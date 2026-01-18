@@ -54,6 +54,8 @@ package() {
 
     # Install files
     cp -a usr/share "${pkgdir}/usr/share"
+    
+    cp -a usr/bin/ashyterm "${pkgdir}/usr/bin/ashyterm"
 
     # Install license file if present
     if [ -f "LICENSE" ]; then

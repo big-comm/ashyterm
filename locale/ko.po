@@ -45,6 +45,11 @@ msgstr "로컬 마운트 지점 {} 열기"
 msgid "Open {} in Ashy Terminal"
 msgstr "Ashy 터미널에서 {} 열기"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "테스트 문자열"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "검색 세션..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "편집 스킴"
+msgid "New Scheme"
+msgstr "새 계획"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "새 계획"
+msgid "Edit Scheme"
+msgstr "편집 스킴"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "헤더바 배경"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "커서"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "취소"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -946,6 +938,19 @@ msgstr "스킴 삭제?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "'{name}' 스킴을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "취소"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2578,6 +2583,11 @@ msgstr "링크 열기"
 msgid "Copy Link"
 msgstr "링크 복사"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "AI에게 물어보기"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2605,11 +2615,6 @@ msgstr "모두 선택"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "세션 지우기"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "AI에게 물어보기"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3741,16 +3746,16 @@ msgstr "사용자 정의 (복사본 생성)"
 msgid "Delete scheme"
 msgstr "삭제 계획"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "스킴 삭제됨"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "'{}'을(를) 삭제하시겠습니까?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "스킴 삭제됨"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3796,15 +3801,6 @@ msgstr "SSH 세션"
 msgid "Apply output highlighting to SSH connections"
 msgstr "SSH 연결에 출력 강조 적용"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} 명령 색상화"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3816,6 +3812,15 @@ msgstr "'{}' 명령 출력에 대한 구문 강조(파이그먼트 사용)"
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygments가 설치되어 있지 않습니다 - '{}' 출력은 색상이 입혀지지 않습니다"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} 명령 색상화"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3842,30 +3847,10 @@ msgstr "'{}' 색상화 활성화"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "'{}' 명령 출력에 구문 강조 적용"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "테마 모드"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "자동: 배경 색상에 맞게 조정됩니다. 수동: 단일 테마."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "자동"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "매뉴얼"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3913,11 +3898,6 @@ msgstr "Pygments 설치"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "쉘 입력 강조 표시"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3927,6 +3907,11 @@ msgstr "명령어를 입력할 때 실시간 구문 강조 표시(실험적)"
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments가 설치되어 있지 않습니다 - 셸 입력 하이라이팅을 사용할 수 없습니다"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "쉘 입력 강조 표시"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3951,6 +3936,26 @@ msgstr "입력하는 대로 셸 명령어에 색상을 입힙니다. 셸 구성�
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "자동 배경 감지, 수동은 선택한 테마 사용"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "테마 모드"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "자동"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "매뉴얼"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3985,6 +3990,12 @@ msgstr "무시 목록에서 제거"
 msgid "Command added: {}"
 msgstr "명령이 추가되었습니다: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "명령이 제거되었습니다: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -3996,11 +4007,10 @@ msgstr "무시된 명령 제거?"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "\"{}\"를 무시된 명령 목록에서 제거하시겠습니까? 이 명령의 출력에 강조 표시가 적용됩니다."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "명령이 제거되었습니다: {}"
+msgid "Restored default ignored commands"
+msgstr "기본 무시된 명령 복원됨"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4013,11 +4023,6 @@ msgid ""
 "This will replace your current ignored commands list with the system defaults. Custom additions "
 "will be lost."
 msgstr "현재 무시된 명령 목록이 시스템 기본값으로 대체됩니다. 사용자 추가 사항은 손실됩니다."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "기본 무시된 명령 복원됨"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4162,6 +4167,12 @@ msgstr "명령어 규칙 편집"
 msgid "Delete command"
 msgstr "삭제 명령"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "명령이 삭제되었습니다: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4172,12 +4183,6 @@ msgstr "삭제 명령어인가요?"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "\"{}\"를 삭제하시겠습니까? 이 작업은 이 명령에 대한 모든 사용자 정의 규칙을 제거합니다."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "명령이 삭제되었습니다: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4317,6 +4322,11 @@ msgstr "재시작 필요"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "터미널에 색상이 적용되도록 프로그램을 다시 시작하십시오."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "전역 규칙이 기본값으로 재설정됨"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4327,10 +4337,10 @@ msgstr "전역 규칙 재설정?"
 msgid "This will restore global rules to system defaults. Context customizations will be preserved."
 msgstr "이것은 전역 규칙을 시스템 기본값으로 복원합니다. 컨텍스트 사용자 지정은 유지됩니다."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "전역 규칙이 기본값으로 재설정됨"
+msgid "All commands reset to defaults"
+msgstr "모든 명령이 기본값으로 재설정됩니다."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4341,11 +4351,6 @@ msgstr "모든 명령 초기화?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "이것은 모든 명령을 시스템 기본값으로 복원합니다. 전역 규칙은 유지됩니다."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "모든 명령이 기본값으로 재설정됩니다."
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5024,11 +5029,6 @@ msgstr "세션 이름"
 msgid "Working directory must exist and be a folder."
 msgstr "작업 디렉터리는 존재해야 하며 폴더여야 합니다."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "잘못된 작업 디렉터리 경로."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5118,6 +5118,11 @@ msgstr "계속"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{}는 필수입니다."
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "잘못된 경로 형식"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5929,15 +5934,35 @@ msgstr "애쉬 아이콘 (번들)"
 msgid "System Icons"
 msgstr "시스템 아이콘"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "최대화된 창 버튼"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "KDE Plasma 패널 통합을 위한"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "자동 감지"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "항상 숨기기"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "절대 숨기지 마세요"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "이미 실행 중일 때"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "이미 열려 있는 상태에서 애플리케이션이 실행될 때의 동작"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5953,6 +5978,11 @@ msgstr "새 창 열기"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "기존 창 집중"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "이미 열려 있는 상태에서 애플리케이션이 실행될 때의 동작"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6035,25 +6065,30 @@ msgstr "소리 알림"
 msgid "Profiles & Data"
 msgstr "프로필 및 데이터"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "시작 시"
+msgid "On Close"
+msgstr "닫기 시"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "항상 이전 세션 복원"
+msgid "Ask what to do"
+msgstr "무엇을 해야 할지 물어보세요"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "이전 세션 복원을 요청하세요"
+msgid "Save tabs and close"
+msgstr "탭 저장 및 닫기"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "이전 세션 복원 안 함"
+msgid "Just close without asking"
+msgstr "그냥 묻지 말고 닫기"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "여러 탭이 열려 있을 때 닫을 때의 동작"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -6304,14 +6339,6 @@ msgstr "파일 찾기"
 msgid "Search for files and directories with various filters"
 msgstr "다양한 필터로 파일 및 디렉토리 검색"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "파일 작업"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6531,12 +6558,6 @@ msgstr "압축할 파일 및 폴더"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "아카이브 이름"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -6960,11 +6981,6 @@ msgstr "루트 데이터는 사전이 아닙니다."
 msgid "Load failed: {}"
 msgstr "로드 실패: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "데이터 유효성 검사 실패"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -6975,6 +6991,11 @@ msgstr "임시 파일이 올바르게 작성되지 않았습니다."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "파일 쓰기 실패: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "데이터 유효성 검사 실패"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7131,11 +7152,10 @@ msgstr "세션이 성공적으로 이동되었습니다."
 msgid "Cannot move a folder into itself."
 msgstr "폴더를 자기 자신으로 이동할 수 없습니다."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "{path}에 SSH 구성 파일이 없습니다."
+msgid "No host entries found in SSH config."
+msgstr "SSH 구성에서 호스트 항목을 찾을 수 없습니다."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7143,16 +7163,17 @@ msgstr "{path}에 SSH 구성 파일이 없습니다."
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH 구성 구문 분석 실패: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "SSH 구성에서 호스트 항목을 찾을 수 없습니다."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "호스트 '{alias}'를 건너뛰었습니다: 호스트 이름이 없습니다."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "{path}에 SSH 구성 파일이 없습니다."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7362,11 +7383,6 @@ msgstr "검색 취소"
 msgid "Search in subfolders"
 msgstr "하위 폴더에서 검색"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "재귀적"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
@@ -7491,20 +7507,16 @@ msgstr "새 파일의 이름을 입력하세요:"
 msgid "New File"
 msgstr "새 파일"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "복사할 항목이 선택되지 않았습니다."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "선택된 항목이 없습니다 {operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "클립보드에 복사된 항목."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "잘라낼 항목이 선택되지 않았습니다."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -7636,16 +7648,16 @@ msgstr "대상 폴더 선택"
 msgid "Download Here"
 msgstr "여기에서 다운로드"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "다운로드 오류"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "오류"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "다운로드 오류"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7925,6 +7937,11 @@ msgstr "{count}개의 파일 전송 중"
 msgid "Cancel All Transfers"
 msgstr "모든 전송 취소"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "활성 터미널이 없어 명령을 보낼 수 없습니다."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8050,20 +8067,17 @@ msgstr "초기화 오류"
 msgid "Failed to initialize terminal: {error}"
 msgstr "터미널 초기화 실패: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "현재 세션 저장?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "{} 탭 닫기?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Ashy Terminal을 다음에 열 때 이러한 탭을 복원하시겠습니까?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "저장하지 않기"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "{}개의 열린 탭이 있습니다. 다음 번에 복원하기 위해 저장하시겠습니까?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK
@@ -8122,11 +8136,6 @@ msgstr "이 작업은 원격 편집을 위해 로컬에서 다운로드한 모�
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "모두 지우기"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "활성 터미널이 없어 명령을 보낼 수 없습니다."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

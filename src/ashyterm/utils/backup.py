@@ -38,6 +38,37 @@ class BackupManager:
             f"Backup manager initialized with directory: {self.backup_dir}"
         )
 
+    def _copy_source_files(self, source_files: List[Path], temp_path: Path) -> None:
+        """Copy primary source files to temporary directory."""
+        for src_file in source_files:
+            if src_file.exists():
+                shutil.copy(src_file, temp_path / src_file.name)
+
+    def _copy_layouts_directory(self, layouts_dir: Path, temp_path: Path) -> None:
+        """Copy layouts directory to temporary directory."""
+        if layouts_dir.exists() and layouts_dir.is_dir():
+            shutil.copytree(layouts_dir, temp_path / "layouts", dirs_exist_ok=True)
+
+    def _export_passwords_to_temp(
+        self, sessions_store: Gio.ListStore, temp_path: Path
+    ) -> None:
+        """Export passwords from sessions store to temporary directory."""
+        from .crypto import export_all_passwords
+
+        passwords = export_all_passwords(sessions_store)
+        if passwords:
+            with open(temp_path / "passwords.json", "w") as f:
+                json.dump(passwords, f, indent=2)
+
+    def _create_7z_archive(
+        self, py7zr, target_file_path: str, password: str, temp_path: Path
+    ) -> None:
+        """Create encrypted 7z archive from temporary directory."""
+        self.logger.info(f"Creating encrypted backup at {target_file_path}")
+        with py7zr.SevenZipFile(target_file_path, "w", password=password) as archive:
+            archive.writeall(temp_path, arcname="")
+        self.logger.info("Encrypted backup created successfully.")
+
     def create_encrypted_backup(
         self,
         target_file_path: str,
@@ -72,36 +103,69 @@ class BackupManager:
                 self.logger.debug(f"Using temporary directory for backup: {temp_path}")
 
                 try:
-                    # 1. Copy primary source files
-                    for src_file in source_files:
-                        if src_file.exists():
-                            shutil.copy(src_file, temp_path / src_file.name)
-
-                    # 2. Copy layouts directory
-                    if layouts_dir.exists() and layouts_dir.is_dir():
-                        shutil.copytree(
-                            layouts_dir, temp_path / "layouts", dirs_exist_ok=True
-                        )
-
-                    # 3. Export and save passwords (lazy import crypto)
-                    from .crypto import export_all_passwords
-                    passwords = export_all_passwords(sessions_store)
-                    if passwords:
-                        with open(temp_path / "passwords.json", "w") as f:
-                            json.dump(passwords, f, indent=2)
-
-                    # 4. Create the encrypted 7z archive
-                    self.logger.info(f"Creating encrypted backup at {target_file_path}")
-                    with py7zr.SevenZipFile(
-                        target_file_path, "w", password=password
-                    ) as archive:
-                        archive.writeall(temp_path, arcname="")
-
-                    self.logger.info("Encrypted backup created successfully.")
-
+                    self._copy_source_files(source_files, temp_path)
+                    self._copy_layouts_directory(layouts_dir, temp_path)
+                    self._export_passwords_to_temp(sessions_store, temp_path)
+                    self._create_7z_archive(
+                        py7zr, target_file_path, password, temp_path
+                    )
                 except Exception as e:
                     self.logger.error(f"Failed to create encrypted backup: {e}")
                     raise StorageWriteError(target_file_path, str(e)) from e
+
+    def _extract_archive(
+        self, py7zr, source_file_path: str, password: str, temp_path: Path
+    ) -> None:
+        """Extract 7z archive to temporary directory."""
+        self.logger.info(f"Extracting backup from {source_file_path}")
+        with py7zr.SevenZipFile(source_file_path, "r", password=password) as archive:
+            archive.extractall(path=temp_path)
+
+    def _restore_files_from_temp(self, temp_path: Path, config_dir: Path) -> None:
+        """Restore files from temporary directory to config directory."""
+        for item in temp_path.iterdir():
+            target_path = config_dir / item.name
+            if item.is_dir():
+                shutil.rmtree(target_path, ignore_errors=True)
+                shutil.copytree(item, target_path, dirs_exist_ok=True)
+            elif item.is_file() and item.name != "passwords.json":
+                shutil.copy(item, target_path)
+
+    def _import_passwords_from_backup(self, passwords_file: Path) -> None:
+        """Import passwords from backup file to system keyring."""
+        if not passwords_file.exists():
+            return
+
+        with open(passwords_file, "r") as f:
+            passwords = json.load(f)
+
+        from .crypto import store_password
+
+        imported_count = 0
+        for session_name, pwd in passwords.items():
+            try:
+                store_password(session_name, pwd)
+                imported_count += 1
+            except Exception as e:
+                self.logger.error(
+                    f"Failed to import password for '{session_name}': {e}"
+                )
+        self.logger.info(f"Imported {imported_count} passwords.")
+
+    def _handle_restore_errors(
+        self, py7zr, e: Exception, source_file_path: str
+    ) -> None:
+        """Handle errors during restore operation."""
+        if isinstance(e, py7zr.exceptions.PasswordRequired):
+            self.logger.error("Password required for backup file.")
+            raise StorageReadError(source_file_path, "Password required.") from e
+        if isinstance(e, py7zr.exceptions.Bad7zFile):
+            self.logger.error("Bad 7z file or incorrect password.")
+            raise StorageReadError(
+                source_file_path, "Incorrect password or corrupted file."
+            ) from e
+        self.logger.error(f"Failed to restore from encrypted backup: {e}")
+        raise StorageReadError(source_file_path, str(e)) from e
 
     def restore_from_encrypted_backup(
         self, source_file_path: str, password: str, config_dir: Path
@@ -130,55 +194,14 @@ class BackupManager:
                 self.logger.debug(f"Using temporary directory for restore: {temp_path}")
 
                 try:
-                    # 1. Extract the archive
-                    self.logger.info(f"Extracting backup from {source_file_path}")
-                    with py7zr.SevenZipFile(
-                        source_file_path, "r", password=password
-                    ) as archive:
-                        archive.extractall(path=temp_path)
-
-                    # 2. Restore files
-                    for item in temp_path.iterdir():
-                        target_path = config_dir / item.name
-                        if item.is_dir():
-                            shutil.rmtree(target_path, ignore_errors=True)
-                            shutil.copytree(item, target_path, dirs_exist_ok=True)
-                        elif item.is_file() and item.name != "passwords.json":
-                            shutil.copy(item, target_path)
-
-                    # 3. Import passwords
-                    passwords_file = temp_path / "passwords.json"
-                    if passwords_file.exists():
-                        with open(passwords_file, "r") as f:
-                            passwords = json.load(f)
-
-                        from .crypto import store_password
-                        imported_count = 0
-                        for session_name, pwd in passwords.items():
-                            try:
-                                store_password(session_name, pwd)
-                                imported_count += 1
-                            except Exception as e:
-                                self.logger.error(
-                                    f"Failed to import password for '{session_name}': {e}"
-                                )
-                        self.logger.info(f"Imported {imported_count} passwords.")
-
+                    self._extract_archive(py7zr, source_file_path, password, temp_path)
+                    self._restore_files_from_temp(temp_path, config_dir)
+                    self._import_passwords_from_backup(temp_path / "passwords.json")
                     self.logger.info(
                         "Restore from encrypted backup completed successfully."
                     )
-
-                except py7zr.exceptions.PasswordRequired:
-                    self.logger.error("Password required for backup file.")
-                    raise StorageReadError(source_file_path, "Password required.")
-                except py7zr.exceptions.Bad7zFile:
-                    self.logger.error("Bad 7z file or incorrect password.")
-                    raise StorageReadError(
-                        source_file_path, "Incorrect password or corrupted file."
-                    )
                 except Exception as e:
-                    self.logger.error(f"Failed to restore from encrypted backup: {e}")
-                    raise StorageReadError(source_file_path, str(e)) from e
+                    self._handle_restore_errors(py7zr, e, source_file_path)
 
 
 _backup_manager: Optional[BackupManager] = None

@@ -52,10 +52,11 @@ class WindowStateManager:
             self.logger.error(f"Failed to save session state: {e}")
 
     def restore_session_state(self) -> bool:
-        """Restores the window layout from the state file if applicable."""
-        policy = self.settings_manager.get("session_restore_policy", "never")
-        if policy == "never" or not os.path.exists(STATE_FILE):
-            self.clear_session_state()
+        """Restores the window layout from the state file if it exists.
+
+        The state file only exists if the user chose 'Save and Close' when exiting.
+        """
+        if not os.path.exists(STATE_FILE):
             return False
 
         try:
@@ -351,4 +352,3 @@ class WindowStateManager:
                     "working_dir": working_dir,
                 }
         return None
-

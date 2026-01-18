@@ -63,7 +63,9 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
         except Exception:
             return None
 
-    def _launch_local_session(self, menu_item: Nautilus.MenuItem, files: list[Nautilus.FileInfo]):
+    def _launch_local_session(
+        self, menu_item: Nautilus.MenuItem, files: list[Nautilus.FileInfo]
+    ):
         """
         Opens Ashy Terminal in the specified local or GVFS directory path.
         """
@@ -72,11 +74,13 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
         if not local_path:
             print(f"Ashy Terminal Error: Could not get local path for {file.get_uri()}")
             return
-        
+
         cmd = [TERMINAL_EXECUTABLE, "--working-directory", local_path]
         self._launch(cmd)
 
-    def _launch_remote_ssh_session(self, menu_item: Nautilus.MenuItem, files: list[Nautilus.FileInfo]):
+    def _launch_remote_ssh_session(
+        self, menu_item: Nautilus.MenuItem, files: list[Nautilus.FileInfo]
+    ):
         """
         Parses a remote URI and launches Ashy Terminal with a direct SSH connection.
         """
@@ -105,7 +109,9 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
         except Exception as e:
             print(f"Error parsing URI '{uri}' or launching SSH session: {e}")
 
-    def _get_menu_items(self, files: list[Nautilus.FileInfo]) -> list[Nautilus.MenuItem]:
+    def _get_menu_items(
+        self, files: list[Nautilus.FileInfo]
+    ) -> list[Nautilus.MenuItem]:
         """
         Core logic for generating menu items based on the file type.
         """
@@ -157,6 +163,8 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
         """Returns menu items for a single selected directory."""
         return self._get_menu_items(files)
 
-    def get_background_items(self, current_folder: Nautilus.FileInfo) -> list[Nautilus.MenuItem]:
+    def get_background_items(
+        self, current_folder: Nautilus.FileInfo
+    ) -> list[Nautilus.MenuItem]:
         """Returns menu items for the background of the current directory."""
         return self._get_menu_items([current_folder])

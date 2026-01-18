@@ -55,6 +55,7 @@ _DEFAULT_CSS = """
 # Apply default CSS once when module loads
 _default_css_provider = None
 
+
 def _ensure_default_css():
     """Ensure default CSS is applied for fallback styling."""
     global _default_css_provider
@@ -64,12 +65,14 @@ def _ensure_default_css():
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             _default_css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION - 1  # Lower priority than custom themes
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            - 1,  # Lower priority than custom themes
         )
 
 
 class BannerAction(Enum):
     """Actions that can be taken from the banner."""
+
     RETRY = auto()
     AUTO_RECONNECT = auto()
     CLOSE = auto()
@@ -81,6 +84,7 @@ class BannerAction(Enum):
 @dataclass
 class BannerConfig:
     """Configuration for auto-reconnect settings."""
+
     duration_mins: int = 5
     interval_secs: int = 10
     timeout_secs: int = 30
@@ -89,10 +93,10 @@ class BannerConfig:
 class SSHErrorBanner(Gtk.Box):
     """
     Non-blocking banner for SSH connection errors.
-    
+
     This widget is designed to be embedded in a terminal pane header
     or as an overlay, providing quick actions without modal dialogs.
-    
+
     Features:
     - Inline display within the terminal area
     - Quick action buttons (Retry, Auto-Reconnect, Close)
@@ -181,9 +185,9 @@ class SSHErrorBanner(Gtk.Box):
         detail_inscription = Gtk.Inscription()
         detail_inscription.set_text(detail_text)
         detail_inscription.set_nat_chars(15)  # Compact natural width
-        detail_inscription.set_min_chars(5)   # Very small minimum for narrow screens
+        detail_inscription.set_min_chars(5)  # Very small minimum for narrow screens
         detail_inscription.set_min_lines(1)
-        detail_inscription.set_nat_lines(4)   # Allow up to 4 lines when narrow
+        detail_inscription.set_nat_lines(4)  # Allow up to 4 lines when narrow
         detail_inscription.set_xalign(0)
         detail_inscription.set_hexpand(True)
         detail_inscription.add_css_class("dim-label")
@@ -247,7 +251,9 @@ class SSHErrorBanner(Gtk.Box):
 
         # Options panel (initially hidden) - only for network errors
         self._options_revealer = Gtk.Revealer()
-        self._options_revealer.set_transition_type(Gtk.RevealerTransitionType.SLIDE_DOWN)
+        self._options_revealer.set_transition_type(
+            Gtk.RevealerTransitionType.SLIDE_DOWN
+        )
         self._options_revealer.set_transition_duration(200)
 
         if not self._is_auth_error:
@@ -358,15 +364,23 @@ class SSHErrorBanner(Gtk.Box):
 
     def _on_retry_clicked(self, _button: Gtk.Button) -> None:
         """Handle retry button click."""
-        self.emit("action-requested", "retry", {
-            "session": self._session,
-            "terminal_id": self._terminal_id,
-            "timeout": self._config.timeout_secs,
-        })
-        if self._on_action_callback:
-            self._on_action_callback(BannerAction.RETRY, self._terminal_id, {
+        self.emit(
+            "action-requested",
+            "retry",
+            {
+                "session": self._session,
+                "terminal_id": self._terminal_id,
                 "timeout": self._config.timeout_secs,
-            })
+            },
+        )
+        if self._on_action_callback:
+            self._on_action_callback(
+                BannerAction.RETRY,
+                self._terminal_id,
+                {
+                    "timeout": self._config.timeout_secs,
+                },
+            )
 
     def _on_auto_reconnect_clicked(self, _button: Gtk.Button) -> None:
         """Handle auto-reconnect button click with default config."""
@@ -382,44 +396,64 @@ class SSHErrorBanner(Gtk.Box):
 
     def _do_auto_reconnect(self) -> None:
         """Execute auto-reconnect action."""
-        self.emit("action-requested", "auto_reconnect", {
-            "session": self._session,
-            "terminal_id": self._terminal_id,
-            "duration_mins": self._config.duration_mins,
-            "interval_secs": self._config.interval_secs,
-            "timeout_secs": self._config.timeout_secs,
-        })
-        if self._on_action_callback:
-            self._on_action_callback(BannerAction.AUTO_RECONNECT, self._terminal_id, {
+        self.emit(
+            "action-requested",
+            "auto_reconnect",
+            {
+                "session": self._session,
+                "terminal_id": self._terminal_id,
                 "duration_mins": self._config.duration_mins,
                 "interval_secs": self._config.interval_secs,
                 "timeout_secs": self._config.timeout_secs,
-            })
+            },
+        )
+        if self._on_action_callback:
+            self._on_action_callback(
+                BannerAction.AUTO_RECONNECT,
+                self._terminal_id,
+                {
+                    "duration_mins": self._config.duration_mins,
+                    "interval_secs": self._config.interval_secs,
+                    "timeout_secs": self._config.timeout_secs,
+                },
+            )
 
     def _on_close_clicked(self, _button: Gtk.Button) -> None:
         """Handle close button click."""
-        self.emit("action-requested", "close", {
-            "session": self._session,
-            "terminal_id": self._terminal_id,
-        })
+        self.emit(
+            "action-requested",
+            "close",
+            {
+                "session": self._session,
+                "terminal_id": self._terminal_id,
+            },
+        )
         if self._on_action_callback:
             self._on_action_callback(BannerAction.CLOSE, self._terminal_id, {})
 
     def _on_edit_session_clicked(self, _button: Gtk.Button) -> None:
         """Handle edit session button click for authentication errors."""
-        self.emit("action-requested", "edit_session", {
-            "session": self._session,
-            "terminal_id": self._terminal_id,
-        })
+        self.emit(
+            "action-requested",
+            "edit_session",
+            {
+                "session": self._session,
+                "terminal_id": self._terminal_id,
+            },
+        )
         if self._on_action_callback:
             self._on_action_callback(BannerAction.EDIT_SESSION, self._terminal_id, {})
 
     def _on_fix_host_key_clicked(self, _button: Gtk.Button) -> None:
         """Handle fix host key button click for host key verification errors."""
-        self.emit("action-requested", "fix_host_key", {
-            "session": self._session,
-            "terminal_id": self._terminal_id,
-        })
+        self.emit(
+            "action-requested",
+            "fix_host_key",
+            {
+                "session": self._session,
+                "terminal_id": self._terminal_id,
+            },
+        )
         if self._on_action_callback:
             self._on_action_callback(BannerAction.FIX_HOST_KEY, self._terminal_id, {})
 
@@ -457,7 +491,7 @@ class SSHErrorBanner(Gtk.Box):
 class SSHErrorBannerManager:
     """
     Manages SSHErrorBanner instances across multiple terminals.
-    
+
     This manager keeps track of banners and provides a centralized way
     to create, show, hide, and remove them.
     """
@@ -479,7 +513,7 @@ class SSHErrorBannerManager:
     def set_action_callback(self, callback: Callable) -> None:
         """
         Set global callback for all banner actions.
-        
+
         Callback signature: callback(action: BannerAction, terminal_id: int, config: dict)
         """
         self._on_action_callback = callback

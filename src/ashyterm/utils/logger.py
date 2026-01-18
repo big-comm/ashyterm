@@ -289,7 +289,7 @@ class LoggerManager:
 _logger_manager = LoggerManager()
 
 
-def get_logger(name: str = None) -> ThreadSafeLogger:
+def get_logger(name: Optional[str] = None) -> ThreadSafeLogger:
     """Get a logger instance."""
     if name is None:
         import inspect
@@ -370,7 +370,9 @@ def log_session_event(event_type: str, item_name: str, details: str = ""):
     logger.info(message)
 
 
-def log_error_with_context(error: Exception, context: str, logger_name: str = None):
+def log_error_with_context(
+    error: Exception, context: str, logger_name: Optional[str] = None
+):
     """Log an error with context information."""
     logger = get_logger(logger_name)
     logger.error(f"Error in {context}: {str(error)}", exc_info=True)

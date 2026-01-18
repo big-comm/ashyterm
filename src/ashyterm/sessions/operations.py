@@ -4,7 +4,7 @@ import os
 import threading
 from functools import partial
 from pathlib import Path
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Any, Callable, List, Optional, Tuple, Union
 
 from gi.repository import Gio
 
@@ -107,15 +107,9 @@ class SessionOperations:
             original_session.post_login_command_enabled = (
                 updated_session.post_login_command_enabled
             )
-            original_session.post_login_command = (
-                updated_session.post_login_command
-            )
-            original_session.sftp_session_enabled = (
-                updated_session.sftp_session_enabled
-            )
-            original_session.sftp_local_directory = (
-                updated_session.sftp_local_directory
-            )
+            original_session.post_login_command = updated_session.post_login_command
+            original_session.sftp_session_enabled = updated_session.sftp_session_enabled
+            original_session.sftp_local_directory = updated_session.sftp_local_directory
             original_session.sftp_remote_directory = (
                 updated_session.sftp_remote_directory
             )
@@ -173,7 +167,9 @@ class SessionOperations:
                 )
 
             if getattr(session, "source", "user") == "ssh_config":
-                key = self._make_ssh_config_key(session.user, session.host, session.port)
+                key = self._make_ssh_config_key(
+                    session.user, session.host, session.port
+                )
                 if key not in self._ignored_ssh_config_hosts:
                     self._ignored_ssh_config_hosts.add(key)
                     self._persist_ignored_hosts()
@@ -309,13 +305,69 @@ class SessionOperations:
             new_item.name = generate_unique_name(new_item.name, existing_names)
             return self.add_session(new_item)
 
+    def _parse_ssh_config_file(
+        self, target_path: Path
+    ) -> tuple[bool, Union[list, str]]:
+        """Parse SSH config file and return entries or error message."""
+        parser = SSHConfigParser()
+        try:
+            entries = parser.parse(target_path)
+            if not entries:
+                return False, _("No host entries found in SSH config.")
+            return True, entries
+        except Exception as exc:
+            return False, _("Failed to parse SSH config: {error}").format(error=exc)
+
+    def _create_session_from_ssh_entry(
+        self,
+        entry: Any,
+        existing_names: set,
+    ) -> tuple[Optional["SessionItem"], Optional[str]]:
+        """Create a SessionItem from an SSH config entry."""
+        hostname = entry.hostname or entry.alias
+        if not hostname:
+            return None, _("Skipped host '{alias}': missing hostname.").format(
+                alias=entry.alias
+            )
+
+        user = entry.user or ""
+        port = entry.port or 22
+        entry_key = self._make_ssh_config_key(user, hostname, port)
+
+        if entry_key in self._ignored_ssh_config_hosts:
+            self.logger.debug(f"Skipping ignored SSH config host: {entry_key}")
+            return None, None
+
+        existing_session = self._find_existing_ssh_session(hostname, user, port)
+        if existing_session:
+            return None, None
+
+        session_name = generate_unique_name(entry.alias, existing_names)
+        candidate_identity = (
+            os.path.expanduser(entry.identity_file) if entry.identity_file else ""
+        )
+
+        return SessionItem(
+            name=session_name,
+            session_type="ssh",
+            host=hostname,
+            user=user,
+            port=port,
+            auth_type="key",
+            auth_value=candidate_identity,
+            x11_forwarding=bool(entry.forward_x11),
+            source="ssh_config",
+        ), None
+
     def import_sessions_from_ssh_config(
         self, config_path: Optional[Union[str, Path]] = None
     ) -> OperationResult:
         """Imports SSH sessions from an OpenSSH-style config file."""
         with self._operation_lock:
             default_path = Path.home() / ".ssh" / "config"
-            target_path = Path(config_path).expanduser() if config_path else default_path
+            target_path = (
+                Path(config_path).expanduser() if config_path else default_path
+            )
 
             if not target_path.exists():
                 message = _("SSH config file not found at {path}").format(
@@ -324,75 +376,40 @@ class SessionOperations:
                 self.logger.warning(message)
                 return OperationResult(False, message)
 
-            parser = SSHConfigParser()
-            try:
-                entries = parser.parse(target_path)
-            except Exception as exc:  # pragma: no cover - defensive
-                error_msg = _("Failed to parse SSH config: {error}").format(error=exc)
-                self.logger.error(error_msg)
-                return OperationResult(False, error_msg)
-
-            if not entries:
-                message = _("No host entries found in SSH config.")
-                self.logger.info(message)
-                return OperationResult(False, message)
+            success, result = self._parse_ssh_config_file(target_path)
+            if not success:
+                self.logger.info(result) if "No host" in result else self.logger.error(
+                    result
+                )
+                return OperationResult(False, result)
+            entries = result
 
             imported_count = 0
             warnings: List[str] = []
             existing_names = self._get_session_names_in_folder("")
 
             for entry in entries:
-                hostname = entry.hostname or entry.alias
-                if not hostname:
-                    warnings.append(
-                        _("Skipped host '{alias}': missing hostname.").format(
-                            alias=entry.alias
-                        )
-                    )
-                    continue
-
-                user = entry.user or ""
-                port = entry.port or 22
-                entry_key = self._make_ssh_config_key(user, hostname, port)
-
-                if entry_key in self._ignored_ssh_config_hosts:
-                    self.logger.debug(
-                        f"Skipping ignored SSH config host: {entry_key}"
-                    )
-                    continue
-
-                existing_session = self._find_existing_ssh_session(hostname, user, port)
-                if existing_session:
-                    continue
-
-                session_name = generate_unique_name(entry.alias, existing_names)
-                candidate_identity = (
-                    os.path.expanduser(entry.identity_file)
-                    if entry.identity_file
-                    else ""
+                session, warning = self._create_session_from_ssh_entry(
+                    entry, existing_names
                 )
+                if warning:
+                    warnings.append(warning)
+                    continue
+                if session is None:
+                    continue
 
-                session = SessionItem(
-                    name=session_name,
-                    session_type="ssh",
-                    host=hostname,
-                    user=user,
-                    port=port,
-                    auth_type="key",
-                    auth_value=candidate_identity,
-                    x11_forwarding=bool(entry.forward_x11),
-                    source="ssh_config",
-                )
-
-                result = self.add_session(session)
-                if result.success:
+                add_result = self.add_session(session)
+                if add_result.success:
+                    entry_key = self._make_ssh_config_key(
+                        session.user, session.host, session.port
+                    )
                     if entry_key in self._ignored_ssh_config_hosts:
                         self._ignored_ssh_config_hosts.remove(entry_key)
                         self._persist_ignored_hosts()
                     imported_count += 1
-                    existing_names.add(session_name)
+                    existing_names.add(session.name)
                 else:
-                    warning_text = result.message or _(
+                    warning_text = add_result.message or _(
                         "Failed to import host '{alias}'."
                     ).format(alias=entry.alias)
                     warnings.append(warning_text)

@@ -12,6 +12,7 @@ from ..helpers import generate_unique_name
 from ..settings.manager import SettingsManager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from .dialogs.base_dialog import BaseDialog
 
 
 # NEW: Custom widget for editing a color with a hex entry field.
@@ -79,7 +80,7 @@ class _ColorEditRow(Adw.ActionRow):
             entry.add_css_class("error")
 
 
-class _SchemeEditorDialog(Adw.Window):
+class _SchemeEditorDialog(BaseDialog):
     """A sub-dialog for creating or editing a single color scheme."""
 
     __gsignals__ = {
@@ -98,16 +99,18 @@ class _SchemeEditorDialog(Adw.Window):
         scheme_data: Dict,
         is_new: bool,
     ):
+        title = _("New Scheme") if is_new else _("Edit Scheme")
         super().__init__(
-            transient_for=parent, modal=True, default_width=700, default_height=600
+            parent,
+            title,
+            auto_setup_toolbar=True,
+            default_width=700,
+            default_height=600,
         )
-        # Add CSS class for theming
-        self.add_css_class("ashyterm-dialog")
 
         self.settings_manager = settings_manager
         self.original_key = scheme_key if not is_new else None
         self.is_new = is_new
-        self.set_title(_("Edit Scheme") if not is_new else _("New Scheme"))
 
         self.name_entry = Adw.EntryRow(title=_("Scheme Name"))
         self.name_entry.set_text(scheme_data.get("name", scheme_key))
@@ -129,23 +132,14 @@ class _SchemeEditorDialog(Adw.Window):
             row.hex_entry.connect("changed", lambda *_: self.preview_area.queue_draw())
 
     def _build_ui(self):
-        toolbar_view = Adw.ToolbarView()
-        self.set_content(toolbar_view)
-
-        header = Adw.HeaderBar()
-        toolbar_view.add_top_bar(header)
-
-        cancel_button = Gtk.Button(label=_("Cancel"))
-        cancel_button.set_valign(Gtk.Align.CENTER)
-        cancel_button.connect("clicked", lambda _: self.close())
-        header.pack_start(cancel_button)
-
+        # Save button in header bar (Cancel is created by BaseDialog)
         save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
         save_button.set_valign(Gtk.Align.CENTER)
         save_button.connect("clicked", self._on_save)
-        header.pack_end(save_button)
+        self.add_header_button(save_button, pack_start=False)
 
         page = Adw.PreferencesPage()
+        self.set_body_content(page)
 
         preview_group = Adw.PreferencesGroup(title=_("Live Preview"))
         self.preview_area = Gtk.DrawingArea(
@@ -176,9 +170,6 @@ class _SchemeEditorDialog(Adw.Window):
             color_row = _ColorEditRow(f"Color {i}")
             self.palette_rows.append(color_row)
             grid.attach(color_row, i % 2, i // 2, 1, 1)
-
-        scrolled = Gtk.ScrolledWindow(child=page, vexpand=True)
-        toolbar_view.set_content(scrolled)
 
     def _populate_colors(self, scheme_data: Dict):
         self.fg_row.set_hex_color(scheme_data.get("foreground", "#FFFFFF"))

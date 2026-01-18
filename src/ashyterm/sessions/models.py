@@ -110,7 +110,6 @@ class SessionItem(BaseModel):
         source: str = "user",
         local_working_directory: str = "",
         local_startup_command: str = "",
-
         # Per-session highlighting overrides (tri-state)
         # None = Automatic (inherit global preferences)
         # True = Explicitly enabled for this session
@@ -139,9 +138,7 @@ class SessionItem(BaseModel):
         )
         self._sftp_session_enabled = bool(sftp_session_enabled)
         self._sftp_local_directory = (
-            str(normalize_path(sftp_local_directory))
-            if sftp_local_directory
-            else ""
+            str(normalize_path(sftp_local_directory)) if sftp_local_directory else ""
         )
         self._sftp_remote_directory = (
             sftp_remote_directory.strip() if sftp_remote_directory else ""
@@ -163,7 +160,9 @@ class SessionItem(BaseModel):
 
         # Highlighting preferences (per-session overrides)
         self._output_highlighting: Optional[bool] = output_highlighting
-        self._command_specific_highlighting: Optional[bool] = command_specific_highlighting
+        self._command_specific_highlighting: Optional[bool] = (
+            command_specific_highlighting
+        )
         self._cat_colorization: Optional[bool] = cat_colorization
         self._shell_input_highlighting: Optional[bool] = shell_input_highlighting
 
@@ -335,9 +334,7 @@ class SessionItem(BaseModel):
 
     @sftp_local_directory.setter
     def sftp_local_directory(self, value: str):
-        new_value = (
-            str(normalize_path(value)) if value and value.strip() else ""
-        )
+        new_value = str(normalize_path(value)) if value and value.strip() else ""
         if self._sftp_local_directory != new_value:
             self._sftp_local_directory = new_value
             self._mark_modified()
@@ -447,7 +444,9 @@ class SessionItem(BaseModel):
     @output_highlighting.setter
     def output_highlighting(self, value: Optional[bool]):
         if value is not None and not isinstance(value, bool):
-            raise SessionValidationError(self.name, ["Invalid output_highlighting value"])
+            raise SessionValidationError(
+                self.name, ["Invalid output_highlighting value"]
+            )
         if self._output_highlighting != value:
             self._output_highlighting = value
             self._mark_modified()
@@ -498,44 +497,65 @@ class SessionItem(BaseModel):
             self._shell_input_highlighting = value
             self._mark_modified()
 
-    def get_validation_errors(self) -> List[str]:
-        """Returns a list of validation error messages."""
+
+    def _validate_basic_fields(self) -> List[str]:
+        """Validate basic session fields."""
         errors = []
         if not self.name:
             errors.append(_("Session name is required."))
+        return errors
+
+    def _validate_ssh_fields(self) -> List[str]:
+        """Validate SSH-specific fields."""
+        errors = []
+        if not self.host:
+            errors.append(_("Host is required for SSH sessions."))
+        if not (1 <= self.port <= 65535):
+            errors.append(_("Port must be between 1 and 65535."))
+        if self.post_login_command_enabled and not self.post_login_command:
+            errors.append(_("Post-login command cannot be empty when enabled."))
+        return errors
+
+    def _validate_sftp_directory(self) -> List[str]:
+        """Validate SFTP local directory configuration."""
+        if not self.sftp_session_enabled or not self.sftp_local_directory:
+            return []
+        try:
+            local_path = Path(self.sftp_local_directory).expanduser()
+            if not local_path.exists() or not local_path.is_dir():
+                return [_("SFTP local directory must exist and be a directory.")]
+        except Exception:
+            return [_("SFTP local directory must exist and be a directory.")]
+        return []
+
+    def _validate_port_forwardings(self) -> List[str]:
+        """Validate port forwarding configurations."""
+        errors = []
+        for tunnel in self._port_forwardings:
+            local_port = tunnel.get("local_port", 0)
+            remote_port = tunnel.get("remote_port", 0)
+            if not (1024 < int(local_port) <= 65535):
+                errors.append(
+                    _(
+                        "Port forward '{name}' has an invalid local port "
+                        "(must be between 1025 and 65535)."
+                    ).format(name=tunnel.get("name", ""))
+                )
+            if not (1 <= int(remote_port) <= 65535):
+                errors.append(
+                    _("Port forward '{name}' has an invalid remote port.").format(
+                        name=tunnel.get("name", "")
+                    )
+                )
+        return errors
+
+    def get_validation_errors(self) -> List[str]:
+        """Returns a list of validation error messages."""
+        errors = self._validate_basic_fields()
         if self.is_ssh():
-            if not self.host:
-                errors.append(_("Host is required for SSH sessions."))
-            if not (1 <= self.port <= 65535):
-                errors.append(_("Port must be between 1 and 65535."))
-            if self.post_login_command_enabled and not self.post_login_command:
-                errors.append(_("Post-login command cannot be empty when enabled."))
-            if self.sftp_session_enabled and self.sftp_local_directory:
-                try:
-                    local_path = Path(self.sftp_local_directory).expanduser()
-                    if not local_path.exists() or not local_path.is_dir():
-                        errors.append(
-                            _("SFTP local directory must exist and be a directory.")
-                        )
-                except Exception:
-                    errors.append(
-                        _("SFTP local directory must exist and be a directory.")
-                    )
-            for tunnel in self._port_forwardings:
-                local_port = tunnel.get("local_port", 0)
-                remote_port = tunnel.get("remote_port", 0)
-                if not (1024 < int(local_port) <= 65535):
-                    errors.append(
-                        _(
-                            "Port forward '{name}' has an invalid local port (must be between 1025 and 65535)."
-                        ).format(name=tunnel.get("name", ""))
-                    )
-                if not (1 <= int(remote_port) <= 65535):
-                    errors.append(
-                        _("Port forward '{name}' has an invalid remote port.").format(
-                            name=tunnel.get("name", "")
-                        )
-                    )
+            errors.extend(self._validate_ssh_fields())
+            errors.extend(self._validate_sftp_directory())
+            errors.extend(self._validate_port_forwardings())
         return errors
 
     def to_dict(self) -> Dict[str, Any]:
@@ -560,13 +580,11 @@ class SessionItem(BaseModel):
             "x11_forwarding": self.x11_forwarding,
             "local_working_directory": self.local_working_directory,
             "local_startup_command": self.local_startup_command,
-
             # Highlighting overrides (tri-state)
             "output_highlighting": self.output_highlighting,
             "command_specific_highlighting": self.command_specific_highlighting,
             "cat_colorization": self.cat_colorization,
             "shell_input_highlighting": self.shell_input_highlighting,
-
             "created_at": self._created_at,
             "modified_at": self._modified_at,
             "source": self._source,
@@ -593,7 +611,6 @@ class SessionItem(BaseModel):
             source=data.get("source", "user"),
             local_working_directory=data.get("local_working_directory", ""),
             local_startup_command=data.get("local_startup_command", ""),
-
             # Highlighting overrides (tri-state)
             output_highlighting=data.get("output_highlighting", None),
             command_specific_highlighting=data.get(

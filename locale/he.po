@@ -45,6 +45,11 @@ msgstr "פתח את נקודת ההתקנה המקומית {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "פתח {} בטרמינל אשיי"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "מחרוזת בדיקה"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "חיפושי מושבים..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "ערוך תכנית"
+msgid "New Scheme"
+msgstr "תוכנית חדשה"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "תוכנית חדשה"
+msgid "Edit Scheme"
+msgstr "ערוך תכנית"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "רקע שורת כותרת"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "סמן"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "ביטול"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -946,6 +938,19 @@ msgstr "מחק תכנית?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "האם אתה בטוח שברצונך למחוק את הסכימה '{name}'? זה לא ניתן לביטול."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "ביטול"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2578,6 +2583,11 @@ msgstr "פתח קישור"
 msgid "Copy Link"
 msgstr "העתק קישור"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "שאל את הבינה המלאכותית"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2605,11 +2615,6 @@ msgstr "בחר הכל"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "נקה סשן"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "שאל את הבינה המלאכותית"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3743,16 +3748,16 @@ msgstr "התאמה אישית (יוצר עותק)"
 msgid "Delete scheme"
 msgstr "מחק תכנית"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "הסכמה נמחקה"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "האם אתה בטוח שברצונך למחוק '{}'?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "הסכמה נמחקה"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3800,15 +3805,6 @@ msgstr "שיחות SSH"
 msgid "Apply output highlighting to SSH connections"
 msgstr "החל הדגשת פלט על חיבורי SSH"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "צביעת פקודות"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3820,6 +3816,15 @@ msgstr "הדגשת תחביר עבור פלט הפקודה '{}' (באמצעות 
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "פיגמנטס לא מותקן - הפלט '{}' לא יהיה ממוסגר בצבעים"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "צביעת פקודות"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3848,30 +3853,10 @@ msgstr "אפשר צבעוניות '{}'"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "החל הדגשת תחביר על פלט הפקודה '{}'"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "מצב תבנית"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "אוטומטי: מתאימה לצבע הרקע. ידני: נושא יחיד."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "אוטומטי"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "מדריך"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3919,11 +3904,6 @@ msgstr "התקן את Pygments"
 msgid "pip install pygments"
 msgstr "pip התקן pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "הדגשת קלט בשורת הפקודה"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3933,6 +3913,11 @@ msgstr "הדגשת תחביר חיה בזמן הקלדת פקודות (ניסי)
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "פיגמנטס לא מותקן - הדגשת קלט של שורת פקודה אינה זמינה"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "הדגשת קלט בשורת הפקודה"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3961,6 +3946,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "מזהה אוטומטית רקע, ידני משתמש בנושא שנבחר"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "מצב תבנית"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "אוטומטי"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "מדריך"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -3995,6 +4000,12 @@ msgstr "הסר מרשימת ההתעלמות"
 msgid "Command added: {}"
 msgstr "פקודה נוספה: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "הפקודה הוסרה: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4006,11 +4017,10 @@ msgstr "הסר פקודה שהתעלמת ממנה?"
 msgid "Remove \"{}\" from the ignored commands list? Highlighting will be applied to this command's output."
 msgstr "האם להסיר את \"{}\" מרשימת הפקודות המוזנחות? הדגשה תיושם על פלט הפקודה הזו."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "הפקודה הוסרה: {}"
+msgid "Restored default ignored commands"
+msgstr "שחזר פקודות ברירת מחדל שהוזנחו"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4025,11 +4035,6 @@ msgid ""
 msgstr ""
 "זה יחליף את רשימת הפקודות המוזנחות הנוכחית שלך עם ברירות המחדל של המערכת. תוספות מותאמות אישית "
 "יאבדו."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "שחזר פקודות ברירת מחדל שהוזנחו"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4174,6 +4179,12 @@ msgstr "ערוך כללי פקודה"
 msgid "Delete command"
 msgstr "מְחִיקָה"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "הפקודה נמחקה: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4184,12 +4195,6 @@ msgstr "מחק פקודה?"
 #, python-brace-format
 msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules for this command."
 msgstr "האם אתה בטוח שברצונך למחוק \"{}\"? זה יסיר את כל הכללים המותאמים אישית עבור פקודה זו."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "הפקודה נמחקה: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4329,6 +4334,11 @@ msgstr "דרושה הפעלה מחדש"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "הפעל מחדש את התוכנית כדי שהצבעים ייושמו על המסוף."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "הגדרות גלובליות הוחזרו לברירות מחדל"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4339,10 +4349,10 @@ msgstr "אפס כללים גלובליים?"
 msgid "This will restore global rules to system defaults. Context customizations will be preserved."
 msgstr "זה יחזיר את הכללים הגלובליים לברירות המחדל של המערכת. התאמות הקשר יישמרו."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "הגדרות גלובליות הוחזרו לברירות מחדל"
+msgid "All commands reset to defaults"
+msgstr "כל הפקודות חוזרות לברירות המחדל"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4353,11 +4363,6 @@ msgstr "אפס את כל הפקודות?"
 #: NEEDS WORK
 msgid "This will restore all commands to system defaults. Global rules will be preserved."
 msgstr "זה יחזיר את כל הפקודות לברירות המחדל של המערכת. כללים גלובליים יישמרו."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "כל הפקודות חוזרות לברירות המחדל"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5036,11 +5041,6 @@ msgstr "שם המושב"
 msgid "Working directory must exist and be a folder."
 msgstr "המדריך העבודה חייב להתקיים ולהיות תיקיה."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "נתיב תיקיית עבודה לא חוקי."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5130,6 +5130,11 @@ msgstr "המשך"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} נדרש"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "פורמט נתיב לא חוקי"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5941,15 +5946,35 @@ msgstr "אייקונים אפרפרים (מוכללים)"
 msgid "System Icons"
 msgstr "אייקונים של מערכת"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "כפתורי חלון כאשר הם ממוזגים"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "לשילוב פאנל KDE Plasma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "זיהוי אוטומטי"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "תמיד הסתר"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "אל תסתיר"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "כאשר כבר פועל"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "פעולה כאשר היישום מופעל בעודו פתוח"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5965,6 +5990,11 @@ msgstr "פתח חלון חדש"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "מקד את החלון הקיים"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "פעולה כאשר היישום מופעל בעודו פתוח"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6047,25 +6077,30 @@ msgstr "פעמון שמיעתי"
 msgid "Profiles & Data"
 msgstr "פרופילים ונתונים"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "בהפעלה"
+msgid "On Close"
+msgstr "בזמן סגירה"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "תמיד שחזר את המושב הקודם"
+msgid "Ask what to do"
+msgstr "שאל מה לעשות"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "בקש לשחזר את המושב הקודם"
+msgid "Save tabs and close"
+msgstr "שמור כרטיסיות וסגור"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "אל תשחזר את הסשן הקודם"
+msgid "Just close without asking"
+msgstr "פשוט סגור בלי לשאול"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "התנהגות בעת סגירה עם מספר טאבים פתוחים"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -6318,14 +6353,6 @@ msgstr "מצא קבצים"
 msgid "Search for files and directories with various filters"
 msgstr "חפש קבצים ודירקטוריות עם מסננים שונים"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "פעולות קובץ"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6545,12 +6572,6 @@ msgstr "קבצים ותיקיות לדחיסה"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "שם הארכיון"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archive.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -6974,11 +6995,6 @@ msgstr "נתוני שורש אינם מילון"
 msgid "Load failed: {}"
 msgstr "טעינה נכשלה: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "אימות נתונים נכשל"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -6989,6 +7005,11 @@ msgstr "הקובץ הזמני לא נכתב כראוי"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "כתיבת קובץ נכשלה: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "אימות נתונים נכשל"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7145,11 +7166,10 @@ msgstr "הישיבה הועברה בהצלחה."
 msgid "Cannot move a folder into itself."
 msgstr "לא ניתן להעביר תיקיה לתוך עצמה."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "קובץ הקונפיגורציה של SSH לא נמצא ב-{path}"
+msgid "No host entries found in SSH config."
+msgstr "לא נמצאו רשומות מארח בקובץ ההגדרות של SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7157,16 +7177,17 @@ msgstr "קובץ הקונפיגורציה של SSH לא נמצא ב-{path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "נכשל בפירוש קובץ ההגדרות של SSH: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "לא נמצאו רשומות מארח בקובץ ההגדרות של SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "הוחלף מארח '{alias}': חסר שם מארח."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "קובץ הקונפיגורציה של SSH לא נמצא ב-{path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7376,11 +7397,6 @@ msgstr "ביטול חיפוש"
 msgid "Search in subfolders"
 msgstr "חפש בתתי-תיקיות"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "רקורסיבי"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
@@ -7505,20 +7521,16 @@ msgstr "הזן שם עבור הקובץ החדש:"
 msgid "New File"
 msgstr "קובץ חדש"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "לא נבחרו פריטים להעתקה."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "לא נבחרו פריטים ל-{operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "פריטים שהועתקו ללוח."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "לא נבחרו פריטים לגזירה."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -7650,16 +7662,16 @@ msgstr "בחר תיקיית יעד"
 msgid "Download Here"
 msgstr "הורד כאן"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "שגיאת הורדה"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "שגיאה"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "שגיאת הורדה"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7942,6 +7954,11 @@ msgstr "מעביר {count} קבצים"
 msgid "Cancel All Transfers"
 msgstr "בטל את כל ההעברות"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "אין טרמינל פעיל לשליחת פקודה."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8067,20 +8084,17 @@ msgstr "שגיאת אתחול"
 msgid "Failed to initialize terminal: {error}"
 msgstr "נכשל בהתחלת הטרמינל: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "שמור את המושב הנוכחי?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "סגור {} טאבים?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "האם אתה רוצה לשחזר את הכרטיסיות הללו בפעם הבאה שתפתח את Ashy Terminal?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "אל תשמור"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "יש לך {} טאבים פתוחים. האם תרצה לשמור אותם לשחזור בפעם הבאה?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK
@@ -8141,11 +8155,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "נקה הכל"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "אין טרמינל פעיל לשליחת פקודה."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

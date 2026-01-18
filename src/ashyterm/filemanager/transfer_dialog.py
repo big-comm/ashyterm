@@ -1,5 +1,6 @@
 # ashyterm/filemanager/transfer_dialog.py
 """Transfer history dialog with elite Adwaita UI design following GNOME HIG."""
+
 import time
 from datetime import datetime
 from typing import Callable, Dict

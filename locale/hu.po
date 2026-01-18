@@ -45,6 +45,11 @@ msgstr "Nyissa meg a helyi csatlakozási pontot {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Nyisd meg a {}-t az Ashy Terminálban"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Teszt szöveg"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "Keresési munkamenetek..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Séma szerkesztése"
+msgid "New Scheme"
+msgstr "Új séma"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Új séma"
+msgid "Edit Scheme"
+msgstr "Séma szerkesztése"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "Fejléc háttér"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Kurzor"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Mégsem"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -948,6 +940,19 @@ msgstr "Séma törlése?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Biztos benne, hogy törölni szeretné a '{name}' sémát? Ezt nem lehet visszavonni."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Mégsem"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2580,6 +2585,11 @@ msgstr "Link megnyitása"
 msgid "Copy Link"
 msgstr "Link másolása"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Kérdezd az AI-t"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2607,11 +2617,6 @@ msgstr "Összes kiválasztása"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Munkamenet törlése"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Kérdezd az AI-t"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3755,16 +3760,16 @@ msgstr "Testreszabás (másolat készítése)"
 msgid "Delete scheme"
 msgstr "Törlés séma"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Séma törölve"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Biztos benne, hogy törölni szeretné a '{}' elemet?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Séma törölve"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3814,15 +3819,6 @@ msgstr "SSH munkamenetek"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Alkalmazza a kimeneti kiemelést az SSH kapcsolatokra"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} Parancs Színezés"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3834,6 +3830,15 @@ msgstr "Szintaxis kiemelés a '{}' parancs kimenetéhez (Pygments használatáva
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "A Pygments nincs telepítve - a '{}' kimenet nem lesz színezve"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Parancs Színezés"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3862,30 +3867,10 @@ msgstr "Engedélyezze a '{}' színezést"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "Alkalmazza a szintaxis kiemelést a '{}' parancs kimenetére"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Téma mód"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Automatikus: alkalmazkodik a háttérszínhez. Manuális: egyetlen téma."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Automatikus"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Kézikönyv"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3933,11 +3918,6 @@ msgstr "Telepítse a Pygments-t"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Shell Bemeneti Kiemelés"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3947,6 +3927,11 @@ msgstr "Élő szintaxis kiemelés, miközben parancsokat írsz (kísérleti)"
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "A Pygments nincs telepítve - a shell bemeneti kiemelés nem elérhető"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Shell Bemeneti Kiemelés"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3975,6 +3960,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automatikusan észleli a háttérképet, Kézi a kiválasztott témát használja"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Téma mód"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Automatikus"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Kézikönyv"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4009,6 +4014,12 @@ msgstr "Eltávolítás a figyelmen kívül hagyott listáról"
 msgid "Command added: {}"
 msgstr "Parancs hozzáadva: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Parancs eltávolítva: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4022,11 +4033,10 @@ msgstr ""
 "Eltávolítja a \"{}\" parancsot az ignorált parancsok listájából? A kiemelés alkalmazva lesz ennek a "
 "parancsnak a kimenetére."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Parancs eltávolítva: {}"
+msgid "Restored default ignored commands"
+msgstr "Visszaállított alapértelmezett figyelmen kívül hagyott parancsok"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4041,11 +4051,6 @@ msgid ""
 msgstr ""
 "Ez felülírja a jelenlegi figyelmen kívül hagyott parancsok listáját a rendszer "
 "alapértelmezettjeivel. A testreszabott kiegészítések elvesznek."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Visszaállított alapértelmezett figyelmen kívül hagyott parancsok"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4190,6 +4195,12 @@ msgstr "Parancs szabályok szerkesztése"
 msgid "Delete command"
 msgstr "Törlés parancs"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Parancs törölve: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4202,12 +4213,6 @@ msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules
 msgstr ""
 "Biztos benne, hogy törölni szeretné a \"{}\"-t? Ez eltávolítja az összes egyedi szabályt ehhez a "
 "parancshoz."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Parancs törölve: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4347,6 +4352,11 @@ msgstr "Újraindítás szükséges"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Indítsa újra a programot, hogy a színek alkalmazva legyenek a terminálra."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Globális szabályok visszaállítva az alapértelmezett értékekre"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4359,10 +4369,10 @@ msgstr ""
 "Ez visszaállítja a globális szabályokat a rendszer alapértelmezett értékeire. A kontextus "
 "testreszabásai megmaradnak."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Globális szabályok visszaállítva az alapértelmezett értékekre"
+msgid "All commands reset to defaults"
+msgstr "Minden parancs alapértelmezett értékre állítva"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4375,11 +4385,6 @@ msgid "This will restore all commands to system defaults. Global rules will be p
 msgstr ""
 "Ez visszaállítja az összes parancsot a rendszer alapértelmezett értékeire. A globális szabályok "
 "megmaradnak."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Minden parancs alapértelmezett értékre állítva"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5064,11 +5069,6 @@ msgstr "Munkamenet neve"
 msgid "Working directory must exist and be a folder."
 msgstr "A munkakönyvtárnak léteznie kell és mappának kell lennie."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Érvénytelen munkakönyvtár-útvonal."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5158,6 +5158,11 @@ msgstr "Folytatás"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} kötelező"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Érvénytelen útvonalformátum"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5971,15 +5976,35 @@ msgstr "Ashy Ikonok (Csomagolt)"
 msgid "System Icons"
 msgstr "Rendszerikonok"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Ablakgombok maximalizáláskor"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "A KDE Plasma panel integrációjához"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Automatikus észlelés"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Mindig elrejtés"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Soha ne rejtsd el"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Amikor már fut"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Művelet, amikor az alkalmazás már nyitva van és újraindítják"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5995,6 +6020,11 @@ msgstr "Új ablak megnyitása"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Fókuszálja a meglévő ablakot"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Művelet, amikor az alkalmazás már nyitva van és újraindítják"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6077,25 +6107,30 @@ msgstr "Hallható Harang"
 msgid "Profiles & Data"
 msgstr "Profilok és Adatok"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Indításkor"
+msgid "On Close"
+msgstr "Bezáráskor"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Mindig állítsa vissza az előző munkamenetet"
+msgid "Ask what to do"
+msgstr "Kérdezze meg, mit tegyen"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Kérjük, állítsa vissza az előző munkamenetet"
+msgid "Save tabs and close"
+msgstr "Fülek mentése és bezárása"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Soha ne állítsa vissza az előző munkamenetet"
+msgid "Just close without asking"
+msgstr "Csak zárja be anélkül, hogy kérdezné."
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Több fül nyitva tartása esetén a bezárás viselkedése"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -6353,14 +6388,6 @@ msgstr "Fájlok keresése"
 msgid "Search for files and directories with various filters"
 msgstr "Fájlok és könyvtárak keresése különböző szűrőkkel"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Fájlműveletek"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6580,12 +6607,6 @@ msgstr "Tömörítendő fájlok és mappák"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Archívum neve"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archívum.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7009,11 +7030,6 @@ msgstr "A gyökéradat nem egy szótár."
 msgid "Load failed: {}"
 msgstr "Betöltés nem sikerült: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Az adatok érvényesítése meghiúsult"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7024,6 +7040,11 @@ msgstr "A ideiglenes fájl nem lett helyesen megírva."
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Fájl írása nem sikerült: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Az adatok érvényesítése meghiúsult"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7180,11 +7201,10 @@ msgstr "A munkamenet sikeresen áthelyezve."
 msgid "Cannot move a folder into itself."
 msgstr "Nem lehet egy mappát önmagába áthelyezni."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "SSH konfigurációs fájl nem található a(z) {path} helyen"
+msgid "No host entries found in SSH config."
+msgstr "Nincsenek gazda bejegyzések az SSH konfigurációban."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7192,16 +7212,17 @@ msgstr "SSH konfigurációs fájl nem található a(z) {path} helyen"
 msgid "Failed to parse SSH config: {error}"
 msgstr "SSH konfiguráció elemzése nem sikerült: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nincsenek gazda bejegyzések az SSH konfigurációban."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Kihagyott gazda '{alias}': hiányzik a hosztnév."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "SSH konfigurációs fájl nem található a(z) {path} helyen"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7413,11 +7434,6 @@ msgstr "Keresés megszakítása"
 msgid "Search in subfolders"
 msgstr "Keresés a mappákban"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekurzív"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
@@ -7542,20 +7558,16 @@ msgstr "Adjon meg egy nevet az új fájlhoz:"
 msgid "New File"
 msgstr "Új fájl"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Nincs kiválasztott elem a másoláshoz."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Nincs kiválasztott elem a {operation} végrehajtásához."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Elemek a vágólapra másolva."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Nincs kiválasztott elem a vágáshoz."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -7687,16 +7699,16 @@ msgstr "Válassza ki a célmappát"
 msgid "Download Here"
 msgstr "Letöltés itt"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Letöltési hiba"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Hiba"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Letöltési hiba"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7981,6 +7993,11 @@ msgstr "Átviteli {count} fájl"
 msgid "Cancel All Transfers"
 msgstr "Minden Átutalás Megszakítása"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Nincs aktív terminál, ahová parancsot küldhetnénk."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8106,20 +8123,17 @@ msgstr "Inicializálási hiba"
 msgid "Failed to initialize terminal: {error}"
 msgstr "A terminál inicializálása nem sikerült: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Jelenlegi munkamenet mentése?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Zárja be a {} lapot?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Szeretnéd visszaállítani ezeket a füleket, amikor legközelebb megnyitod az Ashy Terminált?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Ne mentse el"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "{} nyitott fül van. Szeretnéd elmenteni őket, hogy legközelebb visszaállíthasd?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK
@@ -8180,11 +8194,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Összes törlése"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Nincs aktív terminál, ahová parancsot küldhetnénk."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

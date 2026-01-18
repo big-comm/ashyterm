@@ -61,77 +61,101 @@ class SessionStorageManager:
                 e, "storage initialization", "ashyterm.sessions.storage", reraise=True
             )
 
+    def _check_file_preconditions(self) -> Optional[Tuple[List, List]]:
+        """Check file existence and validate path. Returns empty data if file doesn't exist."""
+        if not self.sessions_file.exists():
+            self.logger.info("Sessions file does not exist, returning empty data")
+            return [], []
+        try:
+            validate_file_path(str(self.sessions_file))
+        except Exception as e:
+            raise StorageReadError(
+                str(self.sessions_file),
+                _("File path validation failed: {}").format(e),
+            ) from e
+        return None
+
+    def _check_file_size(self) -> Optional[Tuple[List, List]]:
+        """Check file size constraints. Returns empty data if file is empty."""
+        if self.sessions_file.stat().st_size == 0:
+            self.logger.info("Sessions file is empty, returning empty data")
+            return [], []
+        if self.sessions_file.stat().st_size > 50 * 1024 * 1024:
+            raise StorageReadError(str(self.sessions_file), _("File too large (>50MB)"))
+        return None
+
+    def _read_json_file(self) -> Dict[str, Any]:
+        """Read and parse JSON file with proper error handling."""
+        try:
+            with open(self.sessions_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except json.JSONDecodeError as e:
+            self.logger.error(f"JSON parsing failed: {e}")
+            raise StorageCorruptedError(
+                str(self.sessions_file), _("Invalid JSON: {}").format(e)
+            ) from e
+        except UnicodeDecodeError as e:
+            raise StorageReadError(
+                str(self.sessions_file), _("Encoding error: {}").format(e)
+            ) from e
+
+        if not isinstance(data, dict):
+            raise StorageCorruptedError(
+                str(self.sessions_file), _("Root data is not a dictionary")
+            )
+        return data
+
+    def _extract_and_validate_data(
+        self, data: Dict[str, Any]
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Extract and validate sessions/folders from loaded data."""
+        sessions = data.get("sessions", [])
+        folders = data.get("folders", [])
+
+        if not isinstance(sessions, list):
+            self.logger.warning("Sessions data is not a list, converting to empty list")
+            sessions = []
+        if not isinstance(folders, list):
+            self.logger.warning("Folders data is not a list, converting to empty list")
+            folders = []
+
+        validated_sessions = self._validate_sessions_data(sessions)
+        validated_folders = self._validate_folders_data(folders)
+        return validated_sessions, validated_folders
+
+    def _schedule_security_audit(
+        self, sessions: List[Dict[str, Any]], folders: List[Dict[str, Any]]
+    ) -> None:
+        """Defer security audit to run after startup completes."""
+        if self.security_auditor:
+            from gi.repository import GLib
+
+            GLib.timeout_add(
+                500,  # 500ms delay - run after startup
+                self._audit_loaded_data,
+                sessions,
+                folders,
+            )
+
     def load_sessions_and_folders_safe(
         self,
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """Safely load sessions and folders with comprehensive error handling."""
         with self._file_lock:
             try:
-                if not self.sessions_file.exists():
-                    self.logger.info(
-                        "Sessions file does not exist, returning empty data"
-                    )
-                    return [], []
-                try:
-                    validate_file_path(str(self.sessions_file))
-                except Exception as e:
-                    raise StorageReadError(
-                        str(self.sessions_file),
-                        _("File path validation failed: {}").format(e),
-                    ) from e
+                early_return = self._check_file_preconditions()
+                if early_return is not None:
+                    return early_return
 
-                if self.sessions_file.stat().st_size == 0:
-                    self.logger.info("Sessions file is empty, returning empty data")
-                    return [], []
-                if self.sessions_file.stat().st_size > 50 * 1024 * 1024:
-                    raise StorageReadError(
-                        str(self.sessions_file), _("File too large (>50MB)")
-                    )
+                early_return = self._check_file_size()
+                if early_return is not None:
+                    return early_return
 
-                try:
-                    with open(self.sessions_file, "r", encoding="utf-8") as f:
-                        data = json.load(f)
-                except json.JSONDecodeError as e:
-                    self.logger.error(f"JSON parsing failed: {e}")
-                    raise StorageCorruptedError(
-                        str(self.sessions_file), _("Invalid JSON: {}").format(e)
-                    ) from e
-                except UnicodeDecodeError as e:
-                    raise StorageReadError(
-                        str(self.sessions_file), _("Encoding error: {}").format(e)
-                    ) from e
-
-                if not isinstance(data, dict):
-                    raise StorageCorruptedError(
-                        str(self.sessions_file), _("Root data is not a dictionary")
-                    )
-
-                sessions = data.get("sessions", [])
-                folders = data.get("folders", [])
-                if not isinstance(sessions, list):
-                    self.logger.warning(
-                        "Sessions data is not a list, converting to empty list"
-                    )
-                    sessions = []
-                if not isinstance(folders, list):
-                    self.logger.warning(
-                        "Folders data is not a list, converting to empty list"
-                    )
-                    folders = []
-
-                validated_sessions = self._validate_sessions_data(sessions)
-                validated_folders = self._validate_folders_data(folders)
-                # Defer security audit to run after startup completes
-                # Using timeout_add with 500ms delay ensures app is fully loaded first
-                if self.security_auditor:
-                    from gi.repository import GLib
-
-                    GLib.timeout_add(
-                        500,  # 500ms delay - run after startup
-                        self._audit_loaded_data,
-                        validated_sessions,
-                        validated_folders,
-                    )
+                data = self._read_json_file()
+                validated_sessions, validated_folders = self._extract_and_validate_data(
+                    data
+                )
+                self._schedule_security_audit(validated_sessions, validated_folders)
 
                 self.logger.info(
                     f"Successfully loaded {len(validated_sessions)} sessions and {len(validated_folders)} folders"
@@ -148,61 +172,64 @@ class SessionStorageManager:
                     str(self.sessions_file), _("Load failed: {}").format(e)
                 )
 
+    def _validate_items_data(
+        self,
+        items: List[Dict[str, Any]],
+        item_class,
+        item_type_name: str,
+        required_fields: List[str],
+    ) -> List[Dict[str, Any]]:
+        """Generic helper to validate and sanitize items data.
+
+        Args:
+            items: List of item dictionaries to validate
+            item_class: The class to instantiate (SessionItem or SessionFolder)
+            item_type_name: Name for logging ("Session" or "Folder")
+            required_fields: List of required field names
+
+        Returns:
+            List of validated item dictionaries
+        """
+        validated_items = []
+        for i, item_data in enumerate(items):
+            try:
+                if not isinstance(item_data, dict):
+                    self.logger.warning(
+                        f"{item_type_name} {i} is not a dictionary, skipping"
+                    )
+                    continue
+                if not all(field in item_data for field in required_fields):
+                    self.logger.warning(
+                        f"{item_type_name} {i} missing required fields, skipping"
+                    )
+                    continue
+                try:
+                    item = item_class.from_dict(item_data)
+                    if item.validate():
+                        validated_items.append(item.to_dict())
+                    else:
+                        self.logger.warning(
+                            f"{item_type_name} '{item.name}' validation failed: {item.get_validation_errors()}"
+                        )
+                except Exception as e:
+                    self.logger.warning(f"{item_type_name} {i} creation failed: {e}")
+            except Exception as e:
+                self.logger.error(f"Error validating {item_type_name.lower()} {i}: {e}")
+        return validated_items
+
     def _validate_sessions_data(
         self, sessions: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Validate and sanitize sessions data."""
-        validated_sessions = []
-        for i, session_data in enumerate(sessions):
-            try:
-                if not isinstance(session_data, dict):
-                    self.logger.warning(f"Session {i} is not a dictionary, skipping")
-                    continue
-                if "name" not in session_data or "session_type" not in session_data:
-                    self.logger.warning(
-                        f"Session {i} missing required fields, skipping"
-                    )
-                    continue
-                try:
-                    session_item = SessionItem.from_dict(session_data)
-                    if session_item.validate():
-                        validated_sessions.append(session_item.to_dict())
-                    else:
-                        self.logger.warning(
-                            f"Session '{session_item.name}' validation failed: {session_item.get_validation_errors()}"
-                        )
-                except Exception as e:
-                    self.logger.warning(f"Session {i} creation failed: {e}")
-            except Exception as e:
-                self.logger.error(f"Error validating session {i}: {e}")
-        return validated_sessions
+        return self._validate_items_data(
+            sessions, SessionItem, "Session", ["name", "session_type"]
+        )
 
     def _validate_folders_data(
         self, folders: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """Validate and sanitize folders data."""
-        validated_folders = []
-        for i, folder_data in enumerate(folders):
-            try:
-                if not isinstance(folder_data, dict):
-                    self.logger.warning(f"Folder {i} is not a dictionary, skipping")
-                    continue
-                if "name" not in folder_data:
-                    self.logger.warning(f"Folder {i} missing name field, skipping")
-                    continue
-                try:
-                    folder_item = SessionFolder.from_dict(folder_data)
-                    if folder_item.validate():
-                        validated_folders.append(folder_item.to_dict())
-                    else:
-                        self.logger.warning(
-                            f"Folder '{folder_item.name}' validation failed: {folder_item.get_validation_errors()}"
-                        )
-                except Exception as e:
-                    self.logger.warning(f"Folder {i} creation failed: {e}")
-            except Exception as e:
-                self.logger.error(f"Error validating folder {i}: {e}")
-        return validated_folders
+        return self._validate_items_data(folders, SessionFolder, "Folder", ["name"])
 
     def _audit_loaded_data(
         self, sessions: List[Dict[str, Any]], folders: List[Dict[str, Any]]
@@ -228,6 +255,61 @@ class SessionStorageManager:
             self.logger.error(f"Security audit failed: {e}")
         return False  # Don't repeat idle callback
 
+    def _write_temp_file(self, temp_file: Path, data_to_save: Dict[str, Any]) -> None:
+        """Write data to temporary file with proper sync."""
+        with open(temp_file, "w", encoding="utf-8") as f:
+            json.dump(data_to_save, f, indent=4, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        if not temp_file.exists() or temp_file.stat().st_size == 0:
+            raise StorageWriteError(
+                str(temp_file),
+                _("Temporary file was not written correctly"),
+            )
+
+    def _atomic_replace(self, temp_file: Path) -> None:
+        """Atomically replace sessions file with temp file."""
+        try:
+            os.replace(temp_file, self.sessions_file)
+            ensure_secure_file_permissions(str(self.sessions_file))
+        except Exception as e:
+            if temp_file.exists():
+                temp_file.unlink()
+            raise StorageWriteError(
+                str(self.sessions_file), _("File write failed: {}").format(e)
+            ) from e
+
+    def _log_save_success(self, data: Dict[str, Any]) -> None:
+        """Log successful save operation."""
+        sessions_count = len(data.get("sessions", []))
+        folders_count = len(data.get("folders", []))
+        self.logger.info(
+            f"Successfully saved {sessions_count} sessions and {folders_count} folders"
+        )
+        log_session_event(
+            "storage_saved",
+            f"{sessions_count} sessions, {folders_count} folders",
+        )
+
+    def _perform_save_operation(self, data_to_save: Dict[str, Any]) -> None:
+        """Perform the actual save operation with validation."""
+        if not self._validate_save_data(data_to_save):
+            raise StorageWriteError(
+                str(self.sessions_file), _("Data validation failed")
+            )
+
+        self.sessions_file.parent.mkdir(parents=True, exist_ok=True)
+        ensure_secure_directory_permissions(str(self.sessions_file.parent))
+
+        temp_file = self.sessions_file.with_suffix(".tmp")
+        self._write_temp_file(temp_file, data_to_save)
+        self._atomic_replace(temp_file)
+
+        if not self._verify_saved_file(data_to_save):
+            raise StorageWriteError(
+                str(self.sessions_file), _("Save verification failed")
+            )
+
     def save_sessions_and_folders_safe(
         self,
         session_store: Optional[Gio.ListStore] = None,
@@ -237,50 +319,8 @@ class SessionStorageManager:
         with self._file_lock:
             try:
                 data_to_save = self._prepare_save_data(session_store, folder_store)
-                if not self._validate_save_data(data_to_save):
-                    raise StorageWriteError(
-                        str(self.sessions_file), _("Data validation failed")
-                    )
-
-                self.sessions_file.parent.mkdir(parents=True, exist_ok=True)
-                ensure_secure_directory_permissions(str(self.sessions_file.parent))
-                temp_file = self.sessions_file.with_suffix(".tmp")
-                try:
-                    with open(temp_file, "w", encoding="utf-8") as f:
-                        json.dump(data_to_save, f, indent=4, ensure_ascii=False)
-                        # Ensure data is flushed to the OS buffer
-                        f.flush()
-                        # Ensure data is written to disk before rename (atomic write)
-                        os.fsync(f.fileno())
-                    if not temp_file.exists() or temp_file.stat().st_size == 0:
-                        raise StorageWriteError(
-                            str(temp_file),
-                            _("Temporary file was not written correctly"),
-                        )
-                    # os.replace is atomic on POSIX systems
-                    os.replace(temp_file, self.sessions_file)
-                    ensure_secure_file_permissions(str(self.sessions_file))
-                except Exception as e:
-                    if temp_file.exists():
-                        temp_file.unlink()
-                    raise StorageWriteError(
-                        str(self.sessions_file), _("File write failed: {}").format(e)
-                    )
-
-                if not self._verify_saved_file(data_to_save):
-                    raise StorageWriteError(
-                        str(self.sessions_file), _("Save verification failed")
-                    )
-
-                sessions_count = len(data_to_save.get("sessions", []))
-                folders_count = len(data_to_save.get("folders", []))
-                self.logger.info(
-                    f"Successfully saved {sessions_count} sessions and {folders_count} folders"
-                )
-                log_session_event(
-                    "storage_saved",
-                    f"{sessions_count} sessions, {folders_count} folders",
-                )
+                self._perform_save_operation(data_to_save)
+                self._log_save_success(data_to_save)
                 return True
             except (StorageWriteError, StorageError):
                 raise
@@ -293,61 +333,67 @@ class SessionStorageManager:
                     str(self.sessions_file), _("Save failed: {}").format(e)
                 )
 
+    def _extract_items_from_store(
+        self,
+        store: Gio.ListStore,
+        item_class,
+        item_type_name: str,
+    ) -> List[Dict[str, Any]]:
+        """Extract and validate items from a GIO ListStore."""
+        items_list = []
+        for i in range(store.get_n_items()):
+            item = store.get_item(i)
+            if not isinstance(item, item_class):
+                continue
+            try:
+                if item.validate():
+                    items_list.append(item.to_dict())
+                else:
+                    self.logger.warning(
+                        f"Skipping invalid {item_type_name} '{item.name}': {item.get_validation_errors()}"
+                    )
+            except Exception as e:
+                self.logger.error(
+                    f"Error processing {item_type_name} '{item.name}': {e}"
+                )
+        return items_list
+
+    def _get_sessions_data(
+        self, session_store: Optional[Gio.ListStore]
+    ) -> List[Dict[str, Any]]:
+        """Get sessions data from store or load existing."""
+        if session_store is not None:
+            return self._extract_items_from_store(session_store, SessionItem, "session")
+        try:
+            sessions, _ = self.load_sessions_and_folders_safe()
+            return sessions
+        except Exception as e:
+            self.logger.warning(f"Could not load existing sessions: {e}")
+            return []
+
+    def _get_folders_data(
+        self, folder_store: Optional[Gio.ListStore]
+    ) -> List[Dict[str, Any]]:
+        """Get folders data from store or load existing."""
+        if folder_store is not None:
+            return self._extract_items_from_store(folder_store, SessionFolder, "folder")
+        try:
+            _, folders = self.load_sessions_and_folders_safe()
+            return folders
+        except Exception as e:
+            self.logger.warning(f"Could not load existing folders: {e}")
+            return []
+
     def _prepare_save_data(
         self,
         session_store: Optional[Gio.ListStore],
         folder_store: Optional[Gio.ListStore],
     ) -> Dict[str, Any]:
         """Prepare data for saving."""
-        data_to_save = {}
-        if session_store is not None:
-            sessions_list = []
-            for i in range(session_store.get_n_items()):
-                session_item = session_store.get_item(i)
-                if isinstance(session_item, SessionItem):
-                    try:
-                        if session_item.validate():
-                            sessions_list.append(session_item.to_dict())
-                        else:
-                            self.logger.warning(
-                                f"Skipping invalid session '{session_item.name}': {session_item.get_validation_errors()}"
-                            )
-                    except Exception as e:
-                        self.logger.error(
-                            f"Error processing session '{session_item.name}': {e}"
-                        )
-            data_to_save["sessions"] = sessions_list
-        else:
-            try:
-                data_to_save["sessions"], _ = self.load_sessions_and_folders_safe()
-            except Exception as e:
-                self.logger.warning(f"Could not load existing sessions: {e}")
-                data_to_save["sessions"] = []
-
-        if folder_store is not None:
-            folders_list = []
-            for i in range(folder_store.get_n_items()):
-                folder_item = folder_store.get_item(i)
-                if isinstance(folder_item, SessionFolder):
-                    try:
-                        if folder_item.validate():
-                            folders_list.append(folder_item.to_dict())
-                        else:
-                            self.logger.warning(
-                                f"Skipping invalid folder '{folder_item.name}': {folder_item.get_validation_errors()}"
-                            )
-                    except Exception as e:
-                        self.logger.error(
-                            f"Error processing folder '{folder_item.name}': {e}"
-                        )
-            data_to_save["folders"] = folders_list
-        else:
-            try:
-                _, data_to_save["folders"] = self.load_sessions_and_folders_safe()
-            except Exception as e:
-                self.logger.warning(f"Could not load existing folders: {e}")
-                data_to_save["folders"] = []
-        return data_to_save
+        return {
+            "sessions": self._get_sessions_data(session_store),
+            "folders": self._get_folders_data(folder_store),
+        }
 
     def _validate_save_data(self, data: Dict[str, Any]) -> bool:
         """Validate data before saving."""

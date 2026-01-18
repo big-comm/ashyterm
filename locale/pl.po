@@ -45,6 +45,11 @@ msgstr "Otwórz lokalny punkt montowania {}"
 msgid "Open {} in Ashy Terminal"
 msgstr "Otwórz {} w terminalu Ashy"
 # 
+# File: tests/test_qa.py, line: 164
+#: NEEDS WORK
+msgid "Test string"
+msgstr "Testowy ciąg"
+# 
 # File: usr/share/ashyterm/utils/exceptions.py, line: 65
 #: NEEDS WORK
 msgid "A terminal error occurred"
@@ -743,13 +748,13 @@ msgstr "Wyszukiwanie sesji..."
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "Edit Scheme"
-msgstr "Edytuj schemat"
+msgid "New Scheme"
+msgstr "Nowy schemat"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
-msgid "New Scheme"
-msgstr "Nowy schemat"
+msgid "Edit Scheme"
+msgstr "Edytuj schemat"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 44
 #: NEEDS WORK
@@ -775,19 +780,6 @@ msgstr "Tło paska nagłówka"
 #: NEEDS WORK
 msgid "Cursor"
 msgstr "Kursor"
-# 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 163
-# File: usr/share/ashyterm/ui/dialogs.py, line: 575
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
-# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
-# File: usr/share/ashyterm/window.py, line: 953
-# File: usr/share/ashyterm/window.py, line: 1013
-#: NEEDS WORK
-msgid "Cancel"
-msgstr "Anuluj"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 589
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1219
@@ -946,6 +938,19 @@ msgstr "Usuń schemat?"
 #, python-brace-format
 msgid "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
 msgstr "Czy na pewno chcesz usunąć schemat '{name}'? Tego nie można cofnąć."
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 163
+# File: usr/share/ashyterm/ui/dialogs.py, line: 575
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1213
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1957
+# File: usr/share/ashyterm/ui/dialogs.py, line: 2006
+# File: usr/share/ashyterm/window.py, line: 953
+# File: usr/share/ashyterm/window.py, line: 1013
+#: NEEDS WORK
+msgid "Cancel"
+msgstr "Anuluj"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2578,6 +2583,11 @@ msgstr "Otwórz link"
 msgid "Copy Link"
 msgstr "Kopiuj link"
 # 
+# File: src/ashyterm/ui/menus.py, line: 312
+#: NEEDS WORK
+msgid "Ask AI"
+msgstr "Zapytaj AI"
+# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/menus.py, line: 30
@@ -2605,11 +2615,6 @@ msgstr "Zaznacz wszystko"
 #: NEEDS WORK
 msgid "Clear Session"
 msgstr "Wyczyść sesję"
-# 
-# File: src/ashyterm/ui/menus.py, line: 312
-#: NEEDS WORK
-msgid "Ask AI"
-msgstr "Zapytaj AI"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3751,16 +3756,16 @@ msgstr "Dostosuj (tworzy kopię)"
 msgid "Delete scheme"
 msgstr "Usuń schemat"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
+#: NEEDS WORK
+msgid "Scheme deleted"
+msgstr "Schemat usunięty"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
 #: NEEDS WORK
 #, python-brace-format
 msgid "Are you sure you want to delete '{}'?"
 msgstr "Czy na pewno chcesz usunąć '{}' ?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1806
-#: NEEDS WORK
-msgid "Scheme deleted"
-msgstr "Schemat usunięty"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -3810,15 +3815,6 @@ msgstr "Sesje SSH"
 msgid "Apply output highlighting to SSH connections"
 msgstr "Zastosuj podświetlenie wyjścia do połączeń SSH"
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
-#: NEEDS WORK
-#, python-brace-format
-msgid "{} Command Colorization"
-msgstr "{} Koloryzacja poleceń"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1925
 #: NEEDS WORK
 #, python-brace-format
@@ -3830,6 +3826,15 @@ msgstr "Podświetlanie składni dla wyjścia polecenia '{}' (z użyciem Pygments
 #, python-brace-format
 msgid "Pygments is not installed - '{}' output will not be colorized"
 msgstr "Pygments nie jest zainstalowany - '{}' wyjście nie będzie kolorowane"
+# 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1923
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 432
+#: NEEDS WORK
+#, python-brace-format
+msgid "{} Command Colorization"
+msgstr "{} Koloryzacja poleceń"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1680
 #: NEEDS WORK
@@ -3858,30 +3863,10 @@ msgstr "Włącz '{}' kolorowanie"
 msgid "Apply syntax highlighting to '{}' command output"
 msgstr "Zastosuj podświetlanie składni do wyjścia polecenia '{}'"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
-#: NEEDS WORK
-msgid "Theme Mode"
-msgstr "Tryb motywu"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1952
 #: NEEDS WORK
 msgid "Auto: adapts to background color. Manual: single theme."
 msgstr "Auto: dostosowuje się do koloru tła. Ręcznie: pojedynczy motyw."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Auto"
-msgstr "Auto"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
-#: NEEDS WORK
-msgid "Manual"
-msgstr "Podręcznik"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2039
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2272
@@ -3929,11 +3914,6 @@ msgstr "Zainstaluj Pygments"
 msgid "pip install pygments"
 msgstr "pip install pygments"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
-#: NEEDS WORK
-msgid "Shell Input Highlighting"
-msgstr "Podświetlanie wejścia powłoki"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1652
 #: NEEDS WORK
 msgid "Live syntax highlighting as you type commands (experimental)"
@@ -3943,6 +3923,11 @@ msgstr "Podświetlanie składni na żywo podczas wpisywania poleceń (eksperymen
 #: NEEDS WORK
 msgid "Pygments is not installed - shell input highlighting unavailable"
 msgstr "Pygments nie jest zainstalowany - podświetlanie wejścia powłoki niedostępne"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1650
+#: NEEDS WORK
+msgid "Shell Input Highlighting"
+msgstr "Podświetlanie wejścia powłoki"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1748
 #: NEEDS WORK
@@ -3971,6 +3956,26 @@ msgstr ""
 #: NEEDS WORK
 msgid "Auto detects background, Manual uses selected theme"
 msgstr "Automatycznie wykrywa tło, Ręcznie używa wybranego motywu"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1951
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2178
+#: NEEDS WORK
+msgid "Theme Mode"
+msgstr "Tryb motywu"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1955
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2182
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Auto"
+msgstr "Auto"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1956
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2183
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 3592
+#: NEEDS WORK
+msgid "Manual"
+msgstr "Podręcznik"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1179
 #: NEEDS WORK
@@ -4005,6 +4010,12 @@ msgstr "Usuń z listy ignorowanych"
 msgid "Command added: {}"
 msgstr "Dodano polecenie: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command removed: {}"
+msgstr "Polecenie usunięte: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1299
 #: NEEDS WORK
 msgid "Remove Ignored Command?"
@@ -4018,11 +4029,10 @@ msgstr ""
 "Usunąć \"{}\" z listy zignorowanych poleceń? Podświetlenie zostanie zastosowane do wyjścia tego "
 "polecenia."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1325
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
 #: NEEDS WORK
-#, python-brace-format
-msgid "Command removed: {}"
-msgstr "Polecenie usunięte: {}"
+msgid "Restored default ignored commands"
+msgstr "Przywrócone domyślne zignorowane polecenia"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1331
 #: NEEDS WORK
@@ -4037,11 +4047,6 @@ msgid ""
 msgstr ""
 "To zastąpi bieżącą listę ignorowanych poleceń domyślnymi ustawieniami systemowymi. Niestandardowe "
 "dodatki zostaną utracone."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1356
-#: NEEDS WORK
-msgid "Restored default ignored commands"
-msgstr "Przywrócone domyślne zignorowane polecenia"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1698
 #: NEEDS WORK
@@ -4186,6 +4191,12 @@ msgstr "Edytuj zasady poleceń"
 msgid "Delete command"
 msgstr "Polecenie usunięcia"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
+#: NEEDS WORK
+#, python-brace-format
+msgid "Command deleted: {}"
+msgstr "Polecenie usunięte: {}"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1972
 #: NEEDS WORK
 msgid "Delete Command?"
@@ -4198,12 +4209,6 @@ msgid "Are you sure you want to delete \"{}\"? This will remove all custom rules
 msgstr ""
 "Czy na pewno chcesz usunąć \"{}\"? To spowoduje usunięcie wszystkich niestandardowych reguł dla "
 "tego polecenia."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1991
-#: NEEDS WORK
-#, python-brace-format
-msgid "Command deleted: {}"
-msgstr "Polecenie usunięte: {}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2086
 #: NEEDS WORK
@@ -4343,6 +4348,11 @@ msgstr "Wymagane ponowne uruchomienie"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Uruchom ponownie program, aby kolory mogły zostać zastosowane w terminalu."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+#: NEEDS WORK
+msgid "Global rules reset to defaults"
+msgstr "Globalne zasady zresetowane do domyślnych ustawień"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2645
 #: NEEDS WORK
 msgid "Reset Global Rules?"
@@ -4355,10 +4365,10 @@ msgstr ""
 "To przywróci globalne zasady do domyślnych ustawień systemowych. Dostosowania kontekstowe zostaną "
 "zachowane."
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
 #: NEEDS WORK
-msgid "Global rules reset to defaults"
-msgstr "Globalne zasady zresetowane do domyślnych ustawień"
+msgid "All commands reset to defaults"
+msgstr "Wszystkie polecenia zresetowane do ustawień domyślnych"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2673
 #: NEEDS WORK
@@ -4371,11 +4381,6 @@ msgid "This will restore all commands to system defaults. Global rules will be p
 msgstr ""
 "To przywróci wszystkie polecenia do domyślnych ustawień systemowych. Globalne zasady zostaną "
 "zachowane."
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2695
-#: NEEDS WORK
-msgid "All commands reset to defaults"
-msgstr "Wszystkie polecenia zresetowane do ustawień domyślnych"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2721
 #: NEEDS WORK
@@ -5060,11 +5065,6 @@ msgstr "Nazwa sesji"
 msgid "Working directory must exist and be a folder."
 msgstr "Katalog roboczy musi istnieć i być folderem."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1374
-#: NEEDS WORK
-msgid "Invalid working directory path."
-msgstr "Nieprawidłowa ścieżka katalogu roboczego."
-# 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 716
@@ -5154,6 +5154,11 @@ msgstr "Kontynuuj"
 #, python-brace-format
 msgid "{} is required"
 msgstr "{} jest wymagany"
+# 
+# File: src/ashyterm/ui/dialogs/base_dialog.py, line: 601
+#: NEEDS WORK
+msgid "Invalid path format"
+msgstr "Nieprawidłowy format ścieżki"
 # 
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 17
 #: NEEDS WORK
@@ -5967,15 +5972,35 @@ msgstr "Ashy Ikony (Zestaw)"
 msgid "System Icons"
 msgstr "Ikony systemowe"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 203
+#: NEEDS WORK
+msgid "Window Buttons When Maximized"
+msgstr "Przyciski okna po maksymalizacji"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 204
+#: NEEDS WORK
+msgid "For KDE Plasma panel integration"
+msgstr "Dla integracji panelu KDE Plasma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 209
+#: NEEDS WORK
+msgid "Auto-detect"
+msgstr "Automatyczne wykrywanie"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 210
+#: NEEDS WORK
+msgid "Always hide"
+msgstr "Zawsze ukrywaj"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 211
+#: NEEDS WORK
+msgid "Never hide"
+msgstr "Nigdy nie ukrywaj"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
 #: NEEDS WORK
 msgid "When Already Running"
 msgstr "Gdy już działa"
-# 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
-#: NEEDS WORK
-msgid "Action when the application is launched while already open"
-msgstr "Akcja, gdy aplikacja jest uruchamiana, gdy jest już otwarta"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -5991,6 +6016,11 @@ msgstr "Otwórz nowe okno"
 #: NEEDS WORK
 msgid "Focus existing window"
 msgstr "Skup się na istniejącym oknie"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 226
+#: NEEDS WORK
+msgid "Action when the application is launched while already open"
+msgstr "Akcja, gdy aplikacja jest uruchamiana, gdy jest już otwarta"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1137
 #: NEEDS WORK
@@ -6073,25 +6103,30 @@ msgstr "Dźwiękowy dzwonek"
 msgid "Profiles & Data"
 msgstr "Profile i dane"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 258
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
 #: NEEDS WORK
-msgid "On Startup"
-msgstr "Przy uruchomieniu"
+msgid "On Close"
+msgstr "Po zamknięciu"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 263
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
-msgid "Always restore previous session"
-msgstr "Zawsze przywracaj poprzednią sesję"
+msgid "Ask what to do"
+msgstr "Zapytaj, co robić"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 264
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 364
 #: NEEDS WORK
-msgid "Ask to restore previous session"
-msgstr "Zapytaj o przywrócenie poprzedniej sesji"
+msgid "Save tabs and close"
+msgstr "Zapisz karty i zamknij"
 # 
-# File: usr/share/ashyterm/ui/dialogs/preferences_dialog.py, line: 265
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 365
 #: NEEDS WORK
-msgid "Never restore previous session"
-msgstr "Nigdy nie przywracaj poprzedniej sesji"
+msgid "Just close without asking"
+msgstr "Po prostu zamknij bez pytania"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 373
+#: NEEDS WORK
+msgid "Behavior when closing with multiple tabs open"
+msgstr "Zachowanie przy zamykaniu z otwartymi wieloma kartami"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -6348,14 +6383,6 @@ msgstr "Znajdź pliki"
 msgid "Search for files and directories with various filters"
 msgstr "Szukaj plików i katalogów z różnymi filtrami"
 # 
-# File: src/ashyterm/data/command_manager_models.py, line: 212
-# File: src/ashyterm/data/command_manager_models.py, line: 311
-# File: src/ashyterm/data/command_manager_models.py, line: 324
-# File: src/ashyterm/data/command_manager_models.py, line: 375
-#: NEEDS WORK
-msgid "File Operations"
-msgstr "Operacje plików"
-# 
 # File: src/ashyterm/data/command_manager_models.py, line: 217
 #: NEEDS WORK
 msgid "Search Path"
@@ -6575,12 +6602,6 @@ msgstr "Pliki i foldery do skompresowania"
 #: NEEDS WORK
 msgid "Archive Name"
 msgstr "Nazwa archiwum"
-# 
-# File: src/ashyterm/data/command_manager_models.py, line: 359
-# File: src/ashyterm/data/command_manager_models.py, line: 383
-#: NEEDS WORK
-msgid "archive.tar.xz"
-msgstr "archiwum.tar.xz"
 # 
 # File: src/ashyterm/data/command_manager_models.py, line: 360
 #: NEEDS WORK
@@ -7004,11 +7025,6 @@ msgstr "Dane główne nie są słownikiem"
 msgid "Load failed: {}"
 msgstr "Ładowanie nie powiodło się: {}"
 # 
-# File: usr/share/ashyterm/sessions/storage.py, line: 395
-#: NEEDS WORK
-msgid "Data validation failed"
-msgstr "Walidacja danych nie powiodła się"
-# 
 # File: usr/share/ashyterm/sessions/storage.py, line: 410
 #: NEEDS WORK
 msgid "Temporary file was not written correctly"
@@ -7019,6 +7035,11 @@ msgstr "Tymczasowy plik nie został zapisany poprawnie"
 #, python-brace-format
 msgid "File write failed: {}"
 msgstr "Błąd zapisu pliku: {}"
+# 
+# File: usr/share/ashyterm/sessions/storage.py, line: 395
+#: NEEDS WORK
+msgid "Data validation failed"
+msgstr "Walidacja danych nie powiodła się"
 # 
 # File: usr/share/ashyterm/sessions/storage.py, line: 439
 #: NEEDS WORK
@@ -7175,11 +7196,10 @@ msgstr "Sesja została pomyślnie przeniesiona."
 msgid "Cannot move a folder into itself."
 msgstr "Nie można przenieść folderu do samego siebie."
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 285
+# File: usr/share/ashyterm/sessions/operations.py, line: 300
 #: NEEDS WORK
-#, python-brace-format
-msgid "SSH config file not found at {path}"
-msgstr "Plik konfiguracyjny SSH nie został znaleziony w {path}"
+msgid "No host entries found in SSH config."
+msgstr "Nie znaleziono wpisów hostów w konfiguracji SSH."
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 295
 #: NEEDS WORK
@@ -7187,16 +7207,17 @@ msgstr "Plik konfiguracyjny SSH nie został znaleziony w {path}"
 msgid "Failed to parse SSH config: {error}"
 msgstr "Nie udało się sparsować konfiguracji SSH: {error}"
 # 
-# File: usr/share/ashyterm/sessions/operations.py, line: 300
-#: NEEDS WORK
-msgid "No host entries found in SSH config."
-msgstr "Nie znaleziono wpisów hostów w konfiguracji SSH."
-# 
 # File: usr/share/ashyterm/sessions/operations.py, line: 312
 #: NEEDS WORK
 #, python-brace-format
 msgid "Skipped host '{alias}': missing hostname."
 msgstr "Pominięto hosta '{alias}': brak nazwy hosta."
+# 
+# File: usr/share/ashyterm/sessions/operations.py, line: 285
+#: NEEDS WORK
+#, python-brace-format
+msgid "SSH config file not found at {path}"
+msgstr "Plik konfiguracyjny SSH nie został znaleziony w {path}"
 # 
 # File: usr/share/ashyterm/sessions/operations.py, line: 360
 #: NEEDS WORK
@@ -7406,11 +7427,6 @@ msgstr "Anuluj wyszukiwanie"
 msgid "Search in subfolders"
 msgstr "Szukaj w podfolderach"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 695
-#: NEEDS WORK
-msgid "Recursive"
-msgstr "Rekurencyjny"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 203
 #: NEEDS WORK
 msgid "Transfer History"
@@ -7535,20 +7551,16 @@ msgstr "Wprowadź nazwę dla nowego pliku:"
 msgid "New File"
 msgstr "Nowy plik"
 # 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1767
+# File: src/ashyterm/filemanager/manager.py, line: 2303
 #: NEEDS WORK
-msgid "No items selected to copy."
-msgstr "Nie wybrano żadnych elementów do skopiowania."
+#, python-brace-format
+msgid "No items selected to {operation}."
+msgstr "Nie wybrano żadnych elementów do {operation}."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1781
 #: NEEDS WORK
 msgid "Items copied to clipboard."
 msgstr "Elementy skopiowane do schowka."
-# 
-# File: usr/share/ashyterm/filemanager/manager.py, line: 1786
-#: NEEDS WORK
-msgid "No items selected to cut."
-msgstr "Nie wybrano żadnych elementów do wycięcia."
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 1800
 #: NEEDS WORK
@@ -7680,16 +7692,16 @@ msgstr "Wybierz folder docelowy"
 msgid "Download Here"
 msgstr "Pobierz tutaj"
 # 
-# File: src/ashyterm/filemanager/manager.py, line: 2608
-#: NEEDS WORK
-msgid "Download Error"
-msgstr "Błąd pobierania"
-# 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 855
 # File: usr/share/ashyterm/filemanager/manager.py, line: 889
 #: NEEDS WORK
 msgid "Error"
 msgstr "Błąd"
+# 
+# File: src/ashyterm/filemanager/manager.py, line: 2608
+#: NEEDS WORK
+msgid "Download Error"
+msgstr "Błąd pobierania"
 # 
 # File: usr/share/ashyterm/filemanager/manager.py, line: 859
 #: NEEDS WORK
@@ -7974,6 +7986,11 @@ msgstr "Przesyłanie {count} plików"
 msgid "Cancel All Transfers"
 msgstr "Anuluj wszystkie transfery"
 # 
+# File: usr/share/ashyterm/window.py, line: 1193
+#: NEEDS WORK
+msgid "No active terminal to send command to."
+msgstr "Brak aktywnego terminala do wysłania polecenia."
+# 
 # File: usr/share/ashyterm/window.py, line: 424
 #: NEEDS WORK
 msgid "Data Loading Error"
@@ -8099,20 +8116,17 @@ msgstr "Błąd inicjalizacji"
 msgid "Failed to initialize terminal: {error}"
 msgstr "Nie udało się zainicjować terminala: {error}"
 # 
-# File: usr/share/ashyterm/window.py, line: 1080
+# File: src/ashyterm/window.py, line: 1524
 #: NEEDS WORK
-msgid "Save Current Session?"
-msgstr "Zapisz bieżącą sesję?"
+#, python-brace-format
+msgid "Close {} Tabs?"
+msgstr "Zamknij {} karty?"
 # 
-# File: usr/share/ashyterm/window.py, line: 1082
+# File: src/ashyterm/window.py, line: 1526
 #: NEEDS WORK
-msgid "Do you want to restore these tabs the next time you open Ashy Terminal?"
-msgstr "Czy chcesz przywrócić te karty następnym razem, gdy otworzysz Ashy Terminal?"
-# 
-# File: usr/share/ashyterm/window.py, line: 1086
-#: NEEDS WORK
-msgid "Don't Save"
-msgstr "Nie zapisuj"
+#, python-brace-format
+msgid "You have {} open tabs. Would you like to save them to restore next time?"
+msgstr "Masz {} otwartych kart. Czy chcesz je zapisać, aby przywrócić je następnym razem?"
 # 
 # File: usr/share/ashyterm/window.py, line: 1088
 #: NEEDS WORK
@@ -8175,11 +8189,6 @@ msgstr ""
 #: NEEDS WORK
 msgid "Clear All"
 msgstr "Wyczyść wszystko"
-# 
-# File: usr/share/ashyterm/window.py, line: 1193
-#: NEEDS WORK
-msgid "No active terminal to send command to."
-msgstr "Brak aktywnego terminala do wysłania polecenia."
 # 
 # File: usr/share/ashyterm/app.py, line: 333
 #: NEEDS WORK

@@ -18,7 +18,7 @@ from gi.repository import Adw, GLib, Gtk
 class BaseSyntaxTextView(Gtk.TextView):
     """
     Base class for text views with syntax highlighting.
-    
+
     Provides common initialization for:
     - Monospace font
     - Margins and padding
@@ -43,12 +43,12 @@ class BaseSyntaxTextView(Gtk.TextView):
     ):
         """
         Initialize the base syntax text view.
-        
+
         Args:
             css_class: CSS class to add to the widget
             wrap_mode: Text wrapping mode
             top_margin: Top margin in pixels
-            bottom_margin: Bottom margin in pixels  
+            bottom_margin: Bottom margin in pixels
             left_margin: Left margin in pixels
             right_margin: Right margin in pixels
             accepts_tab: Whether Tab key inserts tabs
@@ -89,7 +89,7 @@ class BaseSyntaxTextView(Gtk.TextView):
     def _get_default_colors(self) -> Dict[str, str]:
         """
         Get default syntax colors based on dark/light mode.
-        
+
         Subclasses should override _DEFAULT_DARK_COLORS and
         _DEFAULT_LIGHT_COLORS class attributes.
         """
@@ -100,7 +100,7 @@ class BaseSyntaxTextView(Gtk.TextView):
     def _setup_tags(self):
         """
         Setup text tags for syntax highlighting.
-        
+
         Should be called by subclass __init__ after setting up colors.
         """
         tag_table = self.buffer.get_tag_table()
@@ -134,7 +134,7 @@ class BaseSyntaxTextView(Gtk.TextView):
     def _schedule_highlighting(self, delay_ms: int = 150):
         """
         Schedule syntax highlighting with debounce.
-        
+
         Args:
             delay_ms: Delay in milliseconds before applying highlighting
         """
@@ -147,10 +147,10 @@ class BaseSyntaxTextView(Gtk.TextView):
     def _apply_highlighting(self) -> bool:
         """
         Apply syntax highlighting to the buffer.
-        
+
         Subclasses must override this method to implement
         their specific highlighting logic.
-        
+
         Returns:
             False to stop the timeout (required by GLib.timeout_add)
         """
@@ -175,29 +175,31 @@ class BaseSyntaxTextView(Gtk.TextView):
 
     def connect_changed(self, callback):
         """Connect a callback to the buffer's 'changed' signal.
-        
+
         Convenience method for connecting to text changes.
-        
+
         Args:
             callback: Function to call when text changes.
                      Signature: callback(widget) where widget is this text view.
-        
+
         Returns:
             Signal handler ID that can be used to disconnect.
         """
         return self.buffer.connect("changed", lambda _: callback(self))
 
-    def update_colors_from_scheme(self, palette: List[str], foreground: str = "#ffffff"):
+    def update_colors_from_scheme(
+        self, palette: List[str], foreground: str = "#ffffff"
+    ):
         """
         Update syntax highlighting colors from a terminal color scheme palette.
-        
+
         The palette is typically 16 colors:
         [0-7]: Normal colors (black, red, green, yellow, blue, magenta, cyan, white)
         [8-15]: Bright colors (bright versions of above)
-        
+
         Subclasses should override this to map palette colors
         to their specific syntax elements.
-        
+
         Args:
             palette: List of hex color strings from the terminal color scheme
             foreground: Foreground color for normal text/comments

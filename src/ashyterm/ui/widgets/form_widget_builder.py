@@ -23,6 +23,7 @@ from ...utils.tooltip_helper import get_tooltip_helper
 @dataclass(slots=True)
 class FieldConfig:
     """Configuration for a form field widget."""
+
     field_type: str
     label: str
     field_id: str = ""
@@ -42,7 +43,7 @@ class FieldConfig:
 class FormWidgetBuilder:
     """
     Factory class for creating Adwaita form field widgets.
-    
+
     Supports creating widgets for various field types:
     - text: Single-line text entry
     - password: Password entry with peek icon
@@ -68,12 +69,12 @@ class FormWidgetBuilder:
     ) -> Tuple[Gtk.Widget, Gtk.Widget]:
         """
         Create a form field widget based on the configuration.
-        
+
         Args:
             config: Field configuration
             on_change: Callback to invoke when the field value changes
             interactive: Whether the widget should be interactive (False for preview)
-            
+
         Returns:
             Tuple of (row_widget, value_widget) where row_widget is the container
             and value_widget is the widget that holds/provides the value
@@ -104,7 +105,7 @@ class FormWidgetBuilder:
         self, config: FieldConfig, on_change: Optional[Callable], interactive: bool
     ) -> Tuple[Gtk.Widget, Gtk.Widget]:
         """Create a single-line text entry field.
-        
+
         Uses Adw.ActionRow with Gtk.Entry when placeholder is needed (for proper
         placeholder visibility), otherwise uses Adw.EntryRow for cleaner look.
         """
@@ -252,8 +253,7 @@ class FormWidgetBuilder:
             row.set_subtitle(config.tooltip)
 
         scale = Gtk.Scale.new_with_range(
-            Gtk.Orientation.HORIZONTAL,
-            min_val, max_val, step
+            Gtk.Orientation.HORIZONTAL, min_val, max_val, step
         )
         scale.set_hexpand(True)
         scale.set_draw_value(True)
@@ -367,7 +367,9 @@ class FormWidgetBuilder:
                 else:
                     check.set_group(radio_group)
 
-                if value == config.default_value or (i == 0 and not config.default_value):
+                if value == config.default_value or (
+                    i == 0 and not config.default_value
+                ):
                     check.set_active(True)
                     selected_value = value
 
@@ -507,6 +509,7 @@ class FormWidgetBuilder:
             row.set_subtitle(_("Format: {}").format(date_format))
 
         from datetime import datetime
+
         try:
             sample = datetime.now().strftime(date_format)
         except Exception:
@@ -605,19 +608,23 @@ FIELD_TYPE_MAPPING = {
 }
 
 
-def create_field_from_form_field(form_field, on_change: Optional[Callable] = None) -> Tuple[Gtk.Widget, Gtk.Widget]:
+def create_field_from_form_field(
+    form_field, on_change: Optional[Callable] = None
+) -> Tuple[Gtk.Widget, Gtk.Widget]:
     """
     Create a field widget from a CommandFormField object.
-    
+
     Args:
         form_field: A CommandFormField instance from command_manager_models
         on_change: Callback to invoke when value changes
-        
+
     Returns:
         Tuple of (row_widget, value_widget)
     """
     config = FieldConfig(
-        field_type=form_field.field_type.value if hasattr(form_field.field_type, 'value') else str(form_field.field_type),
+        field_type=form_field.field_type.value
+        if hasattr(form_field.field_type, "value")
+        else str(form_field.field_type),
         label=form_field.label,
         field_id=form_field.id,
         tooltip=form_field.tooltip or "",
@@ -630,15 +637,17 @@ def create_field_from_form_field(form_field, on_change: Optional[Callable] = Non
     return FormWidgetBuilder.create_field_widget(config, on_change, interactive=True)
 
 
-def create_field_from_dict(field_data: Dict, on_change: Optional[Callable] = None, interactive: bool = True) -> Tuple[Gtk.Widget, Gtk.Widget]:
+def create_field_from_dict(
+    field_data: Dict, on_change: Optional[Callable] = None, interactive: bool = True
+) -> Tuple[Gtk.Widget, Gtk.Widget]:
     """
     Create a field widget from a dictionary configuration.
-    
+
     Args:
         field_data: Dictionary with field configuration
         on_change: Callback to invoke when value changes
         interactive: Whether widget should be interactive
-        
+
     Returns:
         Tuple of (row_widget, value_widget)
     """
