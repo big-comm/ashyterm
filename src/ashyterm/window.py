@@ -182,11 +182,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Applies all visual settings upon window creation."""
         self.logger.info("Applying initial visual settings to new window.")
         # Apply theme first, as it might affect colors used by other settings.
-        if self.settings_manager.get("gtk_theme") == "terminal":
-            self.settings_manager.apply_gtk_terminal_theme(self)
-        else:
-            # Ensure headerbar transparency is correct for non-terminal themes.
-            self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
+        self.settings_manager._update_app_theme_css(self)
 
         # Apply settings to all terminals, which handles terminal transparency.
         self.terminal_manager.apply_settings_to_all_terminals()
@@ -434,7 +430,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """
         # Re-apply headerbar transparency on map to ensure it takes effect
         if hasattr(self, "header_bar"):
-            self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
+            self.settings_manager._update_app_theme_css(self)
 
         if self._initial_tab_created:
             return
@@ -917,12 +913,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         else:
             style_manager.set_color_scheme(Adw.ColorScheme.DEFAULT)
 
-        if new_value == "terminal":
-            self.settings_manager.apply_gtk_terminal_theme(self)
-        else:
-            self.settings_manager.remove_gtk_terminal_theme(self)
-
-        self.settings_manager.apply_headerbar_transparency(self.header_bar, self)
+        self.settings_manager._update_app_theme_css(self)
 
     def _is_terminal_appearance_key(self, key: str) -> bool:
         """Check if the key is a terminal appearance setting."""
@@ -950,12 +941,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.terminal_manager.apply_settings_to_all_terminals()
 
         # Re-apply terminal theme if color scheme changes OR if headerbar transparency changes
-        # (because the terminal theme CSS depends on transparency state)
-        if (
-            (key == "color_scheme" or key == "headerbar_transparency")
-            and self.settings_manager.get("gtk_theme") == "terminal"
-        ):
-            self.settings_manager.apply_gtk_terminal_theme(self)
+        if key in ["color_scheme", "headerbar_transparency"]:
+            self.settings_manager._update_app_theme_css(self)
 
         if key in ["transparency", "headerbar_transparency"]:
             self._update_file_manager_transparency()
@@ -966,8 +953,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_color_scheme_changed(self, dialog, idx):
         """Handle color scheme changes from the dialog."""
         self.terminal_manager.apply_settings_to_all_terminals()
-        if self.settings_manager.get("gtk_theme") == "terminal":
-            self.settings_manager.apply_gtk_terminal_theme(self)
+        self.settings_manager._update_app_theme_css(self)
 
         # Refresh shell input highlighter to use new color scheme palette
         try:
@@ -2039,7 +2025,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 ):
                     self.settings_manager.apply_headerbar_transparency(
                         file_manager.transfer_history_window.header_bar,
-                        file_manager.transfer_history_window
+                        file_manager.transfer_history_window,
                     )
             except Exception as e:
                 self.logger.warning(f"Failed to update file manager transparency: {e}")

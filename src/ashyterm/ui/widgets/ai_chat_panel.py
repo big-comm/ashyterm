@@ -6,7 +6,7 @@ import json
 import random
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import gi
 
@@ -508,15 +508,29 @@ class MessageBubble(Gtk.Box):
         self._role = role
         self._content = content
         self._commands = commands or []
+        self._commands = commands or []
         self._settings_manager = settings_manager
-        self._palette = None
-
-        # Get terminal palette if using terminal theme
-        if settings_manager and settings_manager.get("gtk_theme", "") == "terminal":
-            scheme = settings_manager.get_color_scheme_data()
-            self._palette = scheme.get("palette", [])
 
         self._setup_ui()
+
+    def update_theme(self):
+        """Update syntax highlighting and colors based on current theme."""
+        # Re-format content with new colors
+        formatted_content = self._format_content(self._content)
+        try:
+            self._label.set_markup(formatted_content)
+        except Exception:
+            self._label.set_text(self._content)
+
+    def _get_palette(self) -> list:
+        """Get current terminal palette if needed."""
+        if (
+            self._settings_manager
+            and self._settings_manager.get("gtk_theme", "") == "terminal"
+        ):
+            scheme = self._settings_manager.get_color_scheme_data()
+            return scheme.get("palette", [])
+        return []
 
     def _add_tooltip(self, widget: Gtk.Widget, text: str):
         """Add tooltip to widget using custom helper or fallback to standard."""
@@ -597,6 +611,18 @@ class MessageBubble(Gtk.Box):
         """Get colors for code blocks and inline code based on theme."""
         style_manager = Adw.StyleManager.get_default()
         is_dark = style_manager.get_dark()
+        palette = self._get_palette()
+
+        # If we have a terminal palette, try to use it for better integration
+        if palette and len(palette) >= 8:
+            return {
+                "block_bg": palette[0]
+                if is_dark
+                else "#f0f0f0",  # Use term bg or light gray
+                "block_fg": palette[7] if is_dark else "#24292e",
+                "inline_bg": palette[8] if len(palette) > 8 else "#3d3d3d",
+                "inline_fg": palette[5] if len(palette) > 5 else "#ff79c6",
+            }
 
         if is_dark:
             return {
@@ -698,157 +724,118 @@ class MessageBubble(Gtk.Box):
         except ClassNotFound:
             lexer = TextLexer()
 
+        # Get current palette dynamically
+        palette = self._get_palette()
+
         # Use terminal palette colors if available, otherwise use Dracula
-        if self._palette and len(self._palette) >= 8:
+        if palette and len(palette) >= 8:
             # Map terminal palette to Pygments tokens
             # 0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white
             # 8-15 are bright variants
             colors = {
-                "Token.Keyword": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Keyword": palette[5]
+                if len(palette) > 5
                 else "#ff79c6",  # Magenta
-                "Token.Keyword.Namespace": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Keyword.Namespace": palette[5]
+                if len(palette) > 5
                 else "#ff79c6",
-                "Token.Keyword.Constant": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Keyword.Constant": palette[5] if len(palette) > 5 else "#ff79c6",
+                "Token.Keyword.Declaration": palette[5]
+                if len(palette) > 5
                 else "#ff79c6",
-                "Token.Keyword.Declaration": self._palette[5]
-                if len(self._palette) > 5
-                else "#ff79c6",
-                "Token.Keyword.Pseudo": self._palette[5]
-                if len(self._palette) > 5
-                else "#ff79c6",
-                "Token.Keyword.Reserved": self._palette[5]
-                if len(self._palette) > 5
-                else "#ff79c6",
-                "Token.Keyword.Type": self._palette[6]
-                if len(self._palette) > 6
+                "Token.Keyword.Pseudo": palette[5] if len(palette) > 5 else "#ff79c6",
+                "Token.Keyword.Reserved": palette[5] if len(palette) > 5 else "#ff79c6",
+                "Token.Keyword.Type": palette[6]
+                if len(palette) > 6
                 else "#8be9fd",  # Cyan
-                "Token.Name.Builtin": self._palette[2]
-                if len(self._palette) > 2
+                "Token.Name.Builtin": palette[2]
+                if len(palette) > 2
                 else "#50fa7b",  # Green
-                "Token.Name.Function": self._palette[2]
-                if len(self._palette) > 2
-                else "#50fa7b",
-                "Token.Name.Class": self._palette[2]
-                if len(self._palette) > 2
-                else "#50fa7b",
-                "Token.Name.Decorator": self._palette[2]
-                if len(self._palette) > 2
-                else "#50fa7b",
-                "Token.Name.Variable": self._palette[6]
-                if len(self._palette) > 6
+                "Token.Name.Function": palette[2] if len(palette) > 2 else "#50fa7b",
+                "Token.Name.Class": palette[2] if len(palette) > 2 else "#50fa7b",
+                "Token.Name.Decorator": palette[2] if len(palette) > 2 else "#50fa7b",
+                "Token.Name.Variable": palette[6]
+                if len(palette) > 6
                 else "#8be9fd",  # Cyan
-                "Token.Name.Variable.Global": self._palette[6]
-                if len(self._palette) > 6
+                "Token.Name.Variable.Global": palette[6]
+                if len(palette) > 6
                 else "#8be9fd",
-                "Token.Name.Variable.Instance": self._palette[6]
-                if len(self._palette) > 6
+                "Token.Name.Variable.Instance": palette[6]
+                if len(palette) > 6
                 else "#8be9fd",
                 # String tokens
-                "Token.String": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",  # Yellow
-                "Token.String.Doc": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.String.Double": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.String.Single": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.String.Backtick": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.String.Interpol": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.String.Escape": self._palette[11]
-                if len(self._palette) > 11
+                "Token.String": palette[3] if len(palette) > 3 else "#f1fa8c",  # Yellow
+                "Token.String.Doc": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.String.Double": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.String.Single": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.String.Backtick": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.String.Interpol": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.String.Escape": palette[11]
+                if len(palette) > 11
                 else "#ffb86c",  # Bright yellow
                 # Literal tokens
-                "Token.Literal": self._palette[3]
-                if len(self._palette) > 3
+                "Token.Literal": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.Literal.String": palette[3] if len(palette) > 3 else "#f1fa8c",
+                "Token.Literal.String.Double": palette[3]
+                if len(palette) > 3
                 else "#f1fa8c",
-                "Token.Literal.String": self._palette[3]
-                if len(self._palette) > 3
+                "Token.Literal.String.Single": palette[3]
+                if len(palette) > 3
                 else "#f1fa8c",
-                "Token.Literal.String.Double": self._palette[3]
-                if len(self._palette) > 3
+                "Token.Literal.String.Backtick": palette[3]
+                if len(palette) > 3
                 else "#f1fa8c",
-                "Token.Literal.String.Single": self._palette[3]
-                if len(self._palette) > 3
+                "Token.Literal.String.Doc": palette[3]
+                if len(palette) > 3
                 else "#f1fa8c",
-                "Token.Literal.String.Backtick": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.Literal.String.Doc": self._palette[3]
-                if len(self._palette) > 3
-                else "#f1fa8c",
-                "Token.Literal.String.Escape": self._palette[11]
-                if len(self._palette) > 11
+                "Token.Literal.String.Escape": palette[11]
+                if len(palette) > 11
                 else "#ffb86c",
-                "Token.Literal.String.Interpol": self._palette[3]
-                if len(self._palette) > 3
+                "Token.Literal.String.Interpol": palette[3]
+                if len(palette) > 3
                 else "#f1fa8c",
-                "Token.Literal.String.Heredoc": self._palette[3]
-                if len(self._palette) > 3
+                "Token.Literal.String.Heredoc": palette[3]
+                if len(palette) > 3
                 else "#f1fa8c",
-                "Token.Literal.Number": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Literal.Number": palette[5]
+                if len(palette) > 5
                 else "#bd93f9",  # Magenta
-                "Token.Literal.Number.Integer": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Literal.Number.Integer": palette[5]
+                if len(palette) > 5
                 else "#bd93f9",
-                "Token.Literal.Number.Float": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Literal.Number.Float": palette[5]
+                if len(palette) > 5
                 else "#bd93f9",
-                "Token.Literal.Number.Hex": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Literal.Number.Hex": palette[5]
+                if len(palette) > 5
                 else "#bd93f9",
-                "Token.Literal.Number.Oct": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Literal.Number.Oct": palette[5]
+                if len(palette) > 5
                 else "#bd93f9",
-                "Token.Literal.Number.Bin": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Literal.Number.Bin": palette[5]
+                if len(palette) > 5
                 else "#bd93f9",
                 # Number tokens
-                "Token.Number": self._palette[5]
-                if len(self._palette) > 5
-                else "#bd93f9",
-                "Token.Number.Integer": self._palette[5]
-                if len(self._palette) > 5
-                else "#bd93f9",
-                "Token.Number.Float": self._palette[5]
-                if len(self._palette) > 5
-                else "#bd93f9",
+                "Token.Number": palette[5] if len(palette) > 5 else "#bd93f9",
+                "Token.Number.Integer": palette[5] if len(palette) > 5 else "#bd93f9",
+                "Token.Number.Float": palette[5] if len(palette) > 5 else "#bd93f9",
                 # Comment tokens
-                "Token.Comment": self._palette[8]
-                if len(self._palette) > 8
+                "Token.Comment": palette[8]
+                if len(palette) > 8
                 else "#6272a4",  # Bright black (gray)
-                "Token.Comment.Single": self._palette[8]
-                if len(self._palette) > 8
+                "Token.Comment.Single": palette[8] if len(palette) > 8 else "#6272a4",
+                "Token.Comment.Multiline": palette[8]
+                if len(palette) > 8
                 else "#6272a4",
-                "Token.Comment.Multiline": self._palette[8]
-                if len(self._palette) > 8
-                else "#6272a4",
-                "Token.Comment.Hashbang": self._palette[8]
-                if len(self._palette) > 8
-                else "#6272a4",
-                "Token.Comment.Preproc": self._palette[8]
-                if len(self._palette) > 8
-                else "#6272a4",
+                "Token.Comment.Hashbang": palette[8] if len(palette) > 8 else "#6272a4",
+                "Token.Comment.Preproc": palette[8] if len(palette) > 8 else "#6272a4",
                 # Operator tokens
-                "Token.Operator": self._palette[5]
-                if len(self._palette) > 5
+                "Token.Operator": palette[5]
+                if len(palette) > 5
                 else "#ff79c6",  # Magenta
-                "Token.Operator.Word": self._palette[5]
-                if len(self._palette) > 5
-                else "#ff79c6",
-                "Token.Punctuation": self._palette[7]
-                if len(self._palette) > 7
+                "Token.Operator.Word": palette[5] if len(palette) > 5 else "#ff79c6",
+                "Token.Punctuation": palette[7]
+                if len(palette) > 7
                 else "#f8f8f2",  # White
             }
         else:
@@ -1508,10 +1495,35 @@ class AIChatPanel(Gtk.Box):
         style_manager = Adw.StyleManager.get_default()
         style_manager.connect("notify::dark", self._on_theme_changed)
 
-    def _on_theme_changed(self, style_manager, param):
-        """Handle theme change (light/dark) to update styles."""
+        # Listen for application settings changes
+        if self._settings_manager and hasattr(
+            self._settings_manager, "add_change_listener"
+        ):
+            self._settings_manager.add_change_listener(self._on_settings_listener)
+
+    def _on_settings_listener(self, key: str, old_value: Any, new_value: Any):
+        """Handle settings changes relevant to the chat panel."""
+        if key in (
+            "gtk_theme",
+            "color_scheme",
+            "headerbar_transparency",
+            "transparency",
+        ):
+            GLib.idle_add(self._on_theme_changed)
+
+    def _on_theme_changed(self, *_):
+        """Handle theme change (light/dark/custom) to update styles."""
         logger.debug("Theme changed, reapplying AI chat panel styles")
+
+        # 1. Update panel background/transparency
         self._apply_transparency()
+
+        # 2. Update all message bubbles
+        child = self._messages_box.get_first_child()
+        while child:
+            if isinstance(child, MessageBubble):
+                child.update_theme()
+            child = child.get_next_sibling()
 
     def _apply_css(self):
         """Apply custom CSS for the chat panel from external file."""
@@ -1605,29 +1617,25 @@ class AIChatPanel(Gtk.Box):
                 )
                 content_fg = fg_color_hex
             elif is_dark:
-                # Dark theme colors - Modern dark palette
-                bubble_user_bg = "#3584e4"  # Accent blue for user
+                # Dark theme colors (variable based fallback)
+                bubble_user_bg = "var(--accent-color, #3584e4)"
                 bubble_user_fg = "#ffffff"
-                bubble_assistant_bg = "#2d2d2d"  # Dark card background
+                bubble_assistant_bg = "#2d2d2d"
                 bubble_assistant_border = "rgba(255, 255, 255, 0.1)"
                 input_bg = "#2d2d2d"
                 input_border = "rgba(255, 255, 255, 0.1)"
-                scroll_bg = (
-                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
-                )
-                content_fg = "#ffffff"
+                scroll_bg = "transparent"
+                content_fg = "var(--window-fg-color, #ffffff)"
             else:
-                # Light theme colors - Clean light palette
-                bubble_user_bg = "#3584e4"  # Same accent blue
+                # Light theme colors
+                bubble_user_bg = "var(--accent-color, #3584e4)"
                 bubble_user_fg = "#ffffff"
-                bubble_assistant_bg = "#ffffff"  # Pure white for assistant
+                bubble_assistant_bg = "#ffffff"
                 bubble_assistant_border = "rgba(0, 0, 0, 0.08)"
                 input_bg = "#ffffff"
                 input_border = "rgba(0, 0, 0, 0.12)"
-                scroll_bg = (
-                    f"rgba({r}, {g}, {b}, 0.3)" if transparency > 0 else "transparent"
-                )
-                content_fg = "#000000"
+                scroll_bg = "transparent"
+                content_fg = "var(--window-fg-color, #000000)"
 
             # Build comprehensive CSS for transparent panel with solid content
             css = f"""
