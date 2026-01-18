@@ -1381,6 +1381,11 @@ class TabManager:
         retry_interval_ms = 50
 
         def focus_task(retries_left: int) -> bool:
+            # Skip focus if a modal dialog is active
+            if self._has_active_modal_dialog():
+                self.logger.debug("Skipping terminal focus - modal dialog is active")
+                return GLib.SOURCE_REMOVE
+
             if (
                 terminal
                 and terminal.get_realized()
@@ -1402,6 +1407,23 @@ class TabManager:
             return GLib.SOURCE_REMOVE
 
         GLib.idle_add(focus_task, max_retries)
+
+    def _has_active_modal_dialog(self) -> bool:
+        """Check if any modal dialog is currently active for the parent window."""
+        parent_window = self.terminal_manager.parent_window
+        if not parent_window:
+            return False
+
+        for window in Gtk.Window.list_toplevels():
+            if (
+                window.get_transient_for() == parent_window
+                and window != parent_window
+                and hasattr(window, "get_modal")
+                and window.get_modal()
+                and window.is_visible()
+            ):
+                return True
+        return False
 
     def _find_terminal_pane_recursive(
         self, widget, terminal_to_find: Vte.Terminal

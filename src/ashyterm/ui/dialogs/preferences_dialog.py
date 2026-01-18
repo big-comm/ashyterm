@@ -31,7 +31,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
             title=_("Preferences"),
             transient_for=parent_window,
             modal=False,
-            hide_on_close=True,
+            hide_on_close=False,
             default_width=900,
             default_height=680,
             search_enabled=True,

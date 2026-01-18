@@ -599,17 +599,15 @@ class TerminalManager:
             except Exception as e:
                 self.logger.warning(f"Failed to pre-load HighlightManager: {e}")
 
-            # Pre-load highlight modules (output, shell_input, and proxy implementation)
+            # Pre-load highlight modules (output, shell_input)
+            # NOTE: HighlightedTerminalProxy import removed - importing GTK from background
+            # threads can cause race conditions on Wayland
             try:
                 from .highlighter.output import get_output_highlighter
                 from .highlighter.shell_input import get_shell_input_highlighter
 
                 get_output_highlighter()
                 get_shell_input_highlighter()
-                # Pre-import the proxy implementation to warm up GTK stack
-                from ._highlighter_impl import (
-                    HighlightedTerminalProxy as _,  # noqa: F401
-                )
 
                 self.logger.debug("Pre-loaded highlighting modules in background")
             except Exception as e:
@@ -1166,7 +1164,9 @@ class TerminalManager:
                         f"Unsupported remote terminal type: {terminal_type}"
                     )
 
-                self._log_terminal_creation(session, session.name, terminal_id, terminal_type)
+                self._log_terminal_creation(
+                    session, session.name, terminal_id, terminal_type
+                )
                 return terminal
             except TerminalCreationError:
                 self.registry.unregister_terminal(terminal_id)
@@ -1379,7 +1379,7 @@ class TerminalManager:
             )
             terminal.add_controller(key_controller)
             terminal.ashy_controllers.append(key_controller)
-            
+
             terminal.terminal_id = terminal_id
         except Exception as e:
             self.logger.error(
@@ -2866,36 +2866,36 @@ class TerminalManager:
         try:
             # Manually handle context menu to avoid VTE/Wayland crashes
             gesture.set_state(Gtk.EventSequenceState.CLAIMED)
-            
+
             menu_model = _create_terminal_menu(
                 terminal,
                 terminal_id,
                 settings_manager=self.settings_manager,
                 click_x=x,
-                click_y=y
+                click_y=y,
             )
-            
+
             popover = Gtk.PopoverMenu.new_from_model(menu_model)
             popover.set_parent(terminal)
             popover.set_has_arrow(False)
             popover.set_position(Gtk.PositionType.BOTTOM)
-            
+
             # Keep reference to prevent GC until closed
             terminal._active_popover = popover
-            
+
             def _cleanup_popover(*args):
                 terminal._active_popover = None
-                
+
             popover.connect("closed", _cleanup_popover)
             popover.connect("destroy", _cleanup_popover)
-            
+
             rect = Gdk.Rectangle()
             rect.x = int(x)
             rect.y = int(y)
             rect.width = 1
             rect.height = 1
             popover.set_pointing_to(rect)
-            
+
             GLib.idle_add(popover.popup)
             return Gdk.EVENT_STOP
         except Exception as e:

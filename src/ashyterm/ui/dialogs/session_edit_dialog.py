@@ -67,6 +67,19 @@ class SessionEditDialog(BaseDialog):
             dict(item) for item in self.editing_session.port_forwardings
         ]
         self.x11_switch: Optional[Adw.SwitchRow] = None
+        # SSH options
+        self.ssh_options_group: Optional[Adw.PreferencesGroup] = None
+        self.post_login_command_group: Optional[Adw.PreferencesGroup] = None
+        self.post_login_command_container: Optional[Gtk.Box] = None
+        self.test_button: Optional[Gtk.Button] = None
+        self.sftp_local_row: Optional[Adw.ActionRow] = None
+        self.sftp_remote_row: Optional[Adw.ActionRow] = None
+        self.port_forward_add_row: Optional[Adw.ActionRow] = None
+        self.port_forward_list_row: Optional[Adw.ActionRow] = None
+        self.folder_combo: Optional[Adw.ComboRow] = None
+        self.local_working_dir_entry: Optional[Adw.EntryRow] = None
+        self.local_startup_command_view: Optional[BashTextView] = None
+        self.testing_dialog: Optional[Gtk.Window] = None
         # Local terminal options
         self.local_terminal_group: Optional[Adw.PreferencesGroup] = None
         self.startup_commands_group: Optional[Adw.PreferencesGroup] = None
@@ -101,7 +114,9 @@ class SessionEditDialog(BaseDialog):
             header.pack_start(cancel_button)
 
             # Save button on right (first pack_end so it's rightmost)
-            save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
+            save_button = Gtk.Button(
+                label=_("Save"), css_classes=[BaseDialog.CSS_CLASS_SUGGESTED]
+            )
             save_button.connect("clicked", self._on_save_clicked)
             header.pack_end(save_button)
             self.set_default_widget(save_button)
@@ -176,7 +191,7 @@ class SessionEditDialog(BaseDialog):
         self.name_row = self._create_entry_row(
             title=_("Session Name"),
             text=self.editing_session.name,
-            on_changed=self._on_name_changed,
+            on_changed=self._on_validated_entry_changed,
         )
         name_group.add(self.name_row)
 
@@ -189,7 +204,9 @@ class SessionEditDialog(BaseDialog):
             Gtk.StringList.new([_("Local Terminal"), _("SSH Connection")])
         )
         self.type_combo.set_selected(0 if self.editing_session.is_local() else 1)
-        self.type_combo.connect("notify::selected", self._on_type_changed)
+        self.type_combo.connect(
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_type_changed
+        )
         name_group.add(self.type_combo)
 
         # Tab Color - using Adw.ActionRow with color button
@@ -217,7 +234,7 @@ class SessionEditDialog(BaseDialog):
             icon_name="edit-clear-symbolic",
             valign=Gtk.Align.CENTER,
             tooltip_text=_("Clear Color"),
-            css_classes=["flat"],
+            css_classes=[BaseDialog.CSS_CLASS_FLAT],
         )
         clear_button.connect("clicked", self._on_clear_color_clicked)
 
@@ -264,7 +281,7 @@ class SessionEditDialog(BaseDialog):
                 selected_index = i
                 break
         folder_row.set_selected(selected_index)
-        folder_row.connect("notify::selected", self._on_folder_changed)
+        folder_row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_folder_changed)
         self.folder_combo = folder_row
 
         folder_group.add(folder_row)
@@ -301,7 +318,7 @@ class SessionEditDialog(BaseDialog):
         row = Adw.ComboRow(title=title, subtitle=subtitle)
         row.set_model(Gtk.StringList.new([_("Automatic"), _("Enabled"), _("Disabled")]))
         row.set_selected(self._tri_state_to_selected(initial_value))
-        row.connect("notify::selected", on_changed)
+        row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, on_changed)
         return row
 
     def _on_highlighting_override_changed(self, *_args) -> None:
@@ -405,7 +422,8 @@ class SessionEditDialog(BaseDialog):
         )
         self.highlighting_customize_switch.set_active(has_custom_overrides)
         self.highlighting_customize_switch.connect(
-            "notify::active", self._on_highlighting_customize_switch_changed
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE,
+            self._on_highlighting_customize_switch_changed,
         )
         group.add(self.highlighting_customize_switch)
 
@@ -481,7 +499,7 @@ class SessionEditDialog(BaseDialog):
         browse_working_dir_button = Gtk.Button(
             icon_name="folder-open-symbolic",
             tooltip_text=_("Browse for folder"),
-            css_classes=["flat"],
+            css_classes=[BaseDialog.CSS_CLASS_FLAT],
         )
         browse_working_dir_button.set_valign(Gtk.Align.CENTER)
         browse_working_dir_button.connect(
@@ -592,7 +610,9 @@ class SessionEditDialog(BaseDialog):
         )
         self.auth_combo.set_model(Gtk.StringList.new([_("SSH Key"), _("Password")]))
         self.auth_combo.set_selected(0 if self.editing_session.uses_key_auth() else 1)
-        self.auth_combo.connect("notify::selected", self._on_auth_changed)
+        self.auth_combo.connect(
+            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_auth_changed
+        )
         ssh_group.add(self.auth_combo)
 
         # SSH Key Path - using Adw.ActionRow with entry and browse button
@@ -621,7 +641,7 @@ class SessionEditDialog(BaseDialog):
         self.browse_button = Gtk.Button(
             icon_name="folder-open-symbolic",
             tooltip_text=_("Browse for SSH key file"),
-            css_classes=["flat"],
+            css_classes=[BaseDialog.CSS_CLASS_FLAT],
         )
         self.browse_button.set_valign(Gtk.Align.CENTER)
         self.browse_button.connect("clicked", self._on_browse_key_clicked)
@@ -683,7 +703,9 @@ class SessionEditDialog(BaseDialog):
         )
         is_post_login_enabled = self.editing_session.post_login_command_enabled
         self.post_login_switch.set_active(is_post_login_enabled)
-        self.post_login_switch.connect("notify::active", self._on_post_login_toggle)
+        self.post_login_switch.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_post_login_toggle
+        )
         post_login_group.add(self.post_login_switch)
 
         # Command input container - shown/hidden based on switch
@@ -744,7 +766,7 @@ class SessionEditDialog(BaseDialog):
             subtitle=_("Allow graphical applications from remote server"),
         )
         self.x11_switch.set_active(self.editing_session.x11_forwarding)
-        self.x11_switch.connect("notify::active", self._on_x11_toggled)
+        self.x11_switch.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_x11_toggled)
         options_group.add(self.x11_switch)
 
         # SFTP toggle
@@ -753,14 +775,14 @@ class SessionEditDialog(BaseDialog):
             subtitle=_("Use default directories when opening SFTP"),
         )
         self.sftp_switch.set_active(self.editing_session.sftp_session_enabled)
-        self.sftp_switch.connect("notify::active", self._on_sftp_toggle)
+        self.sftp_switch.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_sftp_toggle)
         options_group.add(self.sftp_switch)
 
         # SFTP Local Directory - using helper
         self.sftp_local_entry = self._create_entry_row(
             title=_("SFTP Local Directory"),
             text=self.editing_session.sftp_local_directory or "",
-            on_changed=self._on_sftp_local_changed,
+            on_changed=self._on_validated_entry_changed,
         )
         options_group.add(self.sftp_local_entry)
         self.sftp_local_row = self.sftp_local_entry
@@ -802,7 +824,7 @@ class SessionEditDialog(BaseDialog):
         add_row.set_activatable(True)
         add_button = Gtk.Button(icon_name="list-add-symbolic")
         add_button.set_valign(Gtk.Align.CENTER)
-        add_button.add_css_class("flat")
+        add_button.add_css_class(BaseDialog.CSS_CLASS_FLAT)
         add_row.add_suffix(add_button)
         add_row.set_activatable_widget(add_button)
         add_button.connect("clicked", self._on_add_port_forward_clicked)
@@ -813,7 +835,7 @@ class SessionEditDialog(BaseDialog):
         # List container for port forwards
         self.port_forward_list = Gtk.ListBox()
         self.port_forward_list.set_selection_mode(Gtk.SelectionMode.NONE)
-        self.port_forward_list.add_css_class("boxed-list")
+        self.port_forward_list.add_css_class(BaseDialog.CSS_CLASS_BOXED_LIST)
 
         list_row = Adw.ActionRow()
         list_row.set_child(self.port_forward_list)
@@ -851,7 +873,7 @@ class SessionEditDialog(BaseDialog):
                 margin_start=12,
                 margin_end=12,
             )
-            label.add_css_class("dim-label")
+            label.add_css_class(BaseDialog.CSS_CLASS_DIM_LABEL)
             placeholder_row.set_child(label)
             self.port_forward_list.append(placeholder_row)
             return
@@ -929,12 +951,43 @@ class SessionEditDialog(BaseDialog):
         cancel_button.connect("clicked", lambda b: dialog.close())
         header_bar.pack_start(cancel_button)
 
-        save_button = Gtk.Button(label=_("Save"), css_classes=["suggested-action"])
+        save_button = Gtk.Button(
+            label=_("Save"), css_classes=[BaseDialog.CSS_CLASS_SUGGESTED]
+        )
         header_bar.pack_end(save_button)
 
         toolbar_view.add_top_bar(header_bar)
 
         # Scrolled content with preferences page
+        widgets = self._create_port_forward_ui(toolbar_view, existing)
+
+        result: Optional[dict] = None
+
+        def on_save(_button):
+            nonlocal result
+            data = self._get_port_forward_data(widgets)
+            errors = self._validate_port_forward_data(data)
+            if errors:
+                self._show_error_dialog(_("Invalid Port Forward"), "\n".join(errors))
+                return
+
+            result = data
+            dialog.close()
+
+        save_button.connect("clicked", on_save)
+
+        # Run dialog blocking
+        loop = GLib.MainLoop()
+        dialog.connect("close-request", lambda _: loop.quit())
+        dialog.present()
+        loop.run()
+
+        return result
+
+    def _create_port_forward_ui(
+        self, toolbar_view: Adw.ToolbarView, existing: Optional[dict]
+    ) -> dict:
+        """Create UI content for port forward dialog and return widgets dict."""
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         toolbar_view.set_content(scrolled)
@@ -942,128 +995,79 @@ class SessionEditDialog(BaseDialog):
         prefs_page = Adw.PreferencesPage()
         scrolled.set_child(prefs_page)
 
-        # Tunnel settings group
-        settings_group = Adw.PreferencesGroup()
-        prefs_page.add(settings_group)
+        existing = existing or {}
+        widgets = {}
 
-        # Name field - using Adw.EntryRow
-        name_row = Adw.EntryRow(title=_("Tunnel Name"))
-        name_row.set_text(existing.get("name", "") if existing else "")
-        settings_group.add(name_row)
+        # Name
+        group = Adw.PreferencesGroup()
+        prefs_page.add(group)
+        widgets["name"] = Adw.EntryRow(title=_("Tunnel Name"))
+        widgets["name"].set_text(existing.get("name", ""))
+        group.add(widgets["name"])
 
-        # Local Settings group
-        local_group = Adw.PreferencesGroup(
-            title=_("Local Settings"),
-        )
+        # Local
+        local_group = Adw.PreferencesGroup(title=_("Local Settings"))
         prefs_page.add(local_group)
 
-        # Local Host - using Adw.EntryRow
-        local_host_row = Adw.EntryRow(title=_("Local Host"))
-        local_host_row.set_text(
-            existing.get("local_host", "localhost") if existing else "localhost"
-        )
-        local_group.add(local_host_row)
+        widgets["local_host"] = Adw.EntryRow(title=_("Local Host"))
+        widgets["local_host"].set_text(existing.get("local_host", "localhost"))
+        local_group.add(widgets["local_host"])
 
-        # Local Port - using Adw.SpinRow
-        local_port_row = Adw.SpinRow.new_with_range(1, 65535, 1)
-        local_port_row.set_title(_("Local Port"))
-        local_port_row.set_subtitle(_("Port on your machine (1025-65535 recommended)"))
-        local_port_row.set_value(existing.get("local_port", 8080) if existing else 8080)
-        local_group.add(local_port_row)
-
-        # Remote Settings group
-        remote_group = Adw.PreferencesGroup(
-            title=_("Remote Settings"),
+        widgets["local_port"] = Adw.SpinRow.new_with_range(1, 65535, 1)
+        widgets["local_port"].set_title(_("Local Port"))
+        widgets["local_port"].set_subtitle(
+            _("Port on your machine (1025-65535 recommended)")
         )
+        widgets["local_port"].set_value(existing.get("local_port", 8080))
+        local_group.add(widgets["local_port"])
+
+        # Remote
+        remote_group = Adw.PreferencesGroup(title=_("Remote Settings"))
         prefs_page.add(remote_group)
 
-        # Remote host toggle
-        use_custom_remote = bool(existing and existing.get("remote_host"))
-        remote_toggle_row = Adw.SwitchRow(
+        use_custom = bool(existing.get("remote_host"))
+        widgets["remote_toggle"] = Adw.SwitchRow(
             title=_("Use Custom Remote Host"),
             subtitle=_("Leave off to use the SSH server as target"),
+            active=use_custom,
         )
-        remote_toggle_row.set_active(use_custom_remote)
-        remote_group.add(remote_toggle_row)
+        remote_group.add(widgets["remote_toggle"])
 
-        # Remote Host - using Adw.EntryRow
-        remote_host_row = Adw.EntryRow(title=_("Remote Host"))
-        remote_host_row.set_text(existing.get("remote_host", "") if existing else "")
-        remote_host_row.set_visible(use_custom_remote)
-        remote_group.add(remote_host_row)
+        widgets["remote_host"] = Adw.EntryRow(title=_("Remote Host"))
+        widgets["remote_host"].set_text(existing.get("remote_host", ""))
+        widgets["remote_host"].set_visible(use_custom)
+        remote_group.add(widgets["remote_host"])
 
-        def on_remote_toggle(switch_row, _param):
-            remote_host_row.set_visible(switch_row.get_active())
+        def on_remote_toggle(switch, _p):
+            widgets["remote_host"].set_visible(switch.get_active())
 
-        remote_toggle_row.connect("notify::active", on_remote_toggle)
+        widgets["remote_toggle"].connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE, on_remote_toggle
+        )
 
-        # Remote Port - using Adw.SpinRow
-        remote_port_row = Adw.SpinRow.new_with_range(1, 65535, 1)
-        remote_port_row.set_title(_("Remote Port"))
-        remote_port_row.set_subtitle(_("Port on the remote host (1-65535)"))
-        remote_port_row.set_value(existing.get("remote_port", 80) if existing else 80)
-        remote_group.add(remote_port_row)
+        widgets["remote_port"] = Adw.SpinRow.new_with_range(1, 65535, 1)
+        widgets["remote_port"].set_title(_("Remote Port"))
+        widgets["remote_port"].set_subtitle(_("Port on the remote host (1-65535)"))
+        widgets["remote_port"].set_value(existing.get("remote_port", 80))
+        remote_group.add(widgets["remote_port"])
 
-        result: Optional[dict] = None
+        return widgets
 
-        def on_save(_button):
-            nonlocal result
-            name = name_row.get_text().strip() or _("Tunnel")
-            local_host = local_host_row.get_text().strip() or "localhost"
-            local_port = int(local_port_row.get_value())
-            remote_port = int(remote_port_row.get_value())
-            remote_host = (
-                remote_host_row.get_text().strip()
-                if remote_toggle_row.get_active()
-                else ""
-            )
+    def _get_port_forward_data(self, widgets: dict) -> dict:
+        """Extract data from port forward widgets."""
+        is_custom_remote = widgets["remote_toggle"].get_active()
+        return {
+            "name": widgets["name"].get_text().strip() or _("Tunnel"),
+            "local_host": widgets["local_host"].get_text().strip() or "localhost",
+            "local_port": int(widgets["local_port"].get_value()),
+            "remote_port": int(widgets["remote_port"].get_value()),
+            "remote_host": widgets["remote_host"].get_text().strip()
+            if is_custom_remote
+            else "",
+        }
 
-            errors = []
-            if not (1024 < local_port <= 65535):
-                errors.append(
-                    _(
-                        "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-                    )
-                )
-            if not (1 <= remote_port <= 65535):
-                errors.append(_("Remote port must be between 1 and 65535."))
-            if not local_host:
-                errors.append(_("Local host cannot be empty."))
-
-            if errors:
-                self._show_error_dialog(
-                    _("Invalid Port Forward"),
-                    "\n".join(errors),
-                )
-                return
-
-            result = {
-                "name": name,
-                "local_host": local_host,
-                "local_port": local_port,
-                "remote_host": remote_host,
-                "remote_port": remote_port,
-            }
-            dialog.close()
-
-        save_button.connect("clicked", on_save)
-
-        # Run dialog blocking
-        response_holder = {"finished": False}
-        loop = GLib.MainLoop()
-
-        def on_close(_dialog):
-            response_holder["finished"] = True
-            loop.quit()
-
-        dialog.connect("close-request", on_close)
-        dialog.present()
-        loop.run()
-
-        return result
-
-    def _on_name_changed(self, entry) -> None:
-        entry.remove_css_class("error")
+    def _on_validated_entry_changed(self, entry) -> None:
+        entry.remove_css_class(self.CSS_CLASS_ERROR)
         self._mark_changed()
 
     def _on_color_changed(self, button: Gtk.ColorButton) -> None:
@@ -1089,11 +1093,11 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
 
     def _on_host_changed(self, entry: Gtk.Entry) -> None:
-        entry.remove_css_class("error")
+        entry.remove_css_class(self.CSS_CLASS_ERROR)
         self._mark_changed()
         hostname = entry.get_text().strip()
         if hostname and not HostnameValidator.is_valid_hostname(hostname):
-            entry.add_css_class("error")
+            entry.add_css_class(self.CSS_CLASS_ERROR)
 
     def _on_user_changed(self, entry: Gtk.Entry) -> None:
         self._mark_changed()
@@ -1102,8 +1106,8 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
         port = int(spin_row.get_value())
         spin_row.remove_css_class(
-            "error"
-        ) if 1 <= port <= 65535 else spin_row.add_css_class("error")
+            self.CSS_CLASS_ERROR
+        ) if 1 <= port <= 65535 else spin_row.add_css_class(self.CSS_CLASS_ERROR)
 
     def _on_auth_changed(self, combo_row, param) -> None:
         if combo_row.get_selected() == 0 and not self.key_path_entry.get_text().strip():
@@ -1112,14 +1116,14 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
 
     def _on_key_path_changed(self, entry: Gtk.Entry) -> None:
-        entry.remove_css_class("error")
+        entry.remove_css_class(self.CSS_CLASS_ERROR)
         self._mark_changed()
         key_path = entry.get_text().strip()
         if key_path:
             try:
                 validate_ssh_key_file(key_path)
             except Exception:
-                entry.add_css_class("error")
+                entry.add_css_class(self.CSS_CLASS_ERROR)
 
     def _on_password_changed(self, entry: Gtk.PasswordEntry) -> None:
         self._mark_changed()
@@ -1128,18 +1132,15 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
         # Show/hide the command container based on switch state
         is_enabled = switch_row.get_active()
-        if (
-            hasattr(self, "post_login_command_container")
-            and self.post_login_command_container
-        ):
+        if self.post_login_command_container:
             self.post_login_command_container.set_visible(is_enabled)
         self._update_post_login_command_state()
         if self.post_login_entry and not is_enabled:
-            self.post_login_entry.remove_css_class("error")
+            self.post_login_entry.remove_css_class(self.CSS_CLASS_ERROR)
 
     def _on_post_login_command_changed(self, buffer: Gtk.TextBuffer) -> None:
         if self.post_login_entry:
-            self.post_login_entry.remove_css_class("error")
+            self.post_login_entry.remove_css_class(self.CSS_CLASS_ERROR)
         self._mark_changed()
 
     def _on_x11_toggled(self, switch_row: Adw.SwitchRow, _param) -> None:
@@ -1154,36 +1155,36 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
         self._update_sftp_state()
         if self.sftp_local_entry and not switch_row.get_active():
-            self.sftp_local_entry.remove_css_class("error")
-
-    def _on_sftp_local_changed(self, entry: Gtk.Entry) -> None:
-        entry.remove_css_class("error")
-        self._mark_changed()
+            self.sftp_local_entry.remove_css_class(self.CSS_CLASS_ERROR)
 
     def _on_sftp_remote_changed(self, entry: Gtk.Entry) -> None:
         self._mark_changed()
 
     def _update_ssh_visibility(self) -> None:
-        if self.ssh_box and self.type_combo:
-            is_ssh = self.type_combo.get_selected() == 1
-            self.ssh_box.set_visible(is_ssh)
-            if hasattr(self, "ssh_options_group") and self.ssh_options_group:
-                self.ssh_options_group.set_visible(is_ssh)
-            if (
-                hasattr(self, "post_login_command_group")
-                and self.post_login_command_group
-            ):
-                self.post_login_command_group.set_visible(is_ssh)
-            if hasattr(self, "test_button"):
-                self.test_button.set_visible(is_ssh)
-            if self.x11_switch:
-                self.x11_switch.set_sensitive(is_ssh)
+        """Update visibility of SSH-specific fields."""
+        if not self.type_combo:
+            return
+
+        is_ssh = self.type_combo.get_selected() == 1
+
+        # Update visibility
+        visible_widgets = [
+            self.ssh_box,
+            self.ssh_options_group,
+            self.post_login_command_group,
+            self.test_button,
+        ]
+        for widget in visible_widgets:
+            if widget:
+                widget.set_visible(is_ssh)
+
+        # Update sensitivity and state
+        switches = [self.x11_switch, self.sftp_switch]
+        for switch in switches:
+            if switch:
+                switch.set_sensitive(is_ssh)
                 if not is_ssh:
-                    self.x11_switch.set_active(False)
-            if self.sftp_switch:
-                self.sftp_switch.set_sensitive(is_ssh)
-                if not is_ssh:
-                    self.sftp_switch.set_active(False)
+                    switch.set_active(False)
         self._update_port_forward_state()
         self._update_post_login_command_state()
         self._update_sftp_state()
@@ -1192,11 +1193,11 @@ class SessionEditDialog(BaseDialog):
         """Update visibility of local terminal options based on session type."""
         is_local = self.type_combo.get_selected() == 0 if self.type_combo else False
 
-        if hasattr(self, "local_terminal_group") and self.local_terminal_group:
+        if self.local_terminal_group:
             self.local_terminal_group.set_visible(is_local)
 
         # Also update the startup commands group visibility
-        if hasattr(self, "startup_commands_group") and self.startup_commands_group:
+        if self.startup_commands_group:
             self.startup_commands_group.set_visible(is_local)
 
     def _update_auth_visibility(self) -> None:
@@ -1230,15 +1231,12 @@ class SessionEditDialog(BaseDialog):
         )
         # Control visibility of switch and container based on session type
         self.post_login_switch.set_sensitive(is_ssh_session)
-        if (
-            hasattr(self, "post_login_command_container")
-            and self.post_login_command_container
-        ):
+        if self.post_login_command_container:
             # Show container only if SSH session AND switch is active
             is_enabled = self.post_login_switch.get_active() and is_ssh_session
             self.post_login_command_container.set_visible(is_enabled)
         if not is_ssh_session:
-            self.post_login_entry.remove_css_class("error")
+            self.post_login_entry.remove_css_class(self.CSS_CLASS_ERROR)
 
     def _update_sftp_state(self) -> None:
         if (
@@ -1247,7 +1245,7 @@ class SessionEditDialog(BaseDialog):
             or not self.sftp_remote_entry
         ):
             return
-        if not hasattr(self, "sftp_local_row") or not hasattr(self, "sftp_remote_row"):
+        if not self.sftp_local_row or not self.sftp_remote_row:
             return
         is_ssh_session = (
             self.type_combo.get_selected() == 1 if self.type_combo else False
@@ -1258,7 +1256,7 @@ class SessionEditDialog(BaseDialog):
         self.sftp_local_row.set_visible(is_enabled)
         self.sftp_remote_row.set_visible(is_enabled)
         if not is_enabled:
-            self.sftp_local_entry.remove_css_class("error")
+            self.sftp_local_entry.remove_css_class(self.CSS_CLASS_ERROR)
 
     def _on_local_working_dir_changed(self, entry: Gtk.Entry) -> None:
         """Handle changes to the local working directory."""
@@ -1268,13 +1266,13 @@ class SessionEditDialog(BaseDialog):
             try:
                 path = Path(path_text).expanduser()
                 if not path.exists() or not path.is_dir():
-                    entry.add_css_class("error")
+                    entry.add_css_class(self.CSS_CLASS_ERROR)
                 else:
-                    entry.remove_css_class("error")
+                    entry.remove_css_class(self.CSS_CLASS_ERROR)
             except Exception:
-                entry.add_css_class("error")
+                entry.add_css_class(self.CSS_CLASS_ERROR)
         else:
-            entry.remove_css_class("error")
+            entry.remove_css_class(self.CSS_CLASS_ERROR)
 
     def _on_local_startup_command_changed(self, buffer: Gtk.TextBuffer) -> None:
         """Handle changes to the local startup commands."""
@@ -1314,7 +1312,7 @@ class SessionEditDialog(BaseDialog):
             folder = dialog.select_folder_finish(result)
             if folder and (path := folder.get_path()):
                 self.local_working_dir_entry.set_text(path)
-                self.local_working_dir_entry.remove_css_class("error")
+                self.local_working_dir_entry.remove_css_class(self.CSS_CLASS_ERROR)
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
                 self.logger.error(f"Folder dialog error: {e.message}")
@@ -1345,7 +1343,7 @@ class SessionEditDialog(BaseDialog):
                 try:
                     validate_ssh_key_file(path)
                     self.key_path_entry.set_text(path)
-                    self.key_path_entry.remove_css_class("error")
+                    self.key_path_entry.remove_css_class(BaseDialog.CSS_CLASS_ERROR)
                 except SSHKeyError as e:
                     self._show_error_dialog(_("Invalid SSH Key"), e.user_message)
         except GLib.Error as e:
@@ -1363,7 +1361,7 @@ class SessionEditDialog(BaseDialog):
             test_session = self._create_session_from_fields()
             if not test_session:
                 self._show_error_dialog(
-                    _("Validation Error"),
+                    BaseDialog.MSG_VALIDATION_ERROR,
                     _("Please fill in all required SSH fields first."),
                 )
                 return
@@ -1383,7 +1381,7 @@ class SessionEditDialog(BaseDialog):
             thread.start()
         except Exception as e:
             self.logger.error(f"Test connection setup failed: {e}")
-            if hasattr(self, "testing_dialog"):
+            if self.testing_dialog:
                 self.testing_dialog.close()
             self._show_error_dialog(
                 _("Test Connection Error"),
@@ -1415,7 +1413,7 @@ class SessionEditDialog(BaseDialog):
         GLib.idle_add(self._on_test_finished, success, message)
 
     def _on_test_finished(self, success: bool, message: str):
-        if hasattr(self, "testing_dialog"):
+        if self.testing_dialog:
             self.testing_dialog.close()
         if success:
             result_dialog = Adw.MessageDialog(
@@ -1540,33 +1538,30 @@ class SessionEditDialog(BaseDialog):
     def _apply_highlighting_settings(self, session_data: dict) -> None:
         """Apply highlighting customization settings to session data."""
         if (
-            hasattr(self, "highlighting_customize_switch")
-            and not self.highlighting_customize_switch.get_active()
+            not getattr(self, "highlighting_customize_switch", None)
+            or not self.highlighting_customize_switch.get_active()
         ):
             # Customization is off => equivalent to "Automatic" for all.
-            session_data["output_highlighting"] = None
-            session_data["command_specific_highlighting"] = None
-            session_data["cat_colorization"] = None
-            session_data["shell_input_highlighting"] = None
-        else:
-            if hasattr(self, "output_highlighting_row"):
-                session_data["output_highlighting"] = self._selected_to_tri_state(
-                    self.output_highlighting_row.get_selected()
-                )
-            if hasattr(self, "command_specific_highlighting_row"):
-                session_data["command_specific_highlighting"] = (
-                    self._selected_to_tri_state(
-                        self.command_specific_highlighting_row.get_selected()
-                    )
-                )
-            if hasattr(self, "cat_colorization_row"):
-                session_data["cat_colorization"] = self._selected_to_tri_state(
-                    self.cat_colorization_row.get_selected()
-                )
-            if hasattr(self, "shell_input_highlighting_row"):
-                session_data["shell_input_highlighting"] = self._selected_to_tri_state(
-                    self.shell_input_highlighting_row.get_selected()
-                )
+            for key in [
+                "output_highlighting",
+                "command_specific_highlighting",
+                "cat_colorization",
+                "shell_input_highlighting",
+            ]:
+                session_data[key] = None
+            return
+
+        # Mapping of data keys to their corresponding UI rows
+        rows_map = {
+            "output_highlighting": "output_highlighting_row",
+            "command_specific_highlighting": "command_specific_highlighting_row",
+            "cat_colorization": "cat_colorization_row",
+            "shell_input_highlighting": "shell_input_highlighting_row",
+        }
+
+        for data_key, row_attr in rows_map.items():
+            if row := getattr(self, row_attr, None):
+                session_data[data_key] = self._selected_to_tri_state(row.get_selected())
 
     def _apply_tab_color(self, session_data: dict) -> None:
         """Apply tab color setting to session data."""
@@ -1575,10 +1570,8 @@ class SessionEditDialog(BaseDialog):
 
     def _apply_folder_settings(self, session_data: dict) -> None:
         """Apply folder assignment to session data."""
-        if (
-            hasattr(self, "folder_combo")
-            and self.folder_combo
-            and (selected_item := self.folder_combo.get_selected_item())
+        if self.folder_combo and (
+            selected_item := self.folder_combo.get_selected_item()
         ):
             session_data["folder_path"] = self.folder_paths_map.get(
                 selected_item.get_string(), ""
@@ -1663,12 +1656,12 @@ class SessionEditDialog(BaseDialog):
         # Set local terminal fields
         session_data["local_working_directory"] = (
             self.local_working_dir_entry.get_text().strip()
-            if hasattr(self, "local_working_dir_entry")
+            if self.local_working_dir_entry
             else ""
         )
         # Get startup commands from BashTextView
         startup_commands = ""
-        if hasattr(self, "local_startup_command_view"):
+        if self.local_startup_command_view:
             startup_commands = self.local_startup_command_view.get_text().strip()
         session_data["local_startup_command"] = startup_commands
 
@@ -1693,15 +1686,16 @@ class SessionEditDialog(BaseDialog):
 
     def _validate_local_fields(self) -> bool:
         """Validate local terminal specific fields."""
-        valid = True
-        if hasattr(self, "local_working_dir_entry"):
-            if not validate_directory_path(
-                self.local_working_dir_entry,
-                self._validation_errors,
-                _("Working directory must exist and be a folder."),
-                allow_empty=True,
-            ):
-                valid = False
+        if not self.local_working_dir_entry:
+            return True
+
+        valid = validate_directory_path(
+            self.local_working_dir_entry,
+            self._validation_errors,
+            _("Working directory must exist and be a folder."),
+            allow_empty=True,
+        )
+
         if not valid and self._validation_errors:
             self._show_error_dialog(
                 _("Validation Error"),
@@ -1716,10 +1710,10 @@ class SessionEditDialog(BaseDialog):
         hostname = self.host_entry.get_text().strip()
         try:
             validate_ssh_hostname(hostname)
-            self.host_entry.remove_css_class("error")
+            self.host_entry.remove_css_class(self.CSS_CLASS_ERROR)
             return True
         except HostnameValidationError as e:
-            self.host_entry.add_css_class("error")
+            self.host_entry.add_css_class(self.CSS_CLASS_ERROR)
             self._validation_errors.append(e.user_message)
             return False
 
@@ -1732,10 +1726,10 @@ class SessionEditDialog(BaseDialog):
             return True
         try:
             validate_ssh_key_file(key_path)
-            self.key_path_entry.remove_css_class("error")
+            self.key_path_entry.remove_css_class(self.CSS_CLASS_ERROR)
             return True
         except SSHKeyError as e:
-            self.key_path_entry.add_css_class("error")
+            self.key_path_entry.add_css_class(self.CSS_CLASS_ERROR)
             self._validation_errors.append(e.user_message)
             return False
 
@@ -1747,12 +1741,12 @@ class SessionEditDialog(BaseDialog):
             self.post_login_switch.get_active()
             and not self.post_login_entry.get_text().strip()
         ):
-            self.post_login_entry.add_css_class("error")
+            self.post_login_entry.add_css_class(self.CSS_CLASS_ERROR)
             self._validation_errors.append(
                 _("Post-login command cannot be empty when enabled.")
             )
             return False
-        self.post_login_entry.remove_css_class("error")
+        self.post_login_entry.remove_css_class(self.CSS_CLASS_ERROR)
         return True
 
     def _validate_sftp_directory_field(self) -> bool:
@@ -1787,6 +1781,30 @@ class SessionEditDialog(BaseDialog):
                 ),
             )
         return valid
+
+    def _validate_port_forward_data(self, data: dict) -> list[str]:
+        """Validate port forwarding data dictionary.
+
+        Returns:
+            List of error messages, empty if valid.
+        """
+        errors = []
+        local_port = data.get("local_port", 0)
+        remote_port = data.get("remote_port", 0)
+        local_host = data.get("local_host", "")
+
+        if not (1024 < local_port <= 65535):
+            errors.append(
+                _(
+                    "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+                )
+            )
+        if not (1 <= remote_port <= 65535):
+            errors.append(_("Remote port must be between 1 and 65535."))
+        if not local_host:
+            errors.append(_("Local host cannot be empty."))
+
+        return errors
 
     def _get_auth_value(self) -> str:
         if self.type_combo.get_selected() == 0:

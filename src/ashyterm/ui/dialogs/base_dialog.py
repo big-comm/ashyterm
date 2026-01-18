@@ -16,16 +16,31 @@ from ...utils.translation_utils import _
 class BaseDialog(Adw.Window):
     """Base dialog class with enhanced functionality and error handling.
 
-    Provides optional auto-creation of ToolbarView, HeaderBar, and Cancel button
-    to reduce boilerplate in subclasses.
-
-    Args:
-        parent_window: The parent window for the dialog
-        dialog_title: The title to display in the headerbar
-        auto_setup_toolbar: If True, automatically creates ToolbarView, HeaderBar,
-                           and Cancel button. Defaults to False for backward compatibility.
-        **kwargs: Additional properties for Adw.Window
+    Provides constants for common CSS classes and signals to reduce duplication.
     """
+
+    # Common CSS classes
+    CSS_CLASS_ERROR = "error"
+    CSS_CLASS_SUCCESS = "success"
+    CSS_CLASS_FLAT = "flat"
+    CSS_CLASS_CIRCULAR = "circular"
+    CSS_CLASS_SUGGESTED = "suggested-action"
+    CSS_CLASS_BOXED_LIST = "boxed-list"
+    CSS_CLASS_DIM_LABEL = "dim-label"
+
+    # Common signal names
+    SIGNAL_CHANGED = "changed"
+    SIGNAL_CLICKED = "clicked"
+    SIGNAL_NOTIFY_VALUE = "notify::value"
+    SIGNAL_NOTIFY_SELECTED = "notify::selected"
+    SIGNAL_NOTIFY_ACTIVE = "notify::active"
+    SIGNAL_NOTIFY_STATE_SET = "state-set"
+
+    # Common messages
+    MSG_VALIDATION_ERROR = _("Validation Error")
+    MSG_ENTER_COMMAND_NAME = _("Enter a command name")
+    MSG_DELETE_CONFIRMATION = _("Are you sure you want to delete '{}'?")
+    MSG_DELETE_RULE_HEADING = _("Delete Rule?")
 
     def __init__(
         self,
@@ -38,7 +53,7 @@ class BaseDialog(Adw.Window):
             "title": dialog_title,
             "modal": True,
             "transient_for": parent_window,
-            "hide_on_close": True,
+            "hide_on_close": False,
         }
         default_props.update(kwargs)
         super().__init__(**default_props)
@@ -329,7 +344,9 @@ class BaseDialog(Adw.Window):
             row.set_subtitle(subtitle)
         row.set_active(active)
         if on_changed:
-            row.connect("notify::active", lambda r, _: on_changed(r.get_active()))
+            row.connect(
+                self.SIGNAL_NOTIFY_ACTIVE, lambda r, _: on_changed(r.get_active())
+            )
         return row
 
     def _create_spin_row(
@@ -362,7 +379,9 @@ class BaseDialog(Adw.Window):
             row.set_subtitle(subtitle)
         row.set_value(value)
         if on_changed:
-            row.connect("notify::value", lambda r, _: on_changed(r.get_value()))
+            row.connect(
+                self.SIGNAL_NOTIFY_VALUE, lambda r, _: on_changed(r.get_value())
+            )
         return row
 
     def _create_combo_row(
@@ -391,7 +410,9 @@ class BaseDialog(Adw.Window):
         row.set_model(Gtk.StringList.new(items))
         row.set_selected(selected_index)
         if on_changed:
-            row.connect("notify::selected", lambda r, _: on_changed(r.get_selected()))
+            row.connect(
+                self.SIGNAL_NOTIFY_SELECTED, lambda r, _: on_changed(r.get_selected())
+            )
         return row
 
     def _create_preferences_group(
@@ -510,7 +531,7 @@ def create_mapped_combo_row(
         if 0 <= idx < len(value_map):
             on_change(value_map[idx])
 
-    row.connect("notify::selected", _on_notify_selected)
+    row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, _on_notify_selected)
 
     return row
 
@@ -584,7 +605,9 @@ def create_action_row_with_buttons(
         switch = Gtk.Switch()
         switch.set_valign(Gtk.Align.CENTER)
         switch.set_active(toggle_active)
-        switch.connect("state-set", lambda s, state: toggle_callback(state))
+        switch.connect(
+            BaseDialog.SIGNAL_NOTIFY_STATE_SET, lambda s, state: toggle_callback(state)
+        )
         row.add_suffix(switch)
 
     return row

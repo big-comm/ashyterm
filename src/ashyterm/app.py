@@ -300,6 +300,41 @@ class CommTerminalApp(Adw.Application):
             return True, i + 1
         return False, i
 
+    def _handle_execution_arg(
+        self, arg: str, arguments: list, i: int, result: dict
+    ) -> tuple:
+        """Handle execution related arguments. Returns (consumed, new_index, stop_parsing)."""
+        # 1. Stop parsing markers
+        if arg in ["-e", "-x", "--execute"]:
+            return True, i + 1, True
+
+        # 2. Key-value style
+        if arg.startswith("--execute="):
+            result["execute_command"] = arg.split("=", 1)[1]
+            return True, i + 1, False
+
+        # 3. Flags
+        if arg == "--close-after-execute":
+            result["close_after_execute"] = True
+            return True, i + 1, False
+
+        if arg == "--new-window":
+            result["force_new_window"] = True
+            return True, i + 1, False
+
+        return False, i, False
+
+    def _handle_generic_arg(self, arg: str, result: dict, i: int) -> int:
+        """Handle positional arguments or unknown flags."""
+        # Check working directory and SSH handlers first (legacy integration)
+        # These are now merged or called sequentially in the main loop
+
+        # Positional working directory (if not already set)
+        if not arg.startswith("-") and result["working_directory"] is None:
+            result["working_directory"] = arg
+
+        return i + 1
+
     def _parse_command_line_args(self, arguments: list) -> dict:
         """Parse command line arguments into a structured dictionary."""
         result = {
@@ -315,29 +350,25 @@ class CommTerminalApp(Adw.Application):
         while i < len(arguments):
             arg = arguments[i]
 
-            # Try working directory handlers
+            # Try specialized handlers
             consumed, i = self._handle_working_directory_arg(arg, arguments, i, result)
             if consumed:
                 continue
 
-            # Try SSH handlers
             consumed, i = self._handle_ssh_arg(arg, arguments, i, result)
             if consumed:
                 continue
 
-            # Handle execute command (stops parsing)
-            if arg in ["-e", "-x", "--execute"]:
-                execute_index = i + 1
+            # Try execution handlers
+            consumed, i, stop = self._handle_execution_arg(arg, arguments, i, result)
+            if stop:
+                execute_index = i
                 break
-            if arg.startswith("--execute="):
-                result["execute_command"] = arg.split("=", 1)[1]
-            elif arg == "--close-after-execute":
-                result["close_after_execute"] = True
-            elif arg == "--new-window":
-                result["force_new_window"] = True
-            elif not arg.startswith("-") and result["working_directory"] is None:
-                result["working_directory"] = arg
-            i += 1
+            if consumed:
+                continue
+
+            # Handle flags and generic arguments
+            i = self._handle_generic_arg(arg, result, i)
 
         # Capture remaining arguments as execute command
         if execute_index is not None and execute_index < len(arguments):
@@ -405,6 +436,9 @@ class CommTerminalApp(Adw.Application):
 
         The hack is deferred to run at low priority, allowing the main window
         to render and become interactive first. This improves perceived startup time.
+
+        NOTE: This hack is required for KDE Plasma/Wayland to properly focus the window
+        when opening a new tab from an external program.
         """
         window.present()
 
