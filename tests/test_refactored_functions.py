@@ -444,8 +444,8 @@ class TestSettingsManagerTheme:
 
         css = manager._get_sidebar_css(params)
 
-        # With low luminance, background should NOT be applied
-        assert ".sidebar-frame" in css
+        # With low luminance, background should NOT be applied (returns empty string)
+        assert css == ""
 
     def test_get_tooltip_css(self):
         """Test tooltip CSS generation."""
@@ -481,13 +481,14 @@ class TestSettingsManagerTheme:
         params = {
             "bg_color": "#1a1a1a",
             "fg_color": "#ffffff",
+            "header_bg_color": "#1a1a1a",
             "luminance": 0.1,  # Above 0.05, should apply bg
         }
 
         css = manager._get_dialog_css(params)
 
-        assert ".terminal-dialog" in css
-        assert ".terminal-find-bar" in css
+        assert ".ashyterm-dialog" in css
+        assert "messagedialog" in css
 
     def test_get_filemanager_css(self):
         """Test file manager CSS generation."""
@@ -496,15 +497,16 @@ class TestSettingsManagerTheme:
         params = {
             "bg_color": "#1a1a1a",
             "fg_color": "#ffffff",
+            "header_bg_color": "#1a1a1a",
             "hover_alpha": "10%",
             "selected_alpha": "15%",
         }
 
         css = manager._get_filemanager_css(params)
 
-        assert ".file-manager-view" in css
-        assert "listview > row:hover" in css
-        assert "listview > row:selected" in css
+        assert ".file-manager-main-box" in css
+        assert "columnview row:hover" in css
+        assert "columnview row:selected" in css
 
 
 if __name__ == "__main__":

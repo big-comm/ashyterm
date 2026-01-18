@@ -2,6 +2,7 @@
 import json
 import threading
 import time
+import weakref
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
@@ -150,6 +151,8 @@ class SettingsManager:
         # Key: (bg_color, fg_color, header_bg_color, transparency, luminance)
         # Value: (css_string, provider)
         self._theme_css_cache: Dict[tuple, tuple] = {}
+        # Store window-specific transparency providers to manage lifecycle
+        self._window_providers = weakref.WeakKeyDictionary()
         self._initialize()
         self.logger.info("Settings manager initialized")
 
@@ -660,38 +663,55 @@ class SettingsManager:
         )
         terminal.set_cjk_ambiguous_width(self.get("cjk_ambiguous_width", 1))
 
-    def apply_headerbar_transparency(self, headerbar) -> None:
+    def apply_headerbar_transparency(self, headerbar, window=None) -> None:
         """Apply headerbar transparency to a headerbar widget."""
         try:
             user_transparency = self.get("headerbar_transparency", 0)
-            self.logger.info(
-                f"Applying headerbar transparency with user_transparency: {user_transparency}"
-            )
+            
+            # Determine display
+            display = None
+            if window and hasattr(window, "get_display"):
+                display = window.get_display()
+            if display is None:
+                display = Gdk.Display.get_default()
+            
+            if display is None:
+                return
+
+            # Cleanup legacy provider on headerbar if it exists
+            if hasattr(headerbar, "_transparency_provider"):
+                try:
+                    Gtk.StyleContext.remove_provider_for_display(
+                        display, headerbar._transparency_provider
+                    )
+                except Exception:
+                    pass
+                del headerbar._transparency_provider
+
+            # Cleanup provider associated with this window
+            if window and window in self._window_providers:
+                old_provider = self._window_providers[window]
+                try:
+                    Gtk.StyleContext.remove_provider_for_display(display, old_provider)
+                except Exception:
+                    pass
+                del self._window_providers[window]
+
             if user_transparency > 0:
                 # Determine base color based on theme
                 if self.get("gtk_theme") == "terminal":
-                    # Use terminal scheme headerbar background for consistent transparency
                     scheme = self.get_color_scheme_data()
                     base_color_hex = scheme.get(
                         "headerbar_background", scheme.get("background", "#000000")
                     )
-                    self.logger.info(
-                        f"Terminal theme: using headerbar background {base_color_hex} as base color"
-                    )
                 else:
-                    # Use default theme colors
                     style_manager = Adw.StyleManager.get_default()
                     is_dark = style_manager.get_dark()
                     base_color_hex = "#303030" if is_dark else "#f0f0f0"
-                    self.logger.info(
-                        f"Non-terminal theme: using default base color {base_color_hex}"
-                    )
 
-                # Convert user_transparency (0-100) to percentage for color-mix
-                # Higher transparency = more transparent, so we use (100 - transparency)% solid color
+                # Calculate color mix
                 opacity_percent = 100 - user_transparency
                 color_mix_css = f"color-mix(in srgb, {base_color_hex} {opacity_percent}%, transparent)"
-                self.logger.info(f"Calculated color_mix_css: {color_mix_css}")
 
                 css = f"""
                 .header-bar, .header-bar:backdrop,
@@ -709,34 +729,22 @@ class SettingsManager:
                     background-color: transparent;
                 }}
                 """
-                # Remove existing provider if any
-                if hasattr(headerbar, "_transparency_provider"):
-                    Gtk.StyleContext.remove_provider_for_display(
-                        Gdk.Display.get_default(), headerbar._transparency_provider
-                    )
-                    self.logger.info("Removed existing transparency provider")
+                
                 provider = Gtk.CssProvider()
                 provider.load_from_data(css.encode("utf-8"))
+                
                 Gtk.StyleContext.add_provider_for_display(
-                    Gdk.Display.get_default(),
+                    display,
                     provider,
                     Gtk.STYLE_PROVIDER_PRIORITY_USER,
                 )
-                headerbar._transparency_provider = provider
-                self.logger.info(
-                    f"Headerbar transparency applied with color {color_mix_css}"
-                )
-            else:
-                # Reset to full opacity when transparency is 0
-                if hasattr(headerbar, "_transparency_provider"):
-                    Gtk.StyleContext.remove_provider_for_display(
-                        Gdk.Display.get_default(), headerbar._transparency_provider
-                    )
-                    del headerbar._transparency_provider
-                    self.logger.info(
-                        "Removed transparency provider (transparency set to 0)"
-                    )
-                self.logger.info("Headerbar transparency is 0, no provider applied")
+                
+                if window:
+                    self._window_providers[window] = provider
+                else:
+                    # Fallback for calls without window (should not happen with updated code)
+                    headerbar._transparency_provider = provider
+                    
         except Exception as e:
             self.logger.warning(f"Failed to apply headerbar transparency: {e}")
 
@@ -929,43 +937,80 @@ class SettingsManager:
         bg = params["bg_color"]
         fg = params["fg_color"]
         apply_bg = params["luminance"] >= 0.05
-        css = f"""
-        .sidebar-frame {{
-            {"background-color: " + bg + ";" if apply_bg else ""}
-            color: {fg};
-        }}
-        """
-        css += self._get_sidebar_listview_css(params, apply_bg)
-        return css
-
-    def _get_sidebar_listview_css(self, params: dict, apply_bg: bool) -> str:
-        """Generate CSS for sidebar ListView/ColumnView."""
-        bg = params["bg_color"]
-        fg = params["fg_color"]
         hover_alpha = params["hover_alpha"]
         selected_alpha = params["selected_alpha"]
+        
+        if not apply_bg:
+            return ""
+
         return f"""
-        .sidebar-frame listview {{
-            {"background-color: " + bg + ";" if apply_bg else ""}
+        .sidebar-container {{
+            background: {bg};
+            background-color: {bg};
             color: {fg};
         }}
-        .sidebar-frame listview > row {{
+        .sidebar-toolbar {{
+            background: {bg};
+            background-color: {bg};
             color: {fg};
-            {"background-color: " + bg + ";" if apply_bg else ""}
+            padding-top: 2px;
         }}
-        .sidebar-frame listview > row:hover {{
-            background-color: color-mix(in srgb, {fg}, transparent {hover_alpha});
-        }}
-        .sidebar-frame listview > row:selected {{
-            background-color: color-mix(in srgb, {fg}, transparent {selected_alpha});
-        }}
-        .sidebar-frame columnview {{
-            {"background-color: " + bg + ";" if apply_bg else ""}
+        .sidebar-session-tree,
+        .sidebar-session-tree viewport {{
+            background-color: {bg};
             color: {fg};
         }}
-        .sidebar-frame columnview header {{
-            {"background-color: " + bg + ";" if apply_bg else ""}
+        .sidebar-search {{
+            background-color: {bg};
             color: {fg};
+            padding: 8px 12px 12px 12px;
+        }}
+        .sidebar-session-tree list,
+        .sidebar-session-tree listview {{
+            background: {bg};
+            background-color: {bg};
+        }}
+        .sidebar-session-tree list > row,
+        .sidebar-session-tree listview > row {{
+            background: {bg};
+            background-color: {bg};
+            color: {fg};
+        }}
+        .sidebar-session-tree list > row:hover,
+        .sidebar-session-tree listview > row:hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
+        }}
+        .sidebar-session-tree list > row:selected,
+        .sidebar-session-tree listview > row:selected {{
+            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
+        }}
+        .sidebar-session-tree list > row:selected:hover,
+        .sidebar-session-tree listview > row:selected:hover {{
+            background-color: color-mix(in srgb, {fg} 18%, {bg});
+        }}
+        .inline-context-menu {{
+            background: {bg};
+            background-color: {bg};
+            color: {fg};
+        }}
+        .inline-context-menu label {{
+            color: {fg};
+        }}
+        .inline-context-menu button {{
+            color: {fg};
+            background: transparent;
+        }}
+        .inline-context-menu button:hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
+        }}
+        .inline-context-menu button:active {{
+            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
+        }}
+        .inline-context-menu button.destructive-action {{
+            color: @destructive_color;
+        }}
+        .inline-context-menu button.destructive-action:hover {{
+            background-color: alpha(@destructive_color, 0.1);
         }}
         """
 
@@ -973,40 +1018,156 @@ class SettingsManager:
         """Generate CSS for popovers."""
         bg = params["bg_color"]
         fg = params["fg_color"]
+        header_bg = params["header_bg_color"]
         apply_bg = params["luminance"] >= 0.05
+        hover_alpha = params["hover_alpha"]
+        selected_alpha = params["selected_alpha"]
+        
+        if not apply_bg:
+            return ""
+
         return f"""
-        popover.menu > box,
-        popover.menu > contents > box,
-        popover > box,
-        popover > contents > box,
-        popover modelbutton,
-        popover.menu modelbutton {{
-            {"background-color: " + bg + ";" if apply_bg else ""}
+        /* Global popover styling - fixes right-click context menus everywhere */
+        popover > contents {{
+            background-color: {header_bg};
             color: {fg};
         }}
-        popover button:not(.flat),
-        popover.menu button:not(.flat) {{
+        popover > arrow {{
+            background: {header_bg};
+        }}
+        popover > contents > box {{
+            background-color: {header_bg};
+            color: {fg};
+        }}
+        popover label {{
+            color: {fg};
+        }}
+        popover button:not(.suggested-action):not(.destructive-action) {{
+            color: {fg};
+            background: transparent;
+        }}
+        popover button:not(.suggested-action):not(.destructive-action):hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {header_bg});
+        }}
+        popover entry,
+        popover entry text {{
+            color: {fg};
+            background-color: color-mix(in srgb, {fg} 8%, {header_bg});
+        }}
+        
+        /* Menu and menuitem styling - GtkMenu used in context menus */
+        popover menu,
+        popover menubox {{
+            background-color: {header_bg};
             color: {fg};
         }}
         popover menuitem,
-        popover.menu menuitem {{
+        popover modelbutton {{
+            color: {fg};
+            background: transparent;
+        }}
+        popover menuitem label,
+        popover modelbutton label,
+        popover menuitem > box > label {{
             color: {fg};
         }}
-        popover accelerator,
-        popover.menu accelerator {{
-            color: {fg};
-            opacity: 0.7;
+        popover menuitem:hover,
+        popover modelbutton:hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {header_bg});
         }}
-        popover arrow.right image,
-        popover arrow.left image {{
-            color: {fg};
-            opacity: 0.8;
-            -gtk-icon-style: symbolic;
+        popover menuitem:active,
+        popover modelbutton:active {{
+            background-color: color-mix(in srgb, {fg} {selected_alpha}, {header_bg});
         }}
-        popover .dim-label,
-        popover.menu .dim-label {{
+        
+        /* Dropdown popover styling - fixes dropdowns in dialogs */
+        dropdown > popover {{
+            background-color: {header_bg};
+        }}
+        dropdown > popover > contents {{
+            background-color: {header_bg};
             color: {fg};
-            opacity: 0.7;
+        }}
+        dropdown > popover listview {{
+            background-color: {header_bg};
+            color: {fg};
+        }}
+        dropdown > popover row {{
+            color: {fg};
+        }}
+        dropdown > popover row label,
+        dropdown > popover cell label {{
+            color: {fg};
+        }}
+        dropdown > popover row:selected {{
+            background-color: color-mix(in srgb, {fg} {selected_alpha}, {header_bg});
+        }}
+        dropdown > popover row:hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {header_bg});
+        }}
+        
+        /* Sidebar Popover specific styling */
+        popover.sidebar-popover.ashyterm-popover > contents,
+        popover.sidebar-popover > contents {{
+            background-color: {bg};
+            padding: 0;
+        }}
+        popover.sidebar-popover.ashyterm-popover > arrow,
+        popover.sidebar-popover > arrow {{
+            background-color: {bg};
+        }}
+        popover.sidebar-popover .sidebar-container {{
+            background: {bg};
+            background-color: {bg};
+            color: {fg};
+        }}
+        popover.sidebar-popover .sidebar-toolbar {{
+            background: {bg};
+            background-color: {bg};
+            color: {fg};
+            padding-top: 2px;
+        }}
+        popover.sidebar-popover .sidebar-session-tree,
+        popover.sidebar-popover .sidebar-session-tree viewport {{
+            background-color: {bg};
+            color: {fg};
+        }}
+        popover.sidebar-popover .sidebar-search {{
+            background-color: {bg};
+            color: {fg};
+            padding: 8px 12px 12px 12px;
+        }}
+        popover.sidebar-popover .sidebar-session-tree list,
+        popover.sidebar-popover .sidebar-session-tree listview {{
+            background: {bg};
+            background-color: {bg};
+        }}
+        popover.sidebar-popover .sidebar-session-tree list > row,
+        popover.sidebar-popover .sidebar-session-tree listview > row {{
+            background: {bg};
+            background-color: {bg};
+        }}
+        popover.sidebar-popover .sidebar-session-tree list > row:hover,
+        popover.sidebar-popover .sidebar-session-tree listview > row:hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
+        }}
+        popover.sidebar-popover .sidebar-session-tree list > row:selected,
+        popover.sidebar-popover .sidebar-session-tree listview > row:selected {{
+            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
+        }}
+        popover.sidebar-popover label,
+        popover.sidebar-popover button {{
+            color: {fg};
+        }}
+        popover.sidebar-popover button {{
+            background: transparent;
+        }}
+        popover.sidebar-popover button:hover {{
+            background-color: alpha({fg}, 0.1);
+        }}
+        popover.sidebar-popover .sidebar-search entry {{
+            background-color: alpha({fg}, 0.1);
+            color: {fg};
         }}
         """
 
@@ -1031,27 +1192,58 @@ class SettingsManager:
         """Generate CSS for file manager component."""
         bg = params["bg_color"]
         fg = params["fg_color"]
+        header_bg = params["header_bg_color"]
         hover_alpha = params["hover_alpha"]
         selected_alpha = params["selected_alpha"]
         return f"""
-        .file-manager-view {{
+        .file-manager-main-box {{
             background-color: {bg};
             color: {fg};
         }}
-        .file-manager-view listview > row {{
+        .file-manager-main-box > actionbar,
+        .file-manager-main-box > actionbar > revealer > box {{
+            background-color: {header_bg};
             color: {fg};
         }}
-        .file-manager-view listview > row:hover {{
-            background-color: color-mix(in srgb, {fg}, transparent {hover_alpha});
-        }}
-        .file-manager-view listview > row:selected {{
-            background-color: color-mix(in srgb, {fg}, transparent {selected_alpha});
-        }}
-        .file-manager-view label {{
+        .file-manager-main-box scrolledwindow,
+        .file-manager-main-box columnview,
+        .file-manager-main-box columnview row {{
+            background-color: {bg};
             color: {fg};
         }}
-        .file-manager-view image {{
+        .file-manager-main-box columnview row:hover {{
+            background-color: color-mix(in srgb, {fg} {hover_alpha}, {bg});
+        }}
+        .file-manager-main-box columnview row:selected {{
+            background-color: color-mix(in srgb, {fg} {selected_alpha}, {bg});
+        }}
+        .file-manager-main-box columnview row:selected:hover {{
+            background-color: color-mix(in srgb, {fg} 18%, {bg});
+        }}
+        .file-manager-main-box label,
+        .file-manager-main-box button:not(.suggested-action):not(.destructive-action),
+        .file-manager-main-box .breadcrumb-trail button {{
             color: {fg};
+        }}
+        .file-manager-main-box entry {{
+            color: {fg};
+            background-color: {header_bg};
+        }}
+        .file-manager-filter {{
+            background-color: {bg};
+            color: {fg};
+        }}
+        /* File manager internal separators and borders */
+        .file-manager-main-box separator {{
+            background-color: color-mix(in srgb, {fg} 20%, {bg});
+        }}
+        .file-manager-main-box actionbar {{
+            border-top: 1px solid color-mix(in srgb, {fg} 20%, {bg});
+            border-color: color-mix(in srgb, {fg} 20%, {bg});
+        }}
+        /* ActionBar internal structure */
+        .file-manager-main-box actionbar > revealer > box {{
+            border-color: color-mix(in srgb, {fg} 20%, {bg});
         }}
         """
 
@@ -1059,30 +1251,161 @@ class SettingsManager:
         """Generate CSS for dialogs."""
         bg = params["bg_color"]
         fg = params["fg_color"]
+        header_bg = params["header_bg_color"]
+        # Accent color not available in params dict yet, using a safe default or re-deriving if needed
+        # But _get_theme_params doesn't provide palette.
+        # However, we can approximate accent or just use fg for now, or update _get_theme_params.
+        # For safety and speed, I will use a generic accent or just rely on color-mix.
+        # Actually, let's just stick to the text/bg colors which are the main issue.
+        
         apply_bg = params["luminance"] >= 0.05
+        
+        if not apply_bg:
+             return ""
+
         return f"""
-        .terminal-dialog {{
-            {"background-color: " + bg + ";" if apply_bg else ""}
-            color: {fg};
-        }}
-        .terminal-dialog headerbar {{
-            color: {fg};
-        }}
-        .terminal-dialog entry {{
+        .ashyterm-dialog,
+        messagedialog {{
             background-color: {bg};
             color: {fg};
         }}
-        .terminal-dialog button {{
-            color: {fg};
+        .ashyterm-dialog > toolbarview {{
+            background-color: {bg};
         }}
-        .terminal-dialog label {{
-            color: {fg};
+        .ashyterm-dialog > toolbarview > contents {{
+            background-color: {bg};
         }}
-        .terminal-find-bar entry {{
+        .ashyterm-dialog scrolledwindow {{
+            background-color: {bg};
+        }}
+        .ashyterm-dialog scrolledwindow > viewport {{
+            background-color: {bg};
+        }}
+        .ashyterm-dialog .navigation-view,
+        .ashyterm-dialog .preferences-page {{
             background-color: {bg};
             color: {fg};
         }}
-        .terminal-find-bar button {{
+        .ashyterm-dialog .preferences-group {{
+            background-color: {header_bg};
+            color: {fg};
+        }}
+        .ashyterm-dialog > toolbarview label,
+        .ashyterm-dialog .preferences-page label,
+        .ashyterm-dialog row label,
+        .ashyterm-dialog .title,
+        .ashyterm-dialog .subtitle,
+        .ashyterm-dialog button:not(.suggested-action):not(.destructive-action),
+        .ashyterm-dialog entry,
+        .ashyterm-dialog row,
+        .ashyterm-dialog switch,
+        .ashyterm-dialog spinbutton,
+        .ashyterm-dialog dropdown,
+        .ashyterm-dialog checkbutton,
+        messagedialog > box label,
+        messagedialog .title,
+        messagedialog .subtitle,
+        messagedialog button:not(.suggested-action):not(.destructive-action),
+        messagedialog entry,
+        messagedialog row {{
+            color: {fg};
+        }}
+        messagedialog > contents {{
+            background-color: {bg};
+            color: {fg};
+        }}
+        /* Adw.AlertDialog styling */
+        dialog.alert,
+        dialog.alert .dialog-contents,
+        dialog.alert .heading,
+        dialog.alert .body,
+        dialog.alert label,
+        dialog.alert label.heading,
+        dialog.alert label.body {{
+            color: {fg};
+        }}
+        dialog.alert,
+        dialog.alert .dialog-contents,
+        dialog.alert box.dialog-contents {{
+            background-color: {bg};
+        }}
+        dialog.alert .response-area {{
+            background-color: {header_bg};
+        }}
+        dialog.alert button:not(.suggested-action):not(.destructive-action) {{
+            color: {fg};
+        }}
+        .ashyterm-dialog actionbar,
+        .ashyterm-dialog actionbar > revealer,
+        .ashyterm-dialog actionbar > revealer > box {{
+            background: {header_bg};
+            background-color: {header_bg};
+            color: {fg};
+        }}
+        /* Command Manager specific styling */
+        .command-manager-dialog entry,
+        .command-manager-dialog entry text {{
+            background-color: color-mix(in srgb, {fg} 8%, {bg});
+            color: {fg};
+            caret-color: {fg};
+        }}
+        .command-manager-dialog flowboxchild,
+        .command-manager-dialog .command-button {{
+            background-color: {header_bg};
+            color: {fg};
+        }}
+        .command-manager-dialog .command-button label {{
+            color: {fg};
+        }}
+        .command-manager-dialog .search-entry {{
+            background-color: color-mix(in srgb, {fg} 8%, {bg});
+            color: {fg};
+        }}
+        
+        /* Highlight dialog button styling - destructive action */
+        .ashyterm-dialog button.destructive-action {{
+            background-color: #c01c28;
+            background-image: none;
+            color: #ffffff;
+            border: none;
+        }}
+        .ashyterm-dialog button.destructive-action:hover {{
+            background-color: #a51d2d;
+        }}
+        .ashyterm-dialog button.destructive-action label {{
+            color: #ffffff;
+        }}
+        
+        /* Flat button styling */
+        .ashyterm-dialog button.flat {{
+            color: {fg};
+        }}
+        /* Command Form Dialog - form fields and preview contrast */
+        .command-form-dialog entry,
+        .command-form-dialog entry text {{
+            background-color: color-mix(in srgb, {fg} 8%, {bg});
+            color: {fg};
+            caret-color: {fg};
+        }}
+        .command-form-dialog spinbutton,
+        .command-form-dialog spinbutton text,
+        .command-form-dialog spinbutton entry {{
+            background-color: color-mix(in srgb, {fg} 8%, {bg});
+            color: {fg};
+        }}
+        .command-form-dialog .command-preview {{
+            background-color: color-mix(in srgb, {fg} 5%, {bg}) !important;
+            color: {fg} !important;
+        }}
+        .command-form-dialog .command-preview label {{
+            color: {fg};
+        }}
+        .command-form-dialog textview,
+        .command-form-dialog textview text {{
+            background-color: color-mix(in srgb, {fg} 5%, {bg});
+            color: {fg};
+        }}
+        .command-form-dialog row label {{
             color: {fg};
         }}
         """
@@ -1478,7 +1801,7 @@ class SettingsManager:
 
             # Re-apply headerbar transparency to restore default appearance
             if hasattr(window, "header_bar"):
-                self.apply_headerbar_transparency(window.header_bar)
+                self.apply_headerbar_transparency(window.header_bar, window)
         except Exception as e:
             self.logger.warning(f"Failed to remove GTK terminal theme: {e}")
 
@@ -1525,7 +1848,6 @@ class SettingsManager:
             # List of provider attribute names to clean up
             provider_attrs = [
                 "_terminal_theme_provider",
-                "_transparency_provider",
                 "_transparency_css_provider",
             ]
 
@@ -1535,26 +1857,39 @@ class SettingsManager:
                     provider = getattr(window, attr)
                     try:
                         Gtk.StyleContext.remove_provider_for_display(display, provider)
-                        self.logger.debug(f"Removed CSS provider: {attr}")
-                    except Exception as e:
-                        self.logger.debug(f"Could not remove provider {attr}: {e}")
+                    except Exception:
+                        pass
                     delattr(window, attr)
 
-            # Clean up headerbar providers
+            # Clean up transparency provider from WeakKeyDictionary
+            if window in self._window_providers:
+                provider = self._window_providers[window]
+                try:
+                    Gtk.StyleContext.remove_provider_for_display(display, provider)
+                except Exception:
+                    pass
+                del self._window_providers[window]
+
+            # Clean up headerbar providers (legacy cleanup)
             if hasattr(window, "header_bar"):
                 headerbar = window.header_bar
-                for attr in provider_attrs:
+                if hasattr(headerbar, "_transparency_provider"):
+                    try:
+                        Gtk.StyleContext.remove_provider_for_display(
+                            display, headerbar._transparency_provider
+                        )
+                    except Exception:
+                        pass
+                    del headerbar._transparency_provider
+                
+                # Also check legacy attribute names
+                for attr in ["_terminal_theme_header_provider", "_terminal_theme_tabs_provider"]:
                     if hasattr(headerbar, attr):
                         provider = getattr(headerbar, attr)
                         try:
-                            Gtk.StyleContext.remove_provider_for_display(
-                                display, provider
-                            )
-                            self.logger.debug(f"Removed headerbar CSS provider: {attr}")
-                        except Exception as e:
-                            self.logger.debug(
-                                f"Could not remove headerbar provider {attr}: {e}"
-                            )
+                            Gtk.StyleContext.remove_provider_for_display(display, provider)
+                        except Exception:
+                            pass
                         delattr(headerbar, attr)
 
             # Clear the theme CSS cache

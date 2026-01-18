@@ -2880,6 +2880,15 @@ class TerminalManager:
             popover.set_has_arrow(False)
             popover.set_position(Gtk.PositionType.BOTTOM)
             
+            # Keep reference to prevent GC until closed
+            terminal._active_popover = popover
+            
+            def _cleanup_popover(*args):
+                terminal._active_popover = None
+                
+            popover.connect("closed", _cleanup_popover)
+            popover.connect("destroy", _cleanup_popover)
+            
             rect = Gdk.Rectangle()
             rect.x = int(x)
             rect.y = int(y)
