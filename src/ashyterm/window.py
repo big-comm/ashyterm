@@ -1,5 +1,6 @@
 # ashyterm/window.py
 
+import threading
 import weakref
 from typing import Dict, List, Optional
 
@@ -458,20 +459,43 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""
+
+        # ASYNC LOADING: Move heavy JSON parsing to background thread
+        def load_data_background():
+            try:
+                # Lazy import - these are only needed during data loading
+                from .sessions.storage import load_sessions_and_folders
+
+                # This happens in the thread - safe if it just reads files
+                self.state_manager.load_layouts()
+                sessions_data, folders_data = load_sessions_and_folders()
+
+                # Schedule store update on main thread
+                GLib.idle_add(
+                    self._update_stores_with_data, sessions_data, folders_data
+                )
+            except Exception as e:
+                # Schedule error handling on main thread
+                GLib.idle_add(self._handle_load_error, e)
+
+        # Start background loading
+        threading.Thread(target=load_data_background, daemon=True).start()
+
+    def _update_stores_with_data(self, sessions_data, folders_data):
+        """Callback to update stores on main thread after background load."""
         try:
-            # Lazy import - these are only needed during data loading
             from .sessions.storage import (
                 load_folders_to_store,
-                load_sessions_and_folders,
                 load_sessions_to_store,
             )
 
-            self.state_manager.load_layouts()
-            sessions_data, folders_data = load_sessions_and_folders()
             load_sessions_to_store(self.session_store, sessions_data)
             load_folders_to_store(self.folder_store, folders_data)
             self.refresh_tree()
 
+            # SSH import can be fast, or we can background it too.
+            # For now, keeping it here as it might depend on implementation details.
+            # If it parses files, better to background it, but let's see.
             import_result = self.session_operations.import_sessions_from_ssh_config()
             if import_result.success:
                 self.logger.info(import_result.message)
@@ -485,13 +509,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 f"and {len(self.layouts)} layouts"
             )
         except Exception as e:
-            self.logger.error(f"Failed to load initial data: {e}")
-            self._show_error_dialog(
-                _("Data Loading Error"),
-                _(
-                    "Failed to load saved sessions and folders. Starting with empty configuration."
-                ),
-            )
+            self._handle_load_error(e)
+
+        return GLib.SOURCE_REMOVE
+
+    def _handle_load_error(self, e):
+        """Handle errors during data loading on main thread."""
+        self.logger.error(f"Failed to load initial data: {e}")
+        self._show_error_dialog(
+            _("Data Loading Error"),
+            _(
+                "Failed to load saved sessions and folders. Starting with empty configuration."
+            ),
+        )
+        return GLib.SOURCE_REMOVE
 
     # --- Event Handlers & Callbacks ---
 
