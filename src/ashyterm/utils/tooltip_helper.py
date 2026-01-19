@@ -43,6 +43,9 @@ class TooltipHelper:
         self.active_widget = None
         self.show_timer_id = None
         self.hide_timer_id = None
+        self.closing_popover = (
+            None  # Keep track of popover that is currently fading out
+        )
         self._color_css_provider = None
         self._colors_initialized = False
         self._tracked_windows: set = set()  # Windows we're monitoring for focus
@@ -260,16 +263,35 @@ popover.custom-tooltip-static label {{
             GLib.source_remove(self.hide_timer_id)
             self.hide_timer_id = None
 
+        # If we had a closing popover pending from a hide timer we just cancelled,
+        # we must force it to close immediately to prevent it from getting stuck
+        if self.closing_popover:
+            try:
+                self.closing_popover.popdown()
+                self.closing_popover.remove_css_class("visible")
+            except Exception:
+                pass
+            self.closing_popover = None
+
     def _on_enter(self, controller, x, y, widget):
+        # If we are entering a new widget while another is still active (even if fading),
+        # force close the previous one immediately
+        if self.active_widget and self.active_widget != widget:
+            self.hide(immediate=True)
+
         self._clear_timer()
         self.active_widget = widget
         self.show_timer_id = GLib.timeout_add(150, self._show_tooltip_impl)
 
     def _on_leave(self, controller):
-        self._clear_timer()
-        if self.active_widget:
-            self.hide()
-            self.active_widget = None
+        # Only hide if we are leaving the currently active widget
+        # This prevents stale leave events from hiding a NEW tooltip we just entered
+        widget = controller.get_widget()
+        if self.active_widget == widget:
+            self._clear_timer()
+            if self.active_widget:
+                self.hide()
+                self.active_widget = None
 
     def _get_widget_popover(self, widget: Gtk.Widget) -> tuple[Gtk.Popover, Gtk.Label]:
         """Get or create a tooltip popover attached directly to the widget."""
@@ -304,7 +326,8 @@ popover.custom-tooltip-static label {{
                 return GLib.SOURCE_REMOVE
 
             # Check if the widget is actually visible and mapped
-            if not self.active_widget.get_mapped():
+            mapped = self.active_widget.get_mapped()
+            if not mapped:
                 self.show_timer_id = None
                 return GLib.SOURCE_REMOVE
 
@@ -312,7 +335,8 @@ popover.custom-tooltip-static label {{
             # Don't show tooltip if another window (like a dialog) is on top
             root = self.active_widget.get_root()
             if root and isinstance(root, Gtk.Window):
-                if not root.is_active():
+                active = root.is_active()
+                if not active:
                     # Window is not active, don't show tooltip
                     self.show_timer_id = None
                     return GLib.SOURCE_REMOVE
@@ -347,6 +371,9 @@ popover.custom-tooltip-static label {{
             popover_to_hide = self.active_popover
             self.active_popover = None
 
+            # Track this popover as closing
+            self.closing_popover = popover_to_hide
+
             try:
                 popover_to_hide.remove_css_class("visible")
             except Exception:
@@ -366,6 +393,7 @@ popover.custom-tooltip-static label {{
                     except Exception:
                         pass
                     self.hide_timer_id = None
+                    self.closing_popover = None
                     return GLib.SOURCE_REMOVE
 
                 if self.hide_timer_id:
