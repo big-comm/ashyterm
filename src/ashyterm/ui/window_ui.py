@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Optional
 import gi
 
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, Gtk, Pango
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango
 
 from ..data.command_manager_models import (
     get_command_button_manager,
@@ -488,8 +488,12 @@ class WindowUIBuilder:
         # Store reference to the inner toolbar for population
         self._toolbar_inner = toolbar
 
-        # Populate with pinned commands
-        self._populate_command_toolbar(toolbar)
+        # Populate with pinned commands - DEFERRED to avoid blocking startup
+        # We use a low priority to let the window render first
+        GLib.idle_add(
+            lambda: (self._populate_command_toolbar(toolbar), GLib.SOURCE_REMOVE)[1],
+            priority=GLib.PRIORITY_LOW,
+        )
 
         return window_handle
 
