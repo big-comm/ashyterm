@@ -218,17 +218,19 @@ class SessionEditDialog(BaseDialog):
         color_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         color_box.set_valign(Gtk.Align.CENTER)
 
-        self.color_button = Gtk.ColorButton(valign=Gtk.Align.CENTER, show_editor=True)
-        self.color_button.connect("color-set", self._on_color_changed)
+        # Replaced Gtk.ColorButton with standard Gtk.Button + Gtk.ColorDialog (Async)
+        # to prevent segmentation faults on Wayland during dialog destruction.
+        self.color_button = Gtk.Button(valign=Gtk.Align.CENTER)
+        self.color_button.connect("clicked", self._on_select_color_clicked)
 
-        if self.editing_session.tab_color:
-            rgba = Gdk.RGBA()
-            if rgba.parse(self.editing_session.tab_color):
-                self.color_button.set_rgba(rgba)
-            else:
-                self.color_button.set_rgba(Gdk.RGBA())
+        # Initial color setup
+        initial_rgba = Gdk.RGBA()
+        if self.editing_session.tab_color and initial_rgba.parse(
+            self.editing_session.tab_color
+        ):
+            self._update_color_button_content(initial_rgba)
         else:
-            self.color_button.set_rgba(Gdk.RGBA())
+            self._update_color_button_content(None)
 
         clear_button = Gtk.Button(
             icon_name="edit-clear-symbolic",
@@ -1070,11 +1072,65 @@ class SessionEditDialog(BaseDialog):
         entry.remove_css_class(self.CSS_CLASS_ERROR)
         self._mark_changed()
 
-    def _on_color_changed(self, button: Gtk.ColorButton) -> None:
-        self._mark_changed()
+    def _update_color_button_content(self, rgba: Optional[Gdk.RGBA]) -> None:
+        """Update the button content to show the selected color swatch."""
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
 
-    def _on_clear_color_clicked(self, button: Gtk.Button) -> None:
-        self.color_button.set_rgba(Gdk.RGBA())  # Set to no color
+        # Color swatch
+        swatch = Gtk.DrawingArea()
+        swatch.set_content_width(24)
+        swatch.set_content_height(16)
+
+        if rgba:
+
+            def draw_func(_area, cr, _width, _height, color=rgba):
+                Gdk.cairo_set_source_rgba(cr, color)
+                cr.paint()
+
+            swatch.set_draw_func(draw_func)
+            label_text = rgba.to_string()
+        else:
+            # Draw a frame or 'X' for no color
+            def draw_empty(_area, cr, width, height):
+                cr.set_source_rgb(0.5, 0.5, 0.5)
+                cr.rectangle(0, 0, width, height)
+                cr.stroke()
+
+            swatch.set_draw_func(draw_empty)
+            label_text = _("None")
+
+        box.append(swatch)
+        box.append(Gtk.Label(label=label_text))
+        self.color_button.set_child(box)
+
+    def _on_select_color_clicked(self, _button) -> None:
+        """Open async color dialog."""
+        dialog = Gtk.ColorDialog(title=_("Select Tab Color"))
+
+        # Get start color
+        current_rgba = Gdk.RGBA()
+        if self.editing_session.tab_color:
+            current_rgba.parse(self.editing_session.tab_color)
+
+        dialog.choose_rgba(self, current_rgba, None, self._on_color_chosen)
+
+    def _on_color_chosen(self, source, result) -> None:
+        """Handle async color selection."""
+        try:
+            rgba = source.choose_rgba_finish(result)
+            if rgba:
+                self.editing_session.tab_color = rgba.to_string()
+                self._update_color_button_content(rgba)
+                self._mark_changed()
+        except GLib.Error as e:
+            # Cancelled
+            pass
+        except Exception as e:
+            self.logger.error(f"Color selection failed: {e}")
+
+    def _on_clear_color_clicked(self, _button):
+        self.editing_session.tab_color = None
+        self._update_color_button_content(None)
         self._mark_changed()
 
     def _on_folder_changed(self, combo_row, param) -> None:

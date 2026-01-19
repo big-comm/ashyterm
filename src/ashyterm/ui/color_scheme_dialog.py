@@ -6,7 +6,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GObject, Gtk, Pango, PangoCairo
+from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango, PangoCairo
 
 from ..helpers import generate_unique_name
 from ..settings.manager import SettingsManager
@@ -21,7 +21,12 @@ class _ColorEditRow(Adw.ActionRow):
 
     def __init__(self, title: str):
         super().__init__(title=title)
-        self.color_button = Gtk.ColorButton(valign=Gtk.Align.CENTER)
+
+        # Replaced Gtk.ColorButton with standard Gtk.Button + Gtk.ColorDialog (Async)
+        self.color_button = Gtk.Button(valign=Gtk.Align.CENTER)
+        self.color_button.set_size_request(44, 32)  # Standard-ish size
+        self.color_button.connect("clicked", self._on_select_color_clicked)
+
         self.hex_entry = Gtk.Entry(valign=Gtk.Align.CENTER, width_chars=9, max_length=9)
         self.hex_entry.add_css_class("monospace")
 
@@ -31,26 +36,25 @@ class _ColorEditRow(Adw.ActionRow):
         self.add_suffix(box)
         self.set_activatable_widget(self.hex_entry)
 
-        self.color_button.connect("color-set", self._on_color_set)
         self.hex_entry.connect("changed", self._on_hex_changed)
+
+        # Current RGBA state
+        self._current_rgba = Gdk.RGBA()
+        self._current_rgba.parse("#000000")  # Default
+        self._update_swatch()
 
     def get_hex_color(self) -> Optional[str]:
         """Returns the validated hex color string or None if invalid."""
         text = self.hex_entry.get_text().lower()
         rgba = Gdk.RGBA()
-        if rgba.parse(text) and len(text) in [7, 9]:  # #RRGGBB or #RRGGBBAA
+        if rgba.parse(text):
             return self.rgba_to_hex(rgba)
         return None
 
     def set_hex_color(self, hex_str: str):
-        """
-        Sets the color from a hex string. This is the single entry point for
-        programmatically setting the color.
-        """
-        # FIX: Directly set the text in the entry. The 'changed' signal handler
-        # (_on_hex_changed) will then automatically validate the text and update
-        # the color button's swatch, ensuring a consistent state.
+        """Sets the color from a hex string."""
         self.hex_entry.get_buffer().set_text(hex_str, -1)
+        # _on_hex_changed will handle the rest
 
     def rgba_to_hex(self, rgba: Gdk.RGBA) -> str:
         """Converts a Gdk.RGBA object to a #RRGGBB hex string."""
@@ -58,24 +62,72 @@ class _ColorEditRow(Adw.ActionRow):
             int(rgba.red * 255), int(rgba.green * 255), int(rgba.blue * 255)
         )
 
-    def _on_color_set(self, button: Gtk.ColorButton):
-        """When color is picked from chooser, update the hex entry."""
-        rgba = button.get_rgba()
-        hex_str = self.rgba_to_hex(rgba)
-        # Check if update is needed to prevent signal loops
-        if self.hex_entry.get_text() != hex_str:
-            self.hex_entry.get_buffer().set_text(hex_str, -1)
+    def _update_swatch(self):
+        """Draws the color swatch on the button."""
+        swatch = Gtk.DrawingArea()
+        swatch.set_content_width(32)
+        swatch.set_content_height(16)
+
+        if self._current_rgba:
+            color = self._current_rgba.copy()  # Capture for closure
+
+            def draw_func(_area, cr, width, height, c=color):
+                Gdk.cairo_set_source_rgba(cr, c)
+                cr.rectangle(0, 0, width, height)
+                cr.fill()
+
+            swatch.set_draw_func(draw_func)
+
+        self.color_button.set_child(swatch)
+
+    def _on_select_color_clicked(self, _button):
+        """Open async color dialog."""
+        dialog = Gtk.ColorDialog(title=self.get_title())
+        dialog.choose_rgba(
+            self.get_root(), self._current_rgba, None, self._on_color_chosen
+        )
+
+    def _on_color_chosen(self, source, result):
+        """Handle async color selection result."""
+        try:
+            rgba = source.choose_rgba_finish(result)
+            if rgba:
+                hex_str = self.rgba_to_hex(rgba)
+                self.hex_entry.get_buffer().set_text(hex_str, -1)
+        except GLib.Error:
+            pass  # Cancelled
+        except Exception as e:
+            print(f"Color selection error: {e}")
 
     def _on_hex_changed(self, entry: Gtk.Entry):
         """When hex entry changes, update the color button and validate."""
         text = entry.get_text()
         rgba = Gdk.RGBA()
         if rgba.parse(text):
-            # Check if update is needed to prevent signal loops
-            current_hex = self.rgba_to_hex(self.color_button.get_rgba())
-            if text.lower() != current_hex.lower():
-                self.color_button.set_rgba(rgba)
+            self._current_rgba = rgba
+            self._update_swatch()
             entry.remove_css_class("error")
+
+            # Emit a 'notify::color' signal if we wanted to be fancy,
+            # but the parent uses the color_button directly for signals usually.
+            # We need to manually trigger the parent's update logic since we replaced the signal.
+
+            # HACK: The parent dialog listens to 'color-set' on the button.
+            # Since we replaced Gtk.ColorButton, we need to adapt the parent's listeners.
+            # But wait, looking at the parent code:
+            # row.color_button.connect("color-set", ...)
+            # We should probably emit a signal so we don't have to change the parent *too* much,
+            # OR we change the parent to listen to 'clicked' or a custom signal?
+            # actually Gtk.Button doesn't have 'color-set'.
+            # We should manually emit 'clicked' on the button? No, that opens the dialog.
+            # We should probably fire the 'changed' signal on the entry since the parent listens to that too?
+            # Parent: row.hex_entry.connect("changed", lambda *_: self.preview_area.queue_draw())
+            # SO: simply updating the text behaves correctly for the parent!
+            # BUT: The parent also listens to row.color_button.connect("color-set").
+            # We need to remove that listener in the parent or accept that it won't fire.
+            # Wait, if we update hex_entry text, _on_hex_changed fires, and the parent listens to hex_entry 'changed'.
+            # So the preview SHOULD update automatically.
+            pass
         else:
             entry.add_css_class("error")
 
@@ -125,10 +177,9 @@ class _SchemeEditorDialog(BaseDialog):
         self._populate_colors(scheme_data)
 
         # Connect signals for live preview update
+        # Since _ColorEditRow updates the hex entry when color is chosen,
+        # we only need to listen to the entry's changes.
         for row in [self.fg_row, self.bg_row]:
-            row.color_button.connect(
-                "color-set", lambda *_: self.preview_area.queue_draw()
-            )
             row.hex_entry.connect("changed", lambda *_: self.preview_area.queue_draw())
 
     def _build_ui(self):

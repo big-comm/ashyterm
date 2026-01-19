@@ -2104,7 +2104,7 @@ class FileManager(GObject.Object):
             menu.append_section(None, clipboard_section)
 
         popover = create_themed_popover_menu(menu, self.main_box)
-        
+
         # Keep reference to prevent GC
         self._active_popover = popover
         popover.connect("closed", lambda *_: setattr(self, "_active_popover", None))
@@ -2133,7 +2133,7 @@ class FileManager(GObject.Object):
     def _show_context_menu(self, items: List[FileItem], x, y):
         menu_model = self._create_context_menu_model(items)
         popover = create_themed_popover_menu(menu_model, self.main_box)
-        
+
         # Keep reference to prevent GC
         self._active_popover = popover
         popover.connect("closed", lambda *_: setattr(self, "_active_popover", None))
@@ -3244,9 +3244,9 @@ class FileManager(GObject.Object):
                             self._open_and_monitor_local_file(
                                 local_path, remote_path, app_info, initial_timestamp
                             )
-                        else:
                             self._open_local_file(local_path, app_info)
-                d.destroy()
+                # Defer destruction to avoid segfaults in Wayland callbacks
+                GLib.idle_add(d.destroy)
 
             dialog.connect("response", on_response)
             dialog.present()
