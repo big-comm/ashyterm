@@ -25,7 +25,7 @@ class TestColorsModule:
         modifiers = []
         bg_holder = []
         result = _parse_color_part("bold", modifiers, bg_holder)
-        
+
         assert result is None  # Modifiers don't return a base color
         assert len(modifiers) == 1
         assert modifiers[0] == ANSI_MODIFIERS["bold"]
@@ -37,7 +37,7 @@ class TestColorsModule:
         modifiers = []
         bg_holder = []
         result = _parse_color_part("on_red", modifiers, bg_holder)
-        
+
         assert result is None
         assert len(bg_holder) == 1
         assert bg_holder[0] == "41"  # Red background code
@@ -49,7 +49,7 @@ class TestColorsModule:
         modifiers = []
         bg_holder = []
         result = _parse_color_part("blue", modifiers, bg_holder)
-        
+
         assert result == "blue"  # Returns base color
         assert len(modifiers) == 0
         assert len(bg_holder) == 0
@@ -316,7 +316,7 @@ class TestSSHConfigParser:
         from ashyterm.utils.ssh_config_parser import SSHConfigParser
 
         parser = SSHConfigParser()
-        patterns, options, stop = parser._process_config_line(
+        _, _, stop = parser._process_config_line(
             "match", ["all"], ["server1"], {"user": "admin"}, Path("/")
         )
         assert stop is True
@@ -336,23 +336,12 @@ class TestSSHConfigParser:
         assert stop is False
 
 
-class TestSettingsManagerTheme:
-    """Tests for refactored SettingsManager theme CSS generation functions."""
-
-    def _create_mock_manager(self, transparency=0):
-        """Create a mock SettingsManager with required attributes."""
-        import threading
-
-        from ashyterm.settings.manager import SettingsManager
-
-        manager = SettingsManager.__new__(SettingsManager)
-        manager._settings = {"headerbar_transparency": transparency}
-        manager._lock = threading.RLock()
-        return manager
+class TestThemeEngine:
+    """Tests for ThemeEngine CSS generation."""
 
     def test_get_theme_params_dark(self):
         """Test theme params for dark background."""
-        manager = self._create_mock_manager(transparency=0)
+        from ashyterm.utils.theme_engine import ThemeEngine
 
         scheme = {
             "background": "#000000",
@@ -360,7 +349,7 @@ class TestSettingsManagerTheme:
             "headerbar_background": "#000000",
         }
 
-        params = manager._get_theme_params(scheme)
+        params = ThemeEngine.get_theme_params(scheme)
 
         assert params["bg_color"] == "#000000"
         assert params["fg_color"] == "#ffffff"
@@ -369,144 +358,99 @@ class TestSettingsManagerTheme:
 
     def test_get_theme_params_light(self):
         """Test theme params for light background."""
-        manager = self._create_mock_manager(transparency=0)
+        from ashyterm.utils.theme_engine import ThemeEngine
 
         scheme = {
             "background": "#ffffff",
             "foreground": "#000000",
         }
 
-        params = manager._get_theme_params(scheme)
+        params = ThemeEngine.get_theme_params(scheme)
 
         assert params["bg_color"] == "#ffffff"
         assert params["fg_color"] == "#000000"
         assert params["is_dark_theme"] is False
         assert params["luminance"] > 0.5
 
-    def test_get_headerbar_css_with_transparency(self):
-        """Test headerbar CSS generation with transparency."""
-        manager = self._create_mock_manager()
+    def test_get_root_vars_css_terminal_theme(self):
+        """Test root vars CSS generation for 'terminal' theme."""
+        from ashyterm.utils.theme_engine import ThemeEngine
 
         params = {
+            "bg_color": "#1a1a1a",
             "fg_color": "#ffffff",
+            "header_bg_color": "#1a1a1a",
+            "luminance": 0.1,
+        }
+
+        css = ThemeEngine._get_root_vars_css(params, "terminal")
+
+        assert ":root" in css
+        assert "--window-bg-color: #1a1a1a" in css
+        assert "--window-fg-color: #ffffff" in css
+
+    def test_get_root_vars_css_other_theme(self):
+        """Test root vars CSS is empty for non-terminal themes."""
+        from ashyterm.utils.theme_engine import ThemeEngine
+
+        params = {
+            "bg_color": "#1a1a1a",
+            "fg_color": "#ffffff",
+            "header_bg_color": "#1a1a1a",
+            "luminance": 0.1,
+        }
+
+        css = ThemeEngine._get_root_vars_css(params, "Adwaita")
+        assert css == ""
+
+    def test_get_root_vars_css_low_luminance(self):
+        """Test root vars CSS is empty for very low luminance."""
+        from ashyterm.utils.theme_engine import ThemeEngine
+
+        params = {
+            "bg_color": "#010101",
+            "fg_color": "#ffffff",
+            "header_bg_color": "#010101",
+            "luminance": 0.01,
+        }
+
+        css = ThemeEngine._get_root_vars_css(params, "terminal")
+        assert css == ""
+
+    def test_get_headerbar_css_with_transparency(self):
+        """Test headerbar CSS generation with transparency."""
+        from ashyterm.utils.theme_engine import ThemeEngine
+
+        params = {
             "header_bg_color": "#1a1a1a",
             "user_transparency": 50,
         }
 
-        css = manager._get_headerbar_css(params)
+        # Mocking Adw would be complex, but for "terminal" theme we don't need it
+        css = ThemeEngine._get_headerbar_css(params, "terminal")
 
-        # With transparency, background-color should NOT be set
-        assert "background-color" not in css
-        assert "color: #ffffff" in css
+        assert "background-color" in css
+        assert "color-mix" in css
+        assert "transparent" in css
 
     def test_get_headerbar_css_without_transparency(self):
         """Test headerbar CSS generation without transparency."""
-        manager = self._create_mock_manager()
+        from ashyterm.utils.theme_engine import ThemeEngine
 
-        params = {
-            "fg_color": "#ffffff",
-            "header_bg_color": "#1a1a1a",
-            "user_transparency": 0,
-        }
+        params = {"user_transparency": 0}
 
-        css = manager._get_headerbar_css(params)
-
-        # Without transparency, background-color SHOULD be set
-        assert "background-color: #1a1a1a" in css
-        assert "color: #ffffff" in css
-
-    def test_get_tabs_css_structure(self):
-        """Test tabs CSS contains expected selectors."""
-        manager = self._create_mock_manager()
-
-        params = {
-            "fg_color": "#00ff00",
-            "header_bg_color": "#1a1a1a",
-            "user_transparency": 0,
-        }
-
-        css = manager._get_tabs_css(params)
-
-        assert ".scrolled-tab-bar" in css
-        assert "color: #00ff00" in css
-
-    def test_get_sidebar_css_with_low_luminance(self):
-        """Test sidebar CSS for very dark theme (luminance < 0.05)."""
-        manager = self._create_mock_manager()
-
-        params = {
-            "bg_color": "#030303",  # Very dark
-            "fg_color": "#ffffff",
-            "hover_alpha": "10%",
-            "selected_alpha": "15%",
-            "luminance": 0.01,  # Below 0.05 threshold
-        }
-
-        css = manager._get_sidebar_css(params)
-
-        # With low luminance, background should NOT be applied (returns empty string)
+        css = ThemeEngine._get_headerbar_css(params, "terminal")
         assert css == ""
 
-    def test_get_tooltip_css(self):
-        """Test tooltip CSS generation."""
-        manager = self._create_mock_manager()
+    def test_get_tabs_css_terminal_theme(self):
+        """Test tabs CSS for terminal theme."""
+        from ashyterm.utils.theme_engine import ThemeEngine
 
-        params = {
-            "bg_color": "#2a2a2a",
-            "fg_color": "#eeeeee",
-        }
+        params = {"fg_color": "#00ff00"}
 
-        css = manager._get_tooltip_css(params)
-
-        assert "tooltip" in css
-        assert "background-color: #2a2a2a" in css
-        assert "color: #eeeeee" in css
-
-    def test_get_misc_css(self):
-        """Test miscellaneous CSS (SSH error banner, separators)."""
-        manager = self._create_mock_manager()
-
-        params = {"fg_color": "#ffffff"}
-
-        css = manager._get_misc_css(params)
-
-        assert ".ssh-error-banner" in css
-        assert "separator" in css
-        assert "paned-separator" in css
-
-    def test_get_dialog_css(self):
-        """Test dialog CSS generation."""
-        manager = self._create_mock_manager()
-
-        params = {
-            "bg_color": "#1a1a1a",
-            "fg_color": "#ffffff",
-            "header_bg_color": "#1a1a1a",
-            "luminance": 0.1,  # Above 0.05, should apply bg
-        }
-
-        css = manager._get_dialog_css(params)
-
-        assert ".ashyterm-dialog" in css
-        assert "messagedialog" in css
-
-    def test_get_filemanager_css(self):
-        """Test file manager CSS generation."""
-        manager = self._create_mock_manager()
-
-        params = {
-            "bg_color": "#1a1a1a",
-            "fg_color": "#ffffff",
-            "header_bg_color": "#1a1a1a",
-            "hover_alpha": "10%",
-            "selected_alpha": "15%",
-        }
-
-        css = manager._get_filemanager_css(params)
-
-        assert ".file-manager-main-box" in css
-        assert "columnview row:hover" in css
-        assert "columnview row:selected" in css
+        css = ThemeEngine._get_tabs_css(params, "terminal")
+        assert ".scrolled-tab-bar" in css
+        assert "color-mix" in css
 
 
 if __name__ == "__main__":

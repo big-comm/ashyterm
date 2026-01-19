@@ -2470,15 +2470,17 @@ class HighlightedTerminalProxy:
         current_line = self._input_highlight_buffer.split("\n")[-1].strip()
         words_before = current_line.rsplit(token_value, 1)[0].rstrip()
 
-        is_command_position = not words_before or words_before.endswith((
-            "|",
-            ";",
-            "&&",
-            "||",
-            "(",
-            "`",
-            "$(",
-        ))
+        is_command_position = not words_before or words_before.endswith(
+            (
+                "|",
+                ";",
+                "&&",
+                "||",
+                "(",
+                "`",
+                "$(",
+            )
+        )
 
         if not is_command_position and words_before:
             last_word = words_before.split()[-1] if words_before.split() else ""

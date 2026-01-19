@@ -528,11 +528,19 @@ class CommTerminalApp(Adw.Application):
 
     def _on_backup_now_action(self, _action, _param) -> None:
         """Handles the manual backup creation flow."""
-        self.backup_handler.start_backup_flow(self.get_active_window())
+        window = self.get_active_window()
+        if not window:
+            self.logger.warning("No active window found for backup action")
+            return
+        self.backup_handler.start_backup_flow(window)
 
     def _on_restore_backup_action(self, _action, _param) -> None:
         """Handles the restore backup flow."""
-        self.backup_handler.start_restore_flow(self.get_active_window())
+        window = self.get_active_window()
+        if not window:
+            self.logger.warning("No active window found for restore action")
+            return
+        self.backup_handler.start_restore_flow(window)
 
     def _has_active_ssh_sessions(self) -> bool:
         """Check if there are active SSH sessions across all windows."""

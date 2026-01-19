@@ -648,13 +648,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     def _on_backup_now_clicked(self, button):
         app = self.get_transient_for().get_application()
-        if app:
-            app.activate_action("backup-now", None)
+        if app and hasattr(app, "backup_handler"):
+            app.backup_handler.start_backup_flow(self)
 
     def _on_restore_backup_clicked(self, button):
         app = self.get_transient_for().get_application()
-        if app:
-            app.activate_action("restore-backup", None)
+        if app and hasattr(app, "backup_handler"):
+            app.backup_handler.start_restore_flow(self)
 
     def _on_log_level_changed(self, combo_row, _param):
         selected_item = combo_row.get_selected_item()

@@ -370,9 +370,7 @@ class HighlightManager(GObject.GObject):
 
             except Exception as e:
                 self.logger.error(f"Failed to load layered config: {e}")
-                log_error_with_context(
-                    e, "loading layered config", _LOGGER_NAME
-                )
+                log_error_with_context(e, "loading layered config", _LOGGER_NAME)
                 self._create_default_config()
 
     def _extract_global_rules(self, merged_contexts: Dict[str, Any]) -> None:
@@ -506,9 +504,7 @@ class HighlightManager(GObject.GObject):
                 self.logger.info("Saved highlight configuration")
             except Exception as e:
                 self.logger.error(f"Failed to save highlight config: {e}")
-                log_error_with_context(
-                    e, "saving highlight config", _LOGGER_NAME
-                )
+                log_error_with_context(e, "saving highlight config", _LOGGER_NAME)
 
     def _save_user_settings(self) -> None:
         """Save user settings (enabled flags, disabled global rules, and disabled contexts)."""
@@ -1174,7 +1170,9 @@ class HighlightManager(GObject.GObject):
                         global_file.unlink()
                         self.logger.info(f"Deleted user {_GLOBAL_CONFIG_FILENAME}")
                     except Exception as e:
-                        self.logger.warning(f"Failed to delete {_GLOBAL_CONFIG_FILENAME}: {e}")
+                        self.logger.warning(
+                            f"Failed to delete {_GLOBAL_CONFIG_FILENAME}: {e}"
+                        )
 
             # Reload from system
             self._load_layered_config()

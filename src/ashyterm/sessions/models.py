@@ -497,7 +497,6 @@ class SessionItem(BaseModel):
             self._shell_input_highlighting = value
             self._mark_modified()
 
-
     def _validate_basic_fields(self) -> List[str]:
         """Validate basic session fields."""
         errors = []

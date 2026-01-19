@@ -41,7 +41,6 @@ class SSHConfigParser:
 
     # --- Internal helpers -------------------------------------------------
 
-
     def _resolve_config_path(self, path: Path) -> Optional[Path]:
         """Resolve and validate SSH config file path."""
         try:

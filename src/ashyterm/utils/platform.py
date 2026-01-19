@@ -187,13 +187,10 @@ def normalize_path(path: Union[str, Path]) -> Path:
     return get_path_manager().normalize_path(path)
 
 
-
 def _validate_existing_directory(directory_path: Path) -> bool:
     """Validate that an existing path is a directory."""
     if not directory_path.is_dir():
-        raise ConfigError(
-            f"Path exists but is not a directory: {directory_path}"
-        )
+        raise ConfigError(f"Path exists but is not a directory: {directory_path}")
     return True
 
 

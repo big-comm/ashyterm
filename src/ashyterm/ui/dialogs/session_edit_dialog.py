@@ -1122,7 +1122,7 @@ class SessionEditDialog(BaseDialog):
                 self.editing_session.tab_color = rgba.to_string()
                 self._update_color_button_content(rgba)
                 self._mark_changed()
-        except GLib.Error as e:
+        except GLib.Error:
             # Cancelled
             pass
         except Exception as e:
