@@ -1263,11 +1263,17 @@ class TabManager:
         return active_terminals
 
     def get_selected_terminal(self) -> Optional[Vte.Terminal]:
+        page_content = self.view_stack.get_visible_child()
+
+        # Check if last focused terminal is valid AND belongs to the current page
         if self._last_focused_terminal and (terminal := self._last_focused_terminal()):
             if terminal.get_realized():
-                return terminal
+                # Ancestry check to prevent cross-tab focus leakage
+                if page_content and (
+                    terminal.is_ancestor(page_content) or terminal == page_content
+                ):
+                    return terminal
 
-        page_content = self.view_stack.get_visible_child()
         if not page_content:
             return None
 
