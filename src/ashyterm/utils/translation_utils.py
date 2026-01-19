@@ -13,12 +13,13 @@ locale_dir = "/usr/share/locale"  # Default for system install
 # Check if we're in an AppImage
 if "APPIMAGE" in os.environ or "APPDIR" in os.environ:
     # Running from AppImage
-    # translation_utils.py is in: usr/share/ashyterm/utils/translation_utils.py
+    # translation_utils.py is in: src/ashyterm/utils/translation_utils.py
     # We need to get to: usr/share/locale
-    script_dir = os.path.dirname(os.path.abspath(__file__))  # usr/share/ashyterm/utils
-    app_dir = os.path.dirname(script_dir)  # usr/share/ashyterm
-    share_dir = os.path.dirname(app_dir)  # usr/share
-    appimage_locale = os.path.join(share_dir, "locale")  # usr/share/locale
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # src/ashyterm/utils
+    ashyterm_dir = os.path.dirname(script_dir)  # src/ashyterm
+    src_dir = os.path.dirname(ashyterm_dir)  # src
+    appdir_root = os.path.dirname(src_dir)  # AppDir root (squashfs-root)
+    appimage_locale = os.path.join(appdir_root, "usr", "share", "locale")  # usr/share/locale
 
     if os.path.isdir(appimage_locale):
         locale_dir = appimage_locale
