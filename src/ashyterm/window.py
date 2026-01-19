@@ -1019,20 +1019,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if not page or not hasattr(page, "content_paned"):
             return
 
-        # RESILIENCE: Verify terminal is actually in this page's widget tree
-        # This prevents "ghost" bindings if ashy_parent_page is stale
-        page_root = page.get_child()
-        if page_root and not terminal.is_ancestor(page_root) and terminal != page_root:
-            self.logger.warning(
-                f"Terminal {getattr(terminal, 'terminal_id', '?')} claims parent is '{page.get_title()}' "
-                "but is not in its widget tree. Ignoring focus change for binding."
-            )
-            # Optional: Try to find real page? For now, just safe abort.
-            return
-
-        fm_active = page.content_paned.get_end_child() is not None
-
-        if fm_active:
+        if page.content_paned.get_end_child():
             fm = self.tab_manager.file_managers.get(page)
             if fm:
                 fm.rebind_terminal(terminal)
