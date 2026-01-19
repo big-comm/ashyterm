@@ -748,6 +748,23 @@ msgstr "Elimină selectat"
 msgid "Search sessions..."
 msgstr "Căutare sesiuni..."
 # 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Model de căutare invalid."
+# 
+# File: src/ashyterm/ui/search_manager.py, line: 174
+#: NEEDS WORK
+msgid "Search failed."
+msgstr "Căutarea a eșuat."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Nu s-au găsit alte potriviri."
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
 msgid "New Scheme"
@@ -953,6 +970,50 @@ msgstr "Ești sigur că vrei să ștergi schema '{name}'? Aceasta nu poate fi an
 #: NEEDS WORK
 msgid "Cancel"
 msgstr "Anulează"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Nu au fost găsite terminale deschise."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Confirmare trimitere a comenzii"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr ""
+"Selectați care dintre cele <b>{count}</b> terminale deschise ar trebui să primească comanda de mai "
+"jos."
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Amintește-ți alegerea mea"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Alegeți tab-urile care ar trebui să execute acest comandament:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Trimite Comandă"
+# 
+# File: src/ashyterm/ui/broadcast_manager.py, line: 181
+#: NEEDS WORK
+msgid "No tabs were selected."
+msgstr "Nu au fost selectate tab-uri."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2315,6 +2376,25 @@ msgstr "Selectați folderul..."
 msgid "Format: {}"
 msgstr "Format: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "Mutați în sus"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "Mutați în jos"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "Eliminare"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
 #: NEEDS WORK
 msgid "Just now"
@@ -3328,13 +3408,6 @@ msgstr "Culoare:"
 msgid "Bg:"
 msgstr "Bg:"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "Eliminare"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
 #: NEEDS WORK
 msgid "New Rule"
@@ -3625,16 +3698,6 @@ msgstr "Reguli de Evidențiere"
 msgid "➕ Add New Rule"
 msgstr "➕ Adaugă Regula Nouă"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "Editare declanșator"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "Eliminare declanșator"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
 #: NEEDS WORK
 msgid "Cannot remove the last trigger"
@@ -3650,30 +3713,6 @@ msgstr "Eliminare declanșator?"
 #, python-brace-format
 msgid "Remove \"{}\" from the triggers list?"
 msgstr "Elimină \"{}\" din lista de declanșatoare?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "Mutați în sus"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "Mutați în jos"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "Editare regulă"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "Șterge regulă"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
@@ -3693,21 +3732,6 @@ msgstr "Aceasta va elimina personalizările pentru \"{}\" și va reveni la regul
 #: NEEDS WORK
 msgid "Reset"
 msgstr "Resetare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "Șterge regulă?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "Ești sigur că vrei să ștergi \"{}\"?"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3766,12 +3790,6 @@ msgstr "Șterge schema"
 #: NEEDS WORK
 msgid "Scheme deleted"
 msgstr "Schema șters"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete '{}'?"
-msgstr "Ești sigur că vrei să ștergi '{}' ?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -4352,6 +4370,18 @@ msgstr "Repornire necesară"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Repornirea programului pentru ca culorile să fie aplicate terminalului."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "Editare regulă"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "Șterge regulă"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
 msgid "Global rules reset to defaults"
@@ -4407,13 +4437,6 @@ msgstr "Introduceți numele comenzii (de exemplu, ping, docker, git)"
 #: NEEDS WORK
 msgid "Command Name"
 msgstr "Nume comandă"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "Introduceți un nume de comandă"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
@@ -4816,15 +4839,6 @@ msgstr "Creează un nou tunel SSH"
 msgid "No port forwards configured."
 msgstr "Nu sunt configurate redirecționări de porturi."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
-# File: usr/share/ashyterm/sessions/models.py, line: 341
-#: NEEDS WORK
-msgid "Tunnel"
-msgstr "Tunel"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
 #: NEEDS WORK
 msgid "SSH Host"
@@ -4836,10 +4850,24 @@ msgstr "Gazdă SSH"
 msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Tunel"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
 msgid "Edit Port Forward"
 msgstr "Editare Redirecționare Port"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Port Forward invalid"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
@@ -4896,27 +4924,18 @@ msgstr "Portă Remote"
 msgid "Port on the remote host (1-65535)"
 msgstr "Port pe gazda la distanță (1-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
-#: NEEDS WORK
-msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-msgstr ""
-"Porta locală trebuie să fie între 1025 și 65535 (porturile sub 1024 necesită privilegii de "
-"administrator)."
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1100
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "Remote port must be between 1 and 65535."
-msgstr "Porta remote trebuie să fie între 1 și 65535."
+msgid "None"
+msgstr "None"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1108
 #: NEEDS WORK
-msgid "Local host cannot be empty."
-msgstr "Gazda locală nu poate fi goală."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
-#: NEEDS WORK
-msgid "Invalid Port Forward"
-msgstr "Port Forward invalid"
+msgid "Select Tab Color"
+msgstr "Selectați culoarea tab-ului"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
@@ -4974,14 +4993,6 @@ msgstr "Eroare la selectarea fișierului"
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "Nu s-a reușit selectarea fișierului: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 863
-# File: usr/share/ashyterm/ui/dialogs.py, line: 876
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
-#: NEEDS WORK
-msgid "Validation Error"
-msgstr "Eroare de validare"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 840
 #: NEEDS WORK
@@ -5050,6 +5061,14 @@ msgid "An unexpected error occurred while saving."
 msgstr "A apărut o eroare neașteptată în timpul salvării."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 876
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
+#: NEEDS WORK
+msgid "Validation Error"
+msgstr "Eroare de validare"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 863
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
@@ -5102,6 +5121,23 @@ msgstr ""
 "Erori de configurare SSH:\n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"Porta locală trebuie să fie între 1025 și 65535 (porturile sub 1024 necesită privilegii de "
+"administrator)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Porta remote trebuie să fie între 1 și 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Gazda locală nu poate fi goală."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -5147,6 +5183,26 @@ msgstr "Nu s-a reușit salvarea folderului: {}"
 #: NEEDS WORK
 msgid "Folder name"
 msgstr "Nume folder"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "Introduceți un nume de comandă"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "Ești sigur că vrei să ștergi '{}' ?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "Șterge regulă?"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -5734,12 +5790,6 @@ msgstr "Activat implicit"
 msgid "Options"
 msgstr "Opțiuni"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
-#: NEEDS WORK
-msgid "Add option"
-msgstr "Adaugă opțiune"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
 #: NEEDS WORK
@@ -5775,20 +5825,20 @@ msgstr "Pas"
 msgid "Format"
 msgstr "Format"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
-#: NEEDS WORK
-msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-msgstr "Comun: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
 #: NEEDS WORK
 msgid "Hex (#RRGGBB)"
 msgstr "Hex (#RRGGBB)"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "RGB (r,g,b)"
-msgstr "RGB (r,g,b)"
+msgid "RGB (R,G,B)"
+msgstr "RGB (R,G,B)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2466
+#: NEEDS WORK
+msgid "Default Hex"
+msgstr "Hex Implicit"
 # 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
 #: NEEDS WORK
@@ -5809,34 +5859,6 @@ msgstr "Trimite la toate terminalele"
 #: NEEDS WORK
 msgid "Add Command"
 msgstr "Adaugă Comandă"
-# 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "Nu au fost găsite terminale deschise."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Confirmare trimitere a comenzii"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr ""
-"Selectați care dintre cele <b>{count}</b> terminale deschise ar trebui să primească comanda de mai "
-"jos."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Alegeți tab-urile care ar trebui să execute acest comandament:"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Trimite Comandă"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -6286,6 +6308,11 @@ msgstr "Nivel de jurnalizare a consolei"
 msgid "Reset All Settings"
 msgstr "Resetare toate setările"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Select Font"
+msgstr "Selectați fontul"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
 msgid "Icon Theme Changed"
@@ -6341,6 +6368,163 @@ msgstr "Reset eșuat"
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "Eșec la resetarea setărilor: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Salvează copia de rezervă ca..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Eroare de backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Setați parola de rezervă"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Vă rugăm să introduceți o parolă pentru a cripta fișierul de backup."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Confirmă parola"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Eroare parolă"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Parola nu poate fi goală."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Parolele nu se potrivesc."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Crearea unei copii de rezervă..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Backup complet"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Backup salvat cu succes în:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Backup eșuat"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Nu s-a putut crea backup-ul: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Restaurare din backup?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Restaurarea dintr-o copie de rezervă va suprascrie toate sesiunile, setările și aranjamentele "
+"curente. Această acțiune nu poate fi anulată.\n"
+"\n"
+"<b>Aplicația va trebui să fie repornită după restaurare.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Alege Fișier și Restaurează"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Selectați fișierul de backup"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Fișiere de rezervă"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Eroare de restaurare"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Introduceți parola de rezervă"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Vă rugăm să introduceți parola pentru fișierul de rezervă selectat."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Restaurare"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Restaurare din backup..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Restaurare eșuată"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Nu s-a putut restaura din backup: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Restaurare completă"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Datele au fost restaurate cu succes. Vă rugăm să reporniți Ashy Terminal pentru ca modificările să "
+"aibă efect."
 # 
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
@@ -8080,39 +8264,6 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Nu se poate detașa ultima filă."
 # 
-# File: usr/share/ashyterm/window.py, line: 712
-#: NEEDS WORK
-#, python-brace-format
-msgid "Terminal {id}"
-msgstr "Terminal {id}"
-# 
-# File: usr/share/ashyterm/window.py, line: 809
-#: NEEDS WORK
-msgid "Remember my choice"
-msgstr "Amintește-ți alegerea mea"
-# 
-# File: usr/share/ashyterm/window.py, line: 823
-#: NEEDS WORK
-msgid "No tabs were selected to receive the command."
-msgstr "Nu au fost selectate tab-uri pentru a primi comanda."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Nu există un terminal activ pentru a căuta."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Model de căutare invalid."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Nu s-au găsit alte potriviri."
-# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -8215,163 +8366,6 @@ msgstr "Eșec la deschiderea preferințelor: {}"
 #: NEEDS WORK
 msgid "A modern terminal emulator with session management"
 msgstr "Un emulator de terminal modern cu gestionarea sesiunilor"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Salvează copia de rezervă ca..."
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Eroare de backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Setați parola de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Vă rugăm să introduceți o parolă pentru a cripta fișierul de backup."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Confirmă parola"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Eroare parolă"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Parola nu poate fi goală."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Parolele nu se potrivesc."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Crearea unei copii de rezervă..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Backup complet"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Backup salvat cu succes în:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 446
-#: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Backup eșuat"
-# 
-# File: usr/share/ashyterm/app.py, line: 447
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Nu s-a putut crea backup-ul: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Restaurare din backup?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Restaurarea dintr-o copie de rezervă va suprascrie toate sesiunile, setările și aranjamentele "
-"curente. Această acțiune nu poate fi anulată.\n"
-"\n"
-"<b>Aplicația va trebui să fie repornită după restaurare.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Alege Fișier și Restaurează"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Selectați fișierul de backup"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Fișiere de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Eroare de restaurare"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Introduceți parola de rezervă"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Vă rugăm să introduceți parola pentru fișierul de rezervă selectat."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Restaurare"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Restaurare din backup..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Restaurare eșuată"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Nu s-a putut restaura din backup: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Restaurare completă"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Datele au fost restaurate cu succes. Vă rugăm să reporniți Ashy Terminal pentru ca modificările să "
-"aibă efect."
 # 
 # File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK

@@ -746,6 +746,23 @@ msgstr "Fjarlægðu valið"
 msgid "Search sessions..."
 msgstr "Leita að sessum..."
 # 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Ógildur leitarmynstur."
+# 
+# File: src/ashyterm/ui/search_manager.py, line: 174
+#: NEEDS WORK
+msgid "Search failed."
+msgstr "Leitning mistókst."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Engin fleiri leitarniðurstöður fundust."
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
 msgid "New Scheme"
@@ -951,6 +968,48 @@ msgstr "Ertu viss um að þú viljir eyða skema '{name}'? Þetta er ekki hægt 
 #: NEEDS WORK
 msgid "Cancel"
 msgstr "Hætta við"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Engar opnar terminalar fundin."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Staðfesta sendingu skipunar"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Veldu hvaða af <b>{count}</b> opnum terminalum eigi að fá skipunina hér að neðan."
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Munduð valið mitt"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Veldu flipa sem ættu að keyra þessa skipun:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Senda skipun"
+# 
+# File: src/ashyterm/ui/broadcast_manager.py, line: 181
+#: NEEDS WORK
+msgid "No tabs were selected."
+msgstr "Engar flipar voru valin."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2313,6 +2372,25 @@ msgstr "Veldu möppu..."
 msgid "Format: {}"
 msgstr "Snið: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "Færa upp"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "Færa niður"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "Fjarlægja"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
 #: NEEDS WORK
 msgid "Just now"
@@ -3318,13 +3396,6 @@ msgstr "Litur:"
 msgid "Bg:"
 msgstr "Bg:"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "Fjarlægja"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
 #: NEEDS WORK
 msgid "New Rule"
@@ -3615,16 +3686,6 @@ msgstr "Sérfræðireglur"
 msgid "➕ Add New Rule"
 msgstr "➕ Bæta við nýrri reglu"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "Breyta viðvörun"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "Fjarlægja hvatningu"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
 #: NEEDS WORK
 msgid "Cannot remove the last trigger"
@@ -3640,30 +3701,6 @@ msgstr "Fjarlægja Triggers?"
 #, python-brace-format
 msgid "Remove \"{}\" from the triggers list?"
 msgstr "Fjarlægðu \"{}\" úr lista yfir viðbrögð?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "Færa upp"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "Færa niður"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "Breyta reglu"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "Eyða reglu"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
@@ -3683,21 +3720,6 @@ msgstr "Þetta mun fjarlægja sérsniðin stillingar fyrir \"{}\" og snúa aftur
 #: NEEDS WORK
 msgid "Reset"
 msgstr "Endurstilla"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "Eyða reglu?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "Ertu viss um að þú viljir eyða \"{}\"?"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3756,12 +3778,6 @@ msgstr "Eyða skema"
 #: NEEDS WORK
 msgid "Scheme deleted"
 msgstr "Áætlun eytt"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete '{}'?"
-msgstr "Ertu viss um að þú viljir eyða '{}'?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -4342,6 +4358,18 @@ msgstr "Endurræta nauðsynleg."
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Endurræsa forritið til að litirnir verði notaðir í terminalinum."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "Breyta reglu"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "Eyða reglu"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
 msgid "Global rules reset to defaults"
@@ -4393,13 +4421,6 @@ msgstr "Sláðu inn nafnið á skipuninni (t.d. ping, docker, git)"
 #: NEEDS WORK
 msgid "Command Name"
 msgstr "Skipunarnafn"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "Sláðu inn nafn skipunar"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
@@ -4802,15 +4823,6 @@ msgstr "Búa til nýjan SSH göng."
 msgid "No port forwards configured."
 msgstr "Engin er ekki stillt."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
-# File: usr/share/ashyterm/sessions/models.py, line: 341
-#: NEEDS WORK
-msgid "Tunnel"
-msgstr "Gönguleið"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
 #: NEEDS WORK
 msgid "SSH Host"
@@ -4822,10 +4834,24 @@ msgstr "SSH Hýsing"
 msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgstr "{local_host}:{local_port} → {remote_host}:{remote_port}"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Gönguleið"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
 msgid "Edit Port Forward"
 msgstr "Breyta Port Framleiðslu"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Ógildur Port Framleiðsla"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
@@ -4882,25 +4908,18 @@ msgstr "Fjarportur"
 msgid "Port on the remote host (1-65535)"
 msgstr "Portur á fjarhýsli (1-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
-#: NEEDS WORK
-msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-msgstr "Lokaður portur verður að vera á milli 1025 og 65535 (portar undir 1024 krafist stjórnendaheimildar)."
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1100
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "Remote port must be between 1 and 65535."
-msgstr "Fjarportur verður að vera á milli 1 og 65535."
+msgid "None"
+msgstr "None"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1108
 #: NEEDS WORK
-msgid "Local host cannot be empty."
-msgstr "Svæl staður má ekki vera auður."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
-#: NEEDS WORK
-msgid "Invalid Port Forward"
-msgstr "Ógildur Port Framleiðsla"
+msgid "Select Tab Color"
+msgstr "Veldu flipaflokk lit"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
@@ -4958,14 +4977,6 @@ msgstr "Skilavalsháttur Villa"
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "Ekki tókst að velja skrá: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 863
-# File: usr/share/ashyterm/ui/dialogs.py, line: 876
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
-#: NEEDS WORK
-msgid "Validation Error"
-msgstr "Gildisvilla Villa"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 840
 #: NEEDS WORK
@@ -5034,6 +5045,14 @@ msgid "An unexpected error occurred while saving."
 msgstr "Óvissur villa kom upp við að vista."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 876
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
+#: NEEDS WORK
+msgid "Validation Error"
+msgstr "Gildisvilla Villa"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 863
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
@@ -5086,6 +5105,21 @@ msgstr ""
 "SSH stilling villur:\n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr "Lokaður portur verður að vera á milli 1025 og 65535 (portar undir 1024 krafist stjórnendaheimildar)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Fjarportur verður að vera á milli 1 og 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Svæl staður má ekki vera auður."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -5131,6 +5165,26 @@ msgstr "Mistók að vista möppu: {}"
 #: NEEDS WORK
 msgid "Folder name"
 msgstr "Möppunafn"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "Sláðu inn nafn skipunar"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "Ertu viss um að þú viljir eyða '{}'?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "Eyða reglu?"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -5718,12 +5772,6 @@ msgstr "Sjálfgefið á"
 msgid "Options"
 msgstr "Valkostir"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
-#: NEEDS WORK
-msgid "Add option"
-msgstr "Bæta við valkosti"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
 #: NEEDS WORK
@@ -5759,20 +5807,20 @@ msgstr "Skref"
 msgid "Format"
 msgstr "Snið"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
-#: NEEDS WORK
-msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-msgstr "Algengt: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
 #: NEEDS WORK
 msgid "Hex (#RRGGBB)"
 msgstr "Hex (#RRGGBB)"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "RGB (r,g,b)"
-msgstr "RGB (r,g,b)"
+msgid "RGB (R,G,B)"
+msgstr "RGB (R,G,B)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2466
+#: NEEDS WORK
+msgid "Default Hex"
+msgstr "Sjálfgefið Hex"
 # 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
 #: NEEDS WORK
@@ -5793,32 +5841,6 @@ msgstr "Senda til allra terminala"
 #: NEEDS WORK
 msgid "Add Command"
 msgstr "Bæta við skipun"
-# 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "Engar opnar terminalar fundin."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Staðfesta sendingu skipunar"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "Veldu hvaða af <b>{count}</b> opnum terminalum eigi að fá skipunina hér að neðan."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Veldu flipa sem ættu að keyra þessa skipun:"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Senda skipun"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -6268,6 +6290,11 @@ msgstr "Skráningarstig í skel"
 msgid "Reset All Settings"
 msgstr "Endurstillu allar stillingar"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Select Font"
+msgstr "Veldu leturgerð"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
 msgid "Icon Theme Changed"
@@ -6323,6 +6350,163 @@ msgstr "Endurstilling mistókst"
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "Mistók að endurstilla stillingar: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Vista afritunar sem..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Afturheimt Villa"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Stilltu afritunarlykil"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Vinsamlegast sláðu inn lykilorð til að dulkóða afritaskrána."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Staðfesta lykilorð"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Lykilorð Villa"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Lykilorð má ekki vera tómt."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Lyklar passa ekki saman."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Að búa til afrit..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Afturheimt lokið"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Afritun vistu með góðum árangri á:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Afturheimt mistókst"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Gat ekki að búa til afrit: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Endurheimta úr afriti?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Að endurheimta úr afriti mun skrifa yfir allar núverandi lotur, stillingar og uppsetningar. Þessi "
+"aðgerð er ekki hægt að afturkalla.\n"
+"\n"
+"<b>Forritið þarf að vera endurræst eftir endurheimt.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Veldu skrá og endurheimtu"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Veldu afritunar skrá"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Afritunarskrár"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Endurunarvilla"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Sláðu inn afritunarlykil"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Vinsamlegast sláðu inn lykilorðið fyrir valda afritaskrána."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Endurheimta"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Að endurheimta úr afriti..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Endurta mistókst"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Gat ekki að endurheimta úr afriti: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Endurheimta Lokið"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Gögnin hafa verið endurheimt með árangri. Vinsamlegast endurræstu Ashy Terminal til að "
+"breytingarnar taki gildi."
 # 
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
@@ -8060,39 +8244,6 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Get ekki að losa síðasta flipa."
 # 
-# File: usr/share/ashyterm/window.py, line: 712
-#: NEEDS WORK
-#, python-brace-format
-msgid "Terminal {id}"
-msgstr "Terminal {id}"
-# 
-# File: usr/share/ashyterm/window.py, line: 809
-#: NEEDS WORK
-msgid "Remember my choice"
-msgstr "Munduð valið mitt"
-# 
-# File: usr/share/ashyterm/window.py, line: 823
-#: NEEDS WORK
-msgid "No tabs were selected to receive the command."
-msgstr "Engin voru ekki valin til að taka við skipuninni."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Engin virkur til að leita í."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Ógildur leitarmynstur."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Engin fleiri leitarniðurstöður fundust."
-# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -8195,163 +8346,6 @@ msgstr "Ekki tókst að opna stillingar: {}"
 #: NEEDS WORK
 msgid "A modern terminal emulator with session management"
 msgstr "Nútíma skel emulators með sessastjórnun"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Vista afritunar sem..."
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Afturheimt Villa"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Stilltu afritunarlykil"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Vinsamlegast sláðu inn lykilorð til að dulkóða afritaskrána."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Staðfesta lykilorð"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Lykilorð Villa"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Lykilorð má ekki vera tómt."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Lyklar passa ekki saman."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Að búa til afrit..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Afturheimt lokið"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Afritun vistu með góðum árangri á:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 446
-#: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Afturheimt mistókst"
-# 
-# File: usr/share/ashyterm/app.py, line: 447
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Gat ekki að búa til afrit: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Endurheimta úr afriti?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Að endurheimta úr afriti mun skrifa yfir allar núverandi lotur, stillingar og uppsetningar. Þessi "
-"aðgerð er ekki hægt að afturkalla.\n"
-"\n"
-"<b>Forritið þarf að vera endurræst eftir endurheimt.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Veldu skrá og endurheimtu"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Veldu afritunar skrá"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Afritunarskrár"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Endurunarvilla"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Sláðu inn afritunarlykil"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Vinsamlegast sláðu inn lykilorðið fyrir valda afritaskrána."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Endurheimta"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Að endurheimta úr afriti..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Endurta mistókst"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Gat ekki að endurheimta úr afriti: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Endurheimta Lokið"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Gögnin hafa verið endurheimt með árangri. Vinsamlegast endurræstu Ashy Terminal til að "
-"breytingarnar taki gildi."
 # 
 # File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK

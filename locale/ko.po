@@ -746,6 +746,23 @@ msgstr "선택 항목 제거"
 msgid "Search sessions..."
 msgstr "검색 세션..."
 # 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "유효하지 않은 검색 패턴."
+# 
+# File: src/ashyterm/ui/search_manager.py, line: 174
+#: NEEDS WORK
+msgid "Search failed."
+msgstr "검색 실패."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "더 이상 일치하는 항목이 없습니다."
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
 msgid "New Scheme"
@@ -951,6 +968,48 @@ msgstr "'{name}' 스킴을 삭제하시겠습니까? 이 작업은 취소할 수
 #: NEEDS WORK
 msgid "Cancel"
 msgstr "취소"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "열려 있는 터미널이 없습니다."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "명령 전송 확인"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "아래 명령을 받을 <b>{count}</b>개의 열린 터미널 중 선택하세요."
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "내 선택 기억하기"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "이 명령을 실행해야 하는 탭을 선택하세요:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "명령 전송"
+# 
+# File: src/ashyterm/ui/broadcast_manager.py, line: 181
+#: NEEDS WORK
+msgid "No tabs were selected."
+msgstr "선택된 탭이 없습니다."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "터미널 {id}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2313,6 +2372,25 @@ msgstr "폴더 선택..."
 msgid "Format: {}"
 msgstr "형식: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "위로 이동"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "아래로 이동"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "제거"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
 #: NEEDS WORK
 msgid "Just now"
@@ -3314,13 +3392,6 @@ msgstr "색상:"
 msgid "Bg:"
 msgstr "배경:"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "제거"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
 #: NEEDS WORK
 msgid "New Rule"
@@ -3609,16 +3680,6 @@ msgstr "강조 규칙"
 msgid "➕ Add New Rule"
 msgstr "➕ 새 규칙 추가"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "트리거 편집"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "트리거 제거"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
 #: NEEDS WORK
 msgid "Cannot remove the last trigger"
@@ -3634,30 +3695,6 @@ msgstr "트리거 제거?"
 #, python-brace-format
 msgid "Remove \"{}\" from the triggers list?"
 msgstr "\"{}\"를 트리거 목록에서 제거하시겠습니까?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "위로 이동"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "아래로 이동"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "규칙 편집"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "규칙 삭제"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
@@ -3677,21 +3714,6 @@ msgstr "이 작업은 \"{}\"에 대한 사용자 지정을 제거하고 시스�
 #: NEEDS WORK
 msgid "Reset"
 msgstr "재설정"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "규칙 삭제?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "\"{}\"를 삭제하시겠습니까?"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3750,12 +3772,6 @@ msgstr "삭제 계획"
 #: NEEDS WORK
 msgid "Scheme deleted"
 msgstr "스킴 삭제됨"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete '{}'?"
-msgstr "'{}'을(를) 삭제하시겠습니까?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -4322,6 +4338,18 @@ msgstr "재시작 필요"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "터미널에 색상이 적용되도록 프로그램을 다시 시작하십시오."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "규칙 편집"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "규칙 삭제"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
 msgid "Global rules reset to defaults"
@@ -4373,13 +4401,6 @@ msgstr "명령어 이름을 입력하세요 (예: ping, docker, git)"
 #: NEEDS WORK
 msgid "Command Name"
 msgstr "명령 이름"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "명령어 이름 입력"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
@@ -4778,15 +4799,6 @@ msgstr "새 SSH 터널 만들기"
 msgid "No port forwards configured."
 msgstr "포트 포워드가 구성되어 있지 않습니다."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
-# File: usr/share/ashyterm/sessions/models.py, line: 341
-#: NEEDS WORK
-msgid "Tunnel"
-msgstr "터널"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
 #: NEEDS WORK
 msgid "SSH Host"
@@ -4798,10 +4810,24 @@ msgstr "SSH 호스트"
 msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgstr "{로컬_호스트}:{로컬_포트} → {원격_호스트}:{원격_포트}"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "터널"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
 msgid "Edit Port Forward"
 msgstr "포트 포워드 편집"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "잘못된 포트 포워드"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
@@ -4858,25 +4884,18 @@ msgstr "원격 포트"
 msgid "Port on the remote host (1-65535)"
 msgstr "원격 호스트의 포트 (1-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
-#: NEEDS WORK
-msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-msgstr "로컬 포트는 1025와 65535 사이여야 합니다(1024 이하의 포트는 관리자 권한이 필요합니다)."
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1100
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "Remote port must be between 1 and 65535."
-msgstr "원격 포트는 1과 65535 사이여야 합니다."
+msgid "None"
+msgstr "None"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1108
 #: NEEDS WORK
-msgid "Local host cannot be empty."
-msgstr "로컬 호스트는 비어 있을 수 없습니다."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
-#: NEEDS WORK
-msgid "Invalid Port Forward"
-msgstr "잘못된 포트 포워드"
+msgid "Select Tab Color"
+msgstr "탭 색상 선택"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
@@ -4934,14 +4953,6 @@ msgstr "파일 선택 오류"
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "파일 선택에 실패했습니다: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 863
-# File: usr/share/ashyterm/ui/dialogs.py, line: 876
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
-#: NEEDS WORK
-msgid "Validation Error"
-msgstr "유효성 검사 오류"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 840
 #: NEEDS WORK
@@ -5010,6 +5021,14 @@ msgid "An unexpected error occurred while saving."
 msgstr "저장하는 동안 예기치 않은 오류가 발생했습니다."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 876
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
+#: NEEDS WORK
+msgid "Validation Error"
+msgstr "유효성 검사 오류"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 863
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
@@ -5062,6 +5081,21 @@ msgstr ""
 "SSH 구성 오류:\n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr "로컬 포트는 1025와 65535 사이여야 합니다(1024 이하의 포트는 관리자 권한이 필요합니다)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "원격 포트는 1과 65535 사이여야 합니다."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "로컬 호스트는 비어 있을 수 없습니다."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -5107,6 +5141,26 @@ msgstr "폴더를 저장하지 못했습니다: {}"
 #: NEEDS WORK
 msgid "Folder name"
 msgstr "폴더 이름"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "명령어 이름 입력"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "'{}'을(를) 삭제하시겠습니까?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "규칙 삭제?"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -5694,12 +5748,6 @@ msgstr "기본 설정 켜짐"
 msgid "Options"
 msgstr "옵션"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
-#: NEEDS WORK
-msgid "Add option"
-msgstr "옵션 추가"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
 #: NEEDS WORK
@@ -5735,20 +5783,20 @@ msgstr "단계"
 msgid "Format"
 msgstr "형식"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
-#: NEEDS WORK
-msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-msgstr "일반: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
 #: NEEDS WORK
 msgid "Hex (#RRGGBB)"
 msgstr "16진수 (#RRGGBB)"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "RGB (r,g,b)"
-msgstr "RGB (r,g,b)"
+msgid "RGB (R,G,B)"
+msgstr "RGB (R,G,B)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2466
+#: NEEDS WORK
+msgid "Default Hex"
+msgstr "기본 16진수"
 # 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
 #: NEEDS WORK
@@ -5769,32 +5817,6 @@ msgstr "모든 단말기로 전송"
 #: NEEDS WORK
 msgid "Add Command"
 msgstr "명령 추가"
-# 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "열려 있는 터미널이 없습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "명령 전송 확인"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "아래 명령을 받을 <b>{count}</b>개의 열린 터미널 중 선택하세요."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "이 명령을 실행해야 하는 탭을 선택하세요:"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "명령 전송"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -6242,6 +6264,11 @@ msgstr "콘솔 로그 수준"
 msgid "Reset All Settings"
 msgstr "모든 설정 초기화"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Select Font"
+msgstr "글꼴 선택"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
 msgid "Icon Theme Changed"
@@ -6291,6 +6318,160 @@ msgstr "재설정 실패"
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "설정 초기화 실패: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "백업으로 저장..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "백업 오류"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "백업 비밀번호 설정"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "백업 파일을 암호화할 비밀번호를 입력하세요."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "비밀번호 확인"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "비밀번호 오류"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "비밀번호는 비어 있을 수 없습니다."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "비밀번호가 일치하지 않습니다."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "백업 생성 중..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "백업 완료"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"백업이 성공적으로 저장되었습니다:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "백업 실패"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "백업을 생성할 수 없습니다: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "백업에서 복원하시겠습니까?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"백업에서 복원하면 현재의 모든 세션, 설정 및 레이아웃이 덮어씌워집니다. 이 작업은 실행 취소할 수 없습니다.\n"
+"\n"
+"<b>복원 후 애플리케이션을 다시 시작해야 합니다.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "파일 선택 및 복원"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "백업 파일 선택"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "백업 파일"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "복원 오류"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "백업 비밀번호 입력"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "선택한 백업 파일의 비밀번호를 입력해 주세요."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "복원"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "백업에서 복원 중..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "복원 실패"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "백업에서 복원할 수 없습니다: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "복원 완료"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr "데이터가 성공적으로 복원되었습니다. 변경 사항을 적용하려면 Ashy Terminal을 다시 시작하십시오."
 # 
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
@@ -8023,39 +8204,6 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "마지막 탭을 분리할 수 없습니다."
 # 
-# File: usr/share/ashyterm/window.py, line: 712
-#: NEEDS WORK
-#, python-brace-format
-msgid "Terminal {id}"
-msgstr "터미널 {id}"
-# 
-# File: usr/share/ashyterm/window.py, line: 809
-#: NEEDS WORK
-msgid "Remember my choice"
-msgstr "내 선택 기억하기"
-# 
-# File: usr/share/ashyterm/window.py, line: 823
-#: NEEDS WORK
-msgid "No tabs were selected to receive the command."
-msgstr "선택된 탭이 없어 명령을 받을 수 없습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "활성 터미널이 없어 검색할 수 없습니다."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "유효하지 않은 검색 패턴."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "더 이상 일치하는 항목이 없습니다."
-# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -8156,160 +8304,6 @@ msgstr "환경 설정을 열지 못했습니다: {}"
 #: NEEDS WORK
 msgid "A modern terminal emulator with session management"
 msgstr "세션 관리 기능이 있는 현대적인 터미널 에뮬레이터"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "백업으로 저장..."
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "백업 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "백업 비밀번호 설정"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "백업 파일을 암호화할 비밀번호를 입력하세요."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "비밀번호 확인"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "비밀번호 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "비밀번호는 비어 있을 수 없습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "비밀번호가 일치하지 않습니다."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "백업 생성 중..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "백업 완료"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"백업이 성공적으로 저장되었습니다:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 446
-#: NEEDS WORK
-msgid "Backup Failed"
-msgstr "백업 실패"
-# 
-# File: usr/share/ashyterm/app.py, line: 447
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "백업을 생성할 수 없습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "백업에서 복원하시겠습니까?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"백업에서 복원하면 현재의 모든 세션, 설정 및 레이아웃이 덮어씌워집니다. 이 작업은 실행 취소할 수 없습니다.\n"
-"\n"
-"<b>복원 후 애플리케이션을 다시 시작해야 합니다.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "파일 선택 및 복원"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "백업 파일 선택"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "백업 파일"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "복원 오류"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "백업 비밀번호 입력"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "선택한 백업 파일의 비밀번호를 입력해 주세요."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "복원"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "백업에서 복원 중..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "복원 실패"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "백업에서 복원할 수 없습니다: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "복원 완료"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr "데이터가 성공적으로 복원되었습니다. 변경 사항을 적용하려면 Ashy Terminal을 다시 시작하십시오."
 # 
 # File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK

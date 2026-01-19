@@ -746,6 +746,23 @@ msgstr "Ta bort markerade"
 msgid "Search sessions..."
 msgstr "Sök sessioner..."
 # 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Ogiltigt sökmönster."
+# 
+# File: src/ashyterm/ui/search_manager.py, line: 174
+#: NEEDS WORK
+msgid "Search failed."
+msgstr "Sökningen misslyckades."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Inga fler träffar hittades."
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
 msgid "New Scheme"
@@ -951,6 +968,48 @@ msgstr "Är du säker på att du vill ta bort schemat '{name}'? Detta kan inte �
 #: NEEDS WORK
 msgid "Cancel"
 msgstr "Avbryt"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Inga öppna terminaler hittades."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Bekräfta sändning av kommando"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Välj vilken av de <b>{count}</b> öppna terminalerna som ska ta emot kommandot nedan."
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Kom ihåg mitt val"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Välj de flikar som ska köra det här kommandot:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Skicka kommando"
+# 
+# File: src/ashyterm/ui/broadcast_manager.py, line: 181
+#: NEEDS WORK
+msgid "No tabs were selected."
+msgstr "Inga flikar valdes."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2313,6 +2372,25 @@ msgstr "Välj mapp..."
 msgid "Format: {}"
 msgstr "Format: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "Flytta upp"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "Flytta ner"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "Ta bort"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 47
 #: NEEDS WORK
 msgid "Just now"
@@ -3317,13 +3395,6 @@ msgstr "Färg:"
 msgid "Bg:"
 msgstr "Bg:"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "Ta bort"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
 #: NEEDS WORK
 msgid "New Rule"
@@ -3614,16 +3685,6 @@ msgstr "Markera regler"
 msgid "➕ Add New Rule"
 msgstr "➕ Lägg till ny regel"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "Redigera utlösare"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "Ta bort utlösare"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
 #: NEEDS WORK
 msgid "Cannot remove the last trigger"
@@ -3639,30 +3700,6 @@ msgstr "Ta bort utlösare?"
 #, python-brace-format
 msgid "Remove \"{}\" from the triggers list?"
 msgstr "Ta bort \"{}\" från listan över utlösare?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "Flytta upp"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "Flytta ner"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "Redigera regel"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "Ta bort regel"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
@@ -3682,21 +3719,6 @@ msgstr "Detta kommer att ta bort dina anpassningar för \"{}\" och återgå till
 #: NEEDS WORK
 msgid "Reset"
 msgstr "Återställ"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "Ta bort regel?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "Är du säker på att du vill ta bort \"{}\"?"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3755,12 +3777,6 @@ msgstr "Ta bort schema"
 #: NEEDS WORK
 msgid "Scheme deleted"
 msgstr "Schema raderad"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete '{}'?"
-msgstr "Är du säker på att du vill ta bort '{}' ?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -4343,6 +4359,18 @@ msgstr "Omstart krävs"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Starta om programmet för att färgerna ska tillämpas på terminalen."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "Redigera regel"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "Ta bort regel"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
 msgid "Global rules reset to defaults"
@@ -4396,13 +4424,6 @@ msgstr "Ange kommandonamnet (t.ex. ping, docker, git)"
 #: NEEDS WORK
 msgid "Command Name"
 msgstr "Kommandonamn"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "Ange ett kommandonamn"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
@@ -4805,15 +4826,6 @@ msgstr "Skapa en ny SSH-tunnel"
 msgid "No port forwards configured."
 msgstr "Inga portvidare är konfigurerade."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
-# File: usr/share/ashyterm/sessions/models.py, line: 341
-#: NEEDS WORK
-msgid "Tunnel"
-msgstr "Tunnel"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
 #: NEEDS WORK
 msgid "SSH Host"
@@ -4825,10 +4837,24 @@ msgstr "SSH-värd"
 msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgstr "{lokal_värd}:{lokal_port} → {fjärr_värd}:{fjärr_port}"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Tunnel"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
 msgid "Edit Port Forward"
 msgstr "Redigera Portvidare"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Ogiltig port vidarebefordran"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
@@ -4885,25 +4911,18 @@ msgstr "Fjärrport"
 msgid "Port on the remote host (1-65535)"
 msgstr "Port på den fjärranslutna värden (1-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
-#: NEEDS WORK
-msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-msgstr "Lokal port måste vara mellan 1025 och 65535 (portar under 1024 kräver administratörsbehörighet)."
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1100
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "Remote port must be between 1 and 65535."
-msgstr "Fjärrporten måste vara mellan 1 och 65535."
+msgid "None"
+msgstr "Ingen sträng att översätta."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1108
 #: NEEDS WORK
-msgid "Local host cannot be empty."
-msgstr "Lokalt värd får inte vara tomt."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
-#: NEEDS WORK
-msgid "Invalid Port Forward"
-msgstr "Ogiltig port vidarebefordran"
+msgid "Select Tab Color"
+msgstr "Välj flikfärg"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
@@ -4961,14 +4980,6 @@ msgstr "Filvalsningsfel"
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "Misslyckades med att välja fil: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 863
-# File: usr/share/ashyterm/ui/dialogs.py, line: 876
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
-#: NEEDS WORK
-msgid "Validation Error"
-msgstr "Valideringsfel"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 840
 #: NEEDS WORK
@@ -5037,6 +5048,14 @@ msgid "An unexpected error occurred while saving."
 msgstr "Ett oväntat fel inträffade vid sparande."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 876
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
+#: NEEDS WORK
+msgid "Validation Error"
+msgstr "Valideringsfel"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 863
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
@@ -5089,6 +5108,21 @@ msgstr ""
 "SSH-konfigurationsfel:  \n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr "Lokal port måste vara mellan 1025 och 65535 (portar under 1024 kräver administratörsbehörighet)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Fjärrporten måste vara mellan 1 och 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Lokalt värd får inte vara tomt."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -5134,6 +5168,26 @@ msgstr "Misslyckades med att spara mappen: {}"
 #: NEEDS WORK
 msgid "Folder name"
 msgstr "Mappnamn"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "Ange ett kommandonamn"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "Är du säker på att du vill ta bort '{}' ?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "Ta bort regel?"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -5721,12 +5775,6 @@ msgstr "Standard på"
 msgid "Options"
 msgstr "Alternativ"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
-#: NEEDS WORK
-msgid "Add option"
-msgstr "Lägg till alternativ"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
 #: NEEDS WORK
@@ -5762,20 +5810,20 @@ msgstr "Steg"
 msgid "Format"
 msgstr "Format"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
-#: NEEDS WORK
-msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-msgstr "Vanlig: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
 #: NEEDS WORK
 msgid "Hex (#RRGGBB)"
 msgstr "Hex (#RRGGBB)"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "RGB (r,g,b)"
-msgstr "RGB (r,g,b)"
+msgid "RGB (R,G,B)"
+msgstr "RGB (R,G,B)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2466
+#: NEEDS WORK
+msgid "Default Hex"
+msgstr "Standard Hex"
 # 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
 #: NEEDS WORK
@@ -5796,32 +5844,6 @@ msgstr "Skicka till alla terminaler"
 #: NEEDS WORK
 msgid "Add Command"
 msgstr "Lägg till kommando"
-# 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "Inga öppna terminaler hittades."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Bekräfta sändning av kommando"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "Välj vilken av de <b>{count}</b> öppna terminalerna som ska ta emot kommandot nedan."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Välj de flikar som ska köra det här kommandot:"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Skicka kommando"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -6271,6 +6293,11 @@ msgstr "Konsolens loggnivå"
 msgid "Reset All Settings"
 msgstr "Återställ alla inställningar"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Select Font"
+msgstr "Välj teckensnitt"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
 msgid "Icon Theme Changed"
@@ -6326,6 +6353,163 @@ msgstr "Återställning misslyckades"
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "Misslyckades med att återställa inställningar: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Spara säkerhetskopia som..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Säkerhetskopieringsfel"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Ställ in säkerhetskopi lösenord"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Vänligen ange ett lösenord för att kryptera säkerhetskopian."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Bekräfta lösenord"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Lösenordsfel"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Lösenord kan inte vara tomt."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Lösenorden matchar inte."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Skapar säkerhetskopia..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Säkerhetskopiering slutförd"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Säkerhetskopiering sparad framgångsrikt till:\n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Säkerhetskopiering misslyckades"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Kunde inte skapa säkerhetskopia: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Återställ från säkerhetskopia?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Återställning från en säkerhetskopia kommer att skriva över alla dina aktuella sessioner, "
+"inställningar och layouter. Denna åtgärd kan inte ångras.\n"
+"\n"
+"<b>Applikationen måste startas om efter återställning.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Välj fil och återställ"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Välj säkerhetskopieringsfil"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Säkerhetskopieringsfiler"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Återställningsfel"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Ange säkerhetskopi lösenord"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Vänligen ange lösenordet för den valda säkerhetskopifilen."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Återställ"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Återställer från säkerhetskopia..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Återställning misslyckades"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Kunde inte återställa från säkerhetskopia: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Återställning slutförd"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Data har återställts framgångsrikt. Vänligen starta om Ashy Terminal för att ändringarna ska träda "
+"i kraft."
 # 
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
@@ -8063,39 +8247,6 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Kan inte lossa den sista fliken."
 # 
-# File: usr/share/ashyterm/window.py, line: 712
-#: NEEDS WORK
-#, python-brace-format
-msgid "Terminal {id}"
-msgstr "Terminal {id}"
-# 
-# File: usr/share/ashyterm/window.py, line: 809
-#: NEEDS WORK
-msgid "Remember my choice"
-msgstr "Kom ihåg mitt val"
-# 
-# File: usr/share/ashyterm/window.py, line: 823
-#: NEEDS WORK
-msgid "No tabs were selected to receive the command."
-msgstr "Inga flikar valdes för att ta emot kommandot."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Ingen aktiv terminal att söka i."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Ogiltigt sökmönster."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Inga fler träffar hittades."
-# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -8198,163 +8349,6 @@ msgstr "Misslyckades med att öppna inställningar: {}"
 #: NEEDS WORK
 msgid "A modern terminal emulator with session management"
 msgstr "En modern terminalemulator med sessionshantering"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Spara säkerhetskopia som..."
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Säkerhetskopieringsfel"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Ställ in säkerhetskopi lösenord"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Vänligen ange ett lösenord för att kryptera säkerhetskopian."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Bekräfta lösenord"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Lösenordsfel"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Lösenord kan inte vara tomt."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Lösenorden matchar inte."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Skapar säkerhetskopia..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Säkerhetskopiering slutförd"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Säkerhetskopiering sparad framgångsrikt till:\n"
-"{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 446
-#: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Säkerhetskopiering misslyckades"
-# 
-# File: usr/share/ashyterm/app.py, line: 447
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Kunde inte skapa säkerhetskopia: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Återställ från säkerhetskopia?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Återställning från en säkerhetskopia kommer att skriva över alla dina aktuella sessioner, "
-"inställningar och layouter. Denna åtgärd kan inte ångras.\n"
-"\n"
-"<b>Applikationen måste startas om efter återställning.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Välj fil och återställ"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Välj säkerhetskopieringsfil"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Säkerhetskopieringsfiler"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Återställningsfel"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Ange säkerhetskopi lösenord"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Vänligen ange lösenordet för den valda säkerhetskopifilen."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Återställ"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Återställer från säkerhetskopia..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Återställning misslyckades"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Kunde inte återställa från säkerhetskopia: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Återställning slutförd"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Data har återställts framgångsrikt. Vänligen starta om Ashy Terminal för att ändringarna ska träda "
-"i kraft."
 # 
 # File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK

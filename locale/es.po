@@ -748,6 +748,23 @@ msgstr "Eliminar seleccionado"
 msgid "Search sessions..."
 msgstr "Buscar sesiones..."
 # 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Patrón de búsqueda no válido."
+# 
+# File: src/ashyterm/ui/search_manager.py, line: 174
+#: NEEDS WORK
+msgid "Search failed."
+msgstr "Búsqueda fallida."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "No se encontraron más coincidencias."
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
 msgid "New Scheme"
@@ -955,6 +972,48 @@ msgstr "¿Estás seguro de que deseas eliminar el esquema '{name}'? Esto no se p
 #: NEEDS WORK
 msgid "Cancel"
 msgstr "Cancelar"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "No se encontraron terminales abiertos."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Confirmar el envío del comando"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Seleccione cuál de los <b>{count}</b> terminales abiertos debe recibir el comando a continuación."
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Recuerda mi elección"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Elige las pestañas que deben ejecutar este comando:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Enviar Comando"
+# 
+# File: src/ashyterm/ui/broadcast_manager.py, line: 181
+#: NEEDS WORK
+msgid "No tabs were selected."
+msgstr "No se seleccionaron pestañas."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Terminal {id}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2317,6 +2376,25 @@ msgstr "Seleccionar carpeta..."
 msgid "Format: {}"
 msgstr "Formato: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "Mover hacia arriba"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "Mover hacia abajo"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "Eliminar"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
 #: NEEDS WORK
 msgid "Just now"
@@ -3334,13 +3412,6 @@ msgstr "Color:"
 msgid "Bg:"
 msgstr "Bg:"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "Eliminar"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
 #: NEEDS WORK
 msgid "New Rule"
@@ -3631,16 +3702,6 @@ msgstr "Reglas de Resaltado"
 msgid "➕ Add New Rule"
 msgstr "➕ Agregar nueva regla"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "Editar desencadenador"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "Eliminar desencadenador"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
 #: NEEDS WORK
 msgid "Cannot remove the last trigger"
@@ -3656,30 +3717,6 @@ msgstr "¿Eliminar desencadenador?"
 #, python-brace-format
 msgid "Remove \"{}\" from the triggers list?"
 msgstr "¿Eliminar \"{}\" de la lista de disparadores?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "Mover hacia arriba"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "Mover hacia abajo"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "Editar regla"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "Eliminar regla"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
@@ -3699,21 +3736,6 @@ msgstr "Esto eliminará tus personalizaciones para \"{}\" y volverá a las regla
 #: NEEDS WORK
 msgid "Reset"
 msgstr "Restablecer"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "¿Eliminar regla?"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "¿Estás seguro de que deseas eliminar \"{}\"?"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3772,12 +3794,6 @@ msgstr "Eliminar esquema"
 #: NEEDS WORK
 msgid "Scheme deleted"
 msgstr "Esquema eliminado"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete '{}'?"
-msgstr "¿Estás seguro de que deseas eliminar '{}' ?"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -4361,6 +4377,18 @@ msgstr "Reinicio requerido"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Reinicie el programa para que los colores se apliquen al terminal."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "Editar regla"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "Eliminar regla"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
 msgid "Global rules reset to defaults"
@@ -4416,13 +4444,6 @@ msgstr "Ingrese el nombre del comando (por ejemplo, ping, docker, git)"
 #: NEEDS WORK
 msgid "Command Name"
 msgstr "Nombre del comando"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "Ingrese un nombre de comando"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
@@ -4825,15 +4846,6 @@ msgstr "Crear un nuevo túnel SSH"
 msgid "No port forwards configured."
 msgstr "No se han configurado reenvíos de puertos."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
-# File: usr/share/ashyterm/sessions/models.py, line: 341
-#: NEEDS WORK
-msgid "Tunnel"
-msgstr "Túnel"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
 #: NEEDS WORK
 msgid "SSH Host"
@@ -4845,10 +4857,24 @@ msgstr "Host SSH"
 msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgstr "{host_local}:{puerto_local} → {host_remoto}:{puerto_remoto}"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Túnel"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
 msgid "Edit Port Forward"
 msgstr "Editar Reenvío de Puertos"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Reenvío de puerto no válido"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
@@ -4905,27 +4931,18 @@ msgstr "Puerto remoto"
 msgid "Port on the remote host (1-65535)"
 msgstr "Puerto en el host remoto (1-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
-#: NEEDS WORK
-msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-msgstr ""
-"El puerto local debe estar entre 1025 y 65535 (los puertos por debajo de 1024 requieren privilegios "
-"de administrador)."
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1100
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "Remote port must be between 1 and 65535."
-msgstr "El puerto remoto debe estar entre 1 y 65535."
+msgid "None"
+msgstr "None"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1108
 #: NEEDS WORK
-msgid "Local host cannot be empty."
-msgstr "El host local no puede estar vacío."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
-#: NEEDS WORK
-msgid "Invalid Port Forward"
-msgstr "Reenvío de puerto no válido"
+msgid "Select Tab Color"
+msgstr "Seleccionar color de pestaña"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
@@ -4983,14 +5000,6 @@ msgstr "Error de selección de archivo"
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "Error al seleccionar el archivo: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 863
-# File: usr/share/ashyterm/ui/dialogs.py, line: 876
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
-#: NEEDS WORK
-msgid "Validation Error"
-msgstr "Error de validación"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 840
 #: NEEDS WORK
@@ -5059,6 +5068,14 @@ msgid "An unexpected error occurred while saving."
 msgstr "Se produjo un error inesperado al guardar."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 876
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
+#: NEEDS WORK
+msgid "Validation Error"
+msgstr "Error de validación"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 863
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
@@ -5111,6 +5128,23 @@ msgstr ""
 "Errores de configuración de SSH:\n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"El puerto local debe estar entre 1025 y 65535 (los puertos por debajo de 1024 requieren privilegios "
+"de administrador)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "El puerto remoto debe estar entre 1 y 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "El host local no puede estar vacío."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -5156,6 +5190,26 @@ msgstr "Error al guardar la carpeta: {}"
 #: NEEDS WORK
 msgid "Folder name"
 msgstr "Nombre de la carpeta"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "Ingrese un nombre de comando"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "¿Estás seguro de que deseas eliminar '{}' ?"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "¿Eliminar regla?"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -5743,12 +5797,6 @@ msgstr "Predeterminado activado"
 msgid "Options"
 msgstr "Opciones"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
-#: NEEDS WORK
-msgid "Add option"
-msgstr "Agregar opción"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
 #: NEEDS WORK
@@ -5784,20 +5832,20 @@ msgstr "Paso"
 msgid "Format"
 msgstr "Formato"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
-#: NEEDS WORK
-msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-msgstr "Común: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
 #: NEEDS WORK
 msgid "Hex (#RRGGBB)"
 msgstr "Hex (#RRGGBB)"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "RGB (r,g,b)"
-msgstr "RGB (r,g,b)"
+msgid "RGB (R,G,B)"
+msgstr "RGB (R,G,B)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2466
+#: NEEDS WORK
+msgid "Default Hex"
+msgstr "Hex predeterminado"
 # 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
 #: NEEDS WORK
@@ -5818,32 +5866,6 @@ msgstr "Enviar a todos los terminales"
 #: NEEDS WORK
 msgid "Add Command"
 msgstr "Agregar Comando"
-# 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "No se encontraron terminales abiertos."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Confirmar el envío del comando"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "Seleccione cuál de los <b>{count}</b> terminales abiertos debe recibir el comando a continuación."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Elige las pestañas que deben ejecutar este comando:"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Enviar Comando"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -6293,6 +6315,11 @@ msgstr "Nivel de registro de consola"
 msgid "Reset All Settings"
 msgstr "Restablecer todas las configuraciones"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Select Font"
+msgstr "Seleccionar fuente"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
 msgid "Icon Theme Changed"
@@ -6348,6 +6375,163 @@ msgstr "Restablecimiento fallido"
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "Error al restablecer la configuración: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Guardar copia de seguridad como..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Error de copia de seguridad"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Establecer contraseña de respaldo"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Por favor, introduzca una contraseña para cifrar el archivo de copia de seguridad."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Confirmar contraseña"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Error de contraseña"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "La contraseña no puede estar vacía."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Las contraseñas no coinciden."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Creando copia de seguridad..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Copia de seguridad completa"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Copia de seguridad guardada correctamente en:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Copia de seguridad fallida"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "No se pudo crear la copia de seguridad: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "¿Restaurar desde la copia de seguridad?"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Restaurar desde una copia de seguridad sobrescribirá todas tus sesiones, configuraciones y diseños "
+"actuales. Esta acción no se puede deshacer.\n"
+"\n"
+"<b>La aplicación necesitará reiniciarse después de restaurar.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Elegir archivo y restaurar"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Seleccionar archivo de copia de seguridad"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Archivos de respaldo"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Error de restauración"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Introduzca la contraseña de respaldo"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Por favor, introduzca la contraseña del archivo de copia de seguridad seleccionado."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Restaurar"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Restaurando desde la copia de seguridad..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Restauración fallida"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "No se pudo restaurar desde la copia de seguridad: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Restauración completa"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Los datos se han restaurado correctamente. Reinicie Ashy Terminal para que los cambios surtan "
+"efecto."
 # 
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
@@ -8087,39 +8271,6 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "No se puede separar la última pestaña."
 # 
-# File: usr/share/ashyterm/window.py, line: 712
-#: NEEDS WORK
-#, python-brace-format
-msgid "Terminal {id}"
-msgstr "Terminal {id}"
-# 
-# File: usr/share/ashyterm/window.py, line: 809
-#: NEEDS WORK
-msgid "Remember my choice"
-msgstr "Recuerda mi elección"
-# 
-# File: usr/share/ashyterm/window.py, line: 823
-#: NEEDS WORK
-msgid "No tabs were selected to receive the command."
-msgstr "No se seleccionaron pestañas para recibir el comando."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "No hay terminal activa para buscar."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Patrón de búsqueda no válido."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "No se encontraron más coincidencias."
-# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -8222,163 +8373,6 @@ msgstr "Error al abrir las preferencias: {}"
 #: NEEDS WORK
 msgid "A modern terminal emulator with session management"
 msgstr "Un emulador de terminal moderno con gestión de sesiones"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Guardar copia de seguridad como..."
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Error de copia de seguridad"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Establecer contraseña de respaldo"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Por favor, introduzca una contraseña para cifrar el archivo de copia de seguridad."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Confirmar contraseña"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Error de contraseña"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "La contraseña no puede estar vacía."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Las contraseñas no coinciden."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Creando copia de seguridad..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Copia de seguridad completa"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Copia de seguridad guardada correctamente en:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 446
-#: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Copia de seguridad fallida"
-# 
-# File: usr/share/ashyterm/app.py, line: 447
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "No se pudo crear la copia de seguridad: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "¿Restaurar desde la copia de seguridad?"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Restaurar desde una copia de seguridad sobrescribirá todas tus sesiones, configuraciones y diseños "
-"actuales. Esta acción no se puede deshacer.\n"
-"\n"
-"<b>La aplicación necesitará reiniciarse después de restaurar.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Elegir archivo y restaurar"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Seleccionar archivo de copia de seguridad"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Archivos de respaldo"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Error de restauración"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Introduzca la contraseña de respaldo"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Por favor, introduzca la contraseña del archivo de copia de seguridad seleccionado."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Restaurar"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Restaurando desde la copia de seguridad..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Restauración fallida"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "No se pudo restaurar desde la copia de seguridad: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Restauración completa"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Los datos se han restaurado correctamente. Reinicie Ashy Terminal para que los cambios surtan "
-"efecto."
 # 
 # File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK
