@@ -117,9 +117,6 @@ class FileManager(GObject.Object):
         self._recursive_search_generation = 0
         self._recursive_search_in_progress = False
 
-        # Binding generation counter - incremented on each rebind to invalidate stale async ops
-        self._binding_generation = 0
-
         self._build_ui()
 
         self.bound_terminal = None
@@ -150,11 +147,6 @@ class FileManager(GObject.Object):
         Binds the file manager to a new terminal instance, dynamically adjusting
         its context (local vs. remote) based on the terminal's current state.
         """
-        if new_terminal == self.bound_terminal:
-            return
-
-        # Increment binding generation to invalidate any pending async file listings
-        self._binding_generation += 1
         self._is_rebinding = True  # Set flag to prevent race conditions
         if (
             self.bound_terminal
@@ -1752,40 +1744,24 @@ class FileManager(GObject.Object):
             self.search_entry.set_sensitive(False)
             self.search_entry.set_placeholder_text(_("Loading..."))
 
-        # Capture current binding generation to detect stale results after tab switch
-        current_generation = self._binding_generation
         # Use global AsyncTaskManager for I/O-bound file listing
         AsyncTaskManager.get().submit_io(
-            self._list_files_thread, self.current_path, source, current_generation
+            self._list_files_thread, self.current_path, source
         )
 
-    def _list_files_thread(
-        self, requested_path: str, source: str, binding_generation: int
-    ):
+    def _list_files_thread(self, requested_path: str, source: str = "filemanager"):
         """Task 1: UI Batching - Process files in batches to avoid UI freezing.
 
         Uses a short timeout to prevent UI freeze when SSH connection is lost.
-        The binding_generation parameter ensures stale results are discarded
-        when the user switches tabs during listing.
         """
         try:
-            # Early exit if binding changed (user switched tabs)
-            if binding_generation != self._binding_generation:
-                self.logger.debug(
-                    f"Discarding file listing for '{requested_path}' - binding generation mismatch"
-                )
-                return
-
             if self._is_destroyed:
                 return
 
             operations = self.operations
             if not operations:
                 self._schedule_update_with_error(
-                    requested_path,
-                    "Operations not initialized",
-                    source,
-                    binding_generation,
+                    requested_path, "Operations not initialized", source
                 )
                 return
 
@@ -1793,49 +1769,26 @@ class FileManager(GObject.Object):
             command = ["ls", "-la", "--classify", "--full-time", path_for_ls]
             success, output = operations.execute_command_on_session(command, timeout=8)
 
-            # Check again after I/O operation
-            if binding_generation != self._binding_generation:
-                self.logger.debug(
-                    f"Discarding file listing for '{requested_path}' - binding changed during I/O"
-                )
-                return
-
             if not success:
-                self._handle_list_error(
-                    requested_path, output, source, binding_generation
-                )
+                self._handle_list_error(requested_path, output, source)
                 return
 
             all_items = self._parse_ls_output(output, requested_path)
-            GLib.idle_add(
-                self._set_store_items,
-                all_items,
-                requested_path,
-                source,
-                binding_generation,
-            )
+            GLib.idle_add(self._set_store_items, all_items, requested_path, source)
 
         except Exception as e:
             self.logger.error(f"Error in background file listing: {e}")
-            self._schedule_update_with_error(
-                requested_path, str(e), source, binding_generation
-            )
+            self._schedule_update_with_error(requested_path, str(e), source)
 
     def _normalize_path_for_ls(self, path: str) -> str:
         """Ensure path ends with slash for ls command."""
         return path if path.endswith("/") else f"{path}/"
 
-    def _schedule_update_with_error(
-        self, path: str, error: str, source: str, binding_generation: int
-    ) -> None:
+    def _schedule_update_with_error(self, path: str, error: str, source: str) -> None:
         """Schedule an error update on the main thread."""
-        GLib.idle_add(
-            self._update_store_with_files, path, [], error, source, binding_generation
-        )
+        GLib.idle_add(self._update_store_with_files, path, [], error, source)
 
-    def _handle_list_error(
-        self, requested_path: str, output: str, source: str, binding_generation: int
-    ) -> None:
+    def _handle_list_error(self, requested_path: str, output: str, source: str) -> None:
         """Handle errors from ls command."""
         is_connection_error = self._is_connection_error(output)
 
@@ -1857,9 +1810,7 @@ class FileManager(GObject.Object):
                 source,
             )
         else:
-            self._schedule_update_with_error(
-                requested_path, error_msg, source, binding_generation
-            )
+            self._schedule_update_with_error(requested_path, error_msg, source)
 
     def _is_connection_error(self, output: str) -> bool:
         """Check if output indicates a connection error."""
@@ -1919,7 +1870,7 @@ class FileManager(GObject.Object):
                     f"{base_path.rstrip('/')}/{file_item._link_target}"
                 )
 
-    def _set_store_items(self, items, requested_path, source, binding_generation):
+    def _set_store_items(self, items, requested_path, source):
         """Set all store items in a single operation for optimal performance.
 
         GTK4's ColumnView uses virtual scrolling (only visible rows are rendered),
@@ -1928,13 +1879,6 @@ class FileManager(GObject.Object):
         Returns False for GLib.idle_add callback compatibility.
         """
         if self._is_destroyed:
-            return False
-
-        # Verify binding generation hasn't changed (user switched tabs)
-        if binding_generation != self._binding_generation:
-            self.logger.info(
-                f"Discarding stale file list for '{requested_path}' - binding changed."
-            )
             return False
 
         # Verify we're still on the same path
@@ -1961,8 +1905,7 @@ class FileManager(GObject.Object):
         requested_path: str,
         file_items,
         error_message,
-        source: str,
-        binding_generation: int,
+        source: str = "filemanager",
     ):
         """Update store with file items after listing.
 
@@ -1970,13 +1913,6 @@ class FileManager(GObject.Object):
         """
         # Skip if destroyed
         if self._is_destroyed:
-            return False
-
-        # Verify binding generation hasn't changed (user switched tabs)
-        if binding_generation != self._binding_generation:
-            self.logger.info(
-                f"Discarding stale file list for '{requested_path}' - binding changed."
-            )
             return False
 
         if requested_path != self.current_path:
