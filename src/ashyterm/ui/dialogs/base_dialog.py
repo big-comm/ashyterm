@@ -81,6 +81,18 @@ class BaseDialog(Adw.Window):
         key_controller = Gtk.EventControllerKey()
         key_controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(key_controller)
+        # Hook into lifecycle to track active modals safely
+        if self.parent_window and hasattr(self.parent_window, "active_modals_count"):
+            self.parent_window.active_modals_count += 1
+            # Connect to destroy to decrement count
+            self.connect("destroy", self._on_dialog_destroyed)
+
+    def _on_dialog_destroyed(self, _widget):
+        """Decrement active modal count when destroyed."""
+        if self.parent_window and hasattr(self.parent_window, "active_modals_count"):
+            self.parent_window.active_modals_count = max(
+                0, self.parent_window.active_modals_count - 1
+            )
 
     def _setup_toolbar(self) -> None:
         """Set up the ToolbarView, HeaderBar, and Cancel button."""

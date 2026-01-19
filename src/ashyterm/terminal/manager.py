@@ -548,9 +548,10 @@ class TerminalManager:
             int, Any
         ] = {}  # Dict[int, HighlightedTerminalProxy]
         self._highlight_manager = None
-        # Process check timer runs every 1 second for responsive context detection
+        # Process check timer runs every 3 seconds to reduce main thread load
+        # (psutil calls can be blocking and cause UI freezes on some systems)
         self._process_check_timer_id = GLib.timeout_add_seconds(
-            1, self._periodic_process_check
+            3, self._periodic_process_check
         )
         self.logger.info("Terminal manager initialized")
 

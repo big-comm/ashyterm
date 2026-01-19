@@ -4,7 +4,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GObject, Gtk
+from gi.repository import Adw, GLib, GObject, Gtk, Pango
 
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
@@ -39,11 +39,30 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.add_css_class("ashyterm-dialog")
         self.logger = get_logger("ashyterm.ui.dialogs.preferences")
         self.settings_manager = settings_manager
+
+        # Connect to settings changes
+        self.settings_manager.add_change_listener(self._on_external_setting_change)
+
+        # Ensure cleanup on destruction to prevent memory leaks and segfaults
+        self.connect("destroy", self._on_destroy_preferences)
+
         self._setup_appearance_page()
         self._setup_terminal_page()
         self._setup_profiles_page()
         self._setup_advanced_page()
         self.logger.info("Preferences dialog initialized")
+
+    def _on_destroy_preferences(self, _widget) -> None:
+        """Cleanup resources when dialog is destroyed."""
+        if self.settings_manager:
+            self.settings_manager.remove_change_listener(
+                self._on_external_setting_change
+            )
+
+    def _on_external_setting_change(self, key: str, _old_value, new_value) -> None:
+        """Handle settings changes from external sources."""
+        if key == "font" and hasattr(self, "font_button"):
+            self.font_button.set_label(str(new_value))
 
     def _create_switch_row(
         self,
@@ -83,14 +102,15 @@ class PreferencesDialog(Adw.PreferencesWindow):
         font_row = Adw.ActionRow(
             title=_("Terminal Font"),
         )
-        font_button = Gtk.FontButton()
-        font_button.set_valign(Gtk.Align.CENTER)
-        font_button.set_font(self.settings_manager.get("font", "Monospace 10"))
-        # Filter to show only monospace fonts
-        font_button.set_filter_func(self._font_filter_func)
-        font_button.connect("font-set", self._on_font_changed)
-        font_row.add_suffix(font_button)
-        font_row.set_activatable_widget(font_button)
+        # Use a standard button instead of FontButton for better stability
+        self.font_button = Gtk.Button()
+        self.font_button.set_valign(Gtk.Align.CENTER)
+        current_font = self.settings_manager.get("font", "Monospace 10")
+        self.font_button.set_label(current_font)
+        self.font_button.connect("clicked", self._on_select_font_clicked)
+
+        font_row.add_suffix(self.font_button)
+        font_row.set_activatable_widget(self.font_button)
         font_group.add(font_row)
 
         line_spacing_row = Adw.ActionRow(
@@ -564,10 +584,48 @@ class PreferencesDialog(Adw.PreferencesWindow):
         reset_row.set_activatable_widget(reset_button)
         reset_group.add(reset_row)
 
-    def _on_font_changed(self, font_button) -> None:
-        font = font_button.get_font()
-        self.settings_manager.set("font", font)
-        self.emit("font-changed", font)
+    def _on_select_font_clicked(self, button: Gtk.Button) -> None:
+        """Open a font chooser using the modern Async API (GTK 4.10+)."""
+        current_font_desc = Pango.FontDescription.from_string(
+            self.settings_manager.get("font", "Monospace 10")
+        )
+
+        font_dialog = Gtk.FontDialog(
+            title=_("Select Font"),
+            modal=True,
+        )
+        # Filter is not directly supported in the same way on FontDialog
+        # but the native portal usually handles system fonts well.
+        # We pass the current font description
+        font_dialog.choose_font(
+            self,
+            current_font_desc,
+            None,
+            self._on_font_chosen,
+        )
+
+    def _on_font_chosen(self, source_object, result) -> None:
+        """Handle async font selection result."""
+        try:
+            font_desc = source_object.choose_font_finish(result)
+            if font_desc:
+                font_string = font_desc.to_string()
+                self.logger.info(f"Font selected: {font_string}")
+
+                # Apply the setting
+                self.settings_manager.set("font", font_string)
+
+                # Update UI
+                if hasattr(self, "font_button"):
+                    self.font_button.set_label(font_string)
+
+                self.emit("font-changed", font_string)
+
+        except GLib.Error as e:
+            # User likely cancelled the dialog
+            self.logger.debug(f"Font selection cancelled or failed: {e}")
+        except Exception as e:
+            self.logger.error(f"Unexpected error in font selection: {e}")
 
     @staticmethod
     def _font_filter_func(family, _face):

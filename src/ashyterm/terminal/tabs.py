@@ -466,9 +466,17 @@ class TabManager:
         )
 
         if is_at_bottom:
+            # Check if a scroll task is already pending to avoid flooding the idle loop
+            # with thousands of callbacks during fast output.
+            if getattr(terminal, "_scroll_pending", False):
+                return
+
+            terminal._scroll_pending = True
+
             # Defer scrolling to the end to the idle loop. This ensures that the
             # adjustment's 'upper' value is updated before we try to scroll.
             def scroll_to_end():
+                terminal._scroll_pending = False
                 adjustment.set_value(
                     adjustment.get_upper() - adjustment.get_page_size()
                 )
@@ -600,10 +608,11 @@ class TabManager:
         tab_widget.add_controller(right_click)
 
         # Motion controller for hover highlighting during tab move
-        motion_controller = Gtk.EventControllerMotion()
-        motion_controller.connect("motion", self._on_tab_motion, tab_widget)
-        motion_controller.connect("leave", self._on_tab_leave, tab_widget)
-        tab_widget.add_controller(motion_controller)
+        # DISABLED FOR WAYLAND DEBUGGING: Manual drag-and-drop can cause freezes
+        # motion_controller = Gtk.EventControllerMotion()
+        # motion_controller.connect("motion", self._on_tab_motion, tab_widget)
+        # motion_controller.connect("leave", self._on_tab_leave, tab_widget)
+        # tab_widget.add_controller(motion_controller)
 
         close_button.connect("clicked", self._on_tab_close_button_clicked, tab_widget)
 
@@ -1381,9 +1390,13 @@ class TabManager:
         retry_interval_ms = 50
 
         def focus_task(retries_left: int) -> bool:
-            # Skip focus if a modal dialog is active
+            # Skip focus if a modal dialog is active (Wayland Freeze Fix)
             if self._has_active_modal_dialog():
-                self.logger.debug("Skipping terminal focus - modal dialog is active")
+                # self.logger.debug("Skipping terminal focus - modal dialog is active")
+                # Return True to keep checking (wait for dialog to close)
+                # Or return False to give up? Better to wait.
+                # Actually, if we wait too long we might be fighting.
+                # Let's just return SOURCE_REMOVE to stop fighting.
                 return GLib.SOURCE_REMOVE
 
             if (
@@ -1409,20 +1422,15 @@ class TabManager:
         GLib.idle_add(focus_task, max_retries)
 
     def _has_active_modal_dialog(self) -> bool:
-        """Check if any modal dialog is currently active for the parent window."""
+        """Check if any modal dialog is currently active usage safe counter."""
         parent_window = self.terminal_manager.parent_window
         if not parent_window:
             return False
 
-        for window in Gtk.Window.list_toplevels():
-            if (
-                window.get_transient_for() == parent_window
-                and window != parent_window
-                and hasattr(window, "get_modal")
-                and window.get_modal()
-                and window.is_visible()
-            ):
-                return True
+        # Use the safe manual counter if available (added to CommTerminalWindow)
+        if hasattr(parent_window, "active_modals_count"):
+            return parent_window.active_modals_count > 0
+
         return False
 
     def _find_terminal_pane_recursive(

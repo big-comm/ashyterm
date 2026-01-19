@@ -2,6 +2,10 @@ import argparse
 import os
 import signal
 import sys
+import faulthandler
+
+# Enable fault handler to debug segmentation faults
+faulthandler.enable()
 
 # Performance optimization: Use OpenGL renderer instead of Vulkan
 # GTK4's Vulkan renderer has worse startup performance than the GL renderer
