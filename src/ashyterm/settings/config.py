@@ -40,7 +40,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.5"
+    APP_VERSION = "1.8.6"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
