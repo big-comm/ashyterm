@@ -159,18 +159,23 @@ class WindowUIBuilder:
         )
 
         # Load dialog styles (command manager, command guide, etc.)
-        dialogs_provider = Gtk.CssProvider()
-        dialogs_css = _STYLES_DIR / "dialogs.css"
+        # DEFERRED: Not needed for initial window render
+        def load_dialog_styles():
+            dialogs_provider = Gtk.CssProvider()
+            dialogs_css = _STYLES_DIR / "dialogs.css"
 
-        if dialogs_css.exists():
-            dialogs_provider.load_from_path(str(dialogs_css))
-            self.logger.debug(f"Loaded dialog CSS from {dialogs_css}")
+            if dialogs_css.exists():
+                dialogs_provider.load_from_path(str(dialogs_css))
+                self.logger.debug(f"Loaded dialog CSS from {dialogs_css}")
 
-        Gtk.StyleContext.add_provider_for_display(
-            Gdk.Display.get_default(),
-            dialogs_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
-        )
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                dialogs_provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+            )
+            return GLib.SOURCE_REMOVE
+
+        GLib.idle_add(load_dialog_styles, priority=GLib.PRIORITY_LOW)
 
         # Separate provider for window borders (conditional on maximized state)
         self.border_provider = Gtk.CssProvider()
