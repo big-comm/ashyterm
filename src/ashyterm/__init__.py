@@ -2,17 +2,6 @@ import argparse
 import os
 import signal
 import sys
-import faulthandler
-
-# Enable fault handler to debug segmentation faults
-faulthandler.enable()
-
-# Performance optimization: Use OpenGL renderer instead of Vulkan
-# GTK4's Vulkan renderer has worse startup performance than the GL renderer
-# See: https://wiki.archlinux.org/title/GTK#GTK_4_applications_are_slow
-# This must be set BEFORE importing GTK/GLib
-if "GSK_RENDERER" not in os.environ:
-    os.environ["GSK_RENDERER"] = "gl"
 
 if __package__ is None:
     import pathlib
