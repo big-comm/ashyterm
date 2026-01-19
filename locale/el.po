@@ -746,6 +746,23 @@ msgstr "Αφαίρεση Επιλεγμένων"
 msgid "Search sessions..."
 msgstr "Αναζήτηση συνεδριών..."
 # 
+# File: usr/share/ashyterm/window.py, line: 687
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+msgid "Invalid search pattern."
+msgstr "Μη έγκυρο μοτίβο αναζήτησης."
+# 
+# File: src/ashyterm/ui/search_manager.py, line: 174
+#: NEEDS WORK
+msgid "Search failed."
+msgstr "Η αναζήτηση απέτυχε."
+# 
+# File: usr/share/ashyterm/window.py, line: 762
+# File: usr/share/ashyterm/window.py, line: 795
+#: NEEDS WORK
+msgid "No more matches found."
+msgstr "Δεν βρέθηκαν άλλες αντιστοιχίες."
+# 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 42
 #: NEEDS WORK
 msgid "New Scheme"
@@ -953,6 +970,48 @@ msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετ�
 #: NEEDS WORK
 msgid "Cancel"
 msgstr "Ακύρωση"
+# 
+# File: usr/share/ashyterm/window.py, line: 705
+#: NEEDS WORK
+msgid "No open terminals found."
+msgstr "Δεν βρέθηκαν ανοιχτές κονσόλες."
+# 
+# File: usr/share/ashyterm/window.py, line: 711
+#: NEEDS WORK
+msgid "Confirm sending of command"
+msgstr "Επιβεβαίωση αποστολής εντολής"
+# 
+# File: usr/share/ashyterm/window.py, line: 734
+#: NEEDS WORK
+#, python-brace-format
+msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
+msgstr "Επιλέξτε ποιο από τα <b>{count}</b> ανοιχτά τερματικά θα πρέπει να λάβει την παρακάτω εντολή."
+# 
+# File: usr/share/ashyterm/window.py, line: 809
+#: NEEDS WORK
+msgid "Remember my choice"
+msgstr "Θυμήσου την επιλογή μου"
+# 
+# File: usr/share/ashyterm/window.py, line: 749
+#: NEEDS WORK
+msgid "Choose the tabs that should run this command:"
+msgstr "Επιλέξτε τις καρτέλες που θα εκτελέσουν αυτή την εντολή:"
+# 
+# File: usr/share/ashyterm/window.py, line: 731
+#: NEEDS WORK
+msgid "Send Command"
+msgstr "Αποστολή Εντολής"
+# 
+# File: src/ashyterm/ui/broadcast_manager.py, line: 181
+#: NEEDS WORK
+msgid "No tabs were selected."
+msgstr "Δεν επιλέχθηκαν καρτέλες."
+# 
+# File: usr/share/ashyterm/window.py, line: 712
+#: NEEDS WORK
+#, python-brace-format
+msgid "Terminal {id}"
+msgstr "Τερματικός {id}"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 32
 #: NEEDS WORK
@@ -2315,6 +2374,25 @@ msgstr "Επιλέξτε φάκελο..."
 msgid "Format: {}"
 msgstr "Μορφή: {}"
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
+#: NEEDS WORK
+msgid "Move up"
+msgstr "Μετακίνηση προς τα πάνω"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
+#: NEEDS WORK
+msgid "Move down"
+msgstr "Μετακίνηση προς τα κάτω"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
+#: NEEDS WORK
+msgid "Remove"
+msgstr "Αφαίρεση"
+# 
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 46
 #: NEEDS WORK
 msgid "Just now"
@@ -3336,13 +3414,6 @@ msgstr "Χρώμα:"
 msgid "Bg:"
 msgstr "Bg:"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 110
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 817
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1303
-#: NEEDS WORK
-msgid "Remove"
-msgstr "Αφαίρεση"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 210
 #: NEEDS WORK
 msgid "New Rule"
@@ -3633,16 +3704,6 @@ msgstr "Κανόνες Επισήμανσης"
 msgid "➕ Add New Rule"
 msgstr "➕ Προσθήκη Νέου Κανόνα"
 # 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 753
-#: NEEDS WORK
-msgid "Edit trigger"
-msgstr "Επεξεργασία ενεργοποιητή"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 761
-#: NEEDS WORK
-msgid "Remove trigger"
-msgstr "Αφαίρεση ενεργοποιητή"
-# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 767
 #: NEEDS WORK
 msgid "Cannot remove the last trigger"
@@ -3658,30 +3719,6 @@ msgstr "Αφαίρεση Ενεργοποιητή;"
 #, python-brace-format
 msgid "Remove \"{}\" from the triggers list?"
 msgstr "Αφαιρέστε \"{}\" από τη λίστα των ενεργοποιητών;"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 872
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1824
-#: NEEDS WORK
-msgid "Move up"
-msgstr "Μετακίνηση προς τα πάνω"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 881
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1833
-#: NEEDS WORK
-msgid "Move down"
-msgstr "Μετακίνηση προς τα κάτω"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
-#: NEEDS WORK
-msgid "Edit rule"
-msgstr "Επεξεργασία κανόνα"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
-#: NEEDS WORK
-msgid "Delete rule"
-msgstr "Διαγραφή κανόνα"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 957
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1987
@@ -3701,21 +3738,6 @@ msgstr "Αυτό θα αφαιρέσει τις προσαρμογές σας γ
 #: NEEDS WORK
 msgid "Reset"
 msgstr "Επαναφορά"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
-#: NEEDS WORK
-msgid "Delete Rule?"
-msgstr "Διαγραφή Κανόνα;"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1042
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2070
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2250
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete \"{}\"?"
-msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε \"{}\";"
 # 
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
@@ -3774,12 +3796,6 @@ msgstr "Διαγραφή σχεδίου"
 #: NEEDS WORK
 msgid "Scheme deleted"
 msgstr "Το σχέδιο διαγράφηκε"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
-#: NEEDS WORK
-#, python-brace-format
-msgid "Are you sure you want to delete '{}'?"
-msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε '{}';"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1870
 #: NEEDS WORK
@@ -4364,6 +4380,18 @@ msgstr "Απαιτείται Επανεκκίνηση"
 msgid "Restart the program for the colors to be applied to the terminal."
 msgstr "Επανεκκινήστε το πρόγραμμα για να εφαρμοστούν τα χρώματα στο τερματικό."
 # 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 901
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2156
+#: NEEDS WORK
+msgid "Edit rule"
+msgstr "Επεξεργασία κανόνα"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 909
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2164
+#: NEEDS WORK
+msgid "Delete rule"
+msgstr "Διαγραφή κανόνα"
+# 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2667
 #: NEEDS WORK
 msgid "Global rules reset to defaults"
@@ -4419,13 +4447,6 @@ msgstr "Εισάγετε το όνομα της εντολής (π.χ., ping, do
 #: NEEDS WORK
 msgid "Command Name"
 msgstr "Όνομα Εντολής"
-# 
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
-# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
-#: NEEDS WORK
-msgid "Enter a command name"
-msgstr "Εισάγετε ένα όνομα εντολής"
 # 
 # File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2787
 #: NEEDS WORK
@@ -4828,15 +4849,6 @@ msgstr "Δημιουργία νέου SSH τούνελ"
 msgid "No port forwards configured."
 msgstr "Δεν έχουν ρυθμιστεί προωθήσεις θυρών."
 # 
-# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
-# File: usr/share/ashyterm/sessions/models.py, line: 341
-#: NEEDS WORK
-msgid "Tunnel"
-msgstr "Σήραγγα"
-# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
 #: NEEDS WORK
 msgid "SSH Host"
@@ -4848,10 +4860,24 @@ msgstr "SSH Φιλοξενούμενος"
 msgid "{local_host}:{local_port} → {remote_host}:{remote_port}"
 msgstr "{τοπικός_υπολογιστής}:{τοπική_θύρα} → {απομακρυσμένος_υπολογιστής}:{απομακρυσμένη_θύρα}"
 # 
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 427
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 576
+# File: usr/share/ashyterm/sessions/models.py, line: 341
+#: NEEDS WORK
+msgid "Tunnel"
+msgstr "Σήραγγα"
+# 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 484
 #: NEEDS WORK
 msgid "Edit Port Forward"
 msgstr "Επεξεργασία Προώθησης Θύρας"
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
+#: NEEDS WORK
+msgid "Invalid Port Forward"
+msgstr "Μη έγκυρη προώθηση θύρας"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 712
 #: NEEDS WORK
@@ -4908,27 +4934,18 @@ msgstr "Απομακρυσμένη Θύρα"
 msgid "Port on the remote host (1-65535)"
 msgstr "Θύρα στον απομακρυσμένο υπολογιστή (1-65535)"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
-#: NEEDS WORK
-msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-msgstr ""
-"Η τοπική θύρα πρέπει να είναι μεταξύ 1025 και 65535 (οι θύρες κάτω από 1024 απαιτούν δικαιώματα "
-"διαχειριστή)."
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1100
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "Remote port must be between 1 and 65535."
-msgstr "Η απομακρυσμένη θύρα πρέπει να είναι μεταξύ 1 και 65535."
+msgid "None"
+msgstr "None"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1108
 #: NEEDS WORK
-msgid "Local host cannot be empty."
-msgstr "Ο τοπικός διακομιστής δεν μπορεί να είναι κενός."
-# 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 600
-#: NEEDS WORK
-msgid "Invalid Port Forward"
-msgstr "Μη έγκυρη προώθηση θύρας"
+msgid "Select Tab Color"
+msgstr "Επιλέξτε Χρώμα Καρτέλας"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 773
 #: NEEDS WORK
@@ -4986,14 +5003,6 @@ msgstr "Σφάλμα Επιλογής Αρχείου"
 #, python-brace-format
 msgid "Failed to select file: {}"
 msgstr "Αποτυχία επιλογής αρχείου: {}"
-# 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 863
-# File: usr/share/ashyterm/ui/dialogs.py, line: 876
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
-#: NEEDS WORK
-msgid "Validation Error"
-msgstr "Σφάλμα Επικύρωσης"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 840
 #: NEEDS WORK
@@ -5062,6 +5071,14 @@ msgid "An unexpected error occurred while saving."
 msgstr "Παρουσιάστηκε ένα απροσδόκητο σφάλμα κατά την αποθήκευση."
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 863
+# File: usr/share/ashyterm/ui/dialogs.py, line: 876
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1328
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1350
+#: NEEDS WORK
+msgid "Validation Error"
+msgstr "Σφάλμα Επικύρωσης"
+# 
+# File: usr/share/ashyterm/ui/dialogs.py, line: 863
 #: NEEDS WORK
 #, python-brace-format
 msgid ""
@@ -5114,6 +5131,23 @@ msgstr ""
 "Σφάλματα διαμόρφωσης SSH:  \n"
 "{}"
 # 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 590
+#: NEEDS WORK
+msgid "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
+msgstr ""
+"Η τοπική θύρα πρέπει να είναι μεταξύ 1025 και 65535 (οι θύρες κάτω από 1024 απαιτούν δικαιώματα "
+"διαχειριστή)."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Remote port must be between 1 and 65535."
+msgstr "Η απομακρυσμένη θύρα πρέπει να είναι μεταξύ 1 και 65535."
+# 
+# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 596
+#: NEEDS WORK
+msgid "Local host cannot be empty."
+msgstr "Ο τοπικός διακομιστής δεν μπορεί να είναι κενός."
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1056
 #: NEEDS WORK
 msgid "Edit Folder"
@@ -5159,6 +5193,26 @@ msgstr "Αποτυχία αποθήκευσης φακέλου: {}"
 #: NEEDS WORK
 msgid "Folder name"
 msgstr "Όνομα φακέλου"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2383
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2498
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2605
+#: NEEDS WORK
+msgid "Enter a command name"
+msgstr "Εισάγετε ένα όνομα εντολής"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1773
+#: NEEDS WORK
+#, python-brace-format
+msgid "Are you sure you want to delete '{}'?"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε '{}';"
+# 
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 1041
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2069
+# File: src/ashyterm/ui/dialogs/highlight_dialog.py, line: 2249
+#: NEEDS WORK
+msgid "Delete Rule?"
+msgstr "Διαγραφή Κανόνα;"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 164
 #: NEEDS WORK
@@ -5746,12 +5800,6 @@ msgstr "Προεπιλογή ενεργοποιημένη"
 msgid "Options"
 msgstr "Επιλογές"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1729
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1973
-#: NEEDS WORK
-msgid "Add option"
-msgstr "Προσθήκη επιλογής"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1755
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 1997
 #: NEEDS WORK
@@ -5787,20 +5835,20 @@ msgstr "Βήμα"
 msgid "Format"
 msgstr "Μορφή"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2115
-#: NEEDS WORK
-msgid "Common: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-msgstr "Κοινό: %Y-%m-%d %H:%M:%S, %d/%m/%Y, %H:%M"
-# 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
 #: NEEDS WORK
 msgid "Hex (#RRGGBB)"
 msgstr "Εξαδικό (#RRGGBB)"
 # 
-# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2126
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2451
 #: NEEDS WORK
-msgid "RGB (r,g,b)"
-msgstr "RGB (ρ,γ,β)"
+msgid "RGB (R,G,B)"
+msgstr "RGB (R,G,B)"
+# 
+# File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2466
+#: NEEDS WORK
+msgid "Default Hex"
+msgstr "Προεπιλεγμένο Hex"
 # 
 # File: src/ashyterm/ui/dialogs/command_manager_dialog.py, line: 2511
 #: NEEDS WORK
@@ -5821,32 +5869,6 @@ msgstr "Αποστολή σε όλους τους τερματικούς στα�
 #: NEEDS WORK
 msgid "Add Command"
 msgstr "Προσθήκη Εντολής"
-# 
-# File: usr/share/ashyterm/window.py, line: 705
-#: NEEDS WORK
-msgid "No open terminals found."
-msgstr "Δεν βρέθηκαν ανοιχτές κονσόλες."
-# 
-# File: usr/share/ashyterm/window.py, line: 711
-#: NEEDS WORK
-msgid "Confirm sending of command"
-msgstr "Επιβεβαίωση αποστολής εντολής"
-# 
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-#, python-brace-format
-msgid "Select which of the <b>{count}</b> open terminals should receive the command below."
-msgstr "Επιλέξτε ποιο από τα <b>{count}</b> ανοιχτά τερματικά θα πρέπει να λάβει την παρακάτω εντολή."
-# 
-# File: usr/share/ashyterm/window.py, line: 749
-#: NEEDS WORK
-msgid "Choose the tabs that should run this command:"
-msgstr "Επιλέξτε τις καρτέλες που θα εκτελέσουν αυτή την εντολή:"
-# 
-# File: usr/share/ashyterm/window.py, line: 731
-#: NEEDS WORK
-msgid "Send Command"
-msgstr "Αποστολή Εντολής"
 # 
 # File: usr/share/ashyterm/window.py, line: 857
 #: NEEDS WORK
@@ -6294,6 +6316,11 @@ msgstr "Επίπεδο Καταγραφής Κονσόλας"
 msgid "Reset All Settings"
 msgstr "Επαναφορά όλων των ρυθμίσεων"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
+#: NEEDS WORK
+msgid "Select Font"
+msgstr "Επιλέξτε Γραμματοσειρά"
+# 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 681
 #: NEEDS WORK
 msgid "Icon Theme Changed"
@@ -6349,6 +6376,163 @@ msgstr "Αποτυχία Επαναφοράς"
 #, python-brace-format
 msgid "Failed to reset settings: {}"
 msgstr "Αποτυχία επαναφοράς ρυθμίσεων: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 356
+#: NEEDS WORK
+msgid "Save Backup As..."
+msgstr "Αποθήκευση Αντιγράφου Ασφαλείας Ως..."
+# 
+# File: usr/share/ashyterm/app.py, line: 368
+# File: usr/share/ashyterm/app.py, line: 379
+# File: usr/share/ashyterm/app.py, line: 392
+# File: usr/share/ashyterm/app.py, line: 396
+#: NEEDS WORK
+msgid "Backup Error"
+msgstr "Σφάλμα Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 375
+#: NEEDS WORK
+msgid "Set Backup Password"
+msgstr "Ρυθμίστε τον Κωδικό Πρόσβασης Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 376
+#: NEEDS WORK
+msgid "Please enter a password to encrypt the backup file."
+msgstr "Παρακαλώ εισάγετε έναν κωδικό πρόσβασης για να κρυπτογραφήσετε το αρχείο αντιγράφου ασφαλείας."
+# 
+# File: usr/share/ashyterm/app.py, line: 384
+#: NEEDS WORK
+msgid "Confirm Password"
+msgstr "Επιβεβαίωση Κωδικού πρόσβασης"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Password Error"
+msgstr "Σφάλμα Κωδικού Πρόσβασης"
+# 
+# File: usr/share/ashyterm/app.py, line: 400
+#: NEEDS WORK
+msgid "Password cannot be empty."
+msgstr "Ο κωδικός πρόσβασης δεν μπορεί να είναι κενός."
+# 
+# File: usr/share/ashyterm/app.py, line: 405
+#: NEEDS WORK
+msgid "Passwords do not match."
+msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν."
+# 
+# File: usr/share/ashyterm/app.py, line: 423
+#: NEEDS WORK
+msgid "Creating backup..."
+msgstr "Δημιουργία αντιγράφου ασφαλείας..."
+# 
+# File: usr/share/ashyterm/app.py, line: 390
+#: NEEDS WORK
+msgid "Backup Complete"
+msgstr "Αντίγραφο ασφαλείας ολοκληρώθηκε"
+# 
+# File: usr/share/ashyterm/app.py, line: 440
+#: NEEDS WORK
+#, python-brace-format
+msgid ""
+"Backup saved successfully to:\n"
+"{}"
+msgstr ""
+"Η δημιουργία αντιγράφου ασφαλείας αποθηκεύτηκε με επιτυχία στο:  \n"
+"{}"
+# 
+# File: usr/share/ashyterm/app.py, line: 446
+#: NEEDS WORK
+msgid "Backup Failed"
+msgstr "Αποτυχία Δημιουργίας Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 447
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not create backup: {}"
+msgstr "Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 458
+#: NEEDS WORK
+msgid "Restore from Backup?"
+msgstr "Ανάκτηση από αντίγραφο ασφαλείας;"
+# 
+# File: usr/share/ashyterm/app.py, line: 460
+#: NEEDS WORK
+msgid ""
+"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
+"action cannot be undone.\n"
+"\n"
+"<b>The application will need to be restarted after restoring.</b>"
+msgstr ""
+"Η αποκατάσταση από ένα αντίγραφο ασφαλείας θα αντικαταστήσει όλες τις τρέχουσες συνεδρίες, "
+"ρυθμίσεις και διατάξεις σας. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.\n"
+"\n"
+"<b>Η εφαρμογή θα χρειαστεί να επανεκκινηθεί μετά την αποκατάσταση.</b>"
+# 
+# File: usr/share/ashyterm/app.py, line: 466
+#: NEEDS WORK
+msgid "Choose File and Restore"
+msgstr "Επιλέξτε Αρχείο και Επαναφορά"
+# 
+# File: usr/share/ashyterm/app.py, line: 474
+#: NEEDS WORK
+msgid "Select Backup File"
+msgstr "Επιλέξτε Αρχείο Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 477
+#: NEEDS WORK
+msgid "Backup Files"
+msgstr "Αρχεία Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 402
+# File: usr/share/ashyterm/app.py, line: 416
+#: NEEDS WORK
+msgid "Restore Error"
+msgstr "Σφάλμα Επαναφοράς"
+# 
+# File: usr/share/ashyterm/app.py, line: 499
+#: NEEDS WORK
+msgid "Enter Backup Password"
+msgstr "Εισάγετε τον Κωδικό Δημιουργίας Αντιγράφου Ασφαλείας"
+# 
+# File: usr/share/ashyterm/app.py, line: 500
+#: NEEDS WORK
+msgid "Please enter the password for the selected backup file."
+msgstr "Παρακαλώ εισάγετε τον κωδικό πρόσβασης για το επιλεγμένο αρχείο αντιγράφου ασφαλείας."
+# 
+# File: usr/share/ashyterm/app.py, line: 508
+#: NEEDS WORK
+msgid "Restore"
+msgstr "Ανάκτηση"
+# 
+# File: usr/share/ashyterm/app.py, line: 525
+#: NEEDS WORK
+msgid "Restoring from backup..."
+msgstr "Ανάκτηση από αντίγραφο ασφαλείας..."
+# 
+# File: usr/share/ashyterm/app.py, line: 538
+#: NEEDS WORK
+msgid "Restore Failed"
+msgstr "Αποκατάσταση Απέτυχε"
+# 
+# File: usr/share/ashyterm/app.py, line: 539
+#: NEEDS WORK
+#, python-brace-format
+msgid "Could not restore from backup: {}"
+msgstr "Δεν ήταν δυνατή η αποκατάσταση από το αντίγραφο ασφαλείας: {}"
+# 
+# File: usr/share/ashyterm/app.py, line: 549
+#: NEEDS WORK
+msgid "Restore Complete"
+msgstr "Αποκατάσταση Ολοκληρώθηκε"
+# 
+# File: usr/share/ashyterm/app.py, line: 551
+#: NEEDS WORK
+msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
+msgstr ""
+"Τα δεδομένα έχουν αποκατασταθεί με επιτυχία. Παρακαλώ επανεκκινήστε το Ashy Terminal για να "
+"ισχύσουν οι αλλαγές."
 # 
 # File: usr/share/ashyterm/ui/dialogs/move_dialogs.py, line: 28
 #: NEEDS WORK
@@ -8090,39 +8274,6 @@ msgstr ""
 msgid "Cannot detach the last tab."
 msgstr "Δεν μπορείτε να αποσυνδέσετε την τελευταία καρτέλα."
 # 
-# File: usr/share/ashyterm/window.py, line: 712
-#: NEEDS WORK
-#, python-brace-format
-msgid "Terminal {id}"
-msgstr "Τερματικός {id}"
-# 
-# File: usr/share/ashyterm/window.py, line: 809
-#: NEEDS WORK
-msgid "Remember my choice"
-msgstr "Θυμήσου την επιλογή μου"
-# 
-# File: usr/share/ashyterm/window.py, line: 823
-#: NEEDS WORK
-msgid "No tabs were selected to receive the command."
-msgstr "Δεν επιλέχθηκαν καρτέλες για να λάβουν την εντολή."
-# 
-# File: usr/share/ashyterm/window.py, line: 652
-#: NEEDS WORK
-msgid "No active terminal to search in."
-msgstr "Δεν υπάρχει ενεργός τερματικός για αναζήτηση."
-# 
-# File: usr/share/ashyterm/window.py, line: 687
-# File: usr/share/ashyterm/window.py, line: 734
-#: NEEDS WORK
-msgid "Invalid search pattern."
-msgstr "Μη έγκυρο μοτίβο αναζήτησης."
-# 
-# File: usr/share/ashyterm/window.py, line: 762
-# File: usr/share/ashyterm/window.py, line: 795
-#: NEEDS WORK
-msgid "No more matches found."
-msgstr "Δεν βρέθηκαν άλλες αντιστοιχίες."
-# 
 # File: usr/share/ashyterm/window.py, line: 145
 #: NEEDS WORK
 msgid "Initialization Error"
@@ -8225,163 +8376,6 @@ msgstr "Αποτυχία ανοίγματος προτιμήσεων: {}"
 #: NEEDS WORK
 msgid "A modern terminal emulator with session management"
 msgstr "Ένας σύγχρονος εξομοιωτής τερματικού με διαχείριση συνεδριών"
-# 
-# File: usr/share/ashyterm/app.py, line: 356
-#: NEEDS WORK
-msgid "Save Backup As..."
-msgstr "Αποθήκευση Αντιγράφου Ασφαλείας Ως..."
-# 
-# File: usr/share/ashyterm/app.py, line: 368
-# File: usr/share/ashyterm/app.py, line: 379
-# File: usr/share/ashyterm/app.py, line: 392
-# File: usr/share/ashyterm/app.py, line: 396
-#: NEEDS WORK
-msgid "Backup Error"
-msgstr "Σφάλμα Αντιγράφου Ασφαλείας"
-# 
-# File: usr/share/ashyterm/app.py, line: 375
-#: NEEDS WORK
-msgid "Set Backup Password"
-msgstr "Ρυθμίστε τον Κωδικό Πρόσβασης Αντιγράφου Ασφαλείας"
-# 
-# File: usr/share/ashyterm/app.py, line: 376
-#: NEEDS WORK
-msgid "Please enter a password to encrypt the backup file."
-msgstr "Παρακαλώ εισάγετε έναν κωδικό πρόσβασης για να κρυπτογραφήσετε το αρχείο αντιγράφου ασφαλείας."
-# 
-# File: usr/share/ashyterm/app.py, line: 384
-#: NEEDS WORK
-msgid "Confirm Password"
-msgstr "Επιβεβαίωση Κωδικού πρόσβασης"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Password Error"
-msgstr "Σφάλμα Κωδικού Πρόσβασης"
-# 
-# File: usr/share/ashyterm/app.py, line: 400
-#: NEEDS WORK
-msgid "Password cannot be empty."
-msgstr "Ο κωδικός πρόσβασης δεν μπορεί να είναι κενός."
-# 
-# File: usr/share/ashyterm/app.py, line: 405
-#: NEEDS WORK
-msgid "Passwords do not match."
-msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν."
-# 
-# File: usr/share/ashyterm/app.py, line: 423
-#: NEEDS WORK
-msgid "Creating backup..."
-msgstr "Δημιουργία αντιγράφου ασφαλείας..."
-# 
-# File: usr/share/ashyterm/app.py, line: 390
-#: NEEDS WORK
-msgid "Backup Complete"
-msgstr "Αντίγραφο ασφαλείας ολοκληρώθηκε"
-# 
-# File: usr/share/ashyterm/app.py, line: 440
-#: NEEDS WORK
-#, python-brace-format
-msgid ""
-"Backup saved successfully to:\n"
-"{}"
-msgstr ""
-"Η δημιουργία αντιγράφου ασφαλείας αποθηκεύτηκε με επιτυχία στο:  \n"
-"{}"
-# 
-# File: usr/share/ashyterm/app.py, line: 446
-#: NEEDS WORK
-msgid "Backup Failed"
-msgstr "Αποτυχία Δημιουργίας Αντιγράφου Ασφαλείας"
-# 
-# File: usr/share/ashyterm/app.py, line: 447
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not create backup: {}"
-msgstr "Δεν ήταν δυνατή η δημιουργία αντιγράφου ασφαλείας: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 458
-#: NEEDS WORK
-msgid "Restore from Backup?"
-msgstr "Ανάκτηση από αντίγραφο ασφαλείας;"
-# 
-# File: usr/share/ashyterm/app.py, line: 460
-#: NEEDS WORK
-msgid ""
-"Restoring from a backup will overwrite all your current sessions, settings, and layouts. This "
-"action cannot be undone.\n"
-"\n"
-"<b>The application will need to be restarted after restoring.</b>"
-msgstr ""
-"Η αποκατάσταση από ένα αντίγραφο ασφαλείας θα αντικαταστήσει όλες τις τρέχουσες συνεδρίες, "
-"ρυθμίσεις και διατάξεις σας. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.\n"
-"\n"
-"<b>Η εφαρμογή θα χρειαστεί να επανεκκινηθεί μετά την αποκατάσταση.</b>"
-# 
-# File: usr/share/ashyterm/app.py, line: 466
-#: NEEDS WORK
-msgid "Choose File and Restore"
-msgstr "Επιλέξτε Αρχείο και Επαναφορά"
-# 
-# File: usr/share/ashyterm/app.py, line: 474
-#: NEEDS WORK
-msgid "Select Backup File"
-msgstr "Επιλέξτε Αρχείο Αντιγράφου Ασφαλείας"
-# 
-# File: usr/share/ashyterm/app.py, line: 477
-#: NEEDS WORK
-msgid "Backup Files"
-msgstr "Αρχεία Αντιγράφου Ασφαλείας"
-# 
-# File: usr/share/ashyterm/app.py, line: 402
-# File: usr/share/ashyterm/app.py, line: 416
-#: NEEDS WORK
-msgid "Restore Error"
-msgstr "Σφάλμα Επαναφοράς"
-# 
-# File: usr/share/ashyterm/app.py, line: 499
-#: NEEDS WORK
-msgid "Enter Backup Password"
-msgstr "Εισάγετε τον Κωδικό Δημιουργίας Αντιγράφου Ασφαλείας"
-# 
-# File: usr/share/ashyterm/app.py, line: 500
-#: NEEDS WORK
-msgid "Please enter the password for the selected backup file."
-msgstr "Παρακαλώ εισάγετε τον κωδικό πρόσβασης για το επιλεγμένο αρχείο αντιγράφου ασφαλείας."
-# 
-# File: usr/share/ashyterm/app.py, line: 508
-#: NEEDS WORK
-msgid "Restore"
-msgstr "Ανάκτηση"
-# 
-# File: usr/share/ashyterm/app.py, line: 525
-#: NEEDS WORK
-msgid "Restoring from backup..."
-msgstr "Ανάκτηση από αντίγραφο ασφαλείας..."
-# 
-# File: usr/share/ashyterm/app.py, line: 538
-#: NEEDS WORK
-msgid "Restore Failed"
-msgstr "Αποκατάσταση Απέτυχε"
-# 
-# File: usr/share/ashyterm/app.py, line: 539
-#: NEEDS WORK
-#, python-brace-format
-msgid "Could not restore from backup: {}"
-msgstr "Δεν ήταν δυνατή η αποκατάσταση από το αντίγραφο ασφαλείας: {}"
-# 
-# File: usr/share/ashyterm/app.py, line: 549
-#: NEEDS WORK
-msgid "Restore Complete"
-msgstr "Αποκατάσταση Ολοκληρώθηκε"
-# 
-# File: usr/share/ashyterm/app.py, line: 551
-#: NEEDS WORK
-msgid "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
-msgstr ""
-"Τα δεδομένα έχουν αποκατασταθεί με επιτυχία. Παρακαλώ επανεκκινήστε το Ashy Terminal για να "
-"ισχύσουν οι αλλαγές."
 # 
 # File: usr/share/ashyterm/app.py, line: 498
 #: NEEDS WORK
