@@ -511,6 +511,11 @@ class SettingsManager:
         if listener not in self._change_listeners:
             self._change_listeners.append(listener)
 
+    def remove_change_listener(self, listener: Callable[[str, Any, Any], None]):
+        """Remove a previously added change listener."""
+        if listener in self._change_listeners:
+            self._change_listeners.remove(listener)
+
     def get_all_schemes(self) -> Dict[str, Any]:
         """Merges built-in schemes with custom schemes."""
         schemes = ColorSchemes.get_schemes().copy()

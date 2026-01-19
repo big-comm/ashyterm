@@ -66,6 +66,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self.search_current_occurrence = 0
         self.search_active = False
 
+        # Active modal dialog counter for safe focus management
+        self.active_modals_count = 0
+
         # Initial state from command line or other windows
         self.initial_working_directory = kwargs.get("initial_working_directory")
         self.initial_execute_command = kwargs.get("initial_execute_command")
