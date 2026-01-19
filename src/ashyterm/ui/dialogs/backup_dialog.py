@@ -26,26 +26,58 @@ class BackupRestoreHandler:
         file_dialog = Gtk.FileDialog(title=_("Save Backup As..."), modal=True)
         timestamp = datetime.now().strftime("%Y-%m-%d")
         file_dialog.set_initial_name(f"ashyterm-backup-{timestamp}.7z")
-        file_dialog.save(parent_window, None, self._on_backup_file_selected)
+        file_dialog.save(
+            parent_window,
+            None,
+            lambda d, r: self._on_backup_file_selected(d, r, parent_window),
+        )
 
-    def _on_backup_file_selected(self, dialog, result):
+    def _get_session_store(self, window):
+        """Helper to find session_store from window or its transient parent."""
+        if hasattr(window, "session_store"):
+            return window.session_store
+
+        transient = window.get_transient_for()
+        if transient and hasattr(transient, "session_store"):
+            return transient.session_store
+
+        # Fallback to active window if possible
+        active = self.app.get_active_window()
+        if active and hasattr(active, "session_store"):
+            return active.session_store
+        return None
+
+    def _show_toast(self, window, toast):
+        """Helper to show toast on the most appropriate window/overlay."""
+        if hasattr(window, "add_toast"):
+            window.add_toast(toast)
+        elif hasattr(window, "toast_overlay"):
+            window.toast_overlay.add_toast(toast)
+        else:
+            transient = window.get_transient_for()
+            if transient:
+                self._show_toast(transient, toast)
+
+    def _on_backup_file_selected(self, dialog, result, parent_window):
         """Callback after user selects a location to save the backup."""
         try:
             gio_file = dialog.save_finish(result)
             if gio_file:
-                self._prompt_for_backup_password(gio_file.get_path())
+                self._prompt_for_backup_password(gio_file.get_path(), parent_window)
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
-                self._show_error_dialog(_("Backup Error"), e.message)
+                self._show_error_dialog(
+                    _("Backup Error"), e.message, parent=parent_window
+                )
 
-    def _prompt_for_backup_password(self, target_path: str):
+    def _prompt_for_backup_password(self, target_path: str, parent_window: Gtk.Window):
         """Shows a dialog to get and confirm a password for the backup."""
-        active_window = self.app.get_active_window()
         dialog = Adw.MessageDialog(
-            transient_for=active_window,
+            transient_for=parent_window,
             heading=_("Set Backup Password"),
             body=_("Please enter a password to encrypt the backup file."),
             close_response="cancel",
+            modal=True,
         )
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         pass_entry = Gtk.PasswordEntry(
@@ -78,21 +110,33 @@ class BackupRestoreHandler:
                     return
 
                 d.close()
-                self._execute_backup(target_path, pwd1)
+                self._execute_backup(target_path, pwd1, parent_window)
             else:
                 d.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
 
-    def _execute_backup(self, target_path: str, password: str):
+        # Explicitly set properties to assist WS/WM
+        dialog.set_transient_for(parent_window)
+        dialog.set_modal(True)
+        dialog.set_destroy_with_parent(True)
+
+        # Defer presentation via idle_add using a helper to force parent focus
+        def present_dialog():
+            parent_window.present()
+            dialog.present()
+
+        GLib.idle_add(present_dialog)
+
+    def _execute_backup(
+        self, target_path: str, password: str, parent_window: Gtk.Window
+    ):
         """Executes the backup process in a separate thread."""
-        active_window = self.app.get_active_window()
-        if not active_window:
+        if not parent_window:
             return
 
         toast = Adw.Toast(title=_("Creating backup..."), timeout=0)
-        active_window.toast_overlay.add_toast(toast)
+        self._show_toast(parent_window, toast)
 
         def backup_thread():
             try:
@@ -101,10 +145,15 @@ class BackupRestoreHandler:
                     Path(SETTINGS_FILE),
                 ]
                 layouts_dir = Path(LAYOUT_DIR)
+
+                session_store = self._get_session_store(parent_window)
+                if not session_store:
+                    raise Exception("Could not locate session data")
+
                 self.app.backup_manager.create_encrypted_backup(
                     target_path,
                     password,
-                    active_window.session_store,
+                    session_store,
                     source_files,
                     layouts_dir,
                 )
@@ -112,6 +161,7 @@ class BackupRestoreHandler:
                     self._show_info_dialog,
                     _("Backup Complete"),
                     _("Backup saved successfully to:\n{}").format(target_path),
+                    parent_window,
                 )
             except Exception as e:
                 if self.logger:
@@ -120,6 +170,7 @@ class BackupRestoreHandler:
                     self._show_error_dialog,
                     _("Backup Failed"),
                     _("Could not create backup: {}").format(e),
+                    parent_window,
                 )
             finally:
                 GLib.idle_add(toast.dismiss)
@@ -136,14 +187,30 @@ class BackupRestoreHandler:
             ),
             body_use_markup=True,
             close_response="cancel",
+            modal=True,
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("restore", _("Choose File and Restore"))
         dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect("response", self._on_restore_confirmation)
-        dialog.present()
+        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.connect(
+            "response",
+            lambda d, r: self._on_restore_confirmation(d, r, parent_window),
+        )
 
-    def _on_restore_confirmation(self, dialog, response_id):
+        # Explicitly set properties to assist WS/WM
+        dialog.set_transient_for(parent_window)
+        dialog.set_modal(True)
+        dialog.set_destroy_with_parent(True)
+
+        # Defer presentation via idle_add using a helper to force parent focus
+        def present_dialog():
+            parent_window.present()
+            dialog.present()
+
+        GLib.idle_add(present_dialog)
+
+    def _on_restore_confirmation(self, dialog, response_id, parent_window):
         dialog.close()
         if response_id == "restore":
             file_dialog = Gtk.FileDialog(title=_("Select Backup File"), modal=True)
@@ -154,26 +221,31 @@ class BackupRestoreHandler:
             filters.append(file_filter)
             file_dialog.set_filters(filters)
             file_dialog.open(
-                self.app.get_active_window(), None, self._on_restore_file_selected
+                parent_window,
+                None,
+                lambda d, r: self._on_restore_file_selected(d, r, parent_window),
             )
 
-    def _on_restore_file_selected(self, dialog, result):
+    def _on_restore_file_selected(self, dialog, result, parent_window):
         """Callback after user selects a backup file to restore."""
         try:
             gio_file = dialog.open_finish(result)
             if gio_file:
-                self._prompt_for_restore_password(gio_file.get_path())
+                self._prompt_for_restore_password(gio_file.get_path(), parent_window)
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
-                self._show_error_dialog(_("Restore Error"), e.message)
+                self._show_error_dialog(
+                    _("Restore Error"), e.message, parent=parent_window
+                )
 
-    def _prompt_for_restore_password(self, source_path: str):
+    def _prompt_for_restore_password(self, source_path: str, parent_window: Gtk.Window):
         """Shows a dialog to get the password for the backup file."""
         dialog = Adw.MessageDialog(
-            transient_for=self.app.get_active_window(),
+            transient_for=parent_window,
             heading=_("Enter Backup Password"),
             body=_("Please enter the password for the selected backup file."),
             close_response="cancel",
+            modal=True,
         )
         pass_entry = Gtk.PasswordEntry(
             placeholder_text=_("Password"), show_peek_icon=True
@@ -188,24 +260,36 @@ class BackupRestoreHandler:
             if response_id == "restore":
                 password = pass_entry.get_text()
                 if password:
-                    self._execute_restore(source_path, password)
+                    self._execute_restore(source_path, password, parent_window)
             d.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
 
-    def _execute_restore(self, source_path: str, password: str):
+        # Explicitly set properties to assist WS/WM
+        dialog.set_transient_for(parent_window)
+        dialog.set_modal(True)
+        dialog.set_destroy_with_parent(True)
+
+        # Defer presentation via idle_add using a helper to force parent focus
+        def present_dialog():
+            parent_window.present()
+            dialog.present()
+
+        GLib.idle_add(present_dialog)
+
+    def _execute_restore(
+        self, source_path: str, password: str, parent_window: Gtk.Window
+    ):
         """Executes the restore process in a separate thread."""
-        active_window = self.app.get_active_window()
         toast = Adw.Toast(title=_("Restoring from backup..."), timeout=0)
-        active_window.toast_overlay.add_toast(toast)
+        self._show_toast(parent_window, toast)
 
         def restore_thread():
             try:
                 self.app.backup_manager.restore_from_encrypted_backup(
                     source_path, password, self.app.platform_info.config_dir
                 )
-                GLib.idle_add(self._show_restore_success_dialog)
+                GLib.idle_add(self._show_restore_success_dialog, parent_window)
             except Exception as e:
                 if self.logger:
                     self.logger.error(f"Restore failed: {e}")
@@ -213,36 +297,77 @@ class BackupRestoreHandler:
                     self._show_error_dialog,
                     _("Restore Failed"),
                     _("Could not restore from backup: {}").format(e),
+                    parent_window,
                 )
             finally:
                 GLib.idle_add(toast.dismiss)
 
         threading.Thread(target=restore_thread, daemon=True).start()
 
-    def _show_restore_success_dialog(self):
+    def _show_restore_success_dialog(self, parent_window: Gtk.Window):
         dialog = Adw.MessageDialog(
-            transient_for=self.app.get_active_window(),
+            transient_for=parent_window,
             heading=_("Restore Complete"),
             body=_(
                 "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
             ),
             close_response="ok",
+            modal=True,
         )
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+
+        # Explicitly set properties to assist WS/WM
+        dialog.set_transient_for(parent_window)
+        dialog.set_modal(True)
+        dialog.set_destroy_with_parent(True)
+
+        def present_dialog():
+            parent_window.present()
+            dialog.present()
+
+        GLib.idle_add(present_dialog)
         return False
 
     def _show_error_dialog(self, title: str, message: str, parent=None) -> None:
         """Show error dialog to user."""
         if parent is None:
             parent = self.app.get_active_window()
-        dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
+        dialog = Adw.MessageDialog(
+            transient_for=parent, title=title, body=message, modal=True
+        )
         dialog.add_response("ok", _("OK"))
-        dialog.present()
 
-    def _show_info_dialog(self, title: str, message: str) -> None:
+        if parent:
+            dialog.set_transient_for(parent)
+            dialog.set_destroy_with_parent(True)
+
+        dialog.set_modal(True)
+
+        def present_dialog():
+            if parent:
+                parent.present()
+            dialog.present()
+
+        GLib.idle_add(present_dialog)
+
+    def _show_info_dialog(self, title: str, message: str, parent=None) -> None:
         """Show info dialog to user."""
-        parent = self.app.get_active_window()
-        dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
+        if parent is None:
+            parent = self.app.get_active_window()
+        dialog = Adw.MessageDialog(
+            transient_for=parent, title=title, body=message, modal=True
+        )
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+
+        if parent:
+            dialog.set_transient_for(parent)
+            dialog.set_destroy_with_parent(True)
+
+        dialog.set_modal(True)
+
+        def present_dialog():
+            if parent:
+                parent.present()
+            dialog.present()
+
+        GLib.idle_add(present_dialog)

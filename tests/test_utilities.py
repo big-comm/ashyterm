@@ -304,7 +304,10 @@ class TestSecurityExtended:
         from ashyterm.utils.security import InputSanitizer
 
         # Valid hostnames should pass
-        assert InputSanitizer.sanitize_hostname("server.example.com") == "server.example.com"
+        assert (
+            InputSanitizer.sanitize_hostname("server.example.com")
+            == "server.example.com"
+        )
         assert InputSanitizer.sanitize_hostname("MY-SERVER") == "my-server"
 
     def test_path_validator_basic(self):
@@ -335,7 +338,9 @@ class TestSecurityExtended:
         from ashyterm.utils.security import HostnameValidator
 
         assert HostnameValidator.is_valid_hostname("example.com") is True
-        assert HostnameValidator.is_valid_hostname("server.subdomain.example.com") is True
+        assert (
+            HostnameValidator.is_valid_hostname("server.subdomain.example.com") is True
+        )
 
 
 class TestSessionItemExtended:

@@ -791,7 +791,10 @@ class SessionTreeView:
 
     def _transfer_focus_to_active_terminal(self) -> bool:
         """Transfer focus to the active terminal."""
-        if hasattr(self.parent_window, "tab_manager") and self.parent_window.tab_manager:
+        if (
+            hasattr(self.parent_window, "tab_manager")
+            and self.parent_window.tab_manager
+        ):
             terminal = self.parent_window.tab_manager.get_selected_terminal()
             if terminal:
                 self.parent_window.tab_manager._schedule_terminal_focus(terminal)

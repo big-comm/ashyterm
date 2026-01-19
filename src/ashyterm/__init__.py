@@ -1,5 +1,5 @@
 import argparse
-import os
+
 import signal
 import sys
 
@@ -67,7 +67,7 @@ def main() -> int:
     pre_parser = argparse.ArgumentParser(add_help=False)
     pre_parser.add_argument("--debug", "-d", action="store_true")
     pre_parser.add_argument("--log-level")
-    pre_args, remaining_argv = pre_parser.parse_known_args()
+    pre_args, _unused_args = pre_parser.parse_known_args()
 
     # Apply pre-launch log settings if provided
     if pre_args.debug:
@@ -159,10 +159,7 @@ def main() -> int:
         "--new-window", action="store_true", help=_("Force opening a new window")
     )
 
-    try:
-        parser.parse_known_args()
-    except SystemExit:
-        return 0
+    parser.parse_known_args()
 
     setup_signal_handlers()
 

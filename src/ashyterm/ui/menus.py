@@ -279,7 +279,7 @@ def create_terminal_menu(
 ) -> Gio.Menu:
     """Factory function to create a terminal context menu model."""
     menu = Gio.Menu()
-    
+
     # URL detection
     url_at_click = None
     if click_x is not None and click_y is not None and hasattr(terminal, "match_check"):
@@ -305,7 +305,7 @@ def create_terminal_menu(
         menu.append_section(None, url_section)
 
     standard_section = Gio.Menu()
-    
+
     # AI Assistant section - only show if enabled and text is selected
     try:
         if settings_manager and settings_manager.get("ai_assistant_enabled", False):
@@ -333,11 +333,10 @@ def create_terminal_menu(
     split_h_item = Gio.MenuItem.new(_("Split Left/Right"), "win.split-horizontal")
     # split_h_item.set_icon(Gio.ThemedIcon.new("view-split-horizontal-symbolic"))
     split_section.append_item(split_h_item)
-    
+
     split_v_item = Gio.MenuItem.new(_("Split Top/Bottom"), "win.split-vertical")
     # split_v_item.set_icon(Gio.ThemedIcon.new("view-split-vertical-symbolic"))
     split_section.append_item(split_v_item)
 
     menu.append_section(None, split_section)
     return menu
-

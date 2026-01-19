@@ -218,54 +218,64 @@ class SecurityAuditor:
         hostname = session_data.get("host", "")
         if hostname:
             if not HostnameValidator.is_valid_hostname(hostname):
-                findings.append({
-                    "severity": "medium",
-                    "type": "invalid_hostname",
-                    "message": _("Invalid hostname format: {}").format(hostname),
-                    "recommendation": _("Use a valid hostname or IP address"),
-                })
+                findings.append(
+                    {
+                        "severity": "medium",
+                        "type": "invalid_hostname",
+                        "message": _("Invalid hostname format: {}").format(hostname),
+                        "recommendation": _("Use a valid hostname or IP address"),
+                    }
+                )
             elif resolve_dns:
                 # Only resolve hostname when explicitly requested (e.g., test connection)
                 # to avoid blocking the UI during startup
                 if (
                     ip := HostnameValidator.resolve_hostname(hostname)
                 ) and HostnameValidator.is_private_ip(ip):
-                    findings.append({
-                        "severity": "low",
-                        "type": "private_ip",
-                        "message": _("Connecting to private IP: {}").format(ip),
-                        "recommendation": _("Ensure this is intentional"),
-                    })
+                    findings.append(
+                        {
+                            "severity": "low",
+                            "type": "private_ip",
+                            "message": _("Connecting to private IP: {}").format(ip),
+                            "recommendation": _("Ensure this is intentional"),
+                        }
+                    )
 
         auth_type = session_data.get("auth_type", "")
         auth_value = session_data.get("auth_value", "")
         if auth_type == "key" and auth_value:
             is_valid, error = SSHKeyValidator.validate_ssh_key_path(auth_value)
             if not is_valid:
-                findings.append({
-                    "severity": "high",
-                    "type": "invalid_ssh_key",
-                    "message": _("SSH key validation failed: {}").format(error),
-                    "recommendation": _("Fix SSH key configuration"),
-                })
+                findings.append(
+                    {
+                        "severity": "high",
+                        "type": "invalid_ssh_key",
+                        "message": _("SSH key validation failed: {}").format(error),
+                        "recommendation": _("Fix SSH key configuration"),
+                    }
+                )
         elif auth_type == "password":
-            findings.append({
-                "severity": "medium",
-                "type": "password_auth",
-                "message": _("Using password authentication"),
-                "recommendation": _(
-                    "Consider using SSH key authentication for better security"
-                ),
-            })
+            findings.append(
+                {
+                    "severity": "medium",
+                    "type": "password_auth",
+                    "message": _("Using password authentication"),
+                    "recommendation": _(
+                        "Consider using SSH key authentication for better security"
+                    ),
+                }
+            )
 
         username = session_data.get("user", "")
         if username == "root":
-            findings.append({
-                "severity": "medium",
-                "type": "root_user",
-                "message": _("Connecting as root user"),
-                "recommendation": _("Use a regular user account when possible"),
-            })
+            findings.append(
+                {
+                    "severity": "medium",
+                    "type": "root_user",
+                    "message": _("Connecting as root user"),
+                    "recommendation": _("Use a regular user account when possible"),
+                }
+            )
 
         return findings
 
