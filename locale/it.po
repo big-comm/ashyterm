@@ -897,10 +897,10 @@ msgstr "Integrato"
 msgid "Bold Text"
 msgstr "Testo in grassetto"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Schemi di Colore"
+msgid "Appearance Themes"
+msgstr "Temi di Aspetto"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4669,10 +4669,10 @@ msgstr "Evidenzia i comandi mentre digiti al prompt della shell"
 msgid "Local Terminal Options"
 msgstr "Opzioni del Terminale Locale"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Directory di lavoro"
+msgid "Start in Folder"
+msgstr "Inizia nella cartella"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4708,11 +4708,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "Configurazione SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Host"
+msgid "Server Address"
+msgstr "Indirizzo del server"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4724,10 +4724,10 @@ msgstr "Nome utente"
 msgid "Port"
 msgstr "Porta"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Autenticazione"
+msgid "Authentication Method"
+msgstr "Metodo di autenticazione"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4745,10 +4745,10 @@ msgstr "Chiave SSH"
 msgid "Password"
 msgstr "Password"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "Percorso della chiave SSH"
+msgid "SSH Key File"
+msgstr "File chiave SSH"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4840,10 +4840,10 @@ msgstr "Crea un nuovo tunnel SSH"
 msgid "No port forwards configured."
 msgstr "Nessuna porta inoltrata configurata."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "Host SSH"
+msgid "SSH Server Address"
+msgstr "Indirizzo del server SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4880,10 +4880,10 @@ msgstr "Nome Tunnel"
 msgid "Local Settings"
 msgstr "Impostazioni locali"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Host Locale"
+msgid "Local Address"
+msgstr "Indirizzo locale"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4900,20 +4900,20 @@ msgstr "Porta sul tuo computer (1025-65535 consigliato)"
 msgid "Remote Settings"
 msgstr "Impostazioni Remote"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Usa host remoto personalizzato"
+msgid "Use Custom Remote Address"
+msgstr "Usa indirizzo remoto personalizzato"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Lascia vuoto per utilizzare il server SSH come obiettivo"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Host Remoto"
+msgid "Remote Address"
+msgstr "Indirizzo remoto"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4943,10 +4943,10 @@ msgstr "Seleziona colore della scheda"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Il server remoto deve avere X11Forwarding yes in sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Seleziona la directory di lavoro"
+msgid "Select Start Folder"
+msgstr "Seleziona la cartella di avvio"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6026,10 +6026,10 @@ msgstr "Nascondi sempre"
 msgid "Never hide"
 msgstr "Mai nascondere"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Quando già in esecuzione"
+msgid "Launch Behavior"
+msgstr "Comportamento di avvio"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6086,10 +6086,10 @@ msgstr "Acceso attivo"
 msgid "Off"
 msgstr "Spento"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Linee di Scorrimento"
+msgid "History Limit"
+msgstr "Limite di Storia"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6117,6 +6117,16 @@ msgstr "Sensibilità dello Scorrimento del Touchpad"
 msgid "Scroll on Paste"
 msgstr "Scorrere durante l'incolla"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Scorrimento Cinematico"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Abilita lo scorrimento basato su momentum per il touchpad"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6132,10 +6142,10 @@ msgstr "Campanella udibile"
 msgid "Profiles & Data"
 msgstr "Profili e Dati"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Alla Chiusura"
+msgid "Closing Behavior"
+msgstr "Comportamento di Chiusura"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6200,10 +6210,10 @@ msgstr "Usa /tmp per modificare file in remoto"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Cancella file di modifica remota all'uscita"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "Persistenza della connessione SSH"
+msgid "Keep Connection Active"
+msgstr "Mantieni la connessione attiva"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

@@ -895,10 +895,10 @@ msgstr "Innbyggð"
 msgid "Bold Text"
 msgstr "Feitletrað Texti"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Litaskemur"
+msgid "Appearance Themes"
+msgstr "Útlitsþemu"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4652,10 +4652,10 @@ msgstr "Merkið skipanir þegar þú slærð þær inn í skelina."
 msgid "Local Terminal Options"
 msgstr "Stillingar fyrir staðbundinn terminal"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Vinnsluskráður"
+msgid "Start in Folder"
+msgstr "Byrja í möppu"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4691,11 +4691,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH stilling"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Gestirandi"
+msgid "Server Address"
+msgstr "Þjónustuvefurheimilisfang"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4707,10 +4707,10 @@ msgstr "Notandi"
 msgid "Port"
 msgstr "Portur"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Vottun"
+msgid "Authentication Method"
+msgstr "Auðkenningaraðferð"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4728,10 +4728,10 @@ msgstr "SSH lykill"
 msgid "Password"
 msgstr "Lykilorð"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH lykil leið."
+msgid "SSH Key File"
+msgstr "SSH lykil skrá"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4823,10 +4823,10 @@ msgstr "Búa til nýjan SSH göng."
 msgid "No port forwards configured."
 msgstr "Engin er ekki stillt."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH Hýsing"
+msgid "SSH Server Address"
+msgstr "SSH þjónustuvefurheimilisfang"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4863,10 +4863,10 @@ msgstr "Tengill Nafn"
 msgid "Local Settings"
 msgstr "Stillingar á staðnum"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Sviðsvæði"
+msgid "Local Address"
+msgstr "Staðbundin heimilisfang"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4883,20 +4883,20 @@ msgstr "Port á vélinni þinni (1025-65535 mælt með)"
 msgid "Remote Settings"
 msgstr "Fjarstillt stillingar"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Notaðu sérsniðið fjarhýsill"
+msgid "Use Custom Remote Address"
+msgstr "Notaðu sérsniðið fjarstýringuheimilisfang"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Sleppa af til að nota SSH þjóninn sem markmið"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Fjarhosti"
+msgid "Remote Address"
+msgstr "Fjarstýrður Heimilisfang"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4926,10 +4926,10 @@ msgstr "Veldu flipaflokk lit"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Fjarri þjónninn verður að hafa X11Forwarding já í sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Veldu vinnuslóð"
+msgid "Select Start Folder"
+msgstr "Veldu Upphafs möppu"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6007,10 +6007,10 @@ msgstr "Alltaf fela"
 msgid "Never hide"
 msgstr "Aldrei fela"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Þegar þegar forritið er þegar í gangi"
+msgid "Launch Behavior"
+msgstr "Ræsingarhegðun"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6067,10 +6067,10 @@ msgstr "Áfram"
 msgid "Off"
 msgstr "Slökkt"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Skráningarlínur"
+msgid "History Limit"
+msgstr "Sögulegur takmarkanir"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6098,6 +6098,16 @@ msgstr "Snerting á snertiflötum"
 msgid "Scroll on Paste"
 msgstr "Rúlla við límningu"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kinetískur skrollun"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Virkja skrið með krafti fyrir snertiplötu"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6113,10 +6123,10 @@ msgstr "Hljóðmerki"
 msgid "Profiles & Data"
 msgstr "Profílar & Gögn"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Á meðan lokað er"
+msgid "Closing Behavior"
+msgstr "Lokahegðun"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6181,10 +6191,10 @@ msgstr "Notaðu /tmp fyrir fjarritun skráa"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Tæma fjarritunarskrár við útgöngu"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH tengingar viðvarandi"
+msgid "Keep Connection Active"
+msgstr "Haldaðu tengingu virkri"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

@@ -895,10 +895,10 @@ msgstr "Inbyggd"
 msgid "Bold Text"
 msgstr "Fet text"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Färgscheman"
+msgid "Appearance Themes"
+msgstr "Utseende Teman"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4655,10 +4655,10 @@ msgstr "Markera kommandon medan du skriver vid kommandoprompten"
 msgid "Local Terminal Options"
 msgstr "Lokala terminalalternativ"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Arbetskatalog"
+msgid "Start in Folder"
+msgstr "Starta i mapp"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4694,11 +4694,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH-konfiguration"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Värd"
+msgid "Server Address"
+msgstr "Serveradress"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4710,10 +4710,10 @@ msgstr "Användarnamn"
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Autentisering"
+msgid "Authentication Method"
+msgstr "Autentiseringsmetod"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4731,10 +4731,10 @@ msgstr "SSH-nyckel"
 msgid "Password"
 msgstr "Lösenord"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH-nyckelväg"
+msgid "SSH Key File"
+msgstr "SSH-nyckelfil"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4826,10 +4826,10 @@ msgstr "Skapa en ny SSH-tunnel"
 msgid "No port forwards configured."
 msgstr "Inga portvidare är konfigurerade."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH-värd"
+msgid "SSH Server Address"
+msgstr "SSH-serveradress"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4866,10 +4866,10 @@ msgstr "Tunnelens namn"
 msgid "Local Settings"
 msgstr "Lokala inställningar"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Lokal värd"
+msgid "Local Address"
+msgstr "Lokal adress"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4886,20 +4886,20 @@ msgstr "Port på din maskin (1025-65535 rekommenderas)"
 msgid "Remote Settings"
 msgstr "Fjärrinställningar"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Använd anpassad fjärrvärd"
+msgid "Use Custom Remote Address"
+msgstr "Använd anpassad fjärradress"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Lämna av för att använda SSH-servern som mål"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Fjärrvärd"
+msgid "Remote Address"
+msgstr "Fjärradress"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4929,10 +4929,10 @@ msgstr "Välj flikfärg"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Fjärrservern måste ha X11Forwarding ja i sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Välj arbetskatalog"
+msgid "Select Start Folder"
+msgstr "Välj startmapp"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6010,10 +6010,10 @@ msgstr "Dölj alltid"
 msgid "Never hide"
 msgstr "Aldrig dölja"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "När den redan körs"
+msgid "Launch Behavior"
+msgstr "Startbeteende"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6070,10 +6070,10 @@ msgstr "På"
 msgid "Off"
 msgstr "Avstängd"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Scrollback-rader"
+msgid "History Limit"
+msgstr "Historikgräns"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6101,6 +6101,16 @@ msgstr "Touchpad Rullningskänslighet"
 msgid "Scroll on Paste"
 msgstr "Rulla vid klippning"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kinetisk rullning"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Aktivera rörelsebaserad rullning för pekplatta"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6116,10 +6126,10 @@ msgstr "Ljudlig klocka"
 msgid "Profiles & Data"
 msgstr "Profiler och Data"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Vid stängning"
+msgid "Closing Behavior"
+msgstr "Stängningsbeteende"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6184,10 +6194,10 @@ msgstr "Använd /tmp för att redigera filer på distans"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Rensa fjärrredigeringsfiler vid utgång"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH-anslutningsbeständighet"
+msgid "Keep Connection Active"
+msgstr "Håll anslutningen aktiv"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

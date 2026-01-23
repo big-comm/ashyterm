@@ -899,10 +899,10 @@ msgstr "Vestavěný"
 msgid "Bold Text"
 msgstr "Tučný text"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Barevné schémata"
+msgid "Appearance Themes"
+msgstr "Vzhled Témata"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4654,10 +4654,10 @@ msgstr "Zvýrazněte příkazy, jak je zadáváte na příkazovém řádku."
 msgid "Local Terminal Options"
 msgstr "Místní terminálové možnosti"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Pracovní adresář"
+msgid "Start in Folder"
+msgstr "Spustit ve složce"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4693,11 +4693,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "Konfigurace SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Hostitel"
+msgid "Server Address"
+msgstr "Adresa serveru"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4709,10 +4709,10 @@ msgstr "Uživatelské jméno"
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Ověření"
+msgid "Authentication Method"
+msgstr "Metoda ověřování"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4730,10 +4730,10 @@ msgstr "SSH klíč"
 msgid "Password"
 msgstr "Heslo"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "Cesta k SSH klíči"
+msgid "SSH Key File"
+msgstr "Soubor SSH klíče"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4825,10 +4825,10 @@ msgstr "Vytvořit nový SSH tunel"
 msgid "No port forwards configured."
 msgstr "Nebyly nakonfigurovány žádné porty."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH host"
+msgid "SSH Server Address"
+msgstr "Adresa SSH serveru"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4865,10 +4865,10 @@ msgstr "Název tunelu"
 msgid "Local Settings"
 msgstr "Místní nastavení"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Místní hostitel"
+msgid "Local Address"
+msgstr "Místní adresa"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4885,20 +4885,20 @@ msgstr "Port na vašem zařízení (doporučeno 1025-65535)"
 msgid "Remote Settings"
 msgstr "Vzdálená nastavení"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Použít vlastní vzdálený hostitel"
+msgid "Use Custom Remote Address"
+msgstr "Použít vlastní vzdálenou adresu"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Nechte prázdné pro použití SSH serveru jako cíle."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Vzdálený hostitel"
+msgid "Remote Address"
+msgstr "Vzdálená adresa"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4928,10 +4928,10 @@ msgstr "Vyberte barvu karty"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Vzdálený server musí mít X11Forwarding yes v sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Vyberte pracovní adresář"
+msgid "Select Start Folder"
+msgstr "Vyberte složku Start"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6007,10 +6007,10 @@ msgstr "Vždy skrýt"
 msgid "Never hide"
 msgstr "Nikdy neskrývej"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Když je již spuštěno"
+msgid "Launch Behavior"
+msgstr "Chování spuštění"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6067,10 +6067,10 @@ msgstr "Zapnuto"
 msgid "Off"
 msgstr "Vypnuto"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Zpětné řádky"
+msgid "History Limit"
+msgstr "Historie Limit"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6098,6 +6098,16 @@ msgstr "Citlivost posouvání touchpadu"
 msgid "Scroll on Paste"
 msgstr "Srolovat při vložení"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kinetické rolování"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Povolit posuvání založené na momentu pro touchpad"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6113,10 +6123,10 @@ msgstr "Slyšitelný zvonek"
 msgid "Profiles & Data"
 msgstr "Profily a data"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Při zavření"
+msgid "Closing Behavior"
+msgstr "Chování při zavření"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6181,10 +6191,10 @@ msgstr "Použijte /tmp pro vzdálené úpravy souborů"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Vymazat vzdálené upravené soubory při ukončení"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "Trvalost SSH připojení"
+msgid "Keep Connection Active"
+msgstr "Udržovat připojení aktivní"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

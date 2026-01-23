@@ -897,10 +897,10 @@ msgstr "Sisseehitatud"
 msgid "Bold Text"
 msgstr "Rasvane tekst"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Värviskeemid"
+msgid "Appearance Themes"
+msgstr "Välimuse teemad"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4647,10 +4647,10 @@ msgstr "Tõsta käsud esile, kui kirjutad shelli käsuviibas."
 msgid "Local Terminal Options"
 msgstr "Kohalikud terminali valikud"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Töökataloog"
+msgid "Start in Folder"
+msgstr "Ava kaustades"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4686,11 +4686,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH konfiguratsioon"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Host"
+msgid "Server Address"
+msgstr "Serveri aadress"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4702,10 +4702,10 @@ msgstr "Kasutajanimi"
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Autentimine"
+msgid "Authentication Method"
+msgstr "Autentimise meetod"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4723,10 +4723,10 @@ msgstr "SSH võti"
 msgid "Password"
 msgstr "Parool"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH võtme tee"
+msgid "SSH Key File"
+msgstr "SSH võtmefail"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4818,10 +4818,10 @@ msgstr "Loo uus SSH tunnel"
 msgid "No port forwards configured."
 msgstr "Porti edastusi ei ole konfigureeritud."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH Host"
+msgid "SSH Server Address"
+msgstr "SSH serveri aadress"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4858,10 +4858,10 @@ msgstr "Tunnel Nimi"
 msgid "Local Settings"
 msgstr "Kohalikud seaded"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Kohalik host"
+msgid "Local Address"
+msgstr "Kohalik aadress"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4878,20 +4878,20 @@ msgstr "Pord teie masinas (soovitatav 1025-65535)"
 msgid "Remote Settings"
 msgstr "Kaugseaded"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Kasutage kohandatud kaugserverit"
+msgid "Use Custom Remote Address"
+msgstr "Kasutage kohandatud kaugadresse"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Jäta välja, et kasutada SSH-serverit sihtmärgina."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Kaugjuhtimisseade"
+msgid "Remote Address"
+msgstr "Kaugühenduse aadress"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4921,10 +4921,10 @@ msgstr "Vali vahekaardi värv"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Kaugserver peab sshd_config failis olema X11Forwarding jah."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Vali töökaust"
+msgid "Select Start Folder"
+msgstr "Vali alguskaust"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6002,10 +6002,10 @@ msgstr "Alati peida"
 msgid "Never hide"
 msgstr "Ära peida kunagi"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Kui juba käib"
+msgid "Launch Behavior"
+msgstr "Käivitamise käitumine"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6062,10 +6062,10 @@ msgstr "Käesolev"
 msgid "Off"
 msgstr "Väljas"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Kerimisread"
+msgid "History Limit"
+msgstr "Ajalugu piirang"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6093,6 +6093,16 @@ msgstr "Puuteplaadi kerimise tundlikkus"
 msgid "Scroll on Paste"
 msgstr "Keri kopeerimisel"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kineetiline kerimine"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Luba puutetundliku seadme jaoks momentum-põhise kerimise lubamine"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6108,10 +6118,10 @@ msgstr "Kuuldav kell"
 msgid "Profiles & Data"
 msgstr "Profiilid ja andmed"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Sulgemisel"
+msgid "Closing Behavior"
+msgstr "Sulgemisviis"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6176,10 +6186,10 @@ msgstr "Kasutage /tmp kaugredigeerimise failide jaoks"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Kustuta kaugredigeerimise failid väljumisel"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH ühenduse püsimine"
+msgid "Keep Connection Active"
+msgstr "Hoia ühendus aktiivsena"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
