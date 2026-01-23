@@ -478,9 +478,9 @@ class SessionEditDialog(BaseDialog):
             title=_("Local Terminal Options"),
         )
 
-        # Working Directory - using Adw.ActionRow with entry and browse button
+        # Start in Folder - using Adw.ActionRow with entry and browse button
         working_dir_row = Adw.ActionRow(
-            title=_("Working Directory"),
+            title=_("Start in Folder"),
             subtitle=_("Start the terminal in this folder"),
         )
 
@@ -573,9 +573,9 @@ class SessionEditDialog(BaseDialog):
             title=_("SSH Configuration"),
         )
 
-        # Host - using helper
+        # Server Address - using helper
         self.host_row = self._create_entry_row(
-            title=_("Host"),
+            title=_("Server Address"),
             text=self.editing_session.host or "",
             on_changed=self._on_host_changed,
         )
@@ -607,7 +607,7 @@ class SessionEditDialog(BaseDialog):
 
         # Authentication Method - using Adw.ComboRow
         self.auth_combo = Adw.ComboRow(
-            title=_("Authentication"),
+            title=_("Authentication Method"),
             subtitle=_("Choose how to authenticate with the server"),
         )
         self.auth_combo.set_model(Gtk.StringList.new([_("SSH Key"), _("Password")]))
@@ -617,14 +617,14 @@ class SessionEditDialog(BaseDialog):
         )
         ssh_group.add(self.auth_combo)
 
-        # SSH Key Path - using Adw.ActionRow with entry and browse button
+        # SSH Key File - using Adw.ActionRow with entry and browse button
         key_value = (
             self.editing_session.auth_value
             if self.editing_session.uses_key_auth()
             else ""
         )
         self.key_row = Adw.ActionRow(
-            title=_("SSH Key Path"),
+            title=_("SSH Key File"),
             subtitle=_("Path to your private key file"),
         )
 
@@ -881,7 +881,7 @@ class SessionEditDialog(BaseDialog):
             return
 
         for index, tunnel in enumerate(self.port_forwardings):
-            remote_host_display = tunnel.get("remote_host") or _("SSH Host")
+            remote_host_display = tunnel.get("remote_host") or _("SSH Server Address")
             subtitle_text = _(
                 "{local_host}:{local_port} → {remote_host}:{remote_port}"
             ).format(
@@ -1011,7 +1011,7 @@ class SessionEditDialog(BaseDialog):
         local_group = Adw.PreferencesGroup(title=_("Local Settings"))
         prefs_page.add(local_group)
 
-        widgets["local_host"] = Adw.EntryRow(title=_("Local Host"))
+        widgets["local_host"] = Adw.EntryRow(title=_("Local Address"))
         widgets["local_host"].set_text(existing.get("local_host", "localhost"))
         local_group.add(widgets["local_host"])
 
@@ -1029,13 +1029,13 @@ class SessionEditDialog(BaseDialog):
 
         use_custom = bool(existing.get("remote_host"))
         widgets["remote_toggle"] = Adw.SwitchRow(
-            title=_("Use Custom Remote Host"),
+            title=_("Use Custom Remote Address"),
             subtitle=_("Leave off to use the SSH server as target"),
             active=use_custom,
         )
         remote_group.add(widgets["remote_toggle"])
 
-        widgets["remote_host"] = Adw.EntryRow(title=_("Remote Host"))
+        widgets["remote_host"] = Adw.EntryRow(title=_("Remote Address"))
         widgets["remote_host"].set_text(existing.get("remote_host", ""))
         widgets["remote_host"].set_visible(use_custom)
         remote_group.add(widgets["remote_host"])
@@ -1337,9 +1337,7 @@ class SessionEditDialog(BaseDialog):
     def _on_browse_working_dir_clicked(self, button) -> None:
         """Browse for a working directory folder."""
         try:
-            file_dialog = Gtk.FileDialog(
-                title=_("Select Working Directory"), modal=True
-            )
+            file_dialog = Gtk.FileDialog(title=_("Select Start Folder"), modal=True)
             home_dir = Path.home()
             current_path = self.local_working_dir_entry.get_text().strip()
             if current_path:
@@ -1450,15 +1448,21 @@ class SessionEditDialog(BaseDialog):
             or not self.user_entry.get_text().strip()
         ):
             return None
-        return SessionItem(
+        is_password_auth = self.auth_combo.get_selected() != 0
+        session = SessionItem(
             name="Test Connection",
             session_type="ssh",
             host=self.host_entry.get_text().strip(),
             user=self.user_entry.get_text().strip(),
             port=int(self.port_entry.get_value()),
-            auth_type="key" if self.auth_combo.get_selected() == 0 else "password",
-            auth_value=self._get_auth_value(),
+            auth_type="password" if is_password_auth else "key",
+            auth_value="" if is_password_auth else self._get_auth_value(),
         )
+        # For password auth, bypass keyring by setting internal field directly
+        # This allows test_ssh_connection to access the password without saving
+        if is_password_auth:
+            session._auth_value = self.password_entry.get_text()
+        return session
 
     def _run_test_in_thread(self, test_session: SessionItem):
         # Lazy import to defer loading until actually testing connection
@@ -1621,8 +1625,10 @@ class SessionEditDialog(BaseDialog):
 
     def _apply_tab_color(self, session_data: dict) -> None:
         """Apply tab color setting to session data."""
-        rgba = self.color_button.get_rgba()
-        session_data["tab_color"] = rgba.to_string() if rgba.alpha > 0 else None
+        if self.editing_session.tab_color:
+            session_data["tab_color"] = self.editing_session.tab_color
+        else:
+            session_data["tab_color"] = None
 
     def _apply_folder_settings(self, session_data: dict) -> None:
         """Apply folder assignment to session data."""
@@ -1761,7 +1767,7 @@ class SessionEditDialog(BaseDialog):
 
     def _validate_hostname_field(self) -> bool:
         """Validate the SSH hostname field."""
-        if not self._validate_required_field(self.host_entry, _("Host")):
+        if not self._validate_required_field(self.host_entry, _("Server Address")):
             return False
         hostname = self.host_entry.get_text().strip()
         try:

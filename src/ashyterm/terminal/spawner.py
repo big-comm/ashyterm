@@ -43,7 +43,7 @@ LOGGER_NAME_SPAWNER = "ashyterm.spawner"
 
 
 class ProcessTracker:
-    """Track spawned processes for proper cleanup."""
+    """Track launched processes for proper cleanup."""
 
     def __init__(self):
         self.logger = get_logger("ashyterm.spawner.tracker")
@@ -51,7 +51,7 @@ class ProcessTracker:
         self._lock = threading.RLock()
 
     def register_process(self, pid: int, process_info: Dict[str, Any]) -> None:
-        """Register a spawned process."""
+        """Register a launched process."""
         with self._lock:
             self._processes[pid] = {**process_info, "registered_at": time.time()}
 
@@ -133,7 +133,7 @@ class ProcessSpawner:
         self.process_tracker = ProcessTracker()
         self.settings_manager = get_settings_manager()
         self._spawn_lock = threading.Lock()
-        self.logger.info("Process spawner initialized on Linux")
+        self.logger.info("Process launcher initialized on Linux")
 
     def _get_expected_terminal_size(self, terminal: Vte.Terminal) -> Tuple[int, int]:
         """
@@ -427,7 +427,7 @@ class ProcessSpawner:
                 GLib.idle_add(callback, terminal, pid, None, (final_user_data,))
 
             self.logger.info(
-                f"Highlighted {spawn_type} terminal spawned with PID {pid}"
+                f"Highlighted {spawn_type} terminal launched with PID {pid}"
             )
 
             return proxy
@@ -497,9 +497,9 @@ class ProcessSpawner:
                 callback if callback else self._default_spawn_callback,
                 (final_user_data,),
             )
-            self.logger.info("Local terminal spawn initiated successfully")
+            self.logger.info("Local terminal launch initiated successfully")
             log_terminal_event(
-                "spawn_initiated", str(user_data), f"shell command: {' '.join(cmd)}"
+                "launch_initiated", str(user_data), f"shell command: {' '.join(cmd)}"
             )
 
     def _resolve_sftp_working_dir(
@@ -591,17 +591,17 @@ class ProcessSpawner:
                     f"{command_type.upper()} session spawn initiated for: {session.name}"
                 )
                 log_terminal_event(
-                    "spawn_initiated",
+                    "launch_initiated",
                     session.name,
                     f"{command_type.upper()} to {session.get_connection_string()}",
                 )
             except Exception as e:
                 self.logger.error(
-                    f"{command_type.upper()} session spawn failed for {session.name}: {e}"
+                    f"{command_type.upper()} session launch failed for {session.name}: {e}"
                 )
                 log_error_with_context(
                     e,
-                    f"{command_type.upper()} spawn for {session.name}",
+                    f"{command_type.upper()} launch for {session.name}",
                     LOGGER_NAME_SPAWNER,
                 )
                 raise TerminalCreationError(str(e), command_type) from e
@@ -704,7 +704,7 @@ class ProcessSpawner:
 
                 if result:
                     log_terminal_event(
-                        "spawn_initiated",
+                        "launch_initiated",
                         process_name,
                         f"highlighted shell: {' '.join(cmd)}",
                     )
@@ -787,7 +787,7 @@ class ProcessSpawner:
 
                 if spawn_result:
                     log_terminal_event(
-                        "spawn_initiated",
+                        "launch_initiated",
                         session.name,
                         f"highlighted SSH to {session.get_connection_string()}",
                     )
@@ -922,11 +922,15 @@ class ProcessSpawner:
         Builds the SSH test command and environment.
         Returns (command, environment) or (None, error_message) on failure.
         """
+        # Read password directly from _auth_value to bypass keyring lookup
+        # This is needed for test sessions that haven't been saved yet
+        raw_password = getattr(session, "_auth_value", "") or ""
+        use_password = session.uses_password_auth() and raw_password
         ssh_options = {
-            "BatchMode": "yes",
+            "BatchMode": "no" if use_password else "yes",
             "ConnectTimeout": "10",
             "StrictHostKeyChecking": "no",
-            "PasswordAuthentication": "no" if session.uses_key_auth() else "yes",
+            "PasswordAuthentication": "yes" if use_password else "no",
         }
         if getattr(session, "x11_forwarding", False):
             ssh_options["ForwardX11"] = "yes"
@@ -945,7 +949,10 @@ class ProcessSpawner:
         cmd.append("exit")
 
         run_env = None
-        if session.uses_password_auth() and session.auth_value:
+        # Read password directly from _auth_value to bypass keyring lookup
+        # This is needed for test sessions that haven't been saved yet
+        raw_password = getattr(session, "_auth_value", "") or ""
+        if session.uses_password_auth() and raw_password:
             if not has_command("sshpass"):
                 return (
                     None,
@@ -953,7 +960,8 @@ class ProcessSpawner:
                 )
             cmd = ["sshpass", "-e"] + cmd
             run_env = os.environ.copy()
-            run_env["SSHPASS"] = session.auth_value
+            run_env["SSHPASS"] = raw_password
+            run_env["LC_ALL"] = "C"
 
         return cmd, run_env
 
@@ -1313,9 +1321,9 @@ class ProcessSpawner:
             actual_data: Session data for SSH.
         """
         event_type = (
-            f"{spawn_type}_spawn_failed" if spawn_type == "ssh" else "spawn_failed"
+            f"{spawn_type}_launch_failed" if spawn_type == "ssh" else "launch_failed"
         )
-        self.logger.error(f"Process spawn failed for {name}: {error.message}")
+        self.logger.error(f"Process launch failed for {name}: {error.message}")
         log_terminal_event(event_type, name, f"error: {error.message}")
 
         if spawn_type == "ssh" and actual_data:
@@ -1358,8 +1366,8 @@ class ProcessSpawner:
             temp_dir_path: Temporary directory path if any.
             actual_data: Session data for SSH.
         """
-        self.logger.info(f"Process spawned successfully for {name} with PID {pid}")
-        log_terminal_event("spawned", name, f"PID {pid}")
+        self.logger.info(f"Process launched successfully for {name} with PID {pid}")
+        log_terminal_event("launched", name, f"PID {pid}")
 
         if pid > 0:
             process_info = {

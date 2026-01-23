@@ -449,7 +449,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         super().__init__(
             transient_for=parent_window,
             modal=False,
-            title=_("Color Schemes"),
+            title=_("Appearance Themes"),
             default_width=680,
             default_height=720,
             search_enabled=True,

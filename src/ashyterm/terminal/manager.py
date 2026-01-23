@@ -1219,6 +1219,15 @@ class TerminalManager:
                 )
             self._setup_context_menu(terminal)
             self._setup_url_patterns(terminal)
+
+            # Enable kinetic scrolling for touchpad if setting is enabled
+            if self.settings_manager.get("kinetic_scrolling", True):
+                scroll_controller = Gtk.EventControllerScroll.new(
+                    Gtk.EventControllerScrollFlags.BOTH_AXES
+                    | Gtk.EventControllerScrollFlags.KINETIC
+                )
+                terminal.add_controller(scroll_controller)
+
             return terminal
         except Exception as e:
             self.logger.error(f"Base terminal creation failed: {e}")
