@@ -252,9 +252,9 @@ class PreferencesDialog(Adw.PreferencesWindow):
         behavior_group = Adw.PreferencesGroup()
         page.add(behavior_group)
 
-        # New instance behavior setting
+        # Launch Behavior setting
         instance_behavior_row = create_mapped_combo_row(
-            title=_("When Already Running"),
+            title=_("Launch Behavior"),
             value_map=["new_tab", "new_window", "focus_existing"],
             display_strings=[
                 _("Open a new tab"),
@@ -296,7 +296,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         page.add(scrolling_group)
 
         scrollback_row = Adw.ActionRow(
-            title=_("Scrollback Lines"),
+            title=_("History Limit"),
             subtitle=_("0 for unlimited"),
         )
         scrollback_spin = Gtk.SpinButton.new_with_range(0, 1000000, 1000)
@@ -347,6 +347,14 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         scrolling_group.add(scroll_on_insert_row)
 
+        kinetic_scrolling_row = self._create_switch_row(
+            _("Kinetic Scrolling"),
+            _("Enable momentum-based scrolling for touchpad"),
+            "kinetic_scrolling",
+            default_value=True,
+        )
+        scrolling_group.add(kinetic_scrolling_row)
+
         shell_group = Adw.PreferencesGroup()
         page.add(shell_group)
 
@@ -375,9 +383,9 @@ class PreferencesDialog(Adw.PreferencesWindow):
         startup_group = Adw.PreferencesGroup()
         page.add(startup_group)
 
-        # On Close behavior when multiple tabs are open
+        # Closing Behavior when multiple tabs are open
         close_policy_row = create_mapped_combo_row(
-            title=_("On Close"),
+            title=_("Closing Behavior"),
             value_map=["ask", "save_and_close", "just_close"],
             display_strings=[
                 _("Ask what to do"),
@@ -441,7 +449,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         page.add(ssh_group)
 
         persist_row = Adw.ActionRow(
-            title=_("SSH Connection Persistence"),
+            title=_("Keep Connection Active"),
             subtitle=_("Seconds to keep connections alive (0 to disable)"),
         )
         persist_spin = Gtk.SpinButton.new_with_range(0, 3600, 60)
