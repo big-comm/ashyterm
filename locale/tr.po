@@ -895,10 +895,10 @@ msgstr "Yerleşik"
 msgid "Bold Text"
 msgstr "Kalın Metin"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Renk Şemaları"
+msgid "Appearance Themes"
+msgstr "Görünüm Temaları"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4655,10 +4655,10 @@ msgstr "Shell isteminde yazarken komutları vurgula"
 msgid "Local Terminal Options"
 msgstr "Yerel Terminal Seçenekleri"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Çalışma Dizini"
+msgid "Start in Folder"
+msgstr "Klasörde Başlat"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4694,11 +4694,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH Yapılandırması"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Anahtar"
+msgid "Server Address"
+msgstr "Sunucu Adresi"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4710,10 +4710,10 @@ msgstr "Kullanıcı Adı"
 msgid "Port"
 msgstr "Bağlantı Noktası"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Kimlik Doğrulama"
+msgid "Authentication Method"
+msgstr "Kimlik Doğrulama Yöntemi"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4731,10 +4731,10 @@ msgstr "SSH Anahtarı"
 msgid "Password"
 msgstr "Şifre"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH Anahtar Yolu"
+msgid "SSH Key File"
+msgstr "SSH Anahtar Dosyası"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4826,10 +4826,10 @@ msgstr "Yeni bir SSH tüneli oluştur"
 msgid "No port forwards configured."
 msgstr "Hiçbir port yönlendirmesi yapılandırılmamış."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH Ana Bilgisi"
+msgid "SSH Server Address"
+msgstr "SSH Sunucu Adresi"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4866,10 +4866,10 @@ msgstr "Tünel Adı"
 msgid "Local Settings"
 msgstr "Yerel Ayarlar"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Yerel Sunucu"
+msgid "Local Address"
+msgstr "Yerel Adres"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4886,20 +4886,20 @@ msgstr "Makinenizdeki Port (1025-65535 önerilir)"
 msgid "Remote Settings"
 msgstr "Uzaktan Ayarlar"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Özel Uzak Sunucu Kullanımı"
+msgid "Use Custom Remote Address"
+msgstr "Özel Uzak Adres Kullanımı"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Hedef olarak SSH sunucusunu kullanmak için kapatın."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Uzak Sunucu"
+msgid "Remote Address"
+msgstr "Uzak Adres"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4929,10 +4929,10 @@ msgstr "Sekme Rengini Seç"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Uzak sunucuda sshd_config dosyasında X11Forwarding yes olmalıdır."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Çalışma Dizini Seçin"
+msgid "Select Start Folder"
+msgstr "Başlangıç Klasörünü Seç"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6012,10 +6012,10 @@ msgstr "Her zaman gizle"
 msgid "Never hide"
 msgstr "Asla gizleme"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Zaten Çalışıyorken"
+msgid "Launch Behavior"
+msgstr "Başlatma Davranışı"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6072,10 +6072,10 @@ msgstr "Açık"
 msgid "Off"
 msgstr "Kapalı"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Kaydırma Satırları"
+msgid "History Limit"
+msgstr "Geçmiş Sınırı"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6103,6 +6103,16 @@ msgstr "Dokunmatik Yüzey Kaydırma Hassasiyeti"
 msgid "Scroll on Paste"
 msgstr "Yapıştırırken Kaydır"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kinetik Kaydırma"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Dokunmatik yüzey için ivme tabanlı kaydırmayı etkinleştir"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6118,10 +6128,10 @@ msgstr "Sesli Zil"
 msgid "Profiles & Data"
 msgstr "Profiller ve Veriler"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Kapatıldığında"
+msgid "Closing Behavior"
+msgstr "Kapatma Davranışı"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6186,10 +6196,10 @@ msgstr "Uzaktan düzenleme dosyaları için /tmp kullanın"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Çıkışta Uzaktan Düzenleme Dosyalarını Temizle"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH Bağlantı Sürekliliği"
+msgid "Keep Connection Active"
+msgstr "Bağlantıyı Aktif Tut"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

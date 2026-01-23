@@ -895,10 +895,10 @@ msgstr "מובנה"
 msgid "Bold Text"
 msgstr "טקסט מודגש"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "סכמות צבעים"
+msgid "Appearance Themes"
+msgstr "נושאי מראה"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4642,10 +4642,10 @@ msgstr "הדגש פקודות בזמן שאתה מקליד בשורת הפקוד
 msgid "Local Terminal Options"
 msgstr "אפשרויות טרמינל מקומי"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "ספריית עבודה"
+msgid "Start in Folder"
+msgstr "התחל בתיקייה"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4679,11 +4679,11 @@ msgstr "פקודות המבוצעות כאשר הטרמינל מתחיל (אחת
 msgid "SSH Configuration"
 msgstr "הגדרת SSH"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "מארח"
+msgid "Server Address"
+msgstr "כתובת שרת"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4695,10 +4695,10 @@ msgstr "שם משתמש"
 msgid "Port"
 msgstr "פורט"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "אימות"
+msgid "Authentication Method"
+msgstr "שיטת אימות"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4716,10 +4716,10 @@ msgstr "מפתח SSH"
 msgid "Password"
 msgstr "סיסמה"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "נתיב מפתח SSH"
+msgid "SSH Key File"
+msgstr "קובץ מפתח SSH"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4811,10 +4811,10 @@ msgstr "צור מנהרת SSH חדשה"
 msgid "No port forwards configured."
 msgstr "לא הוגדרו הפניות פורטים."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "שרת SSH"
+msgid "SSH Server Address"
+msgstr "כתובת שרת SSH"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4851,10 +4851,10 @@ msgstr "שם מנהרה"
 msgid "Local Settings"
 msgstr "הגדרות מקומיות"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "מחשב מקומי"
+msgid "Local Address"
+msgstr "כתובת מקומית"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4871,20 +4871,20 @@ msgstr "פורט במחשב שלך (מומלץ 1025-65535)"
 msgid "Remote Settings"
 msgstr "הגדרות מרחוק"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "השתמש במארח מרוחק מותאם אישית"
+msgid "Use Custom Remote Address"
+msgstr "השתמש בכתובת מרוחקת מותאמת אישית"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "השאר לא פעיל כדי להשתמש בשרת SSH כמטרה"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "מחשב מרוחק"
+msgid "Remote Address"
+msgstr "כתובת מרוחקת"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4914,10 +4914,10 @@ msgstr "בחר צבע לשונית"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "השרת המרוחק חייב להיות עם X11Forwarding yes בקובץ sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "בחר תיקיית עבודה"
+msgid "Select Start Folder"
+msgstr "בחר תיקיית התחלה"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -5993,10 +5993,10 @@ msgstr "תמיד הסתר"
 msgid "Never hide"
 msgstr "אל תסתיר"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "כאשר כבר פועל"
+msgid "Launch Behavior"
+msgstr "התנהגות השקה"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6053,10 +6053,10 @@ msgstr "על"
 msgid "Off"
 msgstr "כבוי"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "שורות גלילה אחורנית"
+msgid "History Limit"
+msgstr "מגבלת היסטוריה"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6084,6 +6084,16 @@ msgstr "רגישות גלילה של משטח מגע"
 msgid "Scroll on Paste"
 msgstr "גלול בהדבקה"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "גלילה קינטית"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "אפשר להפעיל גלילה מבוססת מומנטום עבור משטח מגע"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6099,10 +6109,10 @@ msgstr "פעמון שמיעתי"
 msgid "Profiles & Data"
 msgstr "פרופילים ונתונים"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "בזמן סגירה"
+msgid "Closing Behavior"
+msgstr "התנהגות סגירה"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6167,10 +6177,10 @@ msgstr "השתמש ב-/tmp לעריכת קבצים מרחוק"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "נקה קבצי עריכה מרחוק ביציאה"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "שימור חיבור SSH"
+msgid "Keep Connection Active"
+msgstr "שמור על חיבור פעיל"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
