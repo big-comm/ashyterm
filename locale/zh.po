@@ -895,10 +895,10 @@ msgstr "内置"
 msgid "Bold Text"
 msgstr "粗体文本"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "颜色方案"
+msgid "Appearance Themes"
+msgstr "外观主题"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4627,10 +4627,10 @@ msgstr "在命令行提示符下输入时高亮显示命令"
 msgid "Local Terminal Options"
 msgstr "本地终端选项"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "工作目录"
+msgid "Start in Folder"
+msgstr "在文件夹中启动"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4664,11 +4664,11 @@ msgstr "终端启动时执行的命令（每行一个）。您可以像编写小
 msgid "SSH Configuration"
 msgstr "SSH 配置"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "主机"
+msgid "Server Address"
+msgstr "服务器地址"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4680,10 +4680,10 @@ msgstr "用户名"
 msgid "Port"
 msgstr "端口"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "身份验证"
+msgid "Authentication Method"
+msgstr "认证方法"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4701,10 +4701,10 @@ msgstr "SSH 密钥"
 msgid "Password"
 msgstr "密码"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH 密钥路径"
+msgid "SSH Key File"
+msgstr "SSH 密钥文件"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4796,10 +4796,10 @@ msgstr "创建一个新的SSH隧道"
 msgid "No port forwards configured."
 msgstr "未配置端口转发。"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH 主机"
+msgid "SSH Server Address"
+msgstr "SSH服务器地址"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4836,10 +4836,10 @@ msgstr "隧道名称"
 msgid "Local Settings"
 msgstr "本地设置"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "本地主机"
+msgid "Local Address"
+msgstr "本地地址"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4856,20 +4856,20 @@ msgstr "您机器上的端口（推荐使用1025-65535）"
 msgid "Remote Settings"
 msgstr "远程设置"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "使用自定义远程主机"
+msgid "Use Custom Remote Address"
+msgstr "使用自定义远程地址"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "留空以使用SSH服务器作为目标"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "远程主机"
+msgid "Remote Address"
+msgstr "远程地址"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4899,10 +4899,10 @@ msgstr "选择标签颜色"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "远程服务器的sshd_config中必须设置X11Forwarding为yes。"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "选择工作目录"
+msgid "Select Start Folder"
+msgstr "选择启动文件夹"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -5978,10 +5978,10 @@ msgstr "始终隐藏"
 msgid "Never hide"
 msgstr "永不隐藏"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "当已在运行时"
+msgid "Launch Behavior"
+msgstr "启动行为"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6038,10 +6038,10 @@ msgstr "开启"
 msgid "Off"
 msgstr "关闭"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "滚动回溯行"
+msgid "History Limit"
+msgstr "历史限制"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6069,6 +6069,16 @@ msgstr "触控板滚动灵敏度"
 msgid "Scroll on Paste"
 msgstr "粘贴时滚动"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "动量滚动"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "启用基于动量的触控板滚动"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6084,10 +6094,10 @@ msgstr "可听铃声"
 msgid "Profiles & Data"
 msgstr "配置文件与数据"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "关闭时"
+msgid "Closing Behavior"
+msgstr "关闭行为"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6152,10 +6162,10 @@ msgstr "使用 /tmp 进行远程编辑文件"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "退出时清除远程编辑文件"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH连接持久性"
+msgid "Keep Connection Active"
+msgstr "保持连接活跃"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

@@ -897,10 +897,10 @@ msgstr "Beépített"
 msgid "Bold Text"
 msgstr "Félkövér szöveg"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Színminták"
+msgid "Appearance Themes"
+msgstr "Megjelenés Témák"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4666,10 +4666,10 @@ msgstr "Emelje ki a parancsokat, ahogy gépel a parancssorban."
 msgid "Local Terminal Options"
 msgstr "Helyi terminál beállítások"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Munkakönyvtár"
+msgid "Start in Folder"
+msgstr "Mappa megnyitása"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4705,11 +4705,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH konfiguráció"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Gazda"
+msgid "Server Address"
+msgstr "Szerver cím"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4721,10 +4721,10 @@ msgstr "Felhasználónév"
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Hitelesítés"
+msgid "Authentication Method"
+msgstr "Hitelesítési Módszer"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4742,10 +4742,10 @@ msgstr "SSH kulcs"
 msgid "Password"
 msgstr "Jelszó"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH kulcs elérési útja"
+msgid "SSH Key File"
+msgstr "SSH kulcsfájl"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4837,10 +4837,10 @@ msgstr "Hozzon létre egy új SSH alagutat"
 msgid "No port forwards configured."
 msgstr "Nincsenek porttovábbítások konfigurálva."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH gazda"
+msgid "SSH Server Address"
+msgstr "SSH szerver címe"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4877,10 +4877,10 @@ msgstr "Alagút neve"
 msgid "Local Settings"
 msgstr "Helyi beállítások"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Helyi gép"
+msgid "Local Address"
+msgstr "Helyi cím"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4897,20 +4897,20 @@ msgstr "Port a gépeden (ajánlott: 1025-65535)"
 msgid "Remote Settings"
 msgstr "Távbeállítások"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Használj egyedi távoli hosztot"
+msgid "Use Custom Remote Address"
+msgstr "Használj egyedi távoli címet"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Hagyja üresen az SSH szerver célként való használatához."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Távoli gazda"
+msgid "Remote Address"
+msgstr "Távoli cím"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4940,10 +4940,10 @@ msgstr "Fül színének kiválasztása"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "A távoli szervernek X11Forwarding yes-t kell tartalmaznia az sshd_config fájlban."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Válassza ki a munkakönyvtárat"
+msgid "Select Start Folder"
+msgstr "Kezdőmappa kiválasztása"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6023,10 +6023,10 @@ msgstr "Mindig elrejtés"
 msgid "Never hide"
 msgstr "Soha ne rejtsd el"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Amikor már fut"
+msgid "Launch Behavior"
+msgstr "Indítási viselkedés"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6083,10 +6083,10 @@ msgstr "Bekapcsolva"
 msgid "Off"
 msgstr "Ki."
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Visszagörgetési sorok"
+msgid "History Limit"
+msgstr "Történeti korlát"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6114,6 +6114,16 @@ msgstr "Touchpad görgetési érzékenység"
 msgid "Scroll on Paste"
 msgstr "Görgetés beillesztéskor"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kinetikus Görgetés"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Engedélyezze a lendület alapú görgetést a touchpad számára"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6129,10 +6139,10 @@ msgstr "Hallható Harang"
 msgid "Profiles & Data"
 msgstr "Profilok és Adatok"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Bezáráskor"
+msgid "Closing Behavior"
+msgstr "Zárási viselkedés"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6197,10 +6207,10 @@ msgstr "Használja a /tmp mappát távoli fájlok szerkesztéséhez"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Távoli szerkesztési fájlok törlése kilépéskor"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH Kapcsolat Megtartás"
+msgid "Keep Connection Active"
+msgstr "Kapcsolat Aktív Tartása"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

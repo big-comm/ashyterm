@@ -897,10 +897,10 @@ msgstr "Ugrađen"
 msgid "Bold Text"
 msgstr "Podebljani tekst"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Sheme boja"
+msgid "Appearance Themes"
+msgstr "Izgled Temi"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4652,10 +4652,10 @@ msgstr "Istaknite naredbe dok upisujete na ljusci."
 msgid "Local Terminal Options"
 msgstr "Opcije lokalnog terminala"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Radni direktorij"
+msgid "Start in Folder"
+msgstr "Započni u mapi"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4691,11 +4691,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH Konfiguracija"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Domaćin"
+msgid "Server Address"
+msgstr "Adresa poslužitelja"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4707,10 +4707,10 @@ msgstr "Korisničko ime"
 msgid "Port"
 msgstr "Port"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Autentifikacija"
+msgid "Authentication Method"
+msgstr "Metoda autentifikacije"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4728,10 +4728,10 @@ msgstr "SSH ključ"
 msgid "Password"
 msgstr "Lozinka"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "Putanja SSH ključa"
+msgid "SSH Key File"
+msgstr "SSH ključna datoteka"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4823,10 +4823,10 @@ msgstr "Stvori novi SSH tunel"
 msgid "No port forwards configured."
 msgstr "Nema konfiguriranih prosljeđenja portova."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH domaćin"
+msgid "SSH Server Address"
+msgstr "Adresa SSH poslužitelja"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4863,10 +4863,10 @@ msgstr "Ime tunela"
 msgid "Local Settings"
 msgstr "Lokalne postavke"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Lokalni poslužitelj"
+msgid "Local Address"
+msgstr "Lokalna adresa"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4883,20 +4883,20 @@ msgstr "Port na vašem računalu (preporučeno 1025-65535)"
 msgid "Remote Settings"
 msgstr "Udaljene postavke"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Koristi prilagođeni udaljeni poslužitelj"
+msgid "Use Custom Remote Address"
+msgstr "Koristi prilagođenu udaljenu adresu"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Ostavite prazno za korištenje SSH poslužitelja kao cilja"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Udaljeni poslužitelj"
+msgid "Remote Address"
+msgstr "Daljinska adresa"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4926,10 +4926,10 @@ msgstr "Odaberi boju kartice"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Udaljeni poslužitelj mora imati X11Forwarding yes u sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Odaberite radnu mapu"
+msgid "Select Start Folder"
+msgstr "Odaberi početnu mapu"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6007,10 +6007,10 @@ msgstr "Uvijek sakrij"
 msgid "Never hide"
 msgstr "Nikada ne skrivaj"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Kada već radi"
+msgid "Launch Behavior"
+msgstr "Ponašanje pri pokretanju"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6067,10 +6067,10 @@ msgstr "Uključeno"
 msgid "Off"
 msgstr "Isključeno"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Linije povratnog pomaka"
+msgid "History Limit"
+msgstr "Ograničenje povijesti"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6098,6 +6098,16 @@ msgstr "Osjetljivost pomicanja na dodirnoj podlozi"
 msgid "Scroll on Paste"
 msgstr "Pomakni se prilikom lijepljenja"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Kinetičko pomicanje"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Omogući pomicanje temeljeno na momentumu za dodirnu podlogu"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6113,10 +6123,10 @@ msgstr "Zvučni zvono"
 msgid "Profiles & Data"
 msgstr "Profili i podaci"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "Na zatvaranju"
+msgid "Closing Behavior"
+msgstr "Zatvaranje ponašanja"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6181,10 +6191,10 @@ msgstr "Koristite /tmp za daljinsko uređivanje datoteka"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Obriši udaljene uređene datoteke pri izlasku"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH veza trajnost"
+msgid "Keep Connection Active"
+msgstr "Održi vezu aktivnom"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

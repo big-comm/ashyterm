@@ -895,10 +895,10 @@ msgstr "Вбудований"
 msgid "Bold Text"
 msgstr "Жирний текст"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "colour schemes"
+msgid "Appearance Themes"
+msgstr "Зовнішній вигляд Теми"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4653,10 +4653,10 @@ msgstr "Виділіть команди під час введення в ком
 msgid "Local Terminal Options"
 msgstr "Місцеві параметри терміналу"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Робочий каталог"
+msgid "Start in Folder"
+msgstr "Почати в папці"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4692,11 +4692,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH Configuration"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Хост"
+msgid "Server Address"
+msgstr "Серверна адреса"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4708,10 +4708,10 @@ msgstr "Username"
 msgid "Port"
 msgstr "Порт"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Аутентифікація"
+msgid "Authentication Method"
+msgstr "Метод автентифікації"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4729,10 +4729,10 @@ msgstr "SSH ключ"
 msgid "Password"
 msgstr "Parole"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH Key Path"
+msgid "SSH Key File"
+msgstr "SSH ключовий файл"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4824,10 +4824,10 @@ msgstr "Створити новий SSH тунель"
 msgid "No port forwards configured."
 msgstr "Не налаштовано жодних переадресацій портів."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH Host"
+msgid "SSH Server Address"
+msgstr "SSH сервер адрес"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4864,10 +4864,10 @@ msgstr "Tunnel Name"
 msgid "Local Settings"
 msgstr "Локальні налаштування"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Локальний хост"
+msgid "Local Address"
+msgstr "Локальна адреса"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4884,20 +4884,20 @@ msgstr "Порт на вашому комп'ютері (рекомендуєть
 msgid "Remote Settings"
 msgstr "Віддалені налаштування"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Використовуйте власний віддалений хост"
+msgid "Use Custom Remote Address"
+msgstr "Використовуйте власну віддалену адресу"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Оставте поред да користите SSH сервер као циљ."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Віддалений хост"
+msgid "Remote Address"
+msgstr "Віддалена адреса"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4927,10 +4927,10 @@ msgstr "Виберіть колір вкладки"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Віддалений сервер повинен мати X11Forwarding yes у sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Select Working Directory"
+msgid "Select Start Folder"
+msgstr "Виберіть папку \"Пуск\""
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6008,10 +6008,10 @@ msgstr "Завжди приховувати"
 msgid "Never hide"
 msgstr "Ніколи не ховати"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Коли вже запущено"
+msgid "Launch Behavior"
+msgstr "Запуск поведінки"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6068,10 +6068,10 @@ msgstr "Ввімкнено"
 msgid "Off"
 msgstr "Вимкнено"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Лінії прокрутки"
+msgid "History Limit"
+msgstr "Історія обмеження"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6099,6 +6099,16 @@ msgstr "Чутливість прокрутки сенсорної панелі"
 msgid "Scroll on Paste"
 msgstr "Прокрутка при вставці"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Кінетичний прокрутка"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Увімкнути прокрутку з використанням інерції для сенсорної панелі"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6114,10 +6124,10 @@ msgstr "Audible Bell"
 msgid "Profiles & Data"
 msgstr "Профілі та дані"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "On Close"
+msgid "Closing Behavior"
+msgstr "Закриття поведінки"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6182,10 +6192,10 @@ msgstr "Використовуйте /tmp для віддаленого реда
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Очистити віддалені файли редагування при виході"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH 连接持久性"
+msgid "Keep Connection Active"
+msgstr "Зберігати з'єднання активним"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

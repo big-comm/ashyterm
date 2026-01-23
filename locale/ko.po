@@ -895,10 +895,10 @@ msgstr "내장형"
 msgid "Bold Text"
 msgstr "굵은 텍스트"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "색 구성표"
+msgid "Appearance Themes"
+msgstr "모양 테마"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4630,10 +4630,10 @@ msgstr "쉘 프롬프트에서 입력할 때 명령어 강조 표시"
 msgid "Local Terminal Options"
 msgstr "로컬 터미널 옵션"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "작업 디렉토리"
+msgid "Start in Folder"
+msgstr "폴더에서 시작"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4667,11 +4667,11 @@ msgstr "터미널이 시작될 때 실행되는 명령어(한 줄에 하나). �
 msgid "SSH Configuration"
 msgstr "SSH 구성"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "호스트"
+msgid "Server Address"
+msgstr "서버 주소"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4683,10 +4683,10 @@ msgstr "사용자 이름"
 msgid "Port"
 msgstr "포트"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "인증"
+msgid "Authentication Method"
+msgstr "인증 방법"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4704,10 +4704,10 @@ msgstr "SSH 키"
 msgid "Password"
 msgstr "비밀번호"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "SSH 키 경로"
+msgid "SSH Key File"
+msgstr "SSH 키 파일"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4799,10 +4799,10 @@ msgstr "새 SSH 터널 만들기"
 msgid "No port forwards configured."
 msgstr "포트 포워드가 구성되어 있지 않습니다."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH 호스트"
+msgid "SSH Server Address"
+msgstr "SSH 서버 주소"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4839,10 +4839,10 @@ msgstr "터널 이름"
 msgid "Local Settings"
 msgstr "로컬 설정"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "로컬 호스트"
+msgid "Local Address"
+msgstr "로컬 주소"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4859,20 +4859,20 @@ msgstr "귀하의 컴퓨터의 포트(권장: 1025-65535)"
 msgid "Remote Settings"
 msgstr "원격 설정"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "사용자 정의 원격 호스트 사용"
+msgid "Use Custom Remote Address"
+msgstr "사용자 정의 원격 주소 사용"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "대상으로 SSH 서버를 사용하려면 생략하세요."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "원격 호스트"
+msgid "Remote Address"
+msgstr "원격 주소"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4902,10 +4902,10 @@ msgstr "탭 색상 선택"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "원격 서버는 sshd_config에서 X11Forwarding yes를 설정해야 합니다."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "작업 디렉터리 선택"
+msgid "Select Start Folder"
+msgstr "시작 폴더 선택"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -5981,10 +5981,10 @@ msgstr "항상 숨기기"
 msgid "Never hide"
 msgstr "절대 숨기지 마세요"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "이미 실행 중일 때"
+msgid "Launch Behavior"
+msgstr "시작 동작"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6041,10 +6041,10 @@ msgstr "켜짐"
 msgid "Off"
 msgstr "끄기"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "스크롤백 라인"
+msgid "History Limit"
+msgstr "기록 한도"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6072,6 +6072,16 @@ msgstr "터치패드 스크롤 감도"
 msgid "Scroll on Paste"
 msgstr "붙여넣기 시 스크롤"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "운동 스크롤링"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "터치패드에 모멘텀 기반 스크롤링 활성화"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6087,10 +6097,10 @@ msgstr "소리 알림"
 msgid "Profiles & Data"
 msgstr "프로필 및 데이터"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "닫기 시"
+msgid "Closing Behavior"
+msgstr "닫기 동작"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6155,10 +6165,10 @@ msgstr "원격 편집 파일에 /tmp 사용"
 msgid "Clear Remote Edit Files on Exit"
 msgstr "종료 시 원격 편집 파일 지우기"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "SSH 연결 지속성"
+msgid "Keep Connection Active"
+msgstr "연결 유지"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK

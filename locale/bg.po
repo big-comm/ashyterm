@@ -895,10 +895,10 @@ msgstr "Вграден"
 msgid "Bold Text"
 msgstr "Дебел текст"
 # 
-# File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 282
+# File: src/ashyterm/ui/color_scheme_dialog.py, line: 452
 #: NEEDS WORK
-msgid "Color Schemes"
-msgstr "Цветови схеми"
+msgid "Appearance Themes"
+msgstr "Темите на външния вид"
 # 
 # File: usr/share/ashyterm/ui/color_scheme_dialog.py, line: 307
 #: NEEDS WORK
@@ -4660,10 +4660,10 @@ msgstr "Подчертайте командите, докато ги въвеж�
 msgid "Local Terminal Options"
 msgstr "Локални терминални опции"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 242
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 483
 #: NEEDS WORK
-msgid "Working Directory"
-msgstr "Работна директория"
+msgid "Start in Folder"
+msgstr "Започнете в папка"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 243
 #: NEEDS WORK
@@ -4699,11 +4699,11 @@ msgstr ""
 msgid "SSH Configuration"
 msgstr "SSH Конфигурация"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 429
-# File: usr/share/ashyterm/ui/dialogs.py, line: 894
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1770
 #: NEEDS WORK
-msgid "Host"
-msgstr "Хост"
+msgid "Server Address"
+msgstr "Сървърен адрес"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 446
 #: NEEDS WORK
@@ -4715,10 +4715,10 @@ msgstr "Потребителско име"
 msgid "Port"
 msgstr "Порт"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 463
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 610
 #: NEEDS WORK
-msgid "Authentication"
-msgstr "Аутентикация"
+msgid "Authentication Method"
+msgstr "Метод на удостоверяване"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 369
 #: NEEDS WORK
@@ -4736,10 +4736,10 @@ msgstr "SSH ключ"
 msgid "Password"
 msgstr "Парола"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 494
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 627
 #: NEEDS WORK
-msgid "SSH Key Path"
-msgstr "Път на SSH ключа"
+msgid "SSH Key File"
+msgstr "SSH ключов файл"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 384
 #: NEEDS WORK
@@ -4831,10 +4831,10 @@ msgstr "Създайте нов SSH тунел"
 msgid "No port forwards configured."
 msgstr "Няма конфигурирани пренасочвания на портове."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 430
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 884
 #: NEEDS WORK
-msgid "SSH Host"
-msgstr "SSH хост"
+msgid "SSH Server Address"
+msgstr "Адрес на SSH сървър"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 431
 #: NEEDS WORK
@@ -4871,10 +4871,10 @@ msgstr "Име на тунел"
 msgid "Local Settings"
 msgstr "Локални настройки"
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 519
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1014
 #: NEEDS WORK
-msgid "Local Host"
-msgstr "Локален хост"
+msgid "Local Address"
+msgstr "Локален адрес"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 524
 #: NEEDS WORK
@@ -4891,20 +4891,20 @@ msgstr "Порт на вашата машина (препоръчително 10
 msgid "Remote Settings"
 msgstr "Отдалечени настройки"
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 745
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1032
 #: NEEDS WORK
-msgid "Use Custom Remote Host"
-msgstr "Използвайте персонализиран отдалечен хост"
+msgid "Use Custom Remote Address"
+msgstr "Използвайте персонализиран отдалечен адрес"
 # 
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 746
 #: NEEDS WORK
 msgid "Leave off to use the SSH server as target"
 msgstr "Оставете празно, за да използвате SSH сървъра като цел."
 # 
-# File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 546
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1038
 #: NEEDS WORK
-msgid "Remote Host"
-msgstr "Отдалечен хост"
+msgid "Remote Address"
+msgstr "Отдален адрес"
 # 
 # File: usr/share/ashyterm/ui/dialogs/session_edit_dialog.py, line: 551
 #: NEEDS WORK
@@ -4934,10 +4934,10 @@ msgstr "Изберете цвят на таба"
 msgid "Remote server must have X11Forwarding yes in sshd_config."
 msgstr "Отдалеченият сървър трябва да има X11Forwarding yes в sshd_config."
 # 
-# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1030
+# File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 1340
 #: NEEDS WORK
-msgid "Select Working Directory"
-msgstr "Изберете работна директория"
+msgid "Select Start Folder"
+msgstr "Изберете папка за стартиране"
 # 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 720
 #: NEEDS WORK
@@ -6017,10 +6017,10 @@ msgstr "Винаги скривай"
 msgid "Never hide"
 msgstr "Никога не скривай"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 225
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 257
 #: NEEDS WORK
-msgid "When Already Running"
-msgstr "Когато вече работи"
+msgid "Launch Behavior"
+msgstr "Поведение при стартиране"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 230
 #: NEEDS WORK
@@ -6077,10 +6077,10 @@ msgstr "Включено"
 msgid "Off"
 msgstr "Изключено"
 # 
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1123
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 299
 #: NEEDS WORK
-msgid "Scrollback Lines"
-msgstr "Линии на скролиране"
+msgid "History Limit"
+msgstr "Исторически лимит"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 246
 #: NEEDS WORK
@@ -6108,6 +6108,16 @@ msgstr "Чувствителност на превъртане на тъчпад
 msgid "Scroll on Paste"
 msgstr "Превъртане при поставяне"
 # 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 351
+#: NEEDS WORK
+msgid "Kinetic Scrolling"
+msgstr "Кинетично превъртане"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 352
+#: NEEDS WORK
+msgid "Enable momentum-based scrolling for touchpad"
+msgstr "Активирайте превъртане с инерция за тъчпад"
+# 
 # File: usr/share/ashyterm/ui/dialogs.py, line: 1107
 #: NEEDS WORK
 msgid "Run Command as a Login Shell"
@@ -6123,10 +6133,10 @@ msgstr "Слушаем звънец"
 msgid "Profiles & Data"
 msgstr "Профили и данни"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 360
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 388
 #: NEEDS WORK
-msgid "On Close"
-msgstr "При затваряне"
+msgid "Closing Behavior"
+msgstr "Затваряне на поведение"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 363
 #: NEEDS WORK
@@ -6191,10 +6201,10 @@ msgstr "Използвайте /tmp за отдалечено редактира
 msgid "Clear Remote Edit Files on Exit"
 msgstr "Изчисти отдалечените файлове за редактиране при изход"
 # 
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 392
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 452
 #: NEEDS WORK
-msgid "SSH Connection Persistence"
-msgstr "Устойчивост на SSH връзка"
+msgid "Keep Connection Active"
+msgstr "Поддържайте връзката активна"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 393
 #: NEEDS WORK
