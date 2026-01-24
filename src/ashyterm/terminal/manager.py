@@ -1369,13 +1369,7 @@ class TerminalManager:
             terminal.add_controller(click_controller)
             terminal.ashy_controllers.append(click_controller)
 
-            right_click_controller = Gtk.GestureClick()
-            right_click_controller.set_button(3)
-            right_click_controller.connect(
-                "pressed", self._on_terminal_right_clicked, terminal, terminal_id
-            )
-            terminal.add_controller(right_click_controller)
-            terminal.ashy_controllers.append(right_click_controller)
+            # Context menu is now handled natively by VTE via setup-context-menu signal
 
             # Key event controller for command detection via screen scraping
             # Captures Enter key press to read the current command line from VTE
@@ -1397,8 +1391,21 @@ class TerminalManager:
             )
 
     def _setup_context_menu(self, terminal: Vte.Terminal) -> None:
-        # We handle context menu manually in _on_terminal_right_clicked
-        pass
+        """Configure VTE's native context menu support."""
+        terminal.connect("setup-context-menu", self._on_setup_context_menu)
+
+    def _on_setup_context_menu(self, terminal: Vte.Terminal, context) -> None:
+        """Build context menu when VTE requests it (native handler)."""
+        terminal_id = getattr(terminal, "terminal_id", None)
+        if terminal_id is None:
+            return
+
+        menu_model = _create_terminal_menu(
+            terminal,
+            terminal_id,
+            settings_manager=self.settings_manager,
+        )
+        terminal.set_context_menu_model(menu_model)
 
     def _update_context_menu_with_url(
         self,
@@ -2867,50 +2874,6 @@ class TerminalManager:
         except Exception as e:
             self.logger.error(
                 f"Terminal click handling failed for terminal {terminal_id}: {e}"
-            )
-            return Gdk.EVENT_PROPAGATE
-
-    def _on_terminal_right_clicked(
-        self, gesture, _n_press, x, y, terminal, terminal_id
-    ):
-        try:
-            # Manually handle context menu to avoid VTE/Wayland crashes
-            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
-
-            menu_model = _create_terminal_menu(
-                terminal,
-                terminal_id,
-                settings_manager=self.settings_manager,
-                click_x=x,
-                click_y=y,
-            )
-
-            popover = Gtk.PopoverMenu.new_from_model(menu_model)
-            popover.set_parent(terminal)
-            popover.set_has_arrow(False)
-            popover.set_position(Gtk.PositionType.BOTTOM)
-
-            # Keep reference to prevent GC until closed
-            terminal._active_popover = popover
-
-            def _cleanup_popover(*args):
-                terminal._active_popover = None
-
-            popover.connect("closed", _cleanup_popover)
-            popover.connect("destroy", _cleanup_popover)
-
-            rect = Gdk.Rectangle()
-            rect.x = int(x)
-            rect.y = int(y)
-            rect.width = 1
-            rect.height = 1
-            popover.set_pointing_to(rect)
-
-            GLib.idle_add(popover.popup)
-            return Gdk.EVENT_STOP
-        except Exception as e:
-            self.logger.error(
-                f"Terminal right-click handling failed for terminal {terminal_id}: {e}"
             )
             return Gdk.EVENT_PROPAGATE
 
