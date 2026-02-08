@@ -60,6 +60,12 @@ def setup_signal_handlers():
 
 def main() -> int:
     """Main entry point for the application."""
+    # Ensure accent/diacritics work on Wayland without IBUS/FCITX.
+    # Must run before any GTK import.
+    from .utils.platform import ensure_wayland_input_method
+
+    ensure_wayland_input_method()
+
     logger_mod = _get_logger_funcs()
     _ = _get_translation()
 
