@@ -135,6 +135,29 @@ class EnvironmentManager:
         return env
 
 
+def ensure_wayland_input_method() -> None:
+    """Ensure a working input method module is set on Wayland.
+
+    GTK4 on Wayland requires an external input method framework (IBUS or
+    FCITX) for proper accent/diacritics support.  When no IM module is
+    configured at all, fall back to ``GTK_IM_MODULE=simple`` so that
+    compose sequences and dead-key accents still work.
+
+    If ``GTK_IM_MODULE`` already has *any* value the user (or desktop
+    session) explicitly chose it, so we leave it untouched.
+
+    This function must be called **before** any GTK import so the
+    environment variable is picked up during toolkit initialization.
+    """
+    if os.environ.get("XDG_SESSION_TYPE", "").lower() != "wayland":
+        return
+
+    if os.environ.get("GTK_IM_MODULE"):
+        return
+
+    os.environ["GTK_IM_MODULE"] = "simple"
+
+
 # Singleton instances for efficiency
 _platform_info: Optional[PlatformInfo] = None
 _path_manager: Optional[PathManager] = None
