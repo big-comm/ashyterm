@@ -135,16 +135,43 @@ class EnvironmentManager:
         return env
 
 
+def _is_im_daemon_running() -> bool:
+    """Check whether an input method daemon (fcitx5 or ibus) is running.
+
+    Uses ``shutil.which`` + ``/proc`` traversal via :mod:`subprocess` to
+    avoid heavy dependencies like *psutil*.  Returns ``True`` when at
+    least one known IM daemon process is detected.
+    """
+    import subprocess
+
+    for daemon in ("fcitx5", "ibus-daemon"):
+        try:
+            result = subprocess.run(
+                ["pgrep", "-x", daemon],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=2,
+            )
+            if result.returncode == 0:
+                return True
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+    return False
+
+
 def ensure_wayland_input_method() -> None:
     """Ensure a working input method module is set on Wayland.
 
     GTK4 on Wayland requires an external input method framework (IBUS or
     FCITX) for proper accent/diacritics support.  When no IM module is
-    configured at all, fall back to ``GTK_IM_MODULE=simple`` so that
-    compose sequences and dead-key accents still work.
+    configured at all **and** no IM daemon is running, fall back to
+    ``GTK_IM_MODULE=simple`` so that compose sequences and dead-key
+    accents still work.
 
     If ``GTK_IM_MODULE`` already has *any* value the user (or desktop
-    session) explicitly chose it, so we leave it untouched.
+    session) explicitly chose it, so we leave it untouched.  Likewise,
+    if *fcitx5* or *ibus-daemon* is already running the IM framework
+    will configure the variable itself, so we must not override it.
 
     This function must be called **before** any GTK import so the
     environment variable is picked up during toolkit initialization.
@@ -153,6 +180,9 @@ def ensure_wayland_input_method() -> None:
         return
 
     if os.environ.get("GTK_IM_MODULE"):
+        return
+
+    if _is_im_daemon_running():
         return
 
     os.environ["GTK_IM_MODULE"] = "simple"
