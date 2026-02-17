@@ -10,6 +10,16 @@
 
 **Ashy Terminal** is a modern, intuitive, and innovative terminal built with GTK4 and Adwaita. While it offers advanced features appreciated by developers and system administrators, it also stands out for making the command-line environment more accessible, helping those who are just beginning to learn how to use the terminal. Its simplified session management, built-in file manager, automatic color highlighting for improved readability, and a variety of other features bring convenience to users of all skill levels on Linux distributions such as BigLinux.
 
+## Summary
+
+- [Key Features](#key-features)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Screenshots
 
 <img width="1526" height="1151" alt="AshyTerm" src="https://github.com/user-attachments/assets/ab92d508-b559-46bb-895c-dad64ea6cfbf" />
@@ -104,6 +114,21 @@ sudo pacman -S python python-gobject vte4 python-cryptography python-psutil pyth
 
 Ashy Terminal comes **pre-installed as the default terminal emulator** on [BigLinux](https://www.biglinux.com.br/) and [BigCommunity](https://communitybig.org/) distributions. No installation required!
 
+---
+
+> Note: You can build different versions from the source. They have minor changes to improve performance and usability.
+
+
+| Package | Extra Dependencies | Description |
+|---------|--------|-------------|
+| `ashyterm` | none | Base terminal emulator |
+| `ashyterm-performance` | `regex` | Faster regex matching |
+| `ashyterm-highlighting` | `Pygments` | Syntax highlighting support |
+| `ashyterm-backup` | `py7zr` | 7z backup/restore support |
+| `ashyterm-all` | all of the above | All optional dependencies |
+
+---
+
 #### From Package (Recommended)
 
 If a package is available for your distribution:
@@ -117,21 +142,44 @@ sudo pacman -U ashyterm-*-x86_64.pkg.tar.zst
 1.  Clone the repository:
 
     ```bash
-    git clone [https://github.com/big-comm/ashyterm.git](https://github.com/big-comm/ashyterm.git)
+    git clone https://github.com/big-comm/ashyterm.git
     cd ashyterm
     ```
 
 2.  Run the application directly:
 
     ```bash
-    python -m ashyterm.main
+    # to just run locally
+    export PYTHONPATH="$PWD/src:$PYTHONPATH"
+    python -m ashyterm
+
+    # to install locally
+    pip install . --user && ashyterm # make sure the pip installed globally or use "python -m pip" instead of just "pip"
     ```
 
-3.  To build and install (Arch/Manjaro):
+#### From Source With Nix (optional)
 
-    ```bash
-    makepkg -si
-    ```
+```bash
+# run directly from the repository (no clone needed)
+nix run github:big-comm/ashyterm
+# OR you can append the build version by adding the target 
+nix run github:big-comm/ashyterm#ashyterm-all # you can replace 'ashyterm-all' by 'ashyterm-performance' or 'ashyterm-highlighting' or 'ashyterm-backup'
+
+# run locally from a cloned repository
+nix run .#ashyterm # you can replace 'ashyterm' by 'ashyterm-all' or 'ashyterm-performance' or 'ashyterm-highlighting' or 'ashyterm-backup'
+
+# enter a development shell
+nix develop
+python -m ashyterm
+```
+
+#### Build From Source for Arch/Manjaro
+
+```bash
+git clone https://github.com/big-comm/ashyterm.git
+cd ashyterm
+makepkg -si
+```
 
 ## Usage
 
