@@ -57,11 +57,13 @@ Go beyond basic color schemes. Ashy Terminal applies **dynamic, real-time highli
 <img width="1386" height="944" alt="AshyTerm have color2" src="https://github.com/user-attachments/assets/10cc985e-a31f-4d45-bd64-57dfe68a91ef" />
 
 In addition, Ashy Terminal offers a **complete customization interface**, allowing you to adjust:
+
 <img width="1386" height="944" alt="AshyTerm have color3" src="https://github.com/user-attachments/assets/c42461ac-c8ae-41b7-883f-534ea9b333b8" />
 
 * **Text and background colors**
 * **Bold**, *italic*, ***underline***, ~~strikethrough~~
 * **Blinking mode** for drawing attention to critical information
+
 <img width="1386" height="944" alt="AshyTerm have color4" src="https://github.com/user-attachments/assets/091e9c39-0958-49ca-8209-6c4c264a0c11" />
 
 This gives you a clearer, more readable view of command output—especially in environments where traditional shell customization is not possible.
@@ -69,6 +71,7 @@ This gives you a clearer, more readable view of command output—especially in e
 
 ### 📂 Advanced File Manager & Remote Editing
 <img width="823" height="1162" alt="image" src="https://github.com/user-attachments/assets/a112042a-ebca-41cd-a0bd-e4454a3eacf5" />
+
 -   **Integrated Side Panel**: Browse local and remote file systems without leaving the terminal.
 -   **Remote Editing**: Click to edit remote files (SSH/SFTP) in your favorite local editor. Ashy watches the file and automatically uploads changes on save.
 -   **Drag & Drop Transfer**: Upload files to remote servers simply by dragging them into the terminal window over (SFTP/Rsync)
@@ -78,6 +81,7 @@ This gives you a clearer, more readable view of command output—especially in e
 
 ### ⚡ Productivity Tools
 <img width="458" height="422" alt="image" src="https://github.com/user-attachments/assets/eb16295b-00ea-4ab7-b6d4-a5fef3d40f6a" />
+
 -   **Input Broadcasting**: Type commands in one terminal and execute them simultaneously across multiple selected tabs/panes.
 -   **Quick Prompts**: One-click AI prompts for common tasks (e.g., "Explain this error", "Optimize this command").
 
