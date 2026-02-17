@@ -1,4 +1,5 @@
 {
+  lib,
   python3Packages,
   vte-gtk4,
   gtk4,
@@ -9,6 +10,9 @@
   libsecret,
   wrapGAppsHook4,
   gobject-introspection,
+  withPerformance ? false,
+  withSyntaxHighlighting ? false,
+  withBackup ? false,
 }:
 
 python3Packages.buildPythonApplication {
@@ -20,13 +24,17 @@ python3Packages.buildPythonApplication {
   pyproject = true;
 
   build-system = with python3Packages; [ uv-build ];
-  dependencies = with python3Packages; [
-    pygobject3
-    pycairo
-    setproctitle
-    requests
-    py7zr
-  ];
+  dependencies = with python3Packages;
+    [
+      pygobject3
+      pycairo
+      setproctitle
+      requests
+      psutil
+    ]
+    ++ lib.optionals withPerformance [ regex ]
+    ++ lib.optionals withSyntaxHighlighting [ pygments ]
+    ++ lib.optionals withBackup [ py7zr ];
 
   nativeBuildInputs = [
     pkg-config
