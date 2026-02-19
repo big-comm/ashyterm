@@ -174,7 +174,7 @@ class OutputHighlighter:
 
         # Fall back to regex for complex patterns
         try:
-            # Compile with regex engine (PCRE2) - use faster VERSION1 mode if available
+            # Compile with regex engine (PCRE2) - use faster VERSION1 mode if available            
             flags = re_engine.IGNORECASE | getattr(re_engine, "VERSION1", 0)
             pattern = re_engine.compile(rule.pattern, flags)
             num_groups = pattern.groups
