@@ -114,13 +114,15 @@ class AIConfigDialog(Adw.PreferencesWindow):
         api_group = Adw.PreferencesGroup()
         page.add(api_group)
 
-        # API Key row
-        self.api_key_row = Adw.PasswordEntryRow(
+        # API Key row with GET button
+        self.api_key_box = Adw.PasswordEntryRow(
             title=_("API Key"),
         )
-        self.api_key_row.set_text(self.settings_manager.get("ai_assistant_api_key", ""))
-        self.api_key_row.connect("changed", self._on_api_key_changed)
-        api_group.add(self.api_key_row)
+        self.get_key_button = Gtk.LinkButton(label=_("Get API Key"))
+        self.get_key_button.set_valign(Gtk.Align.CENTER)
+        self.api_key_box.add_suffix(self.get_key_button)
+        self.api_key_box.connect("changed", self._on_api_key_changed)
+        api_group.add(self.api_key_box)
 
         # Model selection group
         model_group = Adw.PreferencesGroup()
@@ -130,14 +132,12 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.model_row = Adw.EntryRow(
             title=_("Model Identifier"),
         )
-        self.model_row.set_text(self.settings_manager.get("ai_assistant_model", ""))
         self.model_row.connect("changed", self._on_model_changed)
         model_group.add(self.model_row)
 
-        # Browse models button (for OpenRouter - opens searchable dialog)
+        # Browse models button
         self.browse_models_row = Adw.ActionRow(
             title=_("Browse Available Models"),
-            subtitle=_("Search and select from available OpenRouter models."),
         )
         self.browse_models_button = Gtk.Button(label=_("Browse Models"))
         self.browse_models_button.set_valign(Gtk.Align.CENTER)
@@ -199,41 +199,50 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.base_url_row.set_visible(is_local)
 
         # Show/hide API key (local may not need it)
-        self.api_key_row.set_sensitive(
-            not is_local or False
-        )  # Local may or may not need API key
+        self.api_key_box.set_sensitive(not is_local)
 
         # Show/hide browse models button (OpenRouter and Local)
-        self.browse_models_row.set_visible(is_openrouter or is_local)
-        
-        # update title of browse row
-        if is_openrouter:
-            self.browse_models_row.set_subtitle(_("Search and select from available OpenRouter models."))
-        elif is_local:
-            self.browse_models_row.set_subtitle(_("Search and select from available Local models."))
+        self.browse_models_row.set_visible(True)
 
-        # Show/hide OpenRouter-specific settings
+        # OpenRouter-specific settings
         self.openrouter_group.set_visible(is_openrouter)
 
-        # Update model placeholder
-        default_model = self.DEFAULT_MODELS.get(provider_id, "")
-        self.model_row.set_text(
-            self.settings_manager.get("ai_assistant_model", "") or default_model
-        )
+        # Update button URLs and titles
+        self.get_key_button.set_visible(not is_local)
 
-        # Update subtitles based on provider
         if provider_id == "groq":
             self.model_row.set_title(_("Model Identifier"))
-            self.api_key_row.set_title(_("Groq API Key"))
+            self.api_key_box.set_title(_("Groq API Key"))
+            self.get_key_button.set_uri("https://console.groq.com/keys")
+            self.browse_models_row.set_subtitle(_("Search and select from available Groq models."))
         elif provider_id == "gemini":
             self.model_row.set_title(_("Model Identifier"))
-            self.api_key_row.set_title(_("Google AI Studio API Key"))
+            self.api_key_box.set_title(_("Google AI Studio API Key"))
+            self.get_key_button.set_uri("https://aistudio.google.com/app/apikey")
+            self.browse_models_row.set_subtitle(_("Search and select from available Gemini models."))
         elif provider_id == "openrouter":
             self.model_row.set_title(_("Model Identifier"))
-            self.api_key_row.set_title(_("OpenRouter API Key"))
+            self.api_key_box.set_title(_("OpenRouter API Key"))
+            self.get_key_button.set_uri("https://openrouter.ai/keys")
+            self.browse_models_row.set_subtitle(_("Search and select from available OpenRouter models."))
         elif provider_id == "local":
             self.model_row.set_title(_("Model Name"))
-            self.api_key_row.set_title(_("API Key (if required)"))
+            self.api_key_box.set_title(_("API Key (if required)"))
+            self.browse_models_row.set_subtitle(_("Search and select from available Local models."))
+
+        # Update specific config values
+        provider_api_key = self.settings_manager.get(f"ai_assistant_{provider_id}_api_key", "")
+        if not provider_api_key:
+            provider_api_key = self.settings_manager.get("ai_assistant_api_key", "")
+
+        default_model = self.DEFAULT_MODELS.get(provider_id, "")
+        provider_model = self.settings_manager.get(f"ai_assistant_{provider_id}_model", "")
+        if not provider_model:
+            provider_model = self.settings_manager.get("ai_assistant_model", "")
+            
+        # Unblock signal momentarily to avoid feedback
+        self.api_key_box.set_text(provider_api_key)
+        self.model_row.set_text(provider_model or default_model)
 
     def _on_provider_changed(self, combo_row, _param) -> None:
         """Handle provider selection change."""
@@ -251,13 +260,15 @@ class AIConfigDialog(Adw.PreferencesWindow):
     def _on_api_key_changed(self, entry_row) -> None:
         """Handle API key change."""
         key = entry_row.get_text().strip()
-        self.settings_manager.set("ai_assistant_api_key", key)
+        provider_id = self._get_selected_provider_id()
+        self.settings_manager.set(f"ai_assistant_{provider_id}_api_key", key)
         self.emit("setting-changed", "ai_assistant_api_key", key)
 
     def _on_model_changed(self, entry_row) -> None:
         """Handle model change."""
         model = entry_row.get_text().strip()
-        self.settings_manager.set("ai_assistant_model", model)
+        provider_id = self._get_selected_provider_id()
+        self.settings_manager.set(f"ai_assistant_{provider_id}_model", model)
         self.emit("setting-changed", "ai_assistant_model", model)
 
     def _on_site_url_changed(self, entry_row) -> None:
@@ -281,16 +292,23 @@ class AIConfigDialog(Adw.PreferencesWindow):
     def _on_browse_models_clicked(self, button) -> None:
         """Open a searchable dialog to browse and select models."""
         provider_id = self._get_selected_provider_id()
-        api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
+        
+        api_key = self.settings_manager.get(f"ai_assistant_{provider_id}_api_key", "").strip()
+        if not api_key:
+            api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
 
+        base_url = ""
         if provider_id == "openrouter":
-            if not api_key:
-                self._show_toast(_("Please enter an API key first."))
-                return
             base_url = "https://openrouter.ai/api/v1"
+        elif provider_id == "groq":
+            base_url = "https://api.groq.com/openai/v1"
+        elif provider_id == "gemini":
+            base_url = "https://generativelanguage.googleapis.com/v1beta"
         elif provider_id == "local":
             base_url = self.settings_manager.get("ai_local_base_url", "http://localhost:11434/v1")
-        else:
+
+        if provider_id != "local" and not api_key:
+            self._show_toast(_("Please enter an API key first."))
             return
 
         # Open the model browser dialog
@@ -430,7 +448,10 @@ class ModelBrowserDialog(Adw.Window):
                 "Content-Type": "application/json",
             }
             if self.api_key:
-                headers["Authorization"] = f"Bearer {self.api_key}"
+                if self.provider_id == "gemini":
+                    headers["x-goog-api-key"] = self.api_key
+                else:
+                    headers["Authorization"] = f"Bearer {self.api_key}"
 
             base_url = self.base_url.rstrip("/")
             if base_url.endswith(":11434"):
@@ -455,16 +476,22 @@ class ModelBrowserDialog(Adw.Window):
                 return
 
             data = response.json()
-            models = data.get("data", [])
-            
-            if not models and "models" in data:
+            # Handle different JSON shapes
+            if "models" in data and isinstance(data["models"], list):
                 models = data["models"]
+            elif "data" in data and isinstance(data["data"], list):
+                models = data["data"]
+            else:
+                models = []
 
             # Extract model id and name
             model_list = []
             for model in models:
                 model_id = model.get("id", model.get("name", ""))
-                model_name = model.get("name", model_id)
+                # Remove models/ prefix for Gemini
+                if self.provider_id == "gemini" and model_id.startswith("models/"):
+                    model_id = model_id[7:]
+                model_name = model.get("name", model.get("display_name", model_id))
                 if model_id:
                     model_list.append((model_id, model_name))
 

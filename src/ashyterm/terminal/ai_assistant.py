@@ -189,6 +189,9 @@ class TerminalAiAssistant(GObject.Object):
         self._conversations: Dict[int, List[Dict[str, str]]] = {}
         self._terminal_refs: Dict[int, weakref.ReferenceType] = {}
         self._inflight: Dict[int, bool] = {}
+        self._cancel_flags: Dict[int, bool] = {}
+        self._active_responses: Dict[int, Any] = {}
+        self._thread_local = threading.local()
         self._lock = threading.RLock()
         self._history_manager_instance = None  # Lazy loaded via property
         # Callbacks for streaming updates
@@ -210,7 +213,10 @@ class TerminalAiAssistant(GObject.Object):
     def missing_configuration(self) -> List[str]:
         missing = []
         provider = self.settings_manager.get("ai_assistant_provider", "").strip()
-        api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
+        
+        api_key = self.settings_manager.get(f"ai_assistant_{provider}_api_key", "").strip()
+        if not api_key:
+            api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
         if not provider:
             missing.append("provider")
             return missing
@@ -311,21 +317,39 @@ class TerminalAiAssistant(GObject.Object):
 
     def clear_all_conversations(self) -> None:
         with self._lock:
+            for tid in list(self._inflight.keys()):
+                self.cancel_request(tid)
             self._conversations.clear()
             self._terminal_refs.clear()
             self._inflight.clear()
 
+    def cancel_request(self, terminal_id: int = -1) -> None:
+        """Cancel an inflight request for the given terminal."""
+        with self._lock:
+            if self._inflight.get(terminal_id):
+                self._cancel_flags[terminal_id] = True
+                response = self._active_responses.get(terminal_id)
+                if response:
+                    try:
+                        response.close()
+                    except Exception:
+                        pass
+
     def handle_setting_changed(self, key: str, _old_value: Any, new_value: Any) -> None:
         if key == "ai_assistant_enabled" and not new_value:
             self.clear_all_conversations()
-        if key in {
-            "ai_assistant_provider",
-            "ai_assistant_api_key",
-            "ai_assistant_model",
-            "ai_openrouter_site_url",
-            "ai_openrouter_site_name",
-            "ai_local_base_url",
-        }:
+        if (
+            key in {
+                "ai_assistant_provider",
+                "ai_assistant_api_key",
+                "ai_assistant_model",
+                "ai_openrouter_site_url",
+                "ai_openrouter_site_name",
+                "ai_local_base_url",
+            }
+            or key.endswith("_api_key")
+            or key.endswith("_model")
+        ):
             self.clear_all_conversations()
 
     # ------------------------------------------------------------------
@@ -344,6 +368,10 @@ class TerminalAiAssistant(GObject.Object):
         return terminal_id
 
     def _process_request_thread(self, terminal_id: int, prompt: str) -> None:
+        self._thread_local.terminal_id = terminal_id
+        with self._lock:
+            self._cancel_flags[terminal_id] = False
+
         try:
             if self._should_decline_code_request(prompt):
                 self._build_messages(terminal_id, prompt)
@@ -402,6 +430,8 @@ class TerminalAiAssistant(GObject.Object):
         finally:
             with self._lock:
                 self._inflight.pop(terminal_id, None)
+                self._cancel_flags.pop(terminal_id, None)
+                self._active_responses.pop(terminal_id, None)
                 self._streaming_callback = None
 
     def _build_messages(self, terminal_id: int, prompt: str) -> List[Dict[str, str]]:
@@ -415,10 +445,20 @@ class TerminalAiAssistant(GObject.Object):
             return messages
 
     def _load_configuration(self) -> Dict[str, str]:
+        provider = self.settings_manager.get("ai_assistant_provider", "").strip()
+
+        api_key = self.settings_manager.get(f"ai_assistant_{provider}_api_key", "").strip()
+        if not api_key:
+            api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
+            
+        model = self.settings_manager.get(f"ai_assistant_{provider}_model", "").strip()
+        if not model:
+            model = self.settings_manager.get("ai_assistant_model", "").strip()
+
         config = {
-            "provider": self.settings_manager.get("ai_assistant_provider", "").strip(),
-            "model": self.settings_manager.get("ai_assistant_model", "").strip(),
-            "api_key": self.settings_manager.get("ai_assistant_api_key", "").strip(),
+            "provider": provider,
+            "model": model,
+            "api_key": api_key,
         }
         config["openrouter_site_url"] = self.settings_manager.get(
             "ai_openrouter_site_url", ""
@@ -458,9 +498,20 @@ class TerminalAiAssistant(GObject.Object):
     ) -> Dict[str, Any]:
         """Make HTTP request and return parsed JSON response."""
         try:
+            terminal_id = getattr(self._thread_local, 'terminal_id', -1)
+            with self._lock:
+                if self._cancel_flags.get(terminal_id):
+                    raise RuntimeError(_("Request cancelled by user."))
+            
             response = requests.post(
                 url, headers=headers, json=payload, timeout=timeout
             )
+            
+            with self._lock:
+                if self._cancel_flags.get(terminal_id):
+                    response.close()
+                    raise RuntimeError(_("Request cancelled by user."))
+                    
         except requests.RequestException as exc:
             raise RuntimeError(
                 f"Failed to query the {provider_name} service: {exc}"
@@ -513,40 +564,84 @@ class TerminalAiAssistant(GObject.Object):
         )
         return self._extract_openai_content(response_data, provider_name)
 
-    def _parse_sse_line(self, line_str: str) -> Optional[str]:
-        """Parse SSE line and extract content chunk. Returns None if line should be skipped."""
+    def _parse_sse_line(self, line_str: str) -> Tuple[Optional[str], bool]:
+        """Parse SSE line. Returns (content_chunk, is_eof)."""
         if not line_str.startswith("data: "):
-            return None
+            return None, False
 
         data_str = line_str[6:]
         if data_str == "[DONE]":
-            return ""  # Empty string signals end of stream
+            return "", True
 
         try:
             data = json.loads(data_str)
+            if "error" in data:
+                err_msg = data["error"].get("message", "API Error")
+                raise RuntimeError(err_msg)
             choices = data.get("choices", [])
             if choices:
                 delta = choices[0].get("delta", {})
-                return delta.get("content", "")
+                content = delta.get("content", "")
+                if content is None:
+                    return "", False
+                return content, False
         except json.JSONDecodeError:
             pass
-        return None
+        return None, False
 
     def _process_streaming_response(self, response) -> str:
         """Process streaming response and return full content."""
+        terminal_id = getattr(self._thread_local, 'terminal_id', -1)
+        
+        # Check if the server ignored stream=True or returned a JSON error
+        content_type = response.headers.get("Content-Type", "")
+        if "application/json" in content_type:
+            try:
+                data = response.json()
+            except ValueError:
+                data = {}
+            if "error" in data:
+                err_msg = data["error"].get("message", "Unknown API error inside JSON")
+                raise RuntimeError(err_msg)
+            # Maybe it just ignored stream=True and gave the full response
+            choices = data.get("choices", [])
+            if choices:
+                message = choices[0].get("message", {})
+                content = message.get("content", "")
+                if content:
+                    if self._streaming_callback:
+                        GLib.idle_add(self._streaming_callback, content, True)
+                    return content
+            # Fallback for unexpected JSON structure
+            err_msg = _("Provider returned JSON instead of an event stream: {}").format(str(data)[:100])
+            raise RuntimeError(err_msg)
+
         full_content = ""
-        for line in response.iter_lines():
-            if not line:
-                continue
-            line_str = line.decode("utf-8").strip()
-            chunk = self._parse_sse_line(line_str)
-            if chunk is None:
-                continue
-            if chunk == "":  # End of stream
-                break
-            full_content += chunk
-            if self._streaming_callback:
-                GLib.idle_add(self._streaming_callback, chunk, False)
+        try:
+            for line in response.iter_lines():
+                if self._cancel_flags.get(terminal_id):
+                    raise RuntimeError(_("Request cancelled by user."))
+                if not line:
+                    continue
+                line_str = line.decode("utf-8").strip()
+                chunk, is_eof = self._parse_sse_line(line_str)
+                if chunk is None:
+                    continue
+                if is_eof:
+                    break
+                if chunk:
+                    full_content += chunk
+                    if self._streaming_callback:
+                        GLib.idle_add(self._streaming_callback, chunk, False)
+        except Exception as exc:
+            if self._cancel_flags.get(terminal_id):
+                raise RuntimeError(_("Request cancelled by user."))
+            raise
+        finally:
+            try:
+                response.close()
+            except Exception:
+                pass
 
         if self._streaming_callback:
             GLib.idle_add(self._streaming_callback, "", True)
@@ -569,6 +664,12 @@ class TerminalAiAssistant(GObject.Object):
             response = requests.post(
                 url, headers=headers, json=payload, timeout=timeout, stream=True
             )
+            terminal_id = getattr(self._thread_local, 'terminal_id', -1)
+            with self._lock:
+                if self._cancel_flags.get(terminal_id):
+                    response.close()
+                    raise RuntimeError(_("Request cancelled by user."))
+                self._active_responses[terminal_id] = response
         except requests.RequestException as exc:
             raise RuntimeError(
                 f"Failed to query the {provider_name} service: {exc}"

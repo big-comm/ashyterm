@@ -469,11 +469,24 @@ def get_random_quick_prompts(count: int = 6) -> list[tuple[str, str]]:
 
 
 class LoadingIndicator(Gtk.Box):
-    """Loading indicator with animated dots."""
+    """Loading indicator with animated dots and a stop button."""
+    
+    __gsignals__ = {
+        "stop-clicked": (GObject.SignalFlags.RUN_LAST, None, ()),
+    }
 
     def __init__(self):
         super().__init__(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         self.add_css_class("ai-loading-indicator")
+
+        self._stop_btn = Gtk.Button()
+        self._stop_btn.set_icon_name("process-stop-symbolic")
+        self._stop_btn.add_css_class("flat")
+        self._stop_btn.add_css_class("circular")
+        self._stop_btn.set_size_request(24, 24)
+        self._stop_btn.set_valign(Gtk.Align.CENTER)
+        self._stop_btn.connect("clicked", lambda b: self.emit("stop-clicked"))
+        self.append(self._stop_btn)
 
         self._spinner = Gtk.Spinner()
         self._spinner.set_size_request(16, 16)
@@ -602,6 +615,7 @@ class MessageBubble(Gtk.Box):
 
         content_box.append(self._label)
         self.append(content_box)
+        self._content_box = content_box
 
         # Add command buttons for assistant messages
         if self._role == "assistant" and self._commands:
@@ -1335,6 +1349,7 @@ class AIChatPanel(Gtk.Box):
 
         # Loading indicator
         self._loading = LoadingIndicator()
+        self._loading.connect("stop-clicked", self._on_stop_generation_clicked)
         self._loading.set_visible(False)
         self._loading.set_margin_start(16)
         self._loading.set_margin_end(16)
@@ -1670,6 +1685,11 @@ class AIChatPanel(Gtk.Box):
                 box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             }}
 
+            .ai-message-assistant.ai-message-error {{
+                border-color: rgba(255, 60, 60, 0.8);
+                background-color: rgba(255, 60, 60, 0.1);
+            }}
+
             /* Command block - always dark for code highlighting */
             .ai-command-block {{
                 background-color: {command_bg_dark};
@@ -1854,6 +1874,10 @@ class AIChatPanel(Gtk.Box):
         self._set_input_text(text)
         self._on_send(button)
 
+    def _on_stop_generation_clicked(self, widget):
+        """Handle stop button click to abort AI generation."""
+        self._ai_assistant.cancel_request(-1)  # -1 is for chat panel
+
     def _on_streaming_chunk(self, _assistant, chunk: str, is_done: bool):
         """Handle streaming chunk from AI (GObject signal handler)."""
         if not is_done and self._current_assistant_bubble:
@@ -1892,11 +1916,18 @@ class AIChatPanel(Gtk.Box):
         if not clean_response:
             clean_response = response  # Fallback if extraction returns empty
 
+        is_empty_error = False
+        if not commands and not clean_response.strip():
+            clean_response = _("Ocorreu um erro...")
+            is_empty_error = True
+
         # Normalize commands to list of strings
         commands_list = _normalize_commands(list(commands) if commands else [])
 
         if self._current_assistant_bubble:
             self._current_assistant_bubble.update_content(clean_response, commands_list)
+            if is_empty_error:
+                self._current_assistant_bubble._content_box.add_css_class("ai-message-error")
             self._current_assistant_bubble = None
 
         # Re-enable input AFTER updating content
