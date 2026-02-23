@@ -467,7 +467,7 @@ class TerminalAiAssistant(GObject.Object):
             ) from exc
 
         if response.status_code >= 400:
-            raise RuntimeError(self._format_openrouter_error(response))
+            raise RuntimeError(self._format_api_error(response, provider_name))
 
         try:
             return response.json()
@@ -575,7 +575,7 @@ class TerminalAiAssistant(GObject.Object):
             ) from exc
 
         if response.status_code >= 400:
-            raise RuntimeError(self._format_openrouter_error(response))
+            raise RuntimeError(self._format_api_error(response, provider_name))
 
         return self._process_streaming_response(response)
 
@@ -616,6 +616,8 @@ class TerminalAiAssistant(GObject.Object):
     ) -> str:
         """Perform request to local OpenAI-compatible API (Ollama, LM Studio, etc.)."""
         base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
+        if base_url.endswith(":11434"):
+            base_url += "/v1"
         model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
         url = f"{base_url}/chat/completions"
 
@@ -637,6 +639,8 @@ class TerminalAiAssistant(GObject.Object):
     ) -> str:
         """Perform streaming request to local OpenAI-compatible API."""
         base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
+        if base_url.endswith(":11434"):
+            base_url += "/v1"
         model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
         url = f"{base_url}/chat/completions"
 
@@ -713,7 +717,7 @@ class TerminalAiAssistant(GObject.Object):
             raise RuntimeError(f"Failed to query the Gemini service: {exc}") from exc
 
         if response.status_code >= 400:
-            raise RuntimeError(self._format_openrouter_error(response))
+            raise RuntimeError(self._format_api_error(response, "Gemini"))
 
         try:
             return response.json()
@@ -813,36 +817,37 @@ class TerminalAiAssistant(GObject.Object):
         }
         return self._openai_compat_request(url, headers, payload, "OpenRouter")
 
-    def _format_openrouter_error(self, response: Any) -> str:
+    def _format_api_error(self, response: Any, provider_name: str) -> str:
         """Format error from HTTP response. Response type is requests.Response."""
         status = response.status_code
         fallback = response.text.strip() or _("Unknown error.")
         try:
             payload = response.json()
         except ValueError:
-            return _("OpenRouter respondeu com HTTP {status}: {message}").format(
-                status=status, message=fallback
+            return _("{provider} responded with HTTP {status}: {message}").format(
+                provider=provider_name, status=status, message=fallback
             )
 
         error_obj = payload.get("error")
         if not isinstance(error_obj, dict):
-            return _("OpenRouter respondeu com HTTP {status}: {message}").format(
-                status=status, message=fallback
+            return _("{provider} responded with HTTP {status}: {message}").format(
+                provider=provider_name, status=status, message=fallback
             )
 
         message = error_obj.get("message")
         metadata = error_obj.get("metadata", {})
-        provider_name = metadata.get("provider_name")
+        provider_detail = metadata.get("provider_name")
         raw_detail = metadata.get("raw")
         details = []
-        if provider_name:
-            details.append(provider_name)
+        if provider_detail:
+            details.append(provider_detail)
         if raw_detail:
             details.append(raw_detail)
         extra = f" ({' | '.join(details)})" if details else ""
 
         clean_message = message or fallback
-        return _("OpenRouter respondeu com HTTP {status}: {message}{detail}").format(
+        return _("{provider} responded with HTTP {status}: {message}{detail}").format(
+            provider=provider_name,
             status=status,
             message=clean_message,
             detail=extra,

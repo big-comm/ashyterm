@@ -203,8 +203,14 @@ class AIConfigDialog(Adw.PreferencesWindow):
             not is_local or False
         )  # Local may or may not need API key
 
-        # Show/hide browse models button (only for OpenRouter)
-        self.browse_models_row.set_visible(is_openrouter)
+        # Show/hide browse models button (OpenRouter and Local)
+        self.browse_models_row.set_visible(is_openrouter or is_local)
+        
+        # update title of browse row
+        if is_openrouter:
+            self.browse_models_row.set_subtitle(_("Search and select from available OpenRouter models."))
+        elif is_local:
+            self.browse_models_row.set_subtitle(_("Search and select from available Local models."))
 
         # Show/hide OpenRouter-specific settings
         self.openrouter_group.set_visible(is_openrouter)
@@ -273,14 +279,22 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.emit("setting-changed", "ai_assistant_enabled", enabled)
 
     def _on_browse_models_clicked(self, button) -> None:
-        """Open a searchable dialog to browse and select OpenRouter models."""
+        """Open a searchable dialog to browse and select models."""
+        provider_id = self._get_selected_provider_id()
         api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
-        if not api_key:
-            self._show_toast(_("Please enter an API key first."))
+
+        if provider_id == "openrouter":
+            if not api_key:
+                self._show_toast(_("Please enter an API key first."))
+                return
+            base_url = "https://openrouter.ai/api/v1"
+        elif provider_id == "local":
+            base_url = self.settings_manager.get("ai_local_base_url", "http://localhost:11434/v1")
+        else:
             return
 
         # Open the model browser dialog
-        dialog = OpenRouterModelBrowserDialog(self, api_key)
+        dialog = ModelBrowserDialog(self, provider_id, base_url, api_key)
         dialog.connect("model-selected", self._on_model_browser_selected)
         dialog.present()
 
@@ -295,22 +309,24 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.add_toast(toast)
 
 
-class OpenRouterModelBrowserDialog(Adw.Window):
-    """Searchable dialog for browsing and selecting OpenRouter models."""
+class ModelBrowserDialog(Adw.Window):
+    """Searchable dialog for browsing and selecting models."""
 
     __gsignals__ = {
         "model-selected": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
-    def __init__(self, parent_window, api_key: str):
+    def __init__(self, parent_window, provider_id: str, base_url: str, api_key: str):
         super().__init__(
-            title=_("Select OpenRouter Model"),
+            title=_("Select Model"),
             transient_for=parent_window,
             modal=True,
             default_width=800,
             default_height=600,
         )
         self.add_css_class("ashyterm-dialog")
+        self.provider_id = provider_id
+        self.base_url = base_url
         self.api_key = api_key
         self.logger = get_logger("ashyterm.ui.dialogs.model_browser")
         self._all_models: List[Tuple[str, str]] = []
@@ -411,15 +427,28 @@ class OpenRouterModelBrowserDialog(Adw.Window):
             import requests
 
             headers = {
-                "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
             }
+            if self.api_key:
+                headers["Authorization"] = f"Bearer {self.api_key}"
+
+            base_url = self.base_url.rstrip("/")
+            if base_url.endswith(":11434"):
+                base_url += "/v1"
+
+            models_url = f"{base_url}/models"
 
             response = requests.get(
-                "https://openrouter.ai/api/v1/models",
+                models_url,
                 headers=headers,
                 timeout=30,
             )
+
+            if response.status_code >= 400:
+                if response.status_code == 404 and "/v1/models" in models_url:
+                    # Fallback to Ollama native API if /v1/models fails
+                    models_url = models_url.replace("/v1/models", "/api/tags")
+                    response = requests.get(models_url, headers=headers, timeout=30)
 
             if response.status_code >= 400:
                 GLib.idle_add(self._on_fetch_error, f"HTTP {response.status_code}")
@@ -427,11 +456,14 @@ class OpenRouterModelBrowserDialog(Adw.Window):
 
             data = response.json()
             models = data.get("data", [])
+            
+            if not models and "models" in data:
+                models = data["models"]
 
             # Extract model id and name
             model_list = []
             for model in models:
-                model_id = model.get("id", "")
+                model_id = model.get("id", model.get("name", ""))
                 model_name = model.get("name", model_id)
                 if model_id:
                     model_list.append((model_id, model_name))
