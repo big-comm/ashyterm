@@ -1228,10 +1228,35 @@ class TerminalManager:
                 )
                 terminal.add_controller(scroll_controller)
 
+            # Add zoom via Ctrl + Scroll
+            zoom_scroll = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
+            zoom_scroll.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            zoom_scroll.connect("scroll", self._on_terminal_zoom_scroll, terminal)
+            terminal.add_controller(zoom_scroll)
+            if not hasattr(terminal, "ashy_controllers"):
+                terminal.ashy_controllers = []
+            terminal.ashy_controllers.append(zoom_scroll)
+
             return terminal
         except Exception as e:
             self.logger.error(f"Base terminal creation failed: {e}")
             return None
+
+    def _on_terminal_zoom_scroll(self, controller, dx, dy, terminal) -> bool:
+        try:
+            state = controller.get_current_event_state()
+            if state & Gdk.ModifierType.CONTROL_MASK:
+                if dy < 0:
+                    terminal.set_font_scale(terminal.get_font_scale() * 1.1)
+                elif dy > 0:
+                    terminal.set_font_scale(terminal.get_font_scale() / 1.1)
+                
+                if hasattr(self, "parent_window") and hasattr(self.parent_window, "_update_font_sizer_widget"):
+                    self.parent_window._update_font_sizer_widget()
+                return True
+        except Exception as e:
+            self.logger.error(f"Error handling terminal zoom scroll: {e}")
+        return False
 
     def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal):
         drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
