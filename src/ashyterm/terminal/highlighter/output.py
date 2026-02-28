@@ -9,8 +9,7 @@ highlighting rules to terminal output text using ANSI escape codes.
 import threading
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
-# Use regex module (PCRE2 backend) for ~50% faster matching
-import regex as re_engine
+from ...utils.re_engine import engine as re_engine
 
 from ...settings.highlights import HighlightRule, get_highlight_manager
 from ...utils.logger import get_logger
@@ -175,8 +174,8 @@ class OutputHighlighter:
 
         # Fall back to regex for complex patterns
         try:
-            # Compile with regex engine (PCRE2) - use faster VERSION1 mode
-            flags = re_engine.IGNORECASE | re_engine.VERSION1
+            # Compile with regex engine (PCRE2) - use faster VERSION1 mode if available            
+            flags = re_engine.IGNORECASE | getattr(re_engine, "VERSION1", 0)
             pattern = re_engine.compile(rule.pattern, flags)
             num_groups = pattern.groups
 

@@ -33,8 +33,7 @@ import gi
 
 gi.require_version("Vte", "3.91")
 gi.require_version("GLib", "2.0")
-# Use regex module (PCRE2 backend) for ~50% faster matching
-import regex as re_engine
+from ..utils.re_engine import engine as re_engine
 from gi.repository import GLib, Vte
 
 from ..utils.logger import get_logger
