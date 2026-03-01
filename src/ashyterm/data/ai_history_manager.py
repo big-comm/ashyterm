@@ -154,7 +154,7 @@ class AIHistoryManager:
 
         conv = self._ensure_current_conversation()
 
-        entry = {
+        entry: dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "role": role,
             "content": content.strip(),

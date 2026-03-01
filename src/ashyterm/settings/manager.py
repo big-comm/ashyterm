@@ -15,6 +15,7 @@ gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, GLib, Gtk, Pango, Vte
 
 from ..utils.exceptions import ConfigValidationError
+from ..utils.json_versioning import migrate_data, stamp_version
 from ..utils.logger import get_logger, log_error_with_context
 from ..utils.platform import get_platform_info
 from ..utils.security import (
@@ -134,6 +135,8 @@ class SettingsManager:
     """Enhanced settings manager with comprehensive functionality."""
 
     _LOG_AREA = "ashyterm.settings"
+    SCHEMA_VERSION = 1
+    MIGRATIONS: Dict[int, Any] = {}
 
     def __init__(self, settings_file: Optional[Path] = None):
         self.logger = get_logger("ashyterm.settings.manager")
@@ -146,13 +149,14 @@ class SettingsManager:
         self._defaults = DefaultSettings.get_defaults()
         self._metadata: Optional[SettingsMetadata] = None
         self._dirty = False
+        self._was_repaired = False
         self._lock = threading.RLock()
         self._change_listeners: List[Callable[[str, Any, Any], None]] = []
         self.custom_schemes: Dict[str, Any] = {}
         # Unified CSS provider for the entire application
         self._app_css_provider = Gtk.CssProvider()
         # Store window-specific transparency providers to manage lifecycle
-        self._window_providers = weakref.WeakKeyDictionary()
+        self._window_providers: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
         self._initialize()
         self.logger.info("Settings manager initialized")
 
@@ -260,6 +264,7 @@ class SettingsManager:
             if not isinstance(data, dict):
                 raise ValueError("Settings file must contain a JSON object at the root")
 
+            data = migrate_data(data, self.SCHEMA_VERSION, self.MIGRATIONS)
             settings = self._parse_settings_data(data)
             return self._validate_settings_structure(settings)
         except json.JSONDecodeError as e:
@@ -281,7 +286,7 @@ class SettingsManager:
             current_checksum = hashlib.md5(
                 settings_json.encode("utf-8"), usedforsecurity=False
             ).hexdigest()
-            if current_checksum != self._metadata.checksum:
+            if current_checksum != self._metadata.checksum:  # type: ignore[union-attr]
                 self.logger.warning(
                     "Settings checksum mismatch - file may be corrupted"
                 )
@@ -299,6 +304,7 @@ class SettingsManager:
                 if self._repair_settings(errors):
                     self.logger.info("Settings automatically repaired")
                     self._dirty = True
+                    self._was_repaired = True
                 else:
                     self.logger.warning("Could not repair all settings issues")
         except Exception as e:
@@ -398,10 +404,13 @@ class SettingsManager:
                     self._metadata.checksum = hashlib.md5(
                         settings_json.encode("utf-8"), usedforsecurity=False
                     ).hexdigest()
-                    save_data = {
-                        "metadata": asdict(self._metadata),
-                        "settings": settings_to_save,
-                    }
+                    save_data = stamp_version(
+                        {
+                            "metadata": asdict(self._metadata),
+                            "settings": settings_to_save,
+                        },
+                        self.SCHEMA_VERSION,
+                    )
                     self.settings_file.parent.mkdir(parents=True, exist_ok=True)
                     temp_file = self.settings_file.with_suffix(".tmp")
                     with open(temp_file, "w", encoding="utf-8") as f:
@@ -442,7 +451,6 @@ class SettingsManager:
 
                     logger.set_log_to_file_enabled(value)
 
-                self._notify_change_listeners(key, old_value, value)
                 self._notify_change_listeners(key, old_value, value)
 
                 # Update theme CSS if relevant settings change
@@ -564,11 +572,38 @@ class SettingsManager:
         final_alpha = max(0.0, min(1.0, 1.0 - (adjusted_transparency / 100.0) ** 1.6))
         return final_alpha
 
+    _FALLBACK_PALETTE = [
+        "#000000",
+        "#800000",
+        "#008000",
+        "#808000",
+        "#000080",
+        "#800080",
+        "#008080",
+        "#c0c0c0",
+        "#808080",
+        "#ff0000",
+        "#00ff00",
+        "#ffff00",
+        "#0000ff",
+        "#ff00ff",
+        "#00ffff",
+        "#ffffff",
+    ]
+
     def apply_terminal_settings(self, terminal, window) -> None:
+        self._apply_transparency_css(window)
+        self._apply_colors(terminal, window)
+        self._apply_font(terminal)
+        self._apply_scrolling(terminal)
+        self._apply_cursor(terminal)
+        self._apply_behavior(terminal)
+        self._apply_bindings(terminal)
+
+    def _apply_transparency_css(self, window) -> None:
+        """Apply window-level transparency CSS."""
         user_transparency = self.get("transparency", 0)
         style_context = window.get_style_context()
-
-        # Handle terminal transparency
         if hasattr(window, "_transparency_css_provider"):
             style_context.remove_provider(window._transparency_css_provider)
         if user_transparency > 0:
@@ -580,47 +615,35 @@ class SettingsManager:
             )
             window._transparency_css_provider = css_provider
 
+    def _apply_colors(self, terminal, window) -> None:
+        """Apply color scheme, palette, and cursor color."""
+        user_transparency = self.get("transparency", 0)
         color_scheme = self.get_color_scheme_data()
         fg_color, bg_color, cursor_color = Gdk.RGBA(), Gdk.RGBA(), Gdk.RGBA()
         fg_color.parse(color_scheme.get("foreground", "#FFFFFF"))
         bg_color.parse(color_scheme.get("background", "#000000"))
-
         bg_color.alpha = self._calculate_adaptive_alpha(
             color_scheme.get("background", "#000000"), user_transparency
         )
-
         cursor_color.parse(
             color_scheme.get("cursor", color_scheme.get("foreground", "#FFFFFF"))
         )
+
         palette = []
         for i, color_str in enumerate(color_scheme.get("palette", [])):
             color = Gdk.RGBA()
             if not color.parse(color_str):
-                fallback_colors = [
-                    "#000000",
-                    "#800000",
-                    "#008000",
-                    "#808000",
-                    "#000080",
-                    "#800080",
-                    "#008080",
-                    "#c0c0c0",
-                    "#808080",
-                    "#ff0000",
-                    "#00ff00",
-                    "#ffff00",
-                    "#0000ff",
-                    "#ff00ff",
-                    "#00ffff",
-                    "#ffffff",
-                ]
-                color.parse(fallback_colors[i % len(fallback_colors)])
+                color.parse(self._FALLBACK_PALETTE[i % len(self._FALLBACK_PALETTE)])
             palette.append(color)
         while len(palette) < 16:
             palette.append(Gdk.RGBA.new(0, 0, 0, 1))
+
         terminal.set_colors(fg_color, bg_color, palette[:16])
         if hasattr(terminal, "set_color_cursor"):
             terminal.set_color_cursor(cursor_color)
+
+    def _apply_font(self, terminal) -> None:
+        """Apply font family and scale."""
         font_string = self.get("font", "Monospace 10")
         try:
             terminal.set_font(Pango.FontDescription.from_string(font_string))
@@ -632,76 +655,85 @@ class SettingsManager:
         except Exception as e:
             self.logger.warning(f"Failed to apply font scale: {e}")
 
-        # Smart scrolling is handled in TabManager, so we don't call set_scroll_on_output here.
+    def _apply_scrolling(self, terminal) -> None:
+        """Apply scroll-related settings."""
         terminal.set_scroll_on_keystroke(self.get("scroll_on_keystroke", True))
         terminal.set_scroll_on_insert(self.get("scroll_on_insert", True))
         terminal.set_mouse_autohide(self.get("mouse_autohide", True))
         terminal.set_audible_bell(self.get("bell_sound", False))
         terminal.set_scrollback_lines(self.get("scrollback_lines", 10000))
 
-        cursor_shape_map = [
+    @staticmethod
+    def _select_enum(mapping: list, index: int, default):
+        """Select an enum value from a mapping list with bounds checking."""
+        return mapping[index] if 0 <= index < len(mapping) else default
+
+    def _apply_cursor(self, terminal) -> None:
+        """Apply cursor shape, blink mode, and text blink."""
+        cursor_shapes = [
             Vte.CursorShape.BLOCK,
             Vte.CursorShape.IBEAM,
             Vte.CursorShape.UNDERLINE,
         ]
-        shape_index = self.get("cursor_shape", 0)
         terminal.set_cursor_shape(
-            cursor_shape_map[shape_index]
-            if 0 <= shape_index < len(cursor_shape_map)
-            else Vte.CursorShape.BLOCK
+            self._select_enum(
+                cursor_shapes, self.get("cursor_shape", 0), Vte.CursorShape.BLOCK
+            )
         )
-        cursor_blink_map = [
+        blink_modes = [
             Vte.CursorBlinkMode.SYSTEM,
             Vte.CursorBlinkMode.ON,
             Vte.CursorBlinkMode.OFF,
         ]
-        cursor_blink_index = self.get("cursor_blink", 0)
         terminal.set_cursor_blink_mode(
-            cursor_blink_map[cursor_blink_index]
-            if 0 <= cursor_blink_index < len(cursor_blink_map)
-            else Vte.CursorBlinkMode.SYSTEM
+            self._select_enum(
+                blink_modes, self.get("cursor_blink", 0), Vte.CursorBlinkMode.SYSTEM
+            )
         )
-        text_blink_map = [Vte.TextBlinkMode.FOCUSED, Vte.TextBlinkMode.UNFOCUSED]
-        blink_index = self.get("text_blink_mode", 0)
+        text_blink = [Vte.TextBlinkMode.FOCUSED, Vte.TextBlinkMode.UNFOCUSED]
         terminal.set_text_blink_mode(
-            text_blink_map[blink_index]
-            if 0 <= blink_index < len(text_blink_map)
-            else Vte.TextBlinkMode.FOCUSED
+            self._select_enum(
+                text_blink, self.get("text_blink_mode", 0), Vte.TextBlinkMode.FOCUSED
+            )
         )
 
-        terminal.set_enable_bidi(self.get("bidi_enabled", False))
-        terminal.set_enable_shaping(self.get("enable_shaping", False))
-        terminal.set_enable_sixel(self.get("sixel_enabled", True))
-        terminal.set_allow_hyperlink(True)  # OSC8 hyperlinks always enabled
+    def _apply_behavior(self, terminal) -> None:
+        """Apply misc terminal behavior flags."""
+        if hasattr(terminal, "set_enable_bidi"):
+            terminal.set_enable_bidi(self.get("bidi_enabled", False))
+        if hasattr(terminal, "set_enable_shaping"):
+            terminal.set_enable_shaping(self.get("enable_shaping", False))
+        if hasattr(terminal, "set_enable_sixel"):
+            terminal.set_enable_sixel(self.get("sixel_enabled", True))
+        terminal.set_allow_hyperlink(True)
         terminal.set_word_char_exceptions(self.get("word_char_exceptions", "-_.:/~"))
-        # VTE 0.76+ removed set_enable_a11y (accessibility is always enabled)
         if hasattr(terminal, "set_enable_a11y"):
             terminal.set_enable_a11y(self.get("accessibility_enabled", True))
         terminal.set_cell_height_scale(self.get("line_spacing", 1.0))
         terminal.set_bold_is_bright(self.get("bold_is_bright", True))
 
+    def _apply_bindings(self, terminal) -> None:
+        """Apply backspace/delete key bindings and CJK width."""
         backspace_map = [
             Vte.EraseBinding.AUTO,
             Vte.EraseBinding.ASCII_BACKSPACE,
             Vte.EraseBinding.ASCII_DELETE,
             Vte.EraseBinding.DELETE_SEQUENCE,
         ]
-        backspace_index = self.get("backspace_binding", 0)
         terminal.set_backspace_binding(
-            backspace_map[backspace_index]
-            if 0 <= backspace_index < len(backspace_map)
-            else Vte.EraseBinding.AUTO
+            self._select_enum(
+                backspace_map, self.get("backspace_binding", 0), Vte.EraseBinding.AUTO
+            )
         )
         delete_map = [
             Vte.EraseBinding.AUTO,
             Vte.EraseBinding.ASCII_DELETE,
             Vte.EraseBinding.DELETE_SEQUENCE,
         ]
-        delete_index = self.get("delete_binding", 0)
         terminal.set_delete_binding(
-            delete_map[delete_index]
-            if 0 <= delete_index < len(delete_map)
-            else Vte.EraseBinding.AUTO
+            self._select_enum(
+                delete_map, self.get("delete_binding", 0), Vte.EraseBinding.AUTO
+            )
         )
         terminal.set_cjk_ambiguous_width(self.get("cjk_ambiguous_width", 1))
 

@@ -7,7 +7,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gtk, GObject
+from gi.repository import Adw, Gdk, Gtk, GObject
 
 from ..dialogs.base_dialog import create_icon_button
 from ...utils.tooltip_helper import get_tooltip_helper
@@ -99,6 +99,11 @@ class ManagedListRow(Adw.ActionRow):
             )
             self.add_suffix(self._delete_btn)
 
+            # Keyboard shortcuts: Delete key to delete, Enter/Return to edit
+            key_ctrl = Gtk.EventControllerKey.new()
+            key_ctrl.connect("key-pressed", self._on_key_pressed)
+            self.add_controller(key_ctrl)
+
         # 3. Toggle switch (Suffix - rightmost)
         if self._show_toggle:
             self._switch = Gtk.Switch()
@@ -108,6 +113,12 @@ class ManagedListRow(Adw.ActionRow):
 
     def _on_switch_toggled(self, switch, _pspec):
         self.emit("toggled", switch.get_active())
+
+    def _on_key_pressed(self, _controller, keyval, _keycode, _state):
+        if keyval == Gdk.KEY_Delete and hasattr(self, "_delete_btn"):
+            self.emit("delete-clicked")
+            return True
+        return False
 
     def set_reorder_sensitive(self, is_first: bool, is_last: bool):
         """Update sensitivity of reorder buttons."""

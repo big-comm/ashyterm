@@ -2,7 +2,7 @@
 
 import json
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 import gi
 
@@ -13,9 +13,11 @@ from gi.repository import Adw, Gtk, Vte
 
 from ..sessions.models import LayoutItem, SessionItem
 from ..settings.config import LAYOUT_DIR, STATE_FILE
+from ..utils.json_versioning import migrate_data, stamp_version
 from ..utils.logger import get_logger
 from ..utils.security import InputSanitizer
 from ..utils.translation_utils import _
+from ..utils.accessibility import set_label as a11y_label
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
@@ -27,6 +29,9 @@ class WindowStateManager:
     splits, and user-defined layouts.
     """
 
+    SCHEMA_VERSION = 1
+    MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {}
+
     def __init__(self, window: "CommTerminalWindow"):
         self.window = window
         self.settings_manager = window.settings_manager
@@ -36,7 +41,7 @@ class WindowStateManager:
 
     def save_session_state(self):
         """Serializes the current tab and pane layout to a state file."""
-        state = {"tabs": []}
+        state = stamp_version({"tabs": []}, self.SCHEMA_VERSION)
         for page in self.tab_manager.pages.values():
             tab_content = page.get_child()
             if tab_content:
@@ -62,6 +67,8 @@ class WindowStateManager:
         try:
             with open(STATE_FILE, "r") as f:
                 state = json.load(f)
+            if isinstance(state, dict):
+                state = migrate_data(state, self.SCHEMA_VERSION, self.MIGRATIONS)
         except Exception as e:
             self.logger.error(f"Failed to read session state file: {e}")
             return False
@@ -98,6 +105,7 @@ class WindowStateManager:
             hexpand=True,
             activates_default=True,
         )
+        a11y_label(entry, _("Layout name"))
         dialog.set_extra_child(entry)
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("save", _("Save"))
@@ -124,7 +132,7 @@ class WindowStateManager:
         if os.path.exists(target_file):
             self.logger.warning(f"Overwriting existing layout: {sanitized_name}")
 
-        state = {"tabs": [], "folder_path": ""}
+        state = stamp_version({"tabs": [], "folder_path": ""}, self.SCHEMA_VERSION)
         for page in self.tab_manager.pages.values():
             tab_content = page.get_child()
             if tab_content:
@@ -188,7 +196,12 @@ class WindowStateManager:
             return
 
         self.window.tab_manager.close_all_tabs()
-        self.logger.info(f"Restoring {len(state['tabs'])} tabs from saved layout.")
+        tab_count = len(state["tabs"])
+        self.logger.info(f"Restoring {tab_count} tabs from saved layout.")
+        if tab_count > 5:
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Restoring {} tabs\u2026").format(tab_count))
+            )
         for tab_structure in state["tabs"]:
             self.tab_manager.recreate_tab_from_structure(tab_structure)
 
@@ -283,72 +296,74 @@ class WindowStateManager:
     def _serialize_widget_tree(self, widget) -> Optional[dict]:
         """Recursively serializes the widget tree into a dictionary."""
         if isinstance(widget, Gtk.Paned):
-            child1_node = self._serialize_widget_tree(widget.get_start_child())
-            child2_node = self._serialize_widget_tree(widget.get_end_child())
+            return self._serialize_paned(widget)
 
-            # If child2 failed to serialize (e.g., it's a file manager or empty),
-            # this is not a layout split. Just return the serialization of child1.
-            if child2_node is None:
-                return child1_node
+        terminal = self._extract_terminal(widget)
+        if isinstance(terminal, dict):
+            return terminal  # recursive result from Adw.Bin
+        if terminal:
+            return self._serialize_terminal(terminal)
+        return None
 
-            # Otherwise, it's a real split. Proceed as before.
-            position = widget.get_position()
-            orientation = widget.get_orientation()
-            total_size = (
-                widget.get_width()
-                if orientation == Gtk.Orientation.HORIZONTAL
-                else widget.get_height()
-            )
-            position_ratio = position / total_size if total_size > 0 else 0.5
+    def _serialize_paned(self, widget) -> Optional[dict]:
+        """Serialize a Gtk.Paned split layout node."""
+        child1_node = self._serialize_widget_tree(widget.get_start_child())
+        child2_node = self._serialize_widget_tree(widget.get_end_child())
+        if child2_node is None:
+            return child1_node
 
-            return {
-                "type": "paned",
-                "orientation": "horizontal"
-                if orientation == Gtk.Orientation.HORIZONTAL
-                else "vertical",
-                "position_ratio": position_ratio,
-                "child1": child1_node,
-                "child2": child2_node,
-            }
+        position = widget.get_position()
+        orientation = widget.get_orientation()
+        total_size = (
+            widget.get_width()
+            if orientation == Gtk.Orientation.HORIZONTAL
+            else widget.get_height()
+        )
+        return {
+            "type": "paned",
+            "orientation": "horizontal"
+            if orientation == Gtk.Orientation.HORIZONTAL
+            else "vertical",
+            "position_ratio": position / total_size if total_size > 0 else 0.5,
+            "child1": child1_node,
+            "child2": child2_node,
+        }
 
-        terminal = None
+    def _extract_terminal(self, widget):
+        """Extract VTE terminal from widget, or recurse for Adw.Bin."""
         if isinstance(widget, Gtk.ScrolledWindow) and isinstance(
             widget.get_child(), Vte.Terminal
         ):
-            terminal = widget.get_child()
-        elif hasattr(widget, "terminal") and isinstance(widget.terminal, Vte.Terminal):
-            terminal = widget.terminal
-        elif isinstance(widget, Adw.Bin):
+            return widget.get_child()
+        if hasattr(widget, "terminal") and isinstance(widget.terminal, Vte.Terminal):
+            return widget.terminal
+        if isinstance(widget, Adw.Bin):
             return self._serialize_widget_tree(widget.get_child())
-
-        if terminal:
-            terminal_id = getattr(terminal, "terminal_id", None)
-            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-            if not info:
-                return None
-
-            uri = terminal.get_current_directory_uri()
-            working_dir = None
-            if uri:
-                from urllib.parse import unquote, urlparse
-
-                parsed_uri = urlparse(uri)
-                if parsed_uri.scheme == "file":
-                    working_dir = unquote(parsed_uri.path)
-
-            session_info = info.get("identifier")
-            if isinstance(session_info, SessionItem):
-                return {
-                    "type": "terminal",
-                    "session_type": "ssh" if session_info.is_ssh() else "local",
-                    "session_name": session_info.name,
-                    "working_dir": working_dir,
-                }
-            else:
-                return {
-                    "type": "terminal",
-                    "session_type": "local",
-                    "session_name": str(session_info),
-                    "working_dir": working_dir,
-                }
         return None
+
+    def _serialize_terminal(self, terminal) -> Optional[dict]:
+        """Serialize a single VTE terminal node."""
+        terminal_id = getattr(terminal, "terminal_id", None)
+        info = self.terminal_manager.registry.get_terminal_info(terminal_id or 0)
+        if not info:
+            return None
+
+        uri = terminal.get_current_directory_uri()
+        working_dir = None
+        if uri:
+            from urllib.parse import unquote, urlparse
+
+            parsed_uri = urlparse(uri)
+            if parsed_uri.scheme == "file":
+                working_dir = unquote(parsed_uri.path)
+
+        session_info = info.get("identifier")
+        is_ssh = isinstance(session_info, SessionItem) and session_info.is_ssh()
+        return {
+            "type": "terminal",
+            "session_type": "ssh" if is_ssh else "local",
+            "session_name": session_info.name
+            if isinstance(session_info, SessionItem)
+            else str(session_info),
+            "working_dir": working_dir,
+        }

@@ -19,7 +19,9 @@ if "APPIMAGE" in os.environ or "APPDIR" in os.environ:
     ashyterm_dir = os.path.dirname(script_dir)  # src/ashyterm
     src_dir = os.path.dirname(ashyterm_dir)  # src
     appdir_root = os.path.dirname(src_dir)  # AppDir root (squashfs-root)
-    appimage_locale = os.path.join(appdir_root, "usr", "share", "locale")  # usr/share/locale
+    appimage_locale = os.path.join(
+        appdir_root, "usr", "share", "locale"
+    )  # usr/share/locale
 
     if os.path.isdir(appimage_locale):
         locale_dir = appimage_locale

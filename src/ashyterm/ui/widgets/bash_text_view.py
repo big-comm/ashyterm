@@ -298,7 +298,7 @@ class BashTextView(BaseSyntaxTextView):
                 return tag
         return None
 
-    def _refine_tag_by_value(self, base_tag: str, token_value: str) -> str:
+    def _refine_tag_by_value(self, base_tag: str, token_value: str) -> Optional[str]:
         """Refine tag based on the actual token value.
 
         Args:

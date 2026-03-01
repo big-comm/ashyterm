@@ -63,7 +63,6 @@ def lookup_password(session_name: str) -> Optional[str]:
 
     try:
         attributes = {"session_name": session_name}
-        # The synchronous function returns the password or None if not found.
         password = Secret.password_lookup_sync(SECRET_SCHEMA, attributes, None)
         if password:
             get_logger().info(
@@ -110,7 +109,7 @@ def export_all_passwords(sessions_store: Gio.ListStore) -> Dict[str, str]:
     from ..sessions.models import SessionItem
 
     logger = get_logger("ashyterm.crypto")
-    passwords = {}
+    passwords: dict[str, str] = {}
     if not is_encryption_available():
         logger.warning("Cannot export passwords: Secret Service API not available.")
         return passwords

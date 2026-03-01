@@ -127,6 +127,17 @@ popover.menu separator {
     background: color-mix(in srgb, currentColor 7%, transparent);
 }
 
+/* Tab bell animation */
+@keyframes tab-bell-flash {
+    0%   { background: @warning_bg_color; }
+    50%  { background: transparent; }
+    100% { background: @warning_bg_color; }
+}
+
+.custom-tab-button.tab-bell {
+    animation: tab-bell-flash 0.5s ease-in-out 2;
+}
+
 /* Sidebar toolbar view */
 .sidebar-toolbar-view {
     /* Background and borders removed for dynamic theming inheritance */
@@ -316,4 +327,10 @@ window.ashyterm-dialog actionbar>revealer>box {
 
 .toolbar-command-button:active {
     background-color: alpha(currentColor, 0.12);
+}
+
+/* Broadcast mode active indicator */
+.broadcast-active headerbar {
+    background-color: mix(@warning_bg_color, @headerbar_bg_color, 0.25);
+    box-shadow: inset 0 -3px 0 0 @warning_bg_color;
 }

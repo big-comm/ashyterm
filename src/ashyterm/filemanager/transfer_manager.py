@@ -19,6 +19,8 @@ from ..utils.logger import get_logger
 from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 
+PROGRESS_UPDATE_INTERVAL = 0.05  # seconds
+
 
 class TransferType(Enum):
     DOWNLOAD = "download"
@@ -102,10 +104,10 @@ class TransferManager(GObject.Object):
         self._last_progress_update = 0.0
         self._progress_update_interval = 0.1  # 100ms minimum between UI updates
 
-        self.progress_revealer: Optional[Gtk.Revealer] = None
-        self.progress_row: Optional[Adw.ActionRow] = None  # Reference to the ActionRow
-        self.progress_bar: Optional[Gtk.ProgressBar] = None
-        self.cancel_button: Optional[Gtk.Button] = None
+        self.progress_revealer: Gtk.Revealer = None  # type: ignore[assignment]
+        self.progress_row: Adw.ActionRow = None  # type: ignore[assignment]
+        self.progress_bar: Gtk.ProgressBar = None  # type: ignore[assignment]
+        self.cancel_button: Gtk.Button = None  # type: ignore[assignment]
 
         # self.progress_revealer use red background
 
@@ -219,7 +221,7 @@ class TransferManager(GObject.Object):
         # Throttle progress updates to prevent UI flooding
         current_time = time.time()
         # Allow more frequent updates (50ms) for responsive UI
-        if current_time - self._last_progress_update >= 0.05:
+        if current_time - self._last_progress_update >= PROGRESS_UPDATE_INTERVAL:
             self._last_progress_update = current_time
             self.emit("transfer-progress", transfer_id, progress)
             self._update_progress_display()

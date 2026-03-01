@@ -48,6 +48,7 @@ class ShellInputHighlighter:
         self._lexer = None
         self._formatter = None
         self._theme = "monokai"
+        self._lexer_config_key: Optional[str] = None
 
         # Per-proxy state for input tracking
         # Key: proxy_id, Value: current command buffer string
@@ -93,7 +94,10 @@ class ShellInputHighlighter:
                 self._background = "#000000"
 
             if self._enabled:
-                self._init_lexer()
+                config_key = f"{self._theme_mode}:{self._theme}:{self._dark_theme}:{self._light_theme}:{self._background}"
+                if config_key != self._lexer_config_key:
+                    self._init_lexer()
+                    self._lexer_config_key = config_key
                 self.logger.info("Shell input highlighting enabled")
             else:
                 self._lexer = None

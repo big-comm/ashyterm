@@ -14,6 +14,7 @@ from gi.repository import Adw, GLib, GObject, Gtk
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
+from ...utils.accessibility import set_label as a11y_label
 
 
 class AIConfigDialog(Adw.PreferencesWindow):
@@ -214,32 +215,44 @@ class AIConfigDialog(Adw.PreferencesWindow):
             self.model_row.set_title(_("Model Identifier"))
             self.api_key_box.set_title(_("Groq API Key"))
             self.get_key_button.set_uri("https://console.groq.com/keys")
-            self.browse_models_row.set_subtitle(_("Search and select from available Groq models."))
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available Groq models.")
+            )
         elif provider_id == "gemini":
             self.model_row.set_title(_("Model Identifier"))
             self.api_key_box.set_title(_("Google AI Studio API Key"))
             self.get_key_button.set_uri("https://aistudio.google.com/app/apikey")
-            self.browse_models_row.set_subtitle(_("Search and select from available Gemini models."))
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available Gemini models.")
+            )
         elif provider_id == "openrouter":
             self.model_row.set_title(_("Model Identifier"))
             self.api_key_box.set_title(_("OpenRouter API Key"))
             self.get_key_button.set_uri("https://openrouter.ai/keys")
-            self.browse_models_row.set_subtitle(_("Search and select from available OpenRouter models."))
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available OpenRouter models.")
+            )
         elif provider_id == "local":
             self.model_row.set_title(_("Model Name"))
             self.api_key_box.set_title(_("API Key (if required)"))
-            self.browse_models_row.set_subtitle(_("Search and select from available Local models."))
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available Local models.")
+            )
 
         # Update specific config values
-        provider_api_key = self.settings_manager.get(f"ai_assistant_{provider_id}_api_key", "")
+        provider_api_key = self.settings_manager.get(
+            f"ai_assistant_{provider_id}_api_key", ""
+        )
         if not provider_api_key:
             provider_api_key = self.settings_manager.get("ai_assistant_api_key", "")
 
         default_model = self.DEFAULT_MODELS.get(provider_id, "")
-        provider_model = self.settings_manager.get(f"ai_assistant_{provider_id}_model", "")
+        provider_model = self.settings_manager.get(
+            f"ai_assistant_{provider_id}_model", ""
+        )
         if not provider_model:
             provider_model = self.settings_manager.get("ai_assistant_model", "")
-            
+
         # Unblock signal momentarily to avoid feedback
         self.api_key_box.set_text(provider_api_key)
         self.model_row.set_text(provider_model or default_model)
@@ -292,8 +305,10 @@ class AIConfigDialog(Adw.PreferencesWindow):
     def _on_browse_models_clicked(self, button) -> None:
         """Open a searchable dialog to browse and select models."""
         provider_id = self._get_selected_provider_id()
-        
-        api_key = self.settings_manager.get(f"ai_assistant_{provider_id}_api_key", "").strip()
+
+        api_key = self.settings_manager.get(
+            f"ai_assistant_{provider_id}_api_key", ""
+        ).strip()
         if not api_key:
             api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
 
@@ -305,7 +320,9 @@ class AIConfigDialog(Adw.PreferencesWindow):
         elif provider_id == "gemini":
             base_url = "https://generativelanguage.googleapis.com/v1beta"
         elif provider_id == "local":
-            base_url = self.settings_manager.get("ai_local_base_url", "http://localhost:11434/v1")
+            base_url = self.settings_manager.get(
+                "ai_local_base_url", "http://localhost:11434/v1"
+            )
 
         if provider_id != "local" and not api_key:
             self._show_toast(_("Please enter an API key first."))
@@ -350,6 +367,7 @@ class ModelBrowserDialog(Adw.Window):
         self._all_models: List[Tuple[str, str]] = []
         self._filtered_models: List[Tuple[str, str]] = []
         self._fetching = False
+        self._cancel_requested = False
 
         self._setup_ui()
         self._fetch_models()
@@ -385,6 +403,7 @@ class ModelBrowserDialog(Adw.Window):
         self.search_entry = Gtk.SearchEntry(
             placeholder_text=_("Search models by name or ID...")
         )
+        a11y_label(self.search_entry, _("Search models"))
         self.search_entry.connect("search-changed", self._on_search_changed)
         main_box.append(self.search_entry)
 
@@ -398,8 +417,12 @@ class ModelBrowserDialog(Adw.Window):
         )
         self.spinner = Gtk.Spinner()
         self.status_label = Gtk.Label(label=_("Loading models..."))
+        self._cancel_fetch_btn = Gtk.Button(label=_("Cancel"))
+        self._cancel_fetch_btn.add_css_class("flat")
+        self._cancel_fetch_btn.connect("clicked", self._on_cancel_fetch)
         self.status_box.append(self.spinner)
         self.status_box.append(self.status_label)
+        self.status_box.append(self._cancel_fetch_btn)
         main_box.append(self.status_box)
 
         # Results count label
@@ -429,8 +452,10 @@ class ModelBrowserDialog(Adw.Window):
             return
 
         self._fetching = True
+        self._cancel_requested = False
         self.spinner.start()
         self.status_box.set_visible(True)
+        self._cancel_fetch_btn.set_visible(True)
         self.count_label.set_visible(False)
 
         thread = threading.Thread(
@@ -444,64 +469,65 @@ class ModelBrowserDialog(Adw.Window):
         try:
             import requests
 
-            headers = {
-                "Content-Type": "application/json",
-            }
-            if self.api_key:
-                if self.provider_id == "gemini":
-                    headers["x-goog-api-key"] = self.api_key
-                else:
-                    headers["Authorization"] = f"Bearer {self.api_key}"
+            headers = self._build_auth_headers()
+            models_url = self._build_models_url()
 
-            base_url = self.base_url.rstrip("/")
-            if base_url.endswith(":11434"):
-                base_url += "/v1"
+            response = requests.get(models_url, headers=headers, timeout=30)
 
-            models_url = f"{base_url}/models"
+            if self._cancel_requested:
+                return
 
-            response = requests.get(
-                models_url,
-                headers=headers,
-                timeout=30,
-            )
-
-            if response.status_code >= 400:
-                if response.status_code == 404 and "/v1/models" in models_url:
-                    # Fallback to Ollama native API if /v1/models fails
-                    models_url = models_url.replace("/v1/models", "/api/tags")
-                    response = requests.get(models_url, headers=headers, timeout=30)
+            # Fallback to Ollama native API if /v1/models returns 404
+            if response.status_code == 404 and "/v1/models" in models_url:
+                models_url = models_url.replace("/v1/models", "/api/tags")
+                response = requests.get(models_url, headers=headers, timeout=30)
 
             if response.status_code >= 400:
                 GLib.idle_add(self._on_fetch_error, f"HTTP {response.status_code}")
                 return
 
-            data = response.json()
-            # Handle different JSON shapes
-            if "models" in data and isinstance(data["models"], list):
-                models = data["models"]
-            elif "data" in data and isinstance(data["data"], list):
-                models = data["data"]
-            else:
-                models = []
-
-            # Extract model id and name
-            model_list = []
-            for model in models:
-                model_id = model.get("id", model.get("name", ""))
-                # Remove models/ prefix for Gemini
-                if self.provider_id == "gemini" and model_id.startswith("models/"):
-                    model_id = model_id[7:]
-                model_name = model.get("name", model.get("display_name", model_id))
-                if model_id:
-                    model_list.append((model_id, model_name))
-
-            # Sort by name
+            model_list = self._parse_models_response(response.json())
             model_list.sort(key=lambda x: x[1].lower())
-
             GLib.idle_add(self._on_fetch_success, model_list)
 
         except Exception as e:
             GLib.idle_add(self._on_fetch_error, str(e))
+
+    def _build_auth_headers(self) -> dict:
+        """Build HTTP headers with provider-specific auth."""
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            if self.provider_id == "gemini":
+                headers["x-goog-api-key"] = self.api_key
+            else:
+                headers["Authorization"] = f"Bearer {self.api_key}"
+        return headers
+
+    def _build_models_url(self) -> str:
+        """Build the models API URL with Ollama detection."""
+        base_url = self.base_url.rstrip("/")
+        if base_url.endswith(":11434"):
+            base_url += "/v1"
+        return f"{base_url}/models"
+
+    def _parse_models_response(self, data: dict) -> list:
+        """Parse model list from API response (handles OpenAI, Ollama, Gemini shapes)."""
+        if "models" in data and isinstance(data["models"], list):
+            models = data["models"]
+        elif "data" in data and isinstance(data["data"], list):
+            models = data["data"]
+        else:
+            models = []
+
+        model_list = []
+        for model in models:
+            model_id = model.get("id", model.get("name", ""))
+            if self.provider_id == "gemini" and model_id.startswith("models/"):
+                model_id = model_id[7:]
+            model_name = model.get("name", model.get("display_name", model_id))
+            if model_id:
+                model_list.append((model_id, model_name))
+        return model_list
 
     def _on_fetch_success(self, models: List[Tuple[str, str]]) -> None:
         """Handle successful model fetch."""
@@ -520,10 +546,20 @@ class ModelBrowserDialog(Adw.Window):
         """Handle fetch error."""
         self._fetching = False
         self.spinner.stop()
+        self._cancel_fetch_btn.set_visible(False)
         self.status_label.set_text(
             _("Failed to load models: {error}").format(error=error)
         )
         self.status_label.add_css_class("error")
+
+    def _on_cancel_fetch(self, _button) -> None:
+        """Cancel the model fetch."""
+        self._cancel_requested = True
+        self._fetching = False
+        self.spinner.stop()
+        self._cancel_fetch_btn.set_visible(False)
+        self.status_label.set_text(_("Fetch cancelled"))
+        self.status_label.remove_css_class("error")
 
     def _on_search_changed(self, search_entry) -> None:
         """Filter models based on search text."""

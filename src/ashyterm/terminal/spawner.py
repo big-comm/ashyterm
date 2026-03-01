@@ -71,6 +71,13 @@ class ProcessTracker:
                         self.logger.error(
                             f"Failed to clean up temp zshrc directory {temp_dir_path}: {e}"
                         )
+                # Clean up sshpass password file
+                sshpass_file = process_info.get("sshpass_file")
+                if sshpass_file:
+                    try:
+                        os.unlink(sshpass_file)
+                    except OSError:
+                        pass
                 return True
             return False
 
@@ -125,14 +132,15 @@ class ProcessTracker:
 class ProcessSpawner:
     """Enhanced process spawner with comprehensive security and error handling."""
 
-    def __init__(self):
+    def __init__(self, settings_manager=None):
         self.logger = get_logger(LOGGER_NAME_SPAWNER)
         self.platform_info = get_platform_info()
         self.command_builder = get_command_builder()
         self.environment_manager = get_environment_manager()
         self.process_tracker = ProcessTracker()
-        self.settings_manager = get_settings_manager()
+        self.settings_manager = settings_manager or get_settings_manager()
         self._spawn_lock = threading.Lock()
+        self._last_sshpass_file: Optional[str] = None
         self.logger.info("Process launcher initialized on Linux")
 
     def _get_expected_terminal_size(self, terminal: Vte.Terminal) -> Tuple[int, int]:
@@ -414,6 +422,9 @@ class ProcessSpawner:
             }
             if temp_dir_path:
                 process_info["temp_dir_path"] = temp_dir_path
+            if self._last_sshpass_file:
+                process_info["sshpass_file"] = self._last_sshpass_file
+                self._last_sshpass_file = None
             if session:
                 process_info["session"] = session
 
@@ -904,10 +915,14 @@ class ProcessSpawner:
             self._validate_ssh_session(session)
             cmd, run_env = self._build_ssh_test_command(session)
             if cmd is None:
-                return False, run_env  # run_env contains error message in this case
+                return False, str(
+                    run_env
+                )  # run_env contains error message in this case
 
             self.logger.info(f"Testing SSH connection with command: {' '.join(cmd)}")
-            return self._execute_ssh_test(cmd, run_env, session.name)
+            return self._execute_ssh_test(
+                cmd, run_env if isinstance(run_env, dict) else None, session.name
+            )
 
         except Exception as e:
             self.logger.error(
@@ -917,25 +932,37 @@ class ProcessSpawner:
 
     def _build_ssh_test_command(
         self, session: "SessionItem"
-    ) -> Tuple[Optional[List[str]], Optional[dict]]:
+    ) -> Tuple[Optional[List[str]], Optional[dict] | str]:
         """
         Builds the SSH test command and environment.
         Returns (command, environment) or (None, error_message) on failure.
         """
-        # Read password directly from _auth_value to bypass keyring lookup
-        # This is needed for test sessions that haven't been saved yet
         raw_password = getattr(session, "_auth_value", "") or ""
-        use_password = session.uses_password_auth() and raw_password
-        ssh_options = {
+        use_password = session.uses_password_auth() and bool(raw_password)
+
+        ssh_options = self._build_ssh_test_options(session, use_password)
+        cmd = self._build_ssh_base_cmd(session, ssh_options)
+
+        if not use_password:
+            return cmd, None
+
+        return self._wrap_sshpass(cmd, raw_password)
+
+    def _build_ssh_test_options(self, session, use_password: bool) -> dict:
+        """Build SSH option dict for test connections."""
+        opts = {
             "BatchMode": "no" if use_password else "yes",
             "ConnectTimeout": "10",
-            "StrictHostKeyChecking": "no",
+            "StrictHostKeyChecking": "accept-new",
             "PasswordAuthentication": "yes" if use_password else "no",
         }
         if getattr(session, "x11_forwarding", False):
-            ssh_options["ForwardX11"] = "yes"
-            ssh_options["ForwardX11Trusted"] = "yes"
+            opts["ForwardX11"] = "yes"
+            opts["ForwardX11Trusted"] = "yes"
+        return opts
 
+    def _build_ssh_base_cmd(self, session, ssh_options: dict) -> list:
+        """Build the base SSH command list for testing."""
         cmd = self.command_builder.build_remote_command(
             "ssh",
             hostname=session.host,
@@ -947,22 +974,23 @@ class ProcessSpawner:
         if getattr(session, "x11_forwarding", False) and "-Y" not in cmd:
             cmd.insert(1, "-Y")
         cmd.append("exit")
+        return cmd
 
-        run_env = None
-        # Read password directly from _auth_value to bypass keyring lookup
-        # This is needed for test sessions that haven't been saved yet
-        raw_password = getattr(session, "_auth_value", "") or ""
-        if session.uses_password_auth() and raw_password:
-            if not has_command("sshpass"):
-                return (
-                    None,
-                    "sshpass is not installed, cannot test password authentication.",
-                )
+    def _wrap_sshpass(self, cmd: list, password: str):
+        """Wrap command with sshpass for password authentication."""
+        if not has_command("sshpass"):
+            return (
+                None,
+                "sshpass is not installed, cannot test password authentication.",
+            )
+        pass_file = self._create_sshpass_file(password)
+        run_env = os.environ.copy()
+        run_env["LC_ALL"] = "C"
+        if pass_file:
+            cmd = ["sshpass", "-f", pass_file] + cmd
+        else:
             cmd = ["sshpass", "-e"] + cmd
-            run_env = os.environ.copy()
-            run_env["SSHPASS"] = raw_password
-            run_env["LC_ALL"] = "C"
-
+            run_env["SSHPASS"] = password
         return cmd, run_env
 
     def _execute_ssh_test(
@@ -1141,23 +1169,57 @@ class ProcessSpawner:
     ) -> Tuple[List[str], Optional[Dict[str, str]]]:
         """Wrap command with sshpass for password authentication.
 
+        Uses sshpass -f <file> with a secure temporary file (mode 0600)
+        instead of environment variables, so the password is not visible
+        in /proc/<pid>/environ.
+
         Args:
             cmd: The command list.
             session: The SSH session.
 
         Returns:
             Tuple of (modified_command, sshpass_env).
+            sshpass_env is None when not using password auth.
         """
         sshpass_env: Optional[Dict[str, str]] = None
 
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
-                cmd = ["sshpass", "-e"] + cmd
-                sshpass_env = {"SSHPASS": session.auth_value}
+                pass_file = self._create_sshpass_file(session.auth_value)
+                if pass_file:
+                    cmd = ["sshpass", "-f", pass_file] + cmd
+                    # Track the file path for cleanup via process tracker
+                    self._last_sshpass_file = pass_file
+                else:
+                    # Fallback to env var if file creation fails
+                    cmd = ["sshpass", "-e"] + cmd
+                    sshpass_env = {"SSHPASS": session.auth_value}
             else:
                 self.logger.warning("sshpass not available for password authentication")
 
         return (cmd, sshpass_env)
+
+    def _create_sshpass_file(self, password: str) -> Optional[str]:
+        """Create a secure temporary file containing the SSH password.
+
+        The file is created with mode 0600 in the cache directory.
+        It must be cleaned up after the SSH session ends.
+        """
+        try:
+            self.platform_info.cache_dir.mkdir(parents=True, exist_ok=True)
+            fd, path = tempfile.mkstemp(
+                prefix="ashyterm_sshpass_",
+                dir=str(self.platform_info.cache_dir),
+            )
+            try:
+                os.fchmod(fd, 0o600)
+                os.write(fd, password.encode("utf-8"))
+            finally:
+                os.close(fd)
+            return path
+        except Exception as e:
+            self.logger.error(f"Failed to create sshpass temp file: {e}")
+            return None
 
     def _build_remote_command_secure(
         self,
@@ -1259,13 +1321,16 @@ class ProcessSpawner:
         cmd.append(remote_command_str)
 
         # Handle password authentication securely
-        # Use SSHPASS environment variable instead of -p flag to avoid
-        # password being visible in process list (ps aux)
+        # Use sshpass -f <file> to avoid password in process list or environment
         sshpass_env: Optional[Dict[str, str]] = None
         if session.uses_password_auth() and session.auth_value:
             if has_command("sshpass"):
-                cmd = ["sshpass", "-e"] + cmd
-                sshpass_env = {"SSHPASS": session.auth_value}
+                pass_file = self._create_sshpass_file(session.auth_value)
+                if pass_file:
+                    cmd = ["sshpass", "-f", pass_file] + cmd
+                else:
+                    cmd = ["sshpass", "-e"] + cmd
+                    sshpass_env = {"SSHPASS": session.auth_value}
             else:
                 self.logger.warning("sshpass not available for password authentication")
         return (cmd, sshpass_env)
@@ -1377,6 +1442,9 @@ class ProcessSpawner:
             }
             if temp_dir_path:
                 process_info["temp_dir_path"] = temp_dir_path
+            if self._last_sshpass_file:
+                process_info["sshpass_file"] = self._last_sshpass_file
+                self._last_sshpass_file = None
             if spawn_type == "ssh" and actual_data:
                 process_info["session"] = actual_data
             self.process_tracker.register_process(pid, process_info)

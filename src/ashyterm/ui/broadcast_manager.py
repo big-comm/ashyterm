@@ -11,6 +11,7 @@ from gi.repository import Adw, Gdk, GObject, Gtk, Vte
 from ..sessions.models import SessionItem
 from ..utils.syntax_utils import get_bash_pango_markup
 from ..utils.translation_utils import _
+from ..utils.accessibility import set_label as a11y_label
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
@@ -30,7 +31,7 @@ class BroadcastManager(GObject.Object):
 
         # State
         self.remember_choice = False
-        self.last_selection = []
+        self.last_selection: list[str] = []
 
         self._setup_connections()
 
@@ -50,7 +51,9 @@ class BroadcastManager(GObject.Object):
     def _on_broadcast_mode_changed(self, broadcast_bar, _param):
         if broadcast_bar.get_search_mode():
             self.ui.broadcast_entry.grab_focus()
+            self.window.add_css_class("broadcast-active")
         else:
+            self.window.remove_css_class("broadcast-active")
             if terminal := self.tab_manager.get_selected_terminal():
                 terminal.grab_focus()
 
@@ -66,10 +69,25 @@ class BroadcastManager(GObject.Object):
         if not command:
             return
 
+        MAX_BROADCAST_LENGTH = 10_000
+        if len(command) > MAX_BROADCAST_LENGTH:
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(
+                    title=_("Command too long (max {} characters).").format(
+                        MAX_BROADCAST_LENGTH
+                    )
+                )
+            )
+            return
+
         all_terminals = self.tab_manager.get_all_terminals_across_tabs()
         if not all_terminals:
             self.window.toast_overlay.add_toast(
-                Adw.Toast(title=_("No open terminals found."))
+                Adw.Toast(
+                    title=_(
+                        "Cannot broadcast: no terminals are open. Open at least one terminal first."
+                    )
+                )
             )
             return
 
@@ -118,11 +136,25 @@ class BroadcastManager(GObject.Object):
             min_children_per_line=max(1, min(3, len(all_terminals))),
             max_children_per_line=3,
         )
+        a11y_label(flow_box, _("Terminal selection"))
 
-        selection_controls = []
+        selection_controls: list[Gtk.CheckButton] = []
+        selection_counter = Gtk.Label(
+            label=_("{n} terminals selected").format(n=0),
+            halign=Gtk.Align.END,
+            css_classes=["dim-label"],
+        )
+
+        def _update_counter(*_args):
+            n = sum(1 for _, btn in selection_controls if btn.get_active())
+            selection_counter.set_label(_("{n} terminals selected").format(n=n))
+
         for t in all_terminals:
-            btn = Gtk.CheckButton(label=self._get_display_name(t))
-            btn.set_active(True)
+            display_name = self._get_display_name(t)
+            btn = Gtk.CheckButton(label=display_name)
+            btn.set_active(False)
+            btn.connect("toggled", _update_counter)
+            a11y_label(btn, _("Select: {}").format(display_name))
             flow_box.insert(btn, -1)
             selection_controls.append((t, btn))
 
@@ -136,6 +168,7 @@ class BroadcastManager(GObject.Object):
 
         remember_check = Gtk.CheckButton(label=_("Remember my choice"))
         remember_check.set_active(self.remember_choice)
+        a11y_label(remember_check, _("Remember my choice"))
 
         content = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL, spacing=12, margin_all=12
@@ -148,6 +181,7 @@ class BroadcastManager(GObject.Object):
             )
         )
         content.append(container)
+        content.append(selection_counter)
         content.append(remember_check)
         dialog.set_extra_child(content)
 
@@ -215,7 +249,11 @@ class BroadcastManager(GObject.Object):
         all_terminals = self.tab_manager.get_all_terminals_across_tabs()
         if not all_terminals:
             self.window.toast_overlay.add_toast(
-                Adw.Toast(title=_("No open terminals found."))
+                Adw.Toast(
+                    title=_(
+                        "Cannot broadcast: no terminals are open. Open at least one terminal first."
+                    )
+                )
             )
             return
 

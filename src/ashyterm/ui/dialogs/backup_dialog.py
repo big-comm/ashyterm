@@ -12,6 +12,7 @@ from gi.repository import Adw, Gio, GLib, Gtk
 
 from ...settings.config import LAYOUT_DIR, SESSIONS_FILE, SETTINGS_FILE
 from ...utils.translation_utils import _
+from ...utils.accessibility import set_label as a11y_label
 
 
 class BackupRestoreHandler:
@@ -83,9 +84,11 @@ class BackupRestoreHandler:
         pass_entry = Gtk.PasswordEntry(
             placeholder_text=_("Password"), show_peek_icon=True
         )
+        a11y_label(pass_entry, _("Backup password"))
         confirm_entry = Gtk.PasswordEntry(
             placeholder_text=_("Confirm Password"), show_peek_icon=True
         )
+        a11y_label(confirm_entry, _("Confirm password"))
         content.append(pass_entry)
         content.append(confirm_entry)
         dialog.set_extra_child(content)
@@ -250,6 +253,7 @@ class BackupRestoreHandler:
         pass_entry = Gtk.PasswordEntry(
             placeholder_text=_("Password"), show_peek_icon=True
         )
+        a11y_label(pass_entry, _("Backup password"))
         dialog.set_extra_child(pass_entry)
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("restore", _("Restore"))
@@ -293,10 +297,11 @@ class BackupRestoreHandler:
             except Exception as e:
                 if self.logger:
                     self.logger.error(f"Restore failed: {e}")
+                reason = getattr(e, "details", {}).get("reason", str(e))
                 GLib.idle_add(
                     self._show_error_dialog,
                     _("Restore Failed"),
-                    _("Could not restore from backup: {}").format(e),
+                    _("Could not restore from backup: {}").format(reason),
                     parent_window,
                 )
             finally:

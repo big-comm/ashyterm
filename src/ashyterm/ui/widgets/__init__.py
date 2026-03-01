@@ -2,7 +2,7 @@
 
 """Custom UI widgets for AshyTerm."""
 
-from .ai_chat_panel import AIChatPanel
+from .ai_chat import AIChatPanel
 from .base_syntax_text_view import BaseSyntaxTextView
 from .bash_text_view import BashTextView
 from .conversation_history import ConversationHistoryPanel

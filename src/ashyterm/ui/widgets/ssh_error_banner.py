@@ -13,44 +13,28 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gdk, GObject
 from typing import Optional, Callable, TYPE_CHECKING
 from dataclasses import dataclass
+from pathlib import Path
 from enum import Enum, auto
 
 from ashyterm.utils.logger import get_logger
 from ashyterm.utils.translation_utils import _
+from ashyterm.utils.accessibility import (
+    set_label as a11y_label,
+    set_description as a11y_desc,
+)
 
 if TYPE_CHECKING:
     from ashyterm.sessions.models import SessionItem
 
 logger = get_logger("ashyterm.ui.ssh_error_banner")
 
-# Static CSS for default/fallback styling (Adwaita compatible)
-# This ensures the banner always has proper styling even without custom theme
-_DEFAULT_CSS = """
-.ssh-error-banner-container {
-    background-color: @window_bg_color;
-}
-.ssh-error-banner {
-    background-color: @card_bg_color;
-    border-radius: 6px;
-    border: 1px solid alpha(@error_color, 0.4);
-    padding: 6px 10px;
-    margin: 2px 4px;
-}
-.ssh-error-banner .heading {
-    font-weight: 600;
-    color: @error_color;
-}
-.ssh-error-banner .warning-icon {
-    color: @warning_color;
-}
-.options-panel {
-    background-color: @card_bg_color;
-    border-radius: 6px;
-    border: 1px solid alpha(@borders, 0.5);
-    padding: 6px 12px;
-    margin: 0 4px 4px 4px;
-}
-"""
+# Static CSS file for default/fallback styling (Adwaita compatible)
+_CSS_FILE = (
+    Path(__file__).resolve().parent.parent.parent
+    / "data"
+    / "styles"
+    / "ssh_error_banner.css"
+)
 
 # Apply default CSS once when module loads
 _default_css_provider = None
@@ -61,7 +45,7 @@ def _ensure_default_css():
     global _default_css_provider
     if _default_css_provider is None:
         _default_css_provider = Gtk.CssProvider()
-        _default_css_provider.load_from_string(_DEFAULT_CSS)
+        _default_css_provider.load_from_path(str(_CSS_FILE))
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             _default_css_provider,
@@ -123,6 +107,9 @@ class SSHErrorBanner(Gtk.Box):
         is_host_key_error: bool = False,
     ):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.update_property(
+            [Gtk.AccessibleProperty.LABEL], [_("SSH connection error")]
+        )
 
         # Ensure default CSS is applied for fallback styling
         _ensure_default_css()
@@ -150,6 +137,8 @@ class SSHErrorBanner(Gtk.Box):
             hexpand=True,
         )
         self._main_box.add_css_class("ssh-error-banner")
+        a11y_label(self._main_box, _("SSH connection error"))
+        a11y_desc(self._main_box, f"{self._session_name}: {self._error_message}")
         self._main_box.set_margin_start(4)
         self._main_box.set_margin_end(4)
         self._main_box.set_margin_top(2)
@@ -159,6 +148,7 @@ class SSHErrorBanner(Gtk.Box):
         warning_icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
         warning_icon.add_css_class("warning-icon")
         warning_icon.set_valign(Gtk.Align.CENTER)
+        a11y_label(warning_icon, _("Warning"))
         self._main_box.append(warning_icon)
 
         # Message area - vertical box with title and detail
@@ -206,6 +196,7 @@ class SSHErrorBanner(Gtk.Box):
             edit_btn.add_css_class("compact-button")
             edit_btn.connect("clicked", self._on_edit_session_clicked)
             edit_btn.set_tooltip_text(_("Edit session credentials"))
+            a11y_label(edit_btn, _("Edit session credentials"))
             button_box.append(edit_btn)
         elif self._is_host_key_error:
             # For host key errors, show Fix Host Key and Close buttons
@@ -214,6 +205,7 @@ class SSHErrorBanner(Gtk.Box):
             fix_btn.add_css_class("compact-button")
             fix_btn.connect("clicked", self._on_fix_host_key_clicked)
             fix_btn.set_tooltip_text(_("Remove old host key from known_hosts"))
+            a11y_label(fix_btn, _("Remove old host key from known_hosts"))
             button_box.append(fix_btn)
         else:
             # For network errors, show Retry and Auto Reconnect buttons
@@ -222,6 +214,7 @@ class SSHErrorBanner(Gtk.Box):
             retry_btn.add_css_class("compact-button")
             retry_btn.connect("clicked", self._on_retry_clicked)
             retry_btn.set_tooltip_text(_("Retry connection with extended timeout"))
+            a11y_label(retry_btn, _("Retry connection with extended timeout"))
             button_box.append(retry_btn)
 
             # Auto-Reconnect button with dropdown
@@ -231,6 +224,7 @@ class SSHErrorBanner(Gtk.Box):
             auto_btn.add_css_class("compact-button")
             auto_btn.connect("clicked", self._on_auto_reconnect_clicked)
             auto_btn.set_tooltip_text(_("Start automatic reconnection attempts"))
+            a11y_label(auto_btn, _("Start automatic reconnection attempts"))
             auto_btn_box.append(auto_btn)
 
             # Options dropdown toggle
@@ -240,6 +234,7 @@ class SSHErrorBanner(Gtk.Box):
             options_btn.add_css_class("circular")
             options_btn.connect("clicked", self._toggle_options)
             options_btn.set_tooltip_text(_("Configure auto-reconnect options"))
+            a11y_label(options_btn, _("Configure auto-reconnect options"))
             self._options_toggle_btn = options_btn
             auto_btn_box.append(options_btn)
 
@@ -298,6 +293,7 @@ class SSHErrorBanner(Gtk.Box):
         self._duration_spin.set_value(self._config.duration_mins)
         self._duration_spin.set_width_chars(2)
         self._duration_spin.connect("value-changed", self._on_duration_changed)
+        a11y_label(self._duration_spin, _("Reconnect duration in minutes"))
         duration_box.append(self._duration_spin)
 
         duration_unit = Gtk.Label(label=_("min"))
@@ -316,6 +312,7 @@ class SSHErrorBanner(Gtk.Box):
         self._interval_spin.set_value(self._config.interval_secs)
         self._interval_spin.set_width_chars(2)
         self._interval_spin.connect("value-changed", self._on_interval_changed)
+        a11y_label(self._interval_spin, _("Reconnect interval in seconds"))
         interval_box.append(self._interval_spin)
 
         interval_unit = Gtk.Label(label=_("sec"))
@@ -334,6 +331,7 @@ class SSHErrorBanner(Gtk.Box):
         self._timeout_spin.set_value(self._config.timeout_secs)
         self._timeout_spin.set_width_chars(2)
         self._timeout_spin.connect("value-changed", self._on_timeout_changed)
+        a11y_label(self._timeout_spin, _("Connection timeout in seconds"))
         timeout_box.append(self._timeout_spin)
 
         timeout_unit = Gtk.Label(label=_("sec"))
@@ -486,6 +484,45 @@ class SSHErrorBanner(Gtk.Box):
         self._error_message = message
         # Would need to rebuild the message label - for now just log
         self.logger.debug(f"Error message updated: {message}")
+
+    def show_reconnecting(
+        self, attempt: int = 1, max_attempts: int | None = None
+    ) -> None:
+        """Show a reconnecting indicator with attempt counter."""
+        if not hasattr(self, "_reconnect_box"):
+            self._reconnect_box = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL, spacing=6
+            )
+            self._reconnect_box.set_halign(Gtk.Align.CENTER)
+            self._reconnect_box.set_margin_top(4)
+            self._reconnect_box.set_margin_bottom(4)
+
+            self._reconnect_spinner = Gtk.Spinner()
+            self._reconnect_spinner.set_size_request(16, 16)
+            self._reconnect_box.append(self._reconnect_spinner)
+
+            self._reconnect_label = Gtk.Label()
+            self._reconnect_label.add_css_class("dim-label")
+            self._reconnect_box.append(self._reconnect_label)
+
+            self.append(self._reconnect_box)
+
+        if max_attempts:
+            text = _("Reconnecting... attempt {current}/{total}").format(
+                current=attempt, total=max_attempts
+            )
+        else:
+            text = _("Reconnecting... attempt {current}").format(current=attempt)
+
+        self._reconnect_label.set_label(text)
+        self._reconnect_spinner.start()
+        self._reconnect_box.set_visible(True)
+
+    def hide_reconnecting(self) -> None:
+        """Hide the reconnecting indicator."""
+        if hasattr(self, "_reconnect_box"):
+            self._reconnect_spinner.stop()
+            self._reconnect_box.set_visible(False)
 
 
 class SSHErrorBannerManager:

@@ -97,7 +97,10 @@ class CommandBuilder:
         if not self.platform_info.has_command(command_type):
             raise ConfigError(f"{command_type.upper()} command not found")
 
-        cmd = [shutil.which(command_type)]
+        cmd_path = shutil.which(command_type)
+        if not cmd_path:
+            raise ConfigError(f"{command_type.upper()} command not found in PATH")
+        cmd: list[str] = [cmd_path]
         if options:
             for key, value in options.items():
                 cmd.extend(["-o", f"{key}={value}"])

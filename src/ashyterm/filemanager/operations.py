@@ -6,8 +6,9 @@ import signal
 import subprocess
 import tempfile
 import threading
+import time
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from gi.repository import GLib
 
@@ -24,8 +25,8 @@ _PROGRESS_PERCENT_PATTERN = re.compile(r"(\d+)%")
 # when its parent dies. This is the most reliable way to ensure
 # child processes (like rsync/ssh) do not get orphaned.
 try:
-    libc = ctypes.CDLL("libc.so.6")
-    PR_SET_PDEATHSIG = 1
+    libc: ctypes.CDLL | None = ctypes.CDLL("libc.so.6")
+    PR_SET_PDEATHSIG: int | None = 1
 except (OSError, AttributeError):
     libc = None
     PR_SET_PDEATHSIG = None
@@ -72,11 +73,15 @@ class OperationCancelledError(Exception):
 
 
 class FileOperations:
-    def __init__(self, session_item: SessionItem):
+    def __init__(self, session_item: SessionItem, spawner=None):
         self.session_item = session_item
+        self._spawner = spawner
         self.logger = get_logger("ashyterm.filemanager.operations")
-        self._command_cache = {}
-        self._active_processes = {}
+        self._command_cache: dict[
+            str, dict[str, tuple[bool, float]]
+        ] = {}  # {session_key: {command: (available, timestamp)}}
+        self._cache_ttl = 300  # 5 minutes
+        self._active_processes: dict[str, Any] = {}
         self._lock = threading.Lock()
 
     def shutdown(self):
@@ -120,7 +125,9 @@ class FileOperations:
                 session_key in self._command_cache
                 and command in self._command_cache[session_key]
             ):
-                return self._command_cache[session_key][command]
+                available, cached_at = self._command_cache[session_key][command]
+                if time.monotonic() - cached_at < self._cache_ttl:
+                    return available
 
         check_command = ["command", "-v", command]
         success, _ = self.execute_command_on_session(
@@ -129,7 +136,7 @@ class FileOperations:
 
         if session_key not in self._command_cache:
             self._command_cache[session_key] = {}
-        self._command_cache[session_key][command] = success
+        self._command_cache[session_key][command] = (success, time.monotonic())
         return success
 
     def check_command_available(
@@ -184,11 +191,12 @@ class FileOperations:
                     else (False, result.stderr)
                 )
             elif session_to_use.is_ssh():
-                from ..terminal.spawner import get_spawner
+                if self._spawner is None:
+                    from ..terminal.spawner import get_spawner
 
-                spawner = get_spawner()
+                    self._spawner = get_spawner()
                 # Use shorter timeout for file manager operations to avoid UI freeze
-                return spawner.execute_remote_command_sync(
+                return self._spawner.execute_remote_command_sync(
                     session_to_use, command, timeout=timeout
                 )
         except subprocess.TimeoutExpired:
@@ -375,9 +383,11 @@ class FileOperations:
             stderr_thread = None
             stderr_lines: list = []
             try:
-                from ..terminal.spawner import get_spawner
+                if self._spawner is None:
+                    from ..terminal.spawner import get_spawner
 
-                spawner = get_spawner()
+                    self._spawner = get_spawner()
+                spawner = self._spawner
 
                 if self._is_command_available(session, "rsync"):
                     ssh_cmd = (

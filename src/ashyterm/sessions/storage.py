@@ -16,7 +16,10 @@ from ..utils.exceptions import (
     StorageWriteError,
     handle_exception,
 )
+from ..utils.json_versioning import migrate_data, stamp_version
 from ..utils.logger import get_logger, log_error_with_context, log_session_event
+
+MAX_SESSION_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
 from ..utils.platform import (
     ensure_directory_exists,
     get_config_directory,
@@ -33,6 +36,10 @@ from .models import SessionFolder, SessionItem
 
 class SessionStorageManager:
     """Enhanced storage manager with comprehensive functionality."""
+
+    SCHEMA_VERSION = 1
+    # Migrations: key N = function that migrates from version N to N+1
+    MIGRATIONS: Dict[int, Any] = {}
 
     def __init__(self):
         self.logger = get_logger("ashyterm.sessions.storage")
@@ -80,7 +87,7 @@ class SessionStorageManager:
         if self.sessions_file.stat().st_size == 0:
             self.logger.info("Sessions file is empty, returning empty data")
             return [], []
-        if self.sessions_file.stat().st_size > 50 * 1024 * 1024:
+        if self.sessions_file.stat().st_size > MAX_SESSION_FILE_SIZE:
             raise StorageReadError(str(self.sessions_file), _("File too large (>50MB)"))
         return None
 
@@ -103,6 +110,7 @@ class SessionStorageManager:
             raise StorageCorruptedError(
                 str(self.sessions_file), _("Root data is not a dictionary")
             )
+        data = migrate_data(data, self.SCHEMA_VERSION, self.MIGRATIONS)
         return data
 
     def _extract_and_validate_data(
@@ -390,10 +398,13 @@ class SessionStorageManager:
         folder_store: Optional[Gio.ListStore],
     ) -> Dict[str, Any]:
         """Prepare data for saving."""
-        return {
-            "sessions": self._get_sessions_data(session_store),
-            "folders": self._get_folders_data(folder_store),
-        }
+        return stamp_version(
+            {
+                "sessions": self._get_sessions_data(session_store),
+                "folders": self._get_folders_data(folder_store),
+            },
+            self.SCHEMA_VERSION,
+        )
 
     def _validate_save_data(self, data: Dict[str, Any]) -> bool:
         """Validate data before saving."""

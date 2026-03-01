@@ -157,7 +157,7 @@ class OutputHighlighter:
         if literal_keywords:
             # Use optimized literal keyword matching (no regex!)
             # Resolve first color only (keyword rules use single color)
-            if rule.colors:
+            if rule.colors and rule.colors[0]:
                 ansi_color = self._manager.resolve_color_to_ansi(rule.colors[0])
             else:
                 ansi_color = ""
@@ -174,7 +174,7 @@ class OutputHighlighter:
 
         # Fall back to regex for complex patterns
         try:
-            # Compile with regex engine (PCRE2) - use faster VERSION1 mode if available            
+            # Compile with regex engine (PCRE2) - use faster VERSION1 mode if available
             flags = re_engine.IGNORECASE | getattr(re_engine, "VERSION1", 0)
             pattern = re_engine.compile(rule.pattern, flags)
             num_groups = pattern.groups
@@ -257,6 +257,7 @@ class OutputHighlighter:
             True if context changed, False if it was already set.
         """
         with self._lock:
+            resolved_context: str | None
             # Normalize empty/None to empty string
             if not command_name:
                 resolved_context = ""
@@ -534,7 +535,7 @@ class OutputHighlighter:
 
     def _line_already_highlighted(self, line: str) -> bool:
         """Check if line already contains ANSI color codes."""
-        return "\x1b[" in line and ANSI_COLOR_PATTERN.search(line)
+        return "\x1b[" in line and bool(ANSI_COLOR_PATTERN.search(line))
 
     def _collect_matches(
         self,

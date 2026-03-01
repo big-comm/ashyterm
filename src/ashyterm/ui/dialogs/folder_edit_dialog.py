@@ -11,6 +11,7 @@ from gi.repository import Adw, Gtk
 from ...sessions.models import SessionFolder
 from ...utils.platform import normalize_path
 from ...utils.translation_utils import _
+from ...utils.accessibility import set_label as a11y_label
 from .base_dialog import BaseDialog
 
 
@@ -28,6 +29,8 @@ class FolderEditDialog(BaseDialog):
         super().__init__(parent_window, title, default_width=600, default_height=500)
         self.folder_store = folder_store
         self.original_folder = folder_item if not self.is_new_item else None
+        if folder_item is None:
+            raise ValueError("folder_item is required")
         self.editing_folder = (
             SessionFolder.from_dict(folder_item.to_dict())
             if not self.is_new_item
@@ -94,6 +97,7 @@ class FolderEditDialog(BaseDialog):
             placeholder_text=_("Enter folder name..."),
             hexpand=True,
         )
+        a11y_label(self.name_entry, _("Folder name"))
         self.name_entry.connect("changed", self._on_name_changed)
         self.name_entry.connect("activate", self._on_save_clicked)
         name_row.add_suffix(self.name_entry)

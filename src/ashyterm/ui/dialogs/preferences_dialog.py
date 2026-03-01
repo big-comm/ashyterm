@@ -9,6 +9,7 @@ from gi.repository import Adw, GLib, GObject, Gtk, Pango
 from ...settings.manager import SettingsManager
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
+from ...utils.accessibility import set_label as a11y_label
 from .base_dialog import create_mapped_combo_row
 
 
@@ -105,6 +106,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         # Use a standard button instead of FontButton for better stability
         self.font_button = Gtk.Button()
         self.font_button.set_valign(Gtk.Align.CENTER)
+        a11y_label(self.font_button, _("Select terminal font"))
         current_font = self.settings_manager.get("font", "Monospace 10")
         self.font_button.set_label(current_font)
         self.font_button.connect("clicked", self._on_select_font_clicked)
@@ -113,18 +115,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
         font_row.set_activatable_widget(self.font_button)
         font_group.add(font_row)
 
-        line_spacing_row = Adw.ActionRow(
-            title=_("Line Spacing"),
-        )
-        spacing_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        self.spacing_spin = Gtk.SpinButton.new_with_range(0.8, 2.0, 0.05)
-        self.spacing_spin.set_valign(Gtk.Align.CENTER)
+        self.spacing_spin = Adw.SpinRow.new_with_range(0.8, 2.0, 0.05)
+        self.spacing_spin.set_title(_("Line Spacing"))
         self.spacing_spin.set_value(self.settings_manager.get("line_spacing", 1.0))
-        self.spacing_spin.connect("value-changed", self._on_line_spacing_changed)
-        spacing_box.append(self.spacing_spin)
-        line_spacing_row.add_suffix(spacing_box)
-        line_spacing_row.set_activatable_widget(self.spacing_spin)
-        font_group.add(line_spacing_row)
+        self.spacing_spin.connect("notify::value", self._on_line_spacing_changed)
+        font_group.add(self.spacing_spin)
 
         misc_group = Adw.PreferencesGroup()
         page.add(misc_group)
@@ -139,6 +134,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.transparency_scale.set_draw_value(True)
         self.transparency_scale.set_value_pos(Gtk.PositionType.RIGHT)
         self.transparency_scale.set_hexpand(True)
+        a11y_label(self.transparency_scale, _("Terminal Transparency"))
         self.transparency_scale.connect("value-changed", self._on_transparency_changed)
         transparency_row.add_suffix(self.transparency_scale)
         transparency_row.set_activatable_widget(self.transparency_scale)
@@ -156,6 +152,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.headerbar_transparency_scale.set_draw_value(True)
         self.headerbar_transparency_scale.set_value_pos(Gtk.PositionType.RIGHT)
         self.headerbar_transparency_scale.set_hexpand(True)
+        a11y_label(self.headerbar_transparency_scale, _("Headerbar Transparency"))
         self.headerbar_transparency_scale.connect(
             "value-changed", self._on_headerbar_transparency_changed
         )
@@ -295,49 +292,34 @@ class PreferencesDialog(Adw.PreferencesWindow):
         scrolling_group = Adw.PreferencesGroup()
         page.add(scrolling_group)
 
-        scrollback_row = Adw.ActionRow(
-            title=_("History Limit"),
-            subtitle=_("0 for unlimited"),
-        )
-        scrollback_spin = Gtk.SpinButton.new_with_range(0, 1000000, 1000)
-        scrollback_spin.set_valign(Gtk.Align.CENTER)
+        scrollback_spin = Adw.SpinRow.new_with_range(0, 1000000, 1000)
+        scrollback_spin.set_title(_("History Limit"))
+        scrollback_spin.set_subtitle(_("0 for unlimited"))
         scrollback_spin.set_value(self.settings_manager.get("scrollback_lines", 10000))
-        scrollback_spin.connect("value-changed", self._on_scrollback_changed)
-        scrollback_row.add_suffix(scrollback_spin)
-        scrollback_row.set_activatable_widget(scrollback_spin)
-        scrolling_group.add(scrollback_row)
+        scrollback_spin.connect("notify::value", self._on_scrollback_changed)
+        scrolling_group.add(scrollback_spin)
 
-        mouse_scroll_row = Adw.ActionRow(
-            title=_("Mouse Scroll Sensitivity"),
-            subtitle=_("Lower is slower"),
-        )
-        mouse_scroll_spin = Gtk.SpinButton.new_with_range(1, 500, 1)
-        mouse_scroll_spin.set_valign(Gtk.Align.CENTER)
+        mouse_scroll_spin = Adw.SpinRow.new_with_range(1, 500, 1)
+        mouse_scroll_spin.set_title(_("Mouse Scroll Sensitivity"))
+        mouse_scroll_spin.set_subtitle(_("Lower is slower"))
         mouse_scroll_spin.set_value(
             self.settings_manager.get("mouse_scroll_sensitivity", 30.0)
         )
         mouse_scroll_spin.connect(
-            "value-changed", self._on_mouse_scroll_sensitivity_changed
+            "notify::value", self._on_mouse_scroll_sensitivity_changed
         )
-        mouse_scroll_row.add_suffix(mouse_scroll_spin)
-        mouse_scroll_row.set_activatable_widget(mouse_scroll_spin)
-        scrolling_group.add(mouse_scroll_row)
+        scrolling_group.add(mouse_scroll_spin)
 
-        touchpad_scroll_row = Adw.ActionRow(
-            title=_("Touchpad Scroll Sensitivity"),
-            subtitle=_("Lower is slower"),
-        )
-        touchpad_scroll_spin = Gtk.SpinButton.new_with_range(1, 500, 1)
-        touchpad_scroll_spin.set_valign(Gtk.Align.CENTER)
+        touchpad_scroll_spin = Adw.SpinRow.new_with_range(1, 500, 1)
+        touchpad_scroll_spin.set_title(_("Touchpad Scroll Sensitivity"))
+        touchpad_scroll_spin.set_subtitle(_("Lower is slower"))
         touchpad_scroll_spin.set_value(
             self.settings_manager.get("touchpad_scroll_sensitivity", 30.0)
         )
         touchpad_scroll_spin.connect(
-            "value-changed", self._on_touchpad_scroll_sensitivity_changed
+            "notify::value", self._on_touchpad_scroll_sensitivity_changed
         )
-        touchpad_scroll_row.add_suffix(touchpad_scroll_spin)
-        touchpad_scroll_row.set_activatable_widget(touchpad_scroll_spin)
-        scrolling_group.add(touchpad_scroll_row)
+        scrolling_group.add(touchpad_scroll_spin)
 
         scroll_on_insert_row = self._create_switch_row(
             _("Scroll on Paste"),
@@ -347,13 +329,32 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         scrolling_group.add(scroll_on_insert_row)
 
-        kinetic_scrolling_row = self._create_switch_row(
-            _("Kinetic Scrolling"),
-            _("Enable momentum-based scrolling for touchpad"),
-            "kinetic_scrolling",
-            default_value=True,
+        kinetic_spin = Adw.SpinRow.new_with_range(0, 100, 5)
+        kinetic_spin.set_title(_("Kinetic Scrolling"))
+        kinetic_spin.set_subtitle(_("Touchpad momentum intensity (0 = off)"))
+        kinetic_raw = self.settings_manager.get("kinetic_scrolling", 50)
+        if isinstance(kinetic_raw, bool):
+            kinetic_raw = 50 if kinetic_raw else 0
+        kinetic_spin.set_value(int(kinetic_raw))
+        kinetic_spin.connect("notify::value", self._on_kinetic_scrolling_changed)
+        scrolling_group.add(kinetic_spin)
+
+        # Notifications group
+        notifications_group = Adw.PreferencesGroup(title=_("Notifications"))
+        page.add(notifications_group)
+
+        cmd_notify_spin = Adw.SpinRow.new_with_range(0, 600, 5)
+        cmd_notify_spin.set_title(_("Long Command Notification"))
+        cmd_notify_spin.set_subtitle(
+            _(
+                "Notify when a background command takes longer than this (seconds, 0 = off)"
+            )
         )
-        scrolling_group.add(kinetic_scrolling_row)
+        cmd_notify_spin.set_value(
+            self.settings_manager.get("long_command_threshold", 30)
+        )
+        cmd_notify_spin.connect("notify::value", self._on_long_cmd_threshold_changed)
+        notifications_group.add(cmd_notify_spin)
 
         shell_group = Adw.PreferencesGroup()
         page.add(shell_group)
@@ -448,19 +449,14 @@ class PreferencesDialog(Adw.PreferencesWindow):
         ssh_group = Adw.PreferencesGroup()
         page.add(ssh_group)
 
-        persist_row = Adw.ActionRow(
-            title=_("Keep Connection Active"),
-            subtitle=_("Seconds to keep connections alive (0 to disable)"),
-        )
-        persist_spin = Gtk.SpinButton.new_with_range(0, 3600, 60)
-        persist_spin.set_valign(Gtk.Align.CENTER)
+        persist_spin = Adw.SpinRow.new_with_range(0, 3600, 60)
+        persist_spin.set_title(_("Keep Connection Active"))
+        persist_spin.set_subtitle(_("Seconds to keep connections alive (0 to disable)"))
         persist_spin.set_value(
             self.settings_manager.get("ssh_control_persist_duration", 600)
         )
-        persist_spin.connect("value-changed", self._on_ssh_persist_changed)
-        persist_row.add_suffix(persist_spin)
-        persist_row.set_activatable_widget(persist_spin)
-        ssh_group.add(persist_row)
+        persist_spin.connect("notify::value", self._on_ssh_persist_changed)
+        ssh_group.add(persist_spin)
 
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
@@ -640,8 +636,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         """Filter function to show only monospace fonts."""
         return family.is_monospace()
 
-    def _on_line_spacing_changed(self, spin_button) -> None:
-        value = spin_button.get_value()
+    def _on_line_spacing_changed(self, spin_row, _pspec) -> None:
+        value = spin_row.get_value()
         self._on_setting_changed("line_spacing", value)
 
     def _on_transparency_changed(self, scale) -> None:
@@ -670,17 +666,25 @@ class PreferencesDialog(Adw.PreferencesWindow):
             level_str = selected_item.get_string()
             self._on_setting_changed("console_log_level", level_str)
 
-    def _on_scrollback_changed(self, spin_button) -> None:
-        value = int(spin_button.get_value())
+    def _on_scrollback_changed(self, spin_row, _pspec) -> None:
+        value = int(spin_row.get_value())
         self._on_setting_changed("scrollback_lines", value)
 
-    def _on_mouse_scroll_sensitivity_changed(self, spin_button) -> None:
-        value = spin_button.get_value()
+    def _on_mouse_scroll_sensitivity_changed(self, spin_row, _pspec) -> None:
+        value = spin_row.get_value()
         self._on_setting_changed("mouse_scroll_sensitivity", value)
 
-    def _on_touchpad_scroll_sensitivity_changed(self, spin_button) -> None:
-        value = spin_button.get_value()
+    def _on_touchpad_scroll_sensitivity_changed(self, spin_row, _pspec) -> None:
+        value = spin_row.get_value()
         self._on_setting_changed("touchpad_scroll_sensitivity", value)
+
+    def _on_kinetic_scrolling_changed(self, spin_row, _pspec) -> None:
+        value = int(spin_row.get_value())
+        self._on_setting_changed("kinetic_scrolling", value)
+
+    def _on_long_cmd_threshold_changed(self, spin_row, _pspec) -> None:
+        value = int(spin_row.get_value())
+        self._on_setting_changed("long_command_threshold", value)
 
     def _on_cursor_shape_changed(self, combo_row, _param) -> None:
         index = combo_row.get_selected()
@@ -750,8 +754,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         index = combo_row.get_selected()
         self._on_setting_changed("delete_binding", index)
 
-    def _on_ssh_persist_changed(self, spin_button) -> None:
-        value = int(spin_button.get_value())
+    def _on_ssh_persist_changed(self, spin_row, _pspec) -> None:
+        value = int(spin_row.get_value())
         self._on_setting_changed("ssh_control_persist_duration", value)
 
     def _on_setting_changed(self, key: str, value) -> None:

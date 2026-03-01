@@ -378,10 +378,12 @@ class SessionOperations:
 
             success, result = self._parse_ssh_config_file(target_path)
             if not success:
+                assert isinstance(result, str)
                 self.logger.info(result) if "No host" in result else self.logger.error(
                     result
                 )
                 return OperationResult(False, result)
+            assert isinstance(result, list)
             entries = result
 
             imported_count = 0
@@ -454,7 +456,7 @@ class SessionOperations:
 
     def find_session_by_name_and_path(
         self, name: str, path: str
-    ) -> Optional[Tuple[SessionItem, int]]:
+    ) -> Tuple[Optional[SessionItem], int]:
         """Finds a session by its name and folder path."""
         for i in range(self.session_store.get_n_items()):
             session = self.session_store.get_item(i)
@@ -462,7 +464,7 @@ class SessionOperations:
                 return session, i
         return None, -1
 
-    def find_folder_by_path(self, path: str) -> Optional[Tuple[SessionFolder, int]]:
+    def find_folder_by_path(self, path: str) -> Tuple[Optional[SessionFolder], int]:
         """Finds a folder by its full path."""
         for i in range(self.folder_store.get_n_items()):
             folder = self.folder_store.get_item(i)

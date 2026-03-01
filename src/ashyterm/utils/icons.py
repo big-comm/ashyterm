@@ -164,7 +164,7 @@ def _create_button_from_system_icon(icon_name: str, size: int) -> Gtk.Button:
 
 
 def _apply_button_tooltip(button: Gtk.Button, tooltip: Optional[str]) -> None:
-    """Apply tooltip to button if specified."""
+    """Apply tooltip and accessible label to button if specified."""
     if not tooltip:
         return
     helper = get_tooltip_helper()
@@ -172,6 +172,11 @@ def _apply_button_tooltip(button: Gtk.Button, tooltip: Optional[str]) -> None:
         helper.add_tooltip(button, tooltip)
     else:
         button.set_tooltip_text(tooltip)
+    # Set accessible label so screen readers announce the button
+    button.update_property(
+        [Gtk.AccessibleProperty.LABEL],
+        [tooltip],
+    )
 
 
 def _apply_button_styling(
@@ -197,7 +202,7 @@ def create_icon_button(
     tooltip: Optional[str] = None,
     css_classes: Optional[list] = None,
     flat: bool = False,
-    on_clicked: Optional[callable] = None,
+    on_clicked=None,
     callback_args: tuple = (),
     valign: Optional[Gtk.Align] = None,
 ) -> Gtk.Button:

@@ -113,7 +113,7 @@ class HostnameValidator:
             # setdefaulttimeout() which affects ALL sockets globally
             import signal
 
-            def timeout_handler(signum, frame):
+            def timeout_handler(_signum, _frame):
                 raise socket.timeout(f"Hostname resolution timed out for {hostname}")
 
             # Set up signal-based timeout (works on Unix)
@@ -162,6 +162,25 @@ class SSHKeyValidator:
         except OSError as e:
             return False, _("Error accessing key file: {}").format(e)
 
+    # Valid SSH key format markers
+    _PEM_MARKERS = (
+        b"-----BEGIN RSA PRIVATE KEY-----",
+        b"-----BEGIN DSA PRIVATE KEY-----",
+        b"-----BEGIN EC PRIVATE KEY-----",
+        b"-----BEGIN PRIVATE KEY-----",
+        b"-----BEGIN ENCRYPTED PRIVATE KEY-----",
+        b"-----BEGIN OPENSSH PRIVATE KEY-----",
+    )
+    _OPENSSH_MARKER = b"openssh-key-v1"
+    _PUBLIC_KEY_PREFIXES = (
+        b"ssh-rsa ",
+        b"ssh-dss ",
+        b"ssh-ed25519 ",
+        b"ecdsa-sha2-",
+        b"sk-ssh-ed25519@",
+        b"sk-ecdsa-sha2-",
+    )
+
     @staticmethod
     def read_and_validate_ssh_key(
         key_path: str,
@@ -169,7 +188,35 @@ class SSHKeyValidator:
         path_valid, path_error = SSHKeyValidator.validate_ssh_key_path(key_path)
         if not path_valid:
             return False, path_error, None
-        return True, None, None
+
+        try:
+            with open(key_path, "rb") as f:
+                header = f.read(128)
+
+            if not header:
+                return False, _("Key file is empty"), None
+
+            # Check for PEM-encoded private keys
+            for marker in SSHKeyValidator._PEM_MARKERS:
+                if header.startswith(marker):
+                    return True, None, None
+
+            # Check for binary OpenSSH format
+            if SSHKeyValidator._OPENSSH_MARKER in header:
+                return True, None, None
+
+            # Check for public keys (less common as identity files)
+            for prefix in SSHKeyValidator._PUBLIC_KEY_PREFIXES:
+                if header.startswith(prefix):
+                    return True, None, None
+
+            return (
+                False,
+                _("File does not appear to be a valid SSH key"),
+                None,
+            )
+        except OSError as e:
+            return False, _("Error reading key file: {}").format(e), None
 
 
 class PathValidator:
@@ -289,7 +336,7 @@ def validate_ssh_hostname(hostname: str) -> None:
 
 
 def validate_ssh_key_file(key_path: str) -> None:
-    is_valid, error, _ = SSHKeyValidator.read_and_validate_ssh_key(key_path)
+    is_valid, error, _key = SSHKeyValidator.read_and_validate_ssh_key(key_path)
     if not is_valid:
         raise SSHKeyError(key_path, error or _("Unknown validation error"))
 

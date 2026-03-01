@@ -2,14 +2,14 @@
 
 import threading
 import weakref
-from typing import Dict, List, Optional
+from typing import Any, List, Optional
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .sessions.operations import SessionOperations
@@ -30,8 +30,9 @@ from .utils.exceptions import UIError
 from .utils.icons import icon_image
 from .utils.logger import get_logger
 from .utils.security import validate_session_data
-from .utils.syntax_utils import get_bash_pango_markup
 from .utils.translation_utils import _
+from .window_ai_dialog import AIDialogBuilder
+from .window_file_drop import FileDragDropManager
 
 # Constants
 APP_TITLE = _("Ashy Terminal")
@@ -41,7 +42,7 @@ PASTE_START = b"\x1b[200~"
 PASTE_END = b"\x1b[201~"
 
 
-class CommTerminalWindow(Adw.ApplicationWindow):
+class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWindow):
     """
     Main application window. Acts as the central orchestrator for all major
     components (managers), handling high-level
@@ -59,16 +60,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         self._cleanup_performed = False
         self._force_closing = False
         self.layouts: List[LayoutItem] = []
-        self.active_temp_files = weakref.WeakKeyDictionary()
+        self.active_temp_files: weakref.WeakKeyDictionary[Any, Any] = (
+            weakref.WeakKeyDictionary()
+        )
         self.command_manager_dialog = None  # For Command Manager dialog
 
         # Search state tracking
         self.current_search_terminal = None
         self.search_current_occurrence = 0
         self.search_active = False
-
-        # Active modal dialog counter for safe focus management
-        self.active_modals_count = 0
 
         # Initial state from command line or other windows
         self.initial_working_directory = kwargs.get("initial_working_directory")
@@ -145,9 +145,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                         new_move_button.add_css_class("flat")
                         new_move_button.connect(
                             "clicked",
-                            lambda _,
-                            term=terminal_widget: self.tab_manager._on_move_to_tab_callback(
-                                term
+                            lambda _, term=terminal_widget: (
+                                self.tab_manager._on_move_to_tab_callback(term)
                             ),
                         )
 
@@ -176,11 +175,74 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         def _deferred_init():
             if not self._is_for_detached_tab:
                 self._load_initial_data()
+            # Notify user if settings were auto-repaired
+            if self.settings_manager._was_repaired:
+                self.settings_manager._was_repaired = False
+                self.toast_overlay.add_toast(
+                    Adw.Toast(
+                        title=_(
+                            "Settings were automatically repaired after detecting corruption."
+                        )
+                    )
+                )
+            # First-run tips for new users
+            if not self.settings_manager.get("first_run_shown", False):
+                self._show_first_run_tips()
+                self.settings_manager.set("first_run_shown", True)
             return GLib.SOURCE_REMOVE
 
         GLib.idle_add(_deferred_init)
 
         self.logger.info("Main window initialization completed")
+
+    def _show_first_run_tips(self) -> None:
+        """Show welcome overlay for first-time users."""
+        status = Adw.StatusPage(
+            title=_("Welcome to Ashy Terminal!"),
+            description="\n".join(
+                [
+                    _("Ctrl+Shift+, — Settings"),
+                    _("Ctrl+Shift+S — SSH Sessions"),
+                    _("Right-click tabs for split view"),
+                ]
+            ),
+            icon_name="utilities-terminal-symbolic",
+        )
+        status.add_css_class("compact")
+        dismiss_btn = Gtk.Button(label=_("Get Started"))
+        dismiss_btn.set_halign(Gtk.Align.CENTER)
+        dismiss_btn.add_css_class("suggested-action")
+        dismiss_btn.add_css_class("pill")
+
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        box.set_valign(Gtk.Align.CENTER)
+        box.set_halign(Gtk.Align.CENTER)
+        box.append(status)
+        box.append(dismiss_btn)
+
+        # Semi-transparent backdrop
+        bg = Gtk.Box()
+        bg.set_vexpand(True)
+        bg.set_hexpand(True)
+        provider = Gtk.CssProvider()
+        provider.load_from_data(
+            b".welcome-bg { background: alpha(@window_bg_color, 0.92); }"
+        )
+        bg.add_css_class("welcome-bg")
+        bg.get_style_context().add_provider(
+            provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        welcome_overlay = Gtk.Overlay()
+        welcome_overlay.set_child(bg)
+        welcome_overlay.add_overlay(box)
+
+        self.toast_overlay.add_overlay(welcome_overlay)
+
+        def on_dismiss(_btn):
+            self.toast_overlay.remove_overlay(welcome_overlay)
+
+        dismiss_btn.connect("clicked", on_dismiss)
 
     # NEW: Method to apply all visual settings on window creation.
     def _apply_initial_visual_settings(self) -> None:
@@ -330,6 +392,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         # This prevents the duplicate prompt issue caused by resize SIGWINCH
         if not self._is_for_detached_tab:
             self._initial_tab_created = False
+            self._data_loaded = False
+            self._window_mapped = False
             self.connect("map", self._on_window_mapped)
 
         # DEBUG: Start periodic modal window monitor
@@ -436,26 +500,21 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if self._initial_tab_created:
             return
 
+        self._window_mapped = True
+        self.logger.debug("Window mapped - waiting for data before creating tabs")
+
+        # Try to create initial tab (only succeeds if data is also loaded)
+        self._try_create_initial_tab()
+
+    def _try_create_initial_tab(self) -> None:
+        """Create initial tab only when both window is mapped and data is loaded."""
+        if self._initial_tab_created:
+            return
+        if not self._window_mapped or not self._data_loaded:
+            return
         self._initial_tab_created = True
-        self.logger.debug("Window mapped - creating initial tab with final dimensions")
-
-        # Small delay to ensure window size is fully settled
-        # This is especially important when the window is maximized
-        def create_tab_deferred():
-            self._create_initial_tab_safe()
-            return GLib.SOURCE_REMOVE
-
-        GLib.idle_add(create_tab_deferred)
-
-    def _load_initial_data_and_tab(self) -> None:
-        """
-        Loads initial data and then creates the initial tab.
-        Called from deferred initialization to allow the UI to show up immediately.
-        """
-        # Create the tab first (faster perceived startup)
-        self._create_initial_tab_safe()
-        # Then load session data (can happen while user sees the terminal)
-        self._load_initial_data()
+        self.logger.debug("Both window mapped and data loaded - creating initial tab")
+        GLib.idle_add(self._create_initial_tab_safe)
 
     def _load_initial_data(self) -> None:
         """Load initial sessions, folders, and layouts data."""
@@ -500,6 +559,15 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             if import_result.success:
                 self.logger.info(import_result.message)
                 self.refresh_tree()
+                if import_result.warnings:
+                    skipped = len(import_result.warnings)
+                    self.toast_overlay.add_toast(
+                        Adw.Toast(
+                            title=_("{count} SSH config entries skipped.").format(
+                                count=skipped
+                            )
+                        )
+                    )
             elif import_result.message:
                 self.logger.debug(f"SSH config import skipped: {import_result.message}")
 
@@ -510,6 +578,10 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             )
         except Exception as e:
             self._handle_load_error(e)
+
+        # Signal that session data is ready — unblocks initial tab creation
+        self._data_loaded = True
+        self._try_create_initial_tab()
 
         return GLib.SOURCE_REMOVE
 
@@ -522,6 +594,9 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 "Failed to load saved sessions and folders. Starting with empty configuration."
             ),
         )
+        # Still allow initial tab creation even if data loading failed
+        self._data_loaded = True
+        self._try_create_initial_tab()
         return GLib.SOURCE_REMOVE
 
     # --- Event Handlers & Callbacks ---
@@ -552,7 +627,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Handle dynamically configured shortcuts."""
         if not accel_string:
             return False
-        shortcut_actions = {
+        shortcut_actions: dict[str | None, Any] = {
             self.settings_manager.get_shortcut(
                 "next-tab"
             ): self.tab_manager.select_next_tab,
@@ -650,269 +725,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 window.set_modal(False)
                 window.close()
 
-    def _on_ai_assistant_requested(self, *_args) -> None:
-        if not getattr(self, "ai_assistant", None):
-            return
-
-        if not self.settings_manager.get("ai_assistant_enabled", False):
-            self.toast_overlay.add_toast(
-                Adw.Toast(
-                    title=_(
-                        "Enable the AI assistant in Preferences > Terminal > AI Assistant."
-                    )
-                )
-            )
-            return
-
-        missing = self.ai_assistant.missing_configuration()
-        if missing:
-            labels = {
-                "provider": _("Provider"),
-                "model": _("Model"),
-                "api_key": _("API key"),
-                "base_url": _("Base URL"),
-            }
-            readable = ", ".join(labels.get(item, item) for item in missing)
-            self.toast_overlay.add_toast(
-                Adw.Toast(
-                    title=_("Configure {items} in AI Assistant settings.").format(
-                        items=readable
-                    )
-                )
-            )
-            return
-
-        # Toggle AI overlay panel instead of showing dialog
-        self.ui_builder.toggle_ai_panel()
-
-    def show_ai_response_dialog(
-        self,
-        terminal: Vte.Terminal,
-        reply: str,
-        commands: List[Dict[str, str]],
-        _code_snippets: List[Dict[str, str]],
-    ) -> None:
-        dialog_dimensions = self._calculate_ai_dialog_dimensions(reply, commands)
-
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("AI Assistant"),
-            body=_("Here is what I found."),
-            close_response="close",
-        )
-        dialog.set_default_size(*dialog_dimensions)
-        dialog.add_response("close", _("Close"))
-        dialog.set_default_response("close")
-
-        content_box = self._create_ai_dialog_content(reply, commands, terminal, dialog)
-        dialog.set_extra_child(content_box)
-
-        def on_dialog_response(dlg, _response_id):
-            dlg.destroy()
-
-        dialog.connect("response", on_dialog_response)
-        dialog.present()
-
-    def _calculate_ai_dialog_dimensions(
-        self, reply: str, commands: List[Dict[str, str]]
-    ) -> tuple:
-        """Calculate dialog dimensions based on content."""
-        reply_lines = reply.splitlines() or [reply]
-        max_line_length = max(len(line) for line in reply_lines)
-        total_lines = len(reply_lines)
-
-        for item in commands:
-            if isinstance(item, dict):
-                command_text = (item.get("command") or "").strip()
-                description_text = (item.get("description") or "").strip()
-                max_line_length = max(
-                    max_line_length, len(command_text), len(description_text)
-                )
-            elif isinstance(item, str):
-                max_line_length = max(max_line_length, len(item))
-
-        approx_width = max(780, min(1200, max_line_length * 7 + 320))
-        base_height = 460 if total_lines < 10 else 500
-        height = min(820, max(420, base_height))
-
-        return int(approx_width), int(height)
-
-    def _create_ai_dialog_content(
-        self,
-        reply: str,
-        commands: List[Dict[str, str]],
-        terminal: Vte.Terminal,
-        dialog: Adw.MessageDialog,
-    ) -> Gtk.Box:
-        """Create the content box for AI response dialog."""
-        content_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=12,
-            margin_top=12,
-            margin_bottom=12,
-            margin_start=12,
-            margin_end=12,
-        )
-
-        self._add_reply_section(content_box, reply)
-        if commands:
-            self._add_commands_section(content_box, commands, terminal, dialog)
-
-        return content_box
-
-    def _create_info_block(
-        self, content_box: Gtk.Box, title: str, margin_top: int = 0
-    ) -> Gtk.Box:
-        """Create a styled info block with title."""
-        frame = Gtk.Frame()
-        frame.add_css_class("card")
-        frame.set_hexpand(True)
-        if margin_top:
-            frame.set_margin_top(margin_top)
-
-        inner = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        inner.set_margin_top(12)
-        inner.set_margin_bottom(12)
-        inner.set_margin_start(16)
-        inner.set_margin_end(16)
-
-        heading = Gtk.Label(label=title, halign=Gtk.Align.START)
-        heading.add_css_class("heading")
-        inner.append(heading)
-
-        frame.set_child(inner)
-        content_box.append(frame)
-        return inner
-
-    def _add_reply_section(self, content_box: Gtk.Box, reply: str) -> None:
-        """Add the reply section to the dialog."""
-        reply_box = self._create_info_block(content_box, _("Response"))
-        reply_lines = reply.splitlines() or [reply]
-
-        reply_view = Gtk.TextView(
-            editable=False,
-            cursor_visible=False,
-            wrap_mode=Gtk.WrapMode.WORD_CHAR,
-            hexpand=True,
-            vexpand=True,
-        )
-        reply_view.add_css_class("monospace")
-        reply_buffer = reply_view.get_buffer()
-        reply_buffer.set_text(reply.strip())
-
-        reply_scrolled = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
-        reply_scrolled.set_min_content_height(max(140, min(300, len(reply_lines) * 20)))
-        reply_scrolled.set_child(reply_view)
-        reply_box.append(reply_scrolled)
-
-    def _add_commands_section(
-        self,
-        content_box: Gtk.Box,
-        commands: List[Dict[str, str]],
-        terminal: Vte.Terminal,
-        dialog: Adw.MessageDialog,
-    ) -> None:
-        """Add the commands section to the dialog."""
-        commands_box = self._create_info_block(
-            content_box, _("Suggested Commands"), margin_top=6
-        )
-
-        for command_info in commands:
-            command_text, description = self._extract_command_info(command_info)
-            if not command_text:
-                continue
-
-            row = self._create_command_row(command_text, description, terminal, dialog)
-            commands_box.append(row)
-
-    def _extract_command_info(self, command_info) -> tuple:
-        """Extract command and description from command info."""
-        if isinstance(command_info, dict):
-            command_text = (command_info.get("command") or "").strip()
-            description = (command_info.get("description") or "").strip()
-        elif isinstance(command_info, str):
-            command_text = command_info.strip()
-            description = ""
-        else:
-            command_text = ""
-            description = ""
-        return command_text, description
-
-    def _create_command_row(
-        self,
-        command_text: str,
-        description: str,
-        terminal: Vte.Terminal,
-        dialog: Adw.MessageDialog,
-    ) -> Gtk.Box:
-        """Create a row for a command in the dialog."""
-        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, hexpand=True)
-        info_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, spacing=2, hexpand=True
-        )
-
-        highlighted_cmd = get_bash_pango_markup(command_text)
-        command_label = Gtk.Label(
-            label=f"<tt>{highlighted_cmd}</tt>",
-            use_markup=True,
-            halign=Gtk.Align.START,
-            hexpand=True,
-            wrap=True,
-            wrap_mode=Pango.WrapMode.WORD_CHAR,
-        )
-        info_box.append(command_label)
-
-        if description:
-            desc_label = Gtk.Label(
-                label=description,
-                halign=Gtk.Align.START,
-                hexpand=True,
-                wrap=True,
-                wrap_mode=Pango.WrapMode.WORD_CHAR,
-            )
-            desc_label.add_css_class("dim-label")
-            info_box.append(desc_label)
-
-        row.append(info_box)
-
-        run_button = Gtk.Button(label=_("Run"))
-        run_button.connect(
-            "clicked", self._on_ai_command_clicked, dialog, terminal, command_text
-        )
-        row.append(run_button)
-
-        return row
-
-    def _on_ai_command_clicked(
-        self,
-        _button: Gtk.Button,
-        dialog: Adw.MessageDialog,
-        terminal: Vte.Terminal,
-        command: str,
-    ) -> None:
-        if self._execute_ai_command(terminal, command):
-            dialog.destroy()
-
-    def _execute_ai_command(self, terminal: Vte.Terminal, command: str) -> bool:
-        command = (command or "").strip()
-        if not command:
-            self.toast_overlay.add_toast(
-                Adw.Toast(title=_("Command is empty, nothing to run."))
-            )
-            return False
-        try:
-            terminal.feed_child(f"{command}\n".encode("utf-8"))
-            self.toast_overlay.add_toast(
-                Adw.Toast(title=_("Command sent to the terminal."))
-            )
-            return True
-        except Exception as exc:
-            self.logger.error("Failed to execute AI command '%s': %s", command, exc)
-            self.toast_overlay.add_toast(
-                Adw.Toast(title=_("Failed to execute the command."))
-            )
-            return False
-
     def _on_setting_changed(self, key: str, old_value, new_value):
         """Handle changes from the settings manager."""
         if getattr(self, "ai_assistant", None):
@@ -982,8 +794,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         if key in ["transparency", "headerbar_transparency"]:
             self._update_file_manager_transparency()
 
-        if self.font_sizer_widget and key == "font":
-            self.font_sizer_widget.update_display()
+        if self.ui_builder.font_sizer_widget and key == "font":
+            self.ui_builder.font_sizer_widget.update_display()
 
     def _on_color_scheme_changed(self, dialog, idx):
         """Handle color scheme changes from the dialog."""
@@ -1037,6 +849,20 @@ class CommTerminalWindow(Adw.ApplicationWindow):
 
         # Hide search when switching tabs
         self.search_manager.hide_if_terminal_changed()
+
+        # Pause highlighting on inactive tabs, resume on active
+        active_page = self.tab_manager.pages.get(self.tab_manager.active_tab)
+        for tab, page in self.tab_manager.pages.items():
+            panes: list = []
+            self.tab_manager._find_panes_recursive(page.get_child(), panes)
+            is_active = page is active_page
+            for pane in panes:
+                tid = getattr(getattr(pane, "terminal", None), "terminal_id", None)
+                if tid is not None:
+                    if is_active:
+                        self.terminal_manager.resume_highlight_proxy(tid)
+                    else:
+                        self.terminal_manager.pause_highlight_proxy(tid)
 
         self._sync_toggle_button_state()
         self._update_font_sizer_widget()
@@ -1354,8 +1180,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                 self.single_tab_title_widget.set_title(APP_TITLE)
 
     def _update_font_sizer_widget(self):
-        if self.font_sizer_widget:
-            self.font_sizer_widget.update_display()
+        if self.ui_builder.font_sizer_widget:
+            self.ui_builder.font_sizer_widget.update_display()
 
     def _sync_toggle_button_state(self):
         """Synchronize toggle button state with file manager visibility."""
@@ -1379,204 +1205,6 @@ class CommTerminalWindow(Adw.ApplicationWindow):
     def _on_terminal_exit(self, terminal, child_status, identifier):
         if getattr(self, "ai_assistant", None):
             self.ai_assistant.clear_conversation_for_terminal(terminal)
-
-    def _on_ssh_file_dropped(self, terminal_id, local_paths, session, ssh_target):
-        """Handle files dropped on SSH terminal - open file manager and let it handle upload."""
-        self.logger.info(
-            f"SSH file drop: {len(local_paths)} files for terminal {terminal_id}"
-        )
-
-        terminal, page = self._get_terminal_and_page_for_drop(terminal_id)
-        if not terminal or not page:
-            return
-
-        fm = self.tab_manager.file_managers.get(page)
-        remote_dir = self._get_remote_dir_from_terminal(terminal)
-
-        if self._can_upload_directly(fm):
-            self._upload_files_directly(fm, local_paths, remote_dir)
-        else:
-            self._store_pending_drop_and_activate_fm(
-                local_paths,
-                remote_dir,
-                session,
-                ssh_target,
-                terminal_id,
-                page,
-                terminal,
-            )
-
-    def _get_terminal_and_page_for_drop(self, terminal_id):
-        """Get terminal and page for file drop operation."""
-        terminal = self.terminal_manager.registry.get_terminal(terminal_id)
-        if not terminal:
-            self.logger.warning(f"Terminal {terminal_id} not found for file drop")
-            return None, None
-
-        page = self.tab_manager.get_page_for_terminal(terminal)
-        if not page:
-            self.logger.warning(f"Page not found for terminal {terminal_id}")
-            return None, None
-
-        return terminal, page
-
-    def _get_remote_dir_from_terminal(self, terminal):
-        """Try to get the current remote directory from the terminal."""
-        from urllib.parse import unquote, urlparse
-
-        try:
-            uri = terminal.get_current_directory_uri()
-            if uri:
-                parsed_uri = urlparse(uri)
-                if parsed_uri.scheme == "file":
-                    remote_dir = unquote(parsed_uri.path)
-                    self.logger.info(f"Got remote directory from OSC7: {remote_dir}")
-                    return remote_dir
-        except Exception as e:
-            self.logger.debug(f"Could not get terminal directory URI: {e}")
-        return None
-
-    def _can_upload_directly(self, fm) -> bool:
-        """Check if file manager is ready for direct upload."""
-        return (
-            fm and fm._is_remote_session() and not getattr(fm, "_is_rebinding", False)
-        )
-
-    def _upload_files_directly(self, fm, local_paths, remote_dir):
-        """Upload files directly via the file manager."""
-        from pathlib import Path
-
-        if remote_dir:
-            fm.current_path = remote_dir
-        paths = [Path(p) for p in local_paths]
-        fm._show_upload_confirmation_dialog(paths)
-        self.logger.info(f"Upload initiated for {len(paths)} files via file manager")
-
-    def _store_pending_drop_and_activate_fm(
-        self, local_paths, remote_dir, session, ssh_target, terminal_id, page, terminal
-    ):
-        """Store pending drop info and activate file manager."""
-        self._pending_drop_files = local_paths
-        self._pending_drop_remote_dir = remote_dir
-        self._pending_drop_session = session
-        self._pending_drop_ssh_target = ssh_target
-        self._pending_drop_terminal_id = terminal_id
-        self._pending_drop_page = page
-        self._pending_drop_attempts = 0
-        self._pending_drop_terminal = terminal
-
-        # Ensure file manager panel is visible
-        if not self.file_manager_button.get_active():
-            self.file_manager_button.set_active(True)
-
-        # After activation, force rebind to the correct terminal
-        fm = self.tab_manager.file_managers.get(page)
-        if fm:
-            self.logger.info(
-                f"Force rebinding FM to drop target terminal {terminal_id}"
-            )
-            fm.rebind_terminal(terminal)
-
-        GLib.timeout_add(300, self._check_pending_drop_upload)
-
-    def _check_pending_drop_upload(self):
-        """Check if file manager is ready and process pending drop upload."""
-        if not hasattr(self, "_pending_drop_files") or not self._pending_drop_files:
-            return False
-
-        self._pending_drop_attempts = getattr(self, "_pending_drop_attempts", 0) + 1
-        if self._pending_drop_attempts > 30:
-            self.logger.warning(
-                "Timed out waiting for file manager to be ready for upload"
-            )
-            self._clear_pending_drop()
-            return False
-
-        page = getattr(self, "_pending_drop_page", None)
-        if not page:
-            self.logger.warning("No page stored for pending drop")
-            self._clear_pending_drop()
-            return False
-
-        fm = self.tab_manager.file_managers.get(page)
-        wait_result = self._wait_for_file_manager_ready(fm)
-        if wait_result is not None:
-            return wait_result
-
-        # File manager is ready - proceed with upload
-        self._execute_pending_upload(fm)
-        return False
-
-    def _wait_for_file_manager_ready(self, fm):
-        """Wait for file manager to be ready. Returns True to continue, False to stop, None if ready."""
-        if not fm:
-            self.logger.debug(
-                f"Attempt {self._pending_drop_attempts}: File manager not yet created"
-            )
-            return True
-
-        if getattr(fm, "_is_rebinding", False):
-            self.logger.debug(
-                f"Attempt {self._pending_drop_attempts}: File manager still rebinding"
-            )
-            return True
-
-        if not fm.session_item:
-            self.logger.debug(
-                f"Attempt {self._pending_drop_attempts}: Session item not set"
-            )
-            return True
-
-        if not fm._is_remote_session():
-            self._try_rebind_if_needed(fm)
-            return True
-
-        return None  # Ready
-
-    def _try_rebind_if_needed(self, fm):
-        """Attempt rebind to correct terminal if needed."""
-        if self._pending_drop_attempts % 5 != 1:
-            return
-
-        terminal = getattr(self, "_pending_drop_terminal", None)
-        if not terminal:
-            terminal = self.terminal_manager.registry.get_terminal(
-                getattr(self, "_pending_drop_terminal_id", None)
-            )
-        if terminal:
-            self.logger.info(
-                f"Rebinding FM to terminal (attempt {self._pending_drop_attempts})"
-            )
-            fm.rebind_terminal(terminal)
-
-    def _execute_pending_upload(self, fm):
-        """Execute the pending upload operation."""
-        from pathlib import Path
-
-        self.logger.info(
-            f"File manager ready after {self._pending_drop_attempts} attempts"
-        )
-
-        if self._pending_drop_remote_dir:
-            fm.current_path = self._pending_drop_remote_dir
-
-        paths = [Path(p) for p in self._pending_drop_files]
-        fm._show_upload_confirmation_dialog(paths)
-        self.logger.info(
-            f"Pending upload initiated for {len(paths)} files via file manager"
-        )
-        self._clear_pending_drop()
-
-    def _clear_pending_drop(self):
-        """Clear all pending drop state."""
-        self._pending_drop_files = None
-        self._pending_drop_remote_dir = None
-        self._pending_drop_session = None
-        self._pending_drop_ssh_target = None
-        self._pending_drop_terminal_id = None
-        self._pending_drop_page = None
-        self._pending_drop_terminal = None
-        self._pending_drop_attempts = 0
 
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""
@@ -1669,10 +1297,8 @@ class CommTerminalWindow(Adw.ApplicationWindow):
                     edit_key = (info["session_name"], info["remote_path"])
                     remove_button.connect(
                         "clicked",
-                        lambda _,
-                        fm_instance=fm_to_call,
-                        key=edit_key: self._on_clear_single_temp_file_clicked(
-                            fm_instance, key
+                        lambda _, fm_instance=fm_to_call, key=edit_key: (
+                            self._on_clear_single_temp_file_clicked(fm_instance, key)
                         ),
                     )
                 row.add_suffix(remove_button)
@@ -1748,7 +1374,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
         """Creates and shows the Command Manager dialog, or closes it if already visible."""
         if self.command_manager_dialog is None:
             # Lazy import - only load when the dialog is first opened
-            from .ui.dialogs.command_manager_dialog import CommandManagerDialog
+            from .ui.dialogs.command_manager import CommandManagerDialog
 
             self.command_manager_dialog = CommandManagerDialog(
                 self, self.settings_manager
@@ -1807,7 +1433,7 @@ class CommTerminalWindow(Adw.ApplicationWindow):
             command: CommandButton object to execute.
         """
         from .data.command_manager_models import ExecutionMode
-        from .ui.dialogs.command_manager_dialog import CommandFormDialog
+        from .ui.dialogs.command_manager import CommandFormDialog
 
         terminal = self.tab_manager.get_selected_terminal()
 

@@ -6,6 +6,7 @@ and display customization.
 """
 
 import json
+import shlex
 import threading
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -51,6 +52,18 @@ class FieldType(Enum):
     DATE_TIME = "date_time"  # Date/time picker
     COLOR = "color"  # Color picker
 
+
+# Field types whose values come from free-form user input and must be
+# shell-escaped before template substitution to prevent injection.
+_SHELL_ESCAPE_TYPES = frozenset(
+    {
+        FieldType.TEXT,
+        FieldType.FILE_PATH,
+        FieldType.DIRECTORY_PATH,
+        FieldType.PASSWORD,
+        FieldType.TEXT_AREA,
+    }
+)
 
 # Category constants for builtin commands
 CATEGORY_FILE_OPERATIONS = "File Operations"
@@ -195,9 +208,12 @@ class CommandButton:
                 command, form_field, value, placeholder
             )
 
-        # For other fields, substitute the value
+        # For other fields, shell-escape user-provided values to prevent injection
         if placeholder in command:
-            return command.replace(placeholder, str(value) if value else "")
+            str_value = str(value) if value else ""
+            if form_field.field_type in _SHELL_ESCAPE_TYPES and str_value:
+                str_value = shlex.quote(str_value)
+            return command.replace(placeholder, str_value)
         return command
 
     def _substitute_switch_field(

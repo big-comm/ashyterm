@@ -17,7 +17,7 @@ try:
     UTILS_AVAILABLE = True
 except ImportError:
     UTILS_AVAILABLE = False
-    get_config_directory = None
+    get_config_directory = None  # type: ignore[assignment]
 
 
 # Regex pattern for detecting common shell prompt terminators.
@@ -182,6 +182,100 @@ class DefaultSettings:
             # If any import/context creation fails, return safe default
             return _FALLBACK_FONT
 
+    # Category map for programmatic discoverability of settings groups.
+    # Used by preferences UI and documentation.
+    CATEGORIES: Dict[str, list] = {
+        "appearance": [
+            "gtk_theme",
+            "color_scheme",
+            "transparency",
+            "headerbar_transparency",
+            "font",
+            "line_spacing",
+            "bold_is_bright",
+            "tab_alignment",
+            "icon_theme_strategy",
+        ],
+        "window": [
+            "window_width",
+            "window_height",
+            "window_maximized",
+            "remember_window_state",
+            "hide_headerbar_buttons_when_maximized",
+        ],
+        "behavior": [
+            "sidebar_visible",
+            "auto_hide_sidebar",
+            "sidebar_width",
+            "file_manager_height",
+            "scroll_on_output",
+            "scroll_on_keystroke",
+            "scroll_on_insert",
+            "mouse_autohide",
+            "cursor_blink",
+            "new_instance_behavior",
+            "use_login_shell",
+            "close_multiple_tabs_policy",
+        ],
+        "terminal": [
+            "scrollback_lines",
+            "mouse_scroll_sensitivity",
+            "touchpad_scroll_sensitivity",
+            "cursor_shape",
+            "bidi_enabled",
+            "enable_shaping",
+            "sixel_enabled",
+            "text_blink_mode",
+            "accessibility_enabled",
+            "backspace_binding",
+            "delete_binding",
+            "cjk_ambiguous_width",
+            "word_char_exceptions",
+        ],
+        "ssh": [
+            "ssh_control_persist_duration",
+        ],
+        "logging": [
+            "log_to_file",
+            "console_log_level",
+        ],
+        "remote_editing": [
+            "use_system_tmp_for_edit",
+            "clear_remote_edit_files_on_exit",
+        ],
+        "ai": [
+            "ai_assistant_enabled",
+            "ai_assistant_provider",
+            "ai_assistant_model",
+            "ai_assistant_api_key",
+            "ai_openrouter_site_url",
+            "ai_openrouter_site_name",
+            "ai_local_base_url",
+            "ai_custom_quick_prompts",
+        ],
+        "search": [
+            "search_case_sensitive",
+            "search_use_regex",
+        ],
+        "highlighting": [
+            "ignored_highlight_commands",
+            "cat_colorization_enabled",
+            "cat_theme_mode",
+            "cat_dark_theme",
+            "cat_light_theme",
+            "pygments_theme",
+            "shell_input_highlighting_enabled",
+            "highlight_burst_threshold",
+            "shell_input_theme_mode",
+            "shell_input_dark_theme",
+            "shell_input_light_theme",
+            "shell_input_pygments_theme",
+        ],
+        "shortcuts": [
+            "shortcuts",
+        ],
+    }
+
     @staticmethod
     @lru_cache(maxsize=1)
     def get_defaults() -> Dict[str, Any]:
@@ -286,6 +380,8 @@ class DefaultSettings:
             # Cat Output Colorization Settings
             # When enabled, applies Pygments syntax highlighting to cat command output
             "cat_colorization_enabled": True,
+            # Maximum bytes to highlight before falling back to raw output (in MB)
+            "cat_highlight_limit_mb": 1,
             # Theme mode: "auto" (detects background), or "manual" (uses selected theme)
             "cat_theme_mode": "auto",
             # Pygments theme for dark backgrounds (used when mode is "auto" and bg is dark)
@@ -297,6 +393,9 @@ class DefaultSettings:
             # Shell Input Syntax Highlighting (experimental)
             # When enabled, applies Pygments syntax highlighting to shell commands as you type
             "shell_input_highlighting_enabled": False,
+            # Burst detection threshold for syntax highlighting
+            # Consecutive large chunks (>1KB) beyond this count disable highlighting
+            "highlight_burst_threshold": 15,
             # Theme mode: "auto" (detects background), or "manual" (uses selected theme)
             "shell_input_theme_mode": "auto",
             # Pygments theme for dark backgrounds (used when mode is "auto" and bg is dark)
@@ -308,11 +407,13 @@ class DefaultSettings:
             # Icon Theme Strategy: "ashy" (bundled) or "system"
             # Using Ashy Icons by default speeds up GTK4 startup
             "icon_theme_strategy": "ashy",
+            # Notification threshold in seconds for long-running commands (0 = disabled)
+            "long_command_threshold": 30,
             # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",
                 "close-tab": "<Control><Shift>w",
-                "copy": "<Control><Shift>Insert",
+                "copy": "<Control><Shift>c",
                 "paste": "<Control><Shift>v",
                 "select-all": "<Control><Shift>a",
                 "clear-session": "<Control><Shift>l",
@@ -324,11 +425,13 @@ class DefaultSettings:
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",
                 "zoom-reset": "<Control>0",
-                "split-horizontal": "<Control><Shift>parenleft",
-                "split-vertical": "<Control><Shift>parenright",
+                "split-horizontal": "<Control><Shift>o",
+                "split-vertical": "<Control><Shift>d",
                 "close-pane": "<Control><Shift>k",
-                "next-tab": "<Alt>Page_Down",
-                "previous-tab": "<Alt>Page_Up",
+                "next-tab": "<Control>Page_Down",
+                "previous-tab": "<Control>Page_Up",
+                "move-tab-left": "<Control><Shift>Page_Up",
+                "move-tab-right": "<Control><Shift>Page_Down",
                 "toggle-file-manager": "<Control><Shift>e",
                 "toggle-search": "<Control><Shift>f",
                 "toggle-broadcast": "<Control><Shift>b",

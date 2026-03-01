@@ -59,7 +59,7 @@ class TooltipHelper:
         except Exception:
             pass
 
-    def _on_theme_changed(self, style_manager, pspec):
+    def _on_theme_changed(self, style_manager, _pspec):
         """Auto-update colors when system theme changes."""
         GLib.idle_add(self._apply_default_colors)
 
@@ -196,7 +196,7 @@ popover.custom-tooltip-static label {{
         else:
             widget.connect("realize", on_realize)
 
-    def _on_window_state_changed(self, window, pspec):
+    def _on_window_state_changed(self, window, _pspec):
         """Hide all tooltips immediately when window state changes (maximize/fullscreen).
 
         This prevents the tooltip popover from interfering with input events
@@ -215,7 +215,7 @@ popover.custom-tooltip-static label {{
             except Exception:
                 pass
 
-    def _on_window_active_changed(self, window, pspec):
+    def _on_window_active_changed(self, window, _pspec):
         """Hide all tooltips when any tracked window loses focus."""
         if not window.get_property("is-active"):
             # Window lost focus - hide all tooltips immediately
