@@ -115,7 +115,7 @@ class ConversationHistoryPanel(Gtk.Box):
         self._current_conv_id = getattr(
             history_manager, "_current_conversation_id", None
         )
-        self._row_map = {}  # conv_id -> row widget
+        self._row_map: dict[str, Gtk.Widget] = {}  # conv_id -> row widget
 
         self._setup_ui()
         self.refresh()

@@ -1,0 +1,28 @@
+/* ashyterm/data/styles/ssh_error_banner.css
+ * Styles for SSH error banner and options panel
+ */
+
+.ssh-error-banner-container {
+    background-color: @window_bg_color;
+}
+.ssh-error-banner {
+    background-color: @card_bg_color;
+    border-radius: 6px;
+    border: 1px solid alpha(@error_color, 0.4);
+    padding: 6px 10px;
+    margin: 2px 4px;
+}
+.ssh-error-banner .heading {
+    font-weight: 600;
+    color: @error_color;
+}
+.ssh-error-banner .warning-icon {
+    color: @warning_color;
+}
+.options-panel {
+    background-color: @card_bg_color;
+    border-radius: 6px;
+    border: 1px solid alpha(@borders, 0.5);
+    padding: 6px 12px;
+    margin: 0 4px 4px 4px;
+}

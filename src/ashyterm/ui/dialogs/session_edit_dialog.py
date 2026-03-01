@@ -21,6 +21,7 @@ from ...utils.security import (
 )
 from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
+from ...utils.accessibility import set_label as a11y_label
 from ..widgets.bash_text_view import BashTextView
 from .base_dialog import BaseDialog, validate_directory_path
 from ..widgets.action_rows import ManagedListRow
@@ -77,7 +78,7 @@ class SessionEditDialog(BaseDialog):
         self.port_forward_add_row: Optional[Adw.ActionRow] = None
         self.port_forward_list_row: Optional[Adw.ActionRow] = None
         self.folder_combo: Optional[Adw.ComboRow] = None
-        self.local_working_dir_entry: Optional[Adw.EntryRow] = None
+        self.local_working_dir_entry: Gtk.Entry = None  # type: ignore[assignment]
         self.local_startup_command_view: Optional[BashTextView] = None
         self.testing_dialog: Optional[Gtk.Window] = None
         # Local terminal options
@@ -222,6 +223,7 @@ class SessionEditDialog(BaseDialog):
         # to prevent segmentation faults on Wayland during dialog destruction.
         self.color_button = Gtk.Button(valign=Gtk.Align.CENTER)
         self.color_button.connect("clicked", self._on_select_color_clicked)
+        a11y_label(self.color_button, _("Select tab color"))
 
         # Initial color setup
         initial_rgba = Gdk.RGBA()
@@ -494,6 +496,7 @@ class SessionEditDialog(BaseDialog):
             hexpand=True,
             width_chars=25,
         )
+        a11y_label(self.local_working_dir_entry, _("Working directory"))
         self.local_working_dir_entry.connect(
             "changed", self._on_local_working_dir_changed
         )
@@ -599,7 +602,7 @@ class SessionEditDialog(BaseDialog):
             value=self.editing_session.port or 22,
             min_val=1,
             max_val=65535,
-            on_changed=self._on_port_changed,
+            on_changed=lambda val: self._on_port_changed(val),
         )
         ssh_group.add(self.port_row)
         # Keep reference with old name for compatibility
@@ -638,6 +641,7 @@ class SessionEditDialog(BaseDialog):
             hexpand=True,
             width_chars=30,
         )
+        a11y_label(self.key_path_entry, _("SSH key file path"))
         self.key_path_entry.connect("changed", self._on_key_path_changed)
 
         self.browse_button = Gtk.Button(
@@ -827,6 +831,7 @@ class SessionEditDialog(BaseDialog):
         add_button = Gtk.Button(icon_name="list-add-symbolic")
         add_button.set_valign(Gtk.Align.CENTER)
         add_button.add_css_class(BaseDialog.CSS_CLASS_FLAT)
+        a11y_label(add_button, _("Add port forward"))
         add_row.add_suffix(add_button)
         add_row.set_activatable_widget(add_button)
         add_button.connect("clicked", self._on_add_port_forward_clicked)
@@ -838,6 +843,7 @@ class SessionEditDialog(BaseDialog):
         self.port_forward_list = Gtk.ListBox()
         self.port_forward_list.set_selection_mode(Gtk.SelectionMode.NONE)
         self.port_forward_list.add_css_class(BaseDialog.CSS_CLASS_BOXED_LIST)
+        a11y_label(self.port_forward_list, _("Port forwarding rules"))
 
         list_row = Adw.ActionRow()
         list_row.set_child(self.port_forward_list)
@@ -1080,6 +1086,7 @@ class SessionEditDialog(BaseDialog):
         swatch = Gtk.DrawingArea()
         swatch.set_content_width(24)
         swatch.set_content_height(16)
+        a11y_label(swatch, _("Tab color preview"))
 
         if rgba:
 
@@ -1150,20 +1157,25 @@ class SessionEditDialog(BaseDialog):
 
     def _on_host_changed(self, entry: Gtk.Entry) -> None:
         entry.remove_css_class(self.CSS_CLASS_ERROR)
+        self._clear_field_error(entry)
         self._mark_changed()
         hostname = entry.get_text().strip()
         if hostname and not HostnameValidator.is_valid_hostname(hostname):
             entry.add_css_class(self.CSS_CLASS_ERROR)
+            self._set_field_error(entry, _("Invalid hostname format"))
 
     def _on_user_changed(self, entry: Gtk.Entry) -> None:
         self._mark_changed()
 
-    def _on_port_changed(self, spin_row, _param) -> None:
+    def _on_port_changed(self, value: float) -> None:
         self._mark_changed()
-        port = int(spin_row.get_value())
-        spin_row.remove_css_class(
-            self.CSS_CLASS_ERROR
-        ) if 1 <= port <= 65535 else spin_row.add_css_class(self.CSS_CLASS_ERROR)
+        port = int(value)
+        if 1 <= port <= 65535:
+            self.port_row.remove_css_class(self.CSS_CLASS_ERROR)
+            self._clear_field_error(self.port_row)
+        else:
+            self.port_row.add_css_class(self.CSS_CLASS_ERROR)
+            self._set_field_error(self.port_row, _("Port must be between 1 and 65535"))
 
     def _on_auth_changed(self, combo_row, param) -> None:
         if combo_row.get_selected() == 0 and not self.key_path_entry.get_text().strip():
@@ -1173,13 +1185,15 @@ class SessionEditDialog(BaseDialog):
 
     def _on_key_path_changed(self, entry: Gtk.Entry) -> None:
         entry.remove_css_class(self.CSS_CLASS_ERROR)
+        self._clear_field_error(entry)
         self._mark_changed()
         key_path = entry.get_text().strip()
         if key_path:
             try:
                 validate_ssh_key_file(key_path)
-            except Exception:
+            except Exception as e:
                 entry.add_css_class(self.CSS_CLASS_ERROR)
+                self._set_field_error(entry, str(e))
 
     def _on_password_changed(self, entry: Gtk.PasswordEntry) -> None:
         self._mark_changed()
@@ -1323,12 +1337,16 @@ class SessionEditDialog(BaseDialog):
                 path = Path(path_text).expanduser()
                 if not path.exists() or not path.is_dir():
                     entry.add_css_class(self.CSS_CLASS_ERROR)
+                    self._set_field_error(entry, _("Directory does not exist"))
                 else:
                     entry.remove_css_class(self.CSS_CLASS_ERROR)
+                    self._clear_field_error(entry)
             except Exception:
                 entry.add_css_class(self.CSS_CLASS_ERROR)
+                self._set_field_error(entry, _("Invalid path"))
         else:
             entry.remove_css_class(self.CSS_CLASS_ERROR)
+            self._clear_field_error(entry)
 
     def _on_local_startup_command_changed(self, buffer: Gtk.TextBuffer) -> None:
         """Handle changes to the local startup commands."""

@@ -171,7 +171,9 @@ class SearchManager(GObject.Object):
 
         except Exception as e:
             self.logger.error(f"Search error: {e}")
-            self.window.toast_overlay.add_toast(Adw.Toast(title=_("Search failed.")))
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Search failed: {}").format(e))
+            )
 
     def _search_from_beginning(self, terminal, _regex):
         try:

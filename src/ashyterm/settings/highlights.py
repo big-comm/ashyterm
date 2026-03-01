@@ -417,7 +417,7 @@ class HighlightManager(GObject.GObject):
 
     def _load_system_highlights(self) -> Dict[str, HighlightContext]:
         """Load highlight rules from system package data."""
-        contexts = {}
+        contexts: Dict[str, HighlightContext] = {}
         system_path = self._get_system_highlights_path()
 
         if not system_path or not system_path.exists():
@@ -442,7 +442,7 @@ class HighlightManager(GObject.GObject):
 
     def _load_user_highlights(self) -> Dict[str, HighlightContext]:
         """Load highlight rules from user config directory."""
-        contexts = {}
+        contexts: Dict[str, HighlightContext] = {}
 
         if not self._user_highlights_dir.exists():
             return contexts
@@ -649,7 +649,7 @@ class HighlightManager(GObject.GObject):
         self._current_theme_name = "default"
         return self._get_default_palette()
 
-    def _get_default_palette(self) -> Dict[str, str]:
+    def _get_default_palette(self) -> Dict[str, Any]:
         """Get default Dracula-inspired palette."""
         return {
             "foreground": "#f8f8f2",
@@ -721,7 +721,7 @@ class HighlightManager(GObject.GObject):
         # ANSI color mapping
         if color_name in ANSI_COLOR_MAP:
             idx = ANSI_COLOR_MAP[color_name]
-            theme_palette = palette.get("palette", [])
+            theme_palette: list[str] = palette.get("palette", [])  # type: ignore[assignment]
             if idx < len(theme_palette):
                 return theme_palette[idx]
 
@@ -1198,12 +1198,27 @@ class HighlightManager(GObject.GObject):
         self.emit("rules-changed")
 
     def validate_pattern(self, pattern: str) -> Tuple[bool, str]:
-        """Validate a regex pattern."""
+        """Validate a regex pattern, including a basic complexity check."""
         if not pattern:
             return False, "Pattern cannot be empty"
         try:
-            re.compile(pattern)
+            compiled = re.compile(pattern)
+            # Test against a moderately long string to detect catastrophic backtracking
+            import signal as _sig
+
+            def _timeout_handler(_signum, _frame):
+                raise TimeoutError()
+
+            old_handler = _sig.signal(_sig.SIGALRM, _timeout_handler)
+            _sig.alarm(2)  # 2 second timeout
+            try:
+                compiled.search("a" * 1000)
+            finally:
+                _sig.alarm(0)
+                _sig.signal(_sig.SIGALRM, old_handler)
             return True, ""
+        except TimeoutError:
+            return False, "Pattern is too complex (potential ReDoS)"
         except re.error as e:
             return False, str(e)
 

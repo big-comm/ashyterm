@@ -12,6 +12,7 @@ from ..helpers import generate_unique_name
 from ..settings.manager import SettingsManager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from ..utils.accessibility import set_label as a11y_label
 from .dialogs.base_dialog import BaseDialog
 
 
@@ -26,9 +27,11 @@ class _ColorEditRow(Adw.ActionRow):
         self.color_button = Gtk.Button(valign=Gtk.Align.CENTER)
         self.color_button.set_size_request(44, 32)  # Standard-ish size
         self.color_button.connect("clicked", self._on_select_color_clicked)
+        a11y_label(self.color_button, _("Pick color for {}").format(title))
 
         self.hex_entry = Gtk.Entry(valign=Gtk.Align.CENTER, width_chars=9, max_length=9)
         self.hex_entry.add_css_class("monospace")
+        a11y_label(self.hex_entry, _("Hex value for {}").format(title))
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
         box.append(self.hex_entry)
@@ -67,6 +70,7 @@ class _ColorEditRow(Adw.ActionRow):
         swatch = Gtk.DrawingArea()
         swatch.set_content_width(32)
         swatch.set_content_height(16)
+        a11y_label(swatch, _("Color swatch for {}").format(self.get_title()))
 
         if self._current_rgba:
             color = self._current_rgba.copy()  # Capture for closure
@@ -95,9 +99,10 @@ class _ColorEditRow(Adw.ActionRow):
                 hex_str = self.rgba_to_hex(rgba)
                 self.hex_entry.get_buffer().set_text(hex_str, -1)
         except GLib.Error:
-            pass  # Cancelled
+            pass  # Cancelled by user
         except Exception as e:
-            print(f"Color selection error: {e}")
+            logger = get_logger("ashyterm.ui.color_scheme_dialog")
+            logger.error(f"Color selection error: {e}", exc_info=True)
 
     def _on_hex_changed(self, entry: Gtk.Entry):
         """When hex entry changes, update the color button and validate."""
@@ -107,29 +112,19 @@ class _ColorEditRow(Adw.ActionRow):
             self._current_rgba = rgba
             self._update_swatch()
             entry.remove_css_class("error")
-
-            # Emit a 'notify::color' signal if we wanted to be fancy,
-            # but the parent uses the color_button directly for signals usually.
-            # We need to manually trigger the parent's update logic since we replaced the signal.
-
-            # HACK: The parent dialog listens to 'color-set' on the button.
-            # Since we replaced Gtk.ColorButton, we need to adapt the parent's listeners.
-            # But wait, looking at the parent code:
-            # row.color_button.connect("color-set", ...)
-            # We should probably emit a signal so we don't have to change the parent *too* much,
-            # OR we change the parent to listen to 'clicked' or a custom signal?
-            # actually Gtk.Button doesn't have 'color-set'.
-            # We should manually emit 'clicked' on the button? No, that opens the dialog.
-            # We should probably fire the 'changed' signal on the entry since the parent listens to that too?
-            # Parent: row.hex_entry.connect("changed", lambda *_: self.preview_area.queue_draw())
-            # SO: simply updating the text behaves correctly for the parent!
-            # BUT: The parent also listens to row.color_button.connect("color-set").
-            # We need to remove that listener in the parent or accept that it won't fire.
-            # Wait, if we update hex_entry text, _on_hex_changed fires, and the parent listens to hex_entry 'changed'.
-            # So the preview SHOULD update automatically.
-            pass
+            try:
+                entry.update_property([Gtk.AccessibleProperty.DESCRIPTION], [""])
+            except Exception:
+                pass
         else:
             entry.add_css_class("error")
+            try:
+                entry.update_property(
+                    [Gtk.AccessibleProperty.DESCRIPTION],
+                    [_("Invalid hex color format")],
+                )
+            except Exception:
+                pass
 
 
 class _SchemeEditorDialog(BaseDialog):
@@ -147,7 +142,7 @@ class _SchemeEditorDialog(BaseDialog):
         self,
         parent,
         settings_manager: SettingsManager,
-        scheme_key: str,
+        scheme_key: Optional[str],
         scheme_data: Dict,
         is_new: bool,
     ):
@@ -175,12 +170,49 @@ class _SchemeEditorDialog(BaseDialog):
 
         self._build_ui()
         self._populate_colors(scheme_data)
+        self._has_changes = False
 
-        # Connect signals for live preview update
-        # Since _ColorEditRow updates the hex entry when color is chosen,
-        # we only need to listen to the entry's changes.
-        for row in [self.fg_row, self.bg_row]:
-            row.hex_entry.connect("changed", lambda *_: self.preview_area.queue_draw())
+        # Track modifications for discard confirmation
+        self.connect("close-request", self._on_close_request)
+
+        # Connect signals for live preview update and dirty tracking
+        for row in [
+            self.fg_row,
+            self.bg_row,
+            self.headerbar_row,
+            self.cursor_row,
+        ] + self.palette_rows:
+            row.hex_entry.connect("changed", self._mark_dirty)
+        self.name_entry.connect("changed", self._mark_dirty)
+
+    def _mark_dirty(self, *_args):
+        """Mark the dialog as having unsaved changes."""
+        self._has_changes = True
+        # Also update preview
+        self.preview_area.queue_draw()
+
+    def _on_close_request(self, _widget) -> bool:
+        """Intercept close to confirm discarding unsaved changes."""
+        if not self._has_changes:
+            return False  # Allow close
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            title=_("Discard Changes?"),
+            body=_("You have unsaved changes. Discard them?"),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("discard", _("Discard"))
+        dialog.set_response_appearance("discard", Adw.ResponseAppearance.DESTRUCTIVE)
+
+        def on_response(dlg, response_id):
+            if response_id == "discard":
+                self._has_changes = False
+                self.close()
+            dlg.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
+        return True  # Block close until confirmed
 
     def _build_ui(self):
         # Save button in header bar (Cancel is created by BaseDialog)
@@ -196,6 +228,7 @@ class _SchemeEditorDialog(BaseDialog):
         self.preview_area = Gtk.DrawingArea(
             content_height=80, margin_top=12, margin_bottom=12
         )
+        a11y_label(self.preview_area, _("Color scheme live preview"))
         self.preview_area.set_draw_func(self._draw_preview, None)
         preview_group.add(self.preview_area)
         page.add(preview_group)
@@ -217,8 +250,27 @@ class _SchemeEditorDialog(BaseDialog):
         )
         palette_group.add(grid)
 
+        _ANSI_NAMES = [
+            _("Black"),
+            _("Red"),
+            _("Green"),
+            _("Yellow"),
+            _("Blue"),
+            _("Magenta"),
+            _("Cyan"),
+            _("White"),
+            _("Bright Black"),
+            _("Bright Red"),
+            _("Bright Green"),
+            _("Bright Yellow"),
+            _("Bright Blue"),
+            _("Bright Magenta"),
+            _("Bright Cyan"),
+            _("Bright White"),
+        ]
+
         for i in range(16):
-            color_row = _ColorEditRow(f"Color {i}")
+            color_row = _ColorEditRow(_ANSI_NAMES[i])
             self.palette_rows.append(color_row)
             grid.attach(color_row, i % 2, i // 2, 1, 1)
 
@@ -260,7 +312,9 @@ class _SchemeEditorDialog(BaseDialog):
         cr.move_to(10, 10)
         PangoCairo.show_layout(cr, layout)
 
-    def _show_error_dialog(self, title: str, message: str):
+    def _show_error_dialog(
+        self, title: str, message: str, details: Optional[str] = None
+    ):
         dialog = Adw.MessageDialog(
             transient_for=self,
             heading=title,
@@ -328,6 +382,8 @@ class _SchemeEditorDialog(BaseDialog):
         }
 
         self.emit("save-requested", self.original_key, new_key, new_data)
+        self._has_changes = False
+        self._has_changes = False
         self.close()
 
 
@@ -352,10 +408,15 @@ class _SchemePreviewRow(Adw.ActionRow):
             content_width=200, content_height=80, margin_end=12
         )
         preview_area.add_css_class("scheme-preview-canvas")
+        a11y_label(
+            preview_area,
+            _("Color preview for {}").format(scheme_data.get("name", scheme_key)),
+        )
         preview_area.set_draw_func(self._draw_preview, None)
         self.add_prefix(preview_area)
 
         self.checkmark_icon = Gtk.Image.new_from_icon_name("object-select-symbolic")
+        a11y_label(self.checkmark_icon, _("Active scheme"))
         self.add_suffix(self.checkmark_icon)
 
     def set_selected(self, selected: bool):
@@ -485,6 +546,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         )
         self.schemes_listbox.connect("row-selected", self._on_row_selected)
         self.schemes_listbox.connect("row-activated", self._on_edit_clicked)
+        a11y_label(self.schemes_listbox, _("Color schemes list"))
         scrolled_window.set_child(self.schemes_listbox)
         schemes_group.add(scrolled_window)
 
@@ -501,17 +563,20 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         new_button = Gtk.Button.new_with_label(_("New"))
         new_button.set_valign(Gtk.Align.CENTER)
         new_button.connect("clicked", self._on_new_clicked)
+        a11y_label(new_button, _("Create new color scheme"))
         actions_box.append(new_button)
 
         self.edit_button = Gtk.Button.new_with_label(_("Edit"))
         self.edit_button.set_valign(Gtk.Align.CENTER)
         self.edit_button.connect("clicked", self._on_edit_clicked)
+        a11y_label(self.edit_button, _("Edit selected color scheme"))
         actions_box.append(self.edit_button)
 
         self.delete_button = Gtk.Button.new_with_label(_("Delete"))
         self.delete_button.set_valign(Gtk.Align.CENTER)
         self.delete_button.add_css_class("destructive-action")
         self.delete_button.connect("clicked", self._on_delete_clicked)
+        a11y_label(self.delete_button, _("Delete selected color scheme"))
         actions_box.append(self.delete_button)
 
     def _populate_schemes_list(self):

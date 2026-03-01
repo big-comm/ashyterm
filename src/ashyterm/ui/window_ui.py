@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import gi
 
@@ -16,6 +16,7 @@ from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
 from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
+from ..utils.accessibility import set_label as a11y_label
 
 # Lazy import for menus - only loaded when main menu is first shown
 # from .menus import MainApplicationMenu
@@ -92,7 +93,7 @@ class WindowUIBuilder:
         self.file_manager_button = None
         self.command_manager_button = None
         self.cleanup_button = None
-        self.font_sizer_widget = None
+        self.font_sizer_widget: Any = None
         self.scrolled_tab_bar = None
         self.single_tab_title_widget = None
         self.title_stack = None
@@ -117,7 +118,7 @@ class WindowUIBuilder:
         self.menu_button = None
         self.new_tab_button = None
         self.ai_assistant_button = None
-        self.ai_chat_panel = None
+        self.ai_chat_panel: Any = None
         self.ai_paned = None
         self.command_toolbar = None  # Toolbar for pinned commands
 
@@ -195,9 +196,12 @@ class WindowUIBuilder:
         self.search_bar = Gtk.SearchBar()
         search_box = Gtk.Box(spacing=6)
         self.terminal_search_entry = Gtk.SearchEntry(hexpand=True)
+        a11y_label(self.terminal_search_entry, _("Search in terminal"))
         self.search_bar.connect_entry(self.terminal_search_entry)
         self.search_prev_button = icon_button("go-up-symbolic")
+        a11y_label(self.search_prev_button, _("Previous match"))
         self.search_next_button = icon_button("go-down-symbolic")
+        a11y_label(self.search_next_button, _("Next match"))
 
         # Create the BroadcastBar
         self.broadcast_bar = Gtk.SearchBar()
@@ -208,6 +212,7 @@ class WindowUIBuilder:
             placeholder_text=_("Type your command here and press ENTER..."),
         )
         self.broadcast_entry.add_css_class("broadcast-entry")
+        a11y_label(self.broadcast_entry, _("Broadcast command"))
         self.broadcast_entry.set_icon_from_icon_name(
             Gtk.EntryIconPosition.PRIMARY, "utilities-terminal-symbolic"
         )
@@ -224,6 +229,7 @@ class WindowUIBuilder:
 
         # Case sensitive switch
         self.case_sensitive_switch = Gtk.Switch()
+        a11y_label(self.case_sensitive_switch, _("Case sensitive search"))
         self.tooltip_helper.add_tooltip(
             self.case_sensitive_switch, _("Case sensitive search")
         )
@@ -234,6 +240,7 @@ class WindowUIBuilder:
 
         # Regex switch
         self.regex_switch = Gtk.Switch()
+        a11y_label(self.regex_switch, _("Use regular expressions"))
         self.tooltip_helper.add_tooltip(self.regex_switch, _("Use regular expressions"))
         regex_box = Gtk.Box(spacing=6)
         regex_label = Gtk.Label(label=_("Regex"))
@@ -285,18 +292,22 @@ class WindowUIBuilder:
         self.toggle_sidebar_button = Gtk.ToggleButton()
         self.toggle_sidebar_button.set_child(icon_image("pin-symbolic"))
         self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
+        a11y_label(self.toggle_sidebar_button, _("Sessions Panel"))
 
         self.file_manager_button = Gtk.ToggleButton()
         self.file_manager_button.set_child(icon_image("folder-open-symbolic"))
+        a11y_label(self.file_manager_button, _("File Manager"))
 
         # Command Manager button
         self.command_manager_button = Gtk.Button()
         self.command_manager_button.set_child(icon_image("utilities-terminal-symbolic"))
         self.command_manager_button.set_action_name("win.show-command-manager")
+        a11y_label(self.command_manager_button, _("Command Manager"))
 
         # Add the new search button
         self.search_button = Gtk.ToggleButton()
         self.search_button.set_child(icon_image("edit-find-symbolic"))
+        a11y_label(self.search_button, _("Search in Terminal"))
 
         # Broadcast button is kept for internal use but not added to header bar
         # The functionality is integrated into the Command Manager
@@ -309,6 +320,7 @@ class WindowUIBuilder:
             icon_image("avatar-default-symbolic", use_bundled=False)
         )  # System icon
         self.ai_assistant_button.add_css_class("flat")
+        a11y_label(self.ai_assistant_button, _("Ask AI Assistant"))
         self.ai_assistant_button.connect(
             "clicked", lambda _btn: self.window._on_ai_assistant_requested()
         )
@@ -320,6 +332,7 @@ class WindowUIBuilder:
         self.cleanup_button.set_child(icon_image("user-trash-symbolic"))
         self.cleanup_button.add_css_class("destructive-action")
         self.cleanup_button.add_css_class("flat")
+        a11y_label(self.cleanup_button, _("Manage Temporary Files"))
         self.cleanup_popover = Gtk.Popover()
         self.cleanup_popover.add_css_class("ashyterm-popover")
         self.cleanup_button.set_popover(self.cleanup_popover)
@@ -330,6 +343,7 @@ class WindowUIBuilder:
         self.menu_button = Gtk.MenuButton()
         self.menu_button.set_child(icon_image("open-menu-symbolic"))
         self.menu_button.add_css_class("flat")
+        a11y_label(self.menu_button, _("Main Menu"))
         # Lazy initialization: popover is created on first activation
         self._main_menu_popover = None
         self._setup_lazy_menu_popover()
@@ -337,6 +351,7 @@ class WindowUIBuilder:
         self.new_tab_button = icon_button("tab-new-symbolic")
         self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
         self.new_tab_button.add_css_class("flat")
+        a11y_label(self.new_tab_button, _("New Tab"))
 
         # Add custom tooltips to header bar buttons
         self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Sessions Panel"))
@@ -353,7 +368,9 @@ class WindowUIBuilder:
         self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
 
         # Check if window controls are on the left
-        button_layout = self.wm_settings.get_string("button-layout")
+        button_layout = (
+            self.wm_settings.get_string("button-layout") if self.wm_settings else ""
+        )
         if ":" in button_layout:
             left_part = button_layout.split(":")[0]
             window_controls_on_left = any(
@@ -550,6 +567,9 @@ class WindowUIBuilder:
 
         btn.set_child(content_box)
 
+        # Accessibility: ensure screen readers announce button purpose
+        a11y_label(btn, command.name)
+
         # Add tooltip with command description
         self.tooltip_helper.add_tooltip(btn, command.description)
 
@@ -668,24 +688,29 @@ class WindowUIBuilder:
         )
 
         self.add_session_button = icon_button("list-add-symbolic")
+        a11y_label(self.add_session_button, _("Add Session"))
         self.tooltip_helper.add_tooltip(self.add_session_button, _("Add Session"))
         toolbar.append(self.add_session_button)
 
         self.add_folder_button = icon_button("folder-new-symbolic")
+        a11y_label(self.add_folder_button, _("Add Folder"))
         self.tooltip_helper.add_tooltip(self.add_folder_button, _("Add Folder"))
         toolbar.append(self.add_folder_button)
 
         self.edit_button = icon_button("document-edit-symbolic")
+        a11y_label(self.edit_button, _("Edit Selected"))
         self.tooltip_helper.add_tooltip(self.edit_button, _("Edit Selected"))
         toolbar.append(self.edit_button)
 
         self.save_layout_button = icon_button("document-save-symbolic")
+        a11y_label(self.save_layout_button, _("Save Current Layout"))
         self.tooltip_helper.add_tooltip(
             self.save_layout_button, _("Save Current Layout")
         )
         toolbar.append(self.save_layout_button)
 
         self.remove_button = icon_button("user-trash-symbolic")
+        a11y_label(self.remove_button, _("Remove Selected"))
         self.tooltip_helper.add_tooltip(self.remove_button, _("Remove Selected"))
         self.remove_button.add_css_class("destructive")
         toolbar.append(self.remove_button)
@@ -706,6 +731,7 @@ class WindowUIBuilder:
         self.sidebar_search_entry = Gtk.SearchEntry(
             placeholder_text=_("Search sessions...")
         )
+        a11y_label(self.sidebar_search_entry, _("Search sessions"))
         self.sidebar_search_entry.set_margin_start(6)
         self.sidebar_search_entry.set_margin_end(6)
         search_container.append(self.sidebar_search_entry)
@@ -794,7 +820,7 @@ class WindowUIBuilder:
         if self.ai_chat_panel is not None:
             return
 
-        from .widgets.ai_chat_panel import AIChatPanel
+        from .widgets.ai_chat import AIChatPanel
 
         self.ai_chat_panel = AIChatPanel(
             self.window.ai_assistant,

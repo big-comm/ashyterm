@@ -160,7 +160,7 @@ def main() -> int:
     parser.add_argument(
         "--convert-to-ssh", help=_("Convert KIO/GVFS URI path to SSH format")
     )
-    # NOVO: Adicionado o argumento --new-window
+    # NEW: Added the --new-window argument
     parser.add_argument(
         "--new-window", action="store_true", help=_("Force opening a new window")
     )

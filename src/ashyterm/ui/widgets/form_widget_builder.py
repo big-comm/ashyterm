@@ -8,7 +8,7 @@ CommandFormDialog and CommandEditorDialog.
 """
 
 from typing import Any, Callable, Dict, List, Optional, Tuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import gi
 
@@ -30,14 +30,12 @@ class FieldConfig:
     tooltip: str = ""
     placeholder: str = ""
     default_value: Any = None
-    options: List[Tuple[str, str]] = None  # List of (value, label) tuples
-    extra_config: Dict[str, Any] = None
+    options: Optional[List[Tuple[str, str]]] = None  # List of (value, label) tuples
+    extra_config: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
         if self.options is None:
             self.options = []
-        if self.extra_config is None:
-            self.extra_config = {}
 
 
 class FormWidgetBuilder:

@@ -11,6 +11,7 @@ from gi.repository import Gdk, Gio, GLib, GObject, Graphene, Gtk
 
 from ..core.signals import AppSignals
 from ..helpers import create_themed_popover_menu
+from ..utils.accessibility import set_label as a11y_label
 
 # Lazy imports for menus - only loaded when context menus are actually needed
 # from ..ui.menus import create_folder_menu, create_root_menu, create_session_menu
@@ -142,7 +143,7 @@ class SessionTreeView:
         self._clipboard_item: Optional[Union[SessionItem, SessionFolder]] = None
         self._clipboard_is_cut: bool = False
         self._is_restoring_state: bool = False
-        self._populated_folders = set()
+        self._populated_folders: set[str] = set()
         self._filter_text = ""
         self._saved_expansion_state: Optional[Set[str]] = (
             None  # Save expansion state before search
@@ -277,20 +278,31 @@ class SessionTreeView:
         self.logger.debug(f"Saved expansion state: {self._saved_expansion_state}")
 
     def _restore_saved_expansion_state(self) -> None:
-        """Restores the expansion state that was saved before search began."""
+        """Restores the expansion state, merging pre-search and during-search expansions."""
         if self._saved_expansion_state is None:
             # If no saved state, fall back to settings
             self._apply_expansion_state()
             return
 
-        self.logger.debug(
-            f"Restoring saved expansion state: {self._saved_expansion_state}"
-        )
+        # Collect folders the user expanded during the search
+        current_expanded: set[str] = set()
+
+        def collect_current(row, item, is_expanded):
+            if isinstance(item, SessionFolder) and is_expanded:
+                current_expanded.add(item.path)
+            return is_expanded
+
+        iterate_tree_model(self.tree_model, collect_current)
+
+        # Merge: restore anything that was expanded before OR during search
+        merged = self._saved_expansion_state | current_expanded
+
+        self.logger.debug(f"Restoring merged expansion state: {merged}")
 
         def restore_callback(row, item, is_expanded):
             """Restore expansion state for folders."""
             if isinstance(item, SessionFolder):
-                should_be_expanded = item.path in self._saved_expansion_state
+                should_be_expanded = item.path in merged
                 if should_be_expanded and not is_expanded:
                     row.set_expanded(True)
                 elif not should_be_expanded and is_expanded:
@@ -398,6 +410,23 @@ class SessionTreeView:
         tree_list_row = list_item.get_item()
         item = tree_list_row.get_item()
         label.set_label(item.name)
+
+        # Accessible label for screen readers
+        if isinstance(item, SessionItem):
+            kind = "Local" if item.is_local() else "SSH"
+            if not item.is_local() and item.host:
+                desc = (
+                    f"{kind}: {item.user}@{item.host}"
+                    if item.user
+                    else f"{kind}: {item.host}"
+                )
+            else:
+                desc = f"{kind}: {item.name}"
+            a11y_label(box, desc)
+        elif isinstance(item, SessionFolder):
+            a11y_label(box, f"Folder: {item.name}")
+        else:
+            a11y_label(box, item.name)
 
         depth = tree_list_row.get_depth()
         indent_width = depth * 20
@@ -1194,7 +1223,9 @@ class SessionTreeView:
 
         try:
             result = self.operations.paste_item(
-                item_to_paste, target_folder_path, is_cut
+                item_to_paste,
+                target_folder_path,
+                is_cut,  # type: ignore[arg-type]
             )
             if result and result.success:
                 self.refresh_tree()

@@ -213,6 +213,7 @@ class CommTerminalApp(Adw.Application):
         try:
             self.set_accels_for_action("app.quit", ["<Control><Shift>q"])
             self.set_accels_for_action("app.preferences", ["<Control><Shift>comma"])
+            self.set_accels_for_action("win.command-palette", ["<Control><Shift>p"])
             self._update_window_shortcuts()
         except Exception as e:
             self.logger.error(f"Failed to setup keyboard shortcuts: {e}")
@@ -337,7 +338,7 @@ class CommTerminalApp(Adw.Application):
 
     def _parse_command_line_args(self, arguments: list) -> dict:
         """Parse command line arguments into a structured dictionary."""
-        result = {
+        result: dict[str, str | bool | None] = {
             "working_directory": None,
             "execute_command": None,
             "ssh_target": None,
@@ -399,7 +400,7 @@ class CommTerminalApp(Adw.Application):
     def _process_and_execute_args(self, arguments: list):
         """Parse arguments and decide what action to take."""
         args = self._parse_command_line_args(arguments)
-
+        assert self.settings_manager is not None
         behavior = self.settings_manager.get("new_instance_behavior", "new_tab")
         windows = self.get_windows()
         target_window = windows[0] if windows else None
@@ -641,7 +642,7 @@ class CommTerminalApp(Adw.Application):
                 heading=_("Startup Error"),
                 body=_("Application failed to start: {}").format(error_message),
             )
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception:
             print(f"STARTUP ERROR: {error_message}")
@@ -652,7 +653,7 @@ class CommTerminalApp(Adw.Application):
             if parent is None:
                 parent = self.get_active_window()
             dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception as e:
             self.logger.error(f"Failed to show error dialog: {e}")
@@ -662,7 +663,7 @@ class CommTerminalApp(Adw.Application):
         try:
             parent = self.get_active_window()
             dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
-            dialog.add_response("ok", "OK")
+            dialog.add_response("ok", _("OK"))
             dialog.present()
         except Exception as e:
             self.logger.error(f"Failed to show info dialog: {e}")
@@ -699,6 +700,7 @@ class CommTerminalApp(Adw.Application):
                 "detached_terminals_data": kwargs.get("detached_terminals_data"),
                 "detached_file_manager": kwargs.get("detached_file_manager"),
             }
+            assert self.settings_manager is not None
             window = CommTerminalWindow(
                 application=self, settings_manager=self.settings_manager, **init_args
             )

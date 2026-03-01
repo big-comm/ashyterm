@@ -256,7 +256,7 @@ class LoggerManager:
             for logger in self._loggers.values():
                 logger._setup_logger()
 
-    def set_console_level(self, level: LogLevel):
+    def set_console_level(self, level: int):
         with self._lock:
             self.config.console_level = level
             self.reconfigure_all_loggers()
@@ -296,7 +296,8 @@ def get_logger(name: Optional[str] = None) -> ThreadSafeLogger:
 
         frame = inspect.currentframe()
         try:
-            name = frame.f_back.f_globals.get("__name__", "unknown")
+            caller = frame.f_back if frame else None
+            name = caller.f_globals.get("__name__", "unknown") if caller else "unknown"
         finally:
             del frame
     return _logger_manager.get_logger(name)

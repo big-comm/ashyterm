@@ -1,7 +1,7 @@
 # ashyterm/ui/actions.py
 
 import os
-from typing import TYPE_CHECKING, List, Optional, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Union
 from urllib.parse import unquote, urlparse
 
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
@@ -71,6 +71,10 @@ class WindowActions:
             "shortcuts": self.shortcuts,
             "new-window": self.new_window,
             "save-layout": self.save_layout,
+            "move-tab-left": self.move_tab_left,
+            "move-tab-right": self.move_tab_right,
+            "command-palette": self.command_palette,
+            "quick-connect": self.quick_connect,
         }
         for name, callback in actions_map.items():
             action = Gio.SimpleAction.new(name, None)
@@ -147,6 +151,12 @@ class WindowActions:
     def close_pane(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.close_pane(terminal)
+
+    def move_tab_left(self, *_args):
+        self.window.tab_manager.move_tab_left()
+
+    def move_tab_right(self, *_args):
+        self.window.tab_manager.move_tab_right()
 
     # --- Terminal Actions ---
 
@@ -390,9 +400,11 @@ class WindowActions:
 
     def cut_item(self, *_args):
         self.window.session_tree._cut_selected_item()
+        self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item cut")))
 
     def copy_item(self, *_args):
         self.window.session_tree._copy_selected_item()
+        self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item copied")))
 
     def paste_item(self, *_args):
         target_path = ""
@@ -401,9 +413,11 @@ class WindowActions:
                 item.path if isinstance(item, SessionFolder) else item.folder_path
             )
         self.window.session_tree._paste_item(target_path)
+        self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item pasted")))
 
     def paste_item_root(self, *_args):
         self.window.session_tree._paste_item("")
+        self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item pasted")))
 
     def add_session_root(self, *_args):
         self._close_sidebar_popover_if_active()
@@ -461,7 +475,32 @@ class WindowActions:
         from .dialogs import ShortcutsDialog
 
         dialog = ShortcutsDialog(self.window)
-        dialog.present()
+        dialog.present(self.window)
+
+    def command_palette(self, *_args):
+        self._hide_tooltip()
+        # Toggle: close if already open
+        existing = getattr(self.window, "_command_palette", None)
+        if existing is not None:
+            existing.close()
+            self.window._command_palette = None
+            return
+
+        from .dialogs.command_palette import CommandPalette
+
+        palette = CommandPalette(self.window)
+        self.window._command_palette = palette
+        palette.connect(
+            "closed", lambda d: setattr(self.window, "_command_palette", None)
+        )
+        palette.present(self.window)
+
+    def quick_connect(self, *_args):
+        self._hide_tooltip()
+        from .dialogs.quick_connect_dialog import QuickConnectDialog
+
+        dialog = QuickConnectDialog(self.window)
+        dialog.present(self.window)
 
     def new_window(self, *_args):
         if app := self.window.get_application():
@@ -581,31 +620,67 @@ class WindowActions:
         if not items:
             return
         count = len(items)
-        title = _("Delete Item") if count == 1 else _("Delete Items")
         item = items[0]
-        item_type = "Item"
+        title, body_text = self._build_delete_text(items, count, item)
+
+        dialog = Adw.MessageDialog(
+            transient_for=self.window, title=title, body=body_text
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("delete", _("Delete"))
+        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+
+        def on_response(dlg, response_id):
+            if response_id == "delete":
+                deleted_snapshots = self._execute_deletions(items)
+                if deleted_snapshots and count <= 3:
+                    label = (
+                        _('Deleted "{name}"').format(name=items[0].name)
+                        if count == 1
+                        else _("Deleted {count} items").format(count=count)
+                    )
+                    self._show_undo_toast(label, deleted_snapshots)
+            dlg.close()
+
+        dialog.connect("response", on_response)
+        dialog.present()
+
+    def _get_item_type_name(self, item) -> str:
+        """Return translated type name for a sidebar item."""
         if isinstance(item, SessionItem):
-            item_type = _("Session")
+            return _("Session")
         elif isinstance(item, SessionFolder):
-            item_type = _("Folder")
+            return _("Folder")
         elif isinstance(item, LayoutItem):
-            item_type = _("Layout")
+            return _("Layout")
+        return "Item"
+
+    def _build_delete_text(self, items, count, item):
+        """Build title and body text for delete confirmation dialog."""
+        item_type = self._get_item_type_name(item)
 
         if count == 1:
             title = _("Delete {type}").format(type=item_type)
             has_children = isinstance(
                 item, SessionFolder
             ) and self.window.session_operations._folder_has_children(item.path)
-            body_text = (
-                _(
+            if has_children:
+                body_text = _(
                     'The folder "{name}" is not empty. Are you sure you want to permanently delete it and all its contents?'
                 ).format(name=item.name)
-                if has_children
-                else _('Are you sure you want to delete "{name}"?').format(
+            elif isinstance(item, SessionItem) and item.is_ssh():
+                body_text = _('Delete "{name}" ({user}@{host}:{port})?').format(
+                    name=item.name,
+                    user=item.user or "root",
+                    host=item.host or "?",
+                    port=item.port or 22,
+                )
+            else:
+                body_text = _('Are you sure you want to delete "{name}"?').format(
                     name=item.name
                 )
-            )
         else:
+            title = _("Delete Items")
             body_text = _(
                 "Are you sure you want to permanently delete these {count} items?"
             ).format(count=count)
@@ -617,32 +692,44 @@ class WindowActions:
                 body_text += "\n\n" + _(
                     "This will also delete all contents of any selected folders."
                 )
+        return title, body_text
 
-        dialog = Adw.MessageDialog(
-            transient_for=self.window, title=title, body=body_text
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("delete", _("Delete"))
-        dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
+    def _execute_deletions(self, items) -> list[tuple[str, Any]]:
+        """Execute deletion of items and return snapshots for undo."""
+        deleted_snapshots: list[tuple[str, Any]] = []
+        for item_to_delete in items:
+            if isinstance(item_to_delete, SessionFolder):
+                self.window.session_operations.remove_folder(item_to_delete, force=True)
+                deleted_snapshots.append(("folder", item_to_delete.to_dict()))
+            elif isinstance(item_to_delete, SessionItem):
+                self.window.session_operations.remove_session(item_to_delete)
+                deleted_snapshots.append(("session", item_to_delete.to_dict()))
+            elif isinstance(item_to_delete, LayoutItem):
+                self.window.state_manager.delete_saved_layout(
+                    item_to_delete.name, confirm=False
+                )
+                deleted_snapshots.append(("layout", {"name": item_to_delete.name}))
+                from ..core.signals import AppSignals
 
-        def on_response(dlg, response_id):
-            if response_id == "delete":
-                for item_to_delete in items:
-                    if isinstance(item_to_delete, SessionFolder):
-                        self.window.session_operations.remove_folder(
-                            item_to_delete, force=True
-                        )
-                    elif isinstance(item_to_delete, SessionItem):
-                        self.window.session_operations.remove_session(item_to_delete)
-                    elif isinstance(item_to_delete, LayoutItem):
-                        self.window.state_manager.delete_saved_layout(
-                            item_to_delete.name, confirm=False
-                        )
-                        # Layouts need explicit tree refresh until they use signals
-                        from ..core.signals import AppSignals
+                AppSignals.get().emit("request-tree-refresh")
+        return deleted_snapshots
 
-                        AppSignals.get().emit("request-tree-refresh")
-            dlg.close()
+    def _show_undo_toast(self, label: str, snapshots: list[tuple[str, Any]]) -> None:
+        """Show a toast with an Undo button that restores deleted items."""
+        toast_overlay = getattr(self.window, "toast_overlay", None)
+        if not toast_overlay:
+            return
 
-        dialog.connect("response", on_response)
-        dialog.present()
+        toast = Adw.Toast(title=label, timeout=5, button_label=_("Undo"))
+
+        def _on_undo(_toast: Adw.Toast) -> None:
+            for kind, data in snapshots:
+                if kind == "session":
+                    restored = SessionItem.from_dict(data)
+                    self.window.session_operations.add_session(restored)
+                elif kind == "folder":
+                    restored_folder = SessionFolder.from_dict(data)
+                    self.window.session_operations.add_folder(restored_folder)
+
+        toast.connect("button-clicked", _on_undo)
+        toast_overlay.add_toast(toast)

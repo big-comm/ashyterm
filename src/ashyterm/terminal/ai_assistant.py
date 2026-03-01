@@ -29,7 +29,7 @@ def _get_requests():
     """Get the requests module, importing lazily on first use."""
     global _requests_module
     if _requests_module is None:
-        import requests
+        import requests  # type: ignore[import-untyped]
 
         _requests_module = requests
     return _requests_module
@@ -86,6 +86,15 @@ class TerminalAiAssistant(GObject.Object):
     )
 
     @staticmethod
+    def _sanitize_os_value(value: str) -> str:
+        """Sanitize OS-release values to prevent prompt injection.
+        Only allow alphanumeric, spaces, dots, hyphens, parens, slashes."""
+        import re
+
+        sanitized = re.sub(r"[^\w .\-()/:,]", "", value)
+        return sanitized[:100]
+
+    @staticmethod
     def _parse_os_release() -> Tuple[str, str]:
         """Parse /etc/os-release and return (os_name, base_distro)."""
         os_name = "Linux"
@@ -94,9 +103,11 @@ class TerminalAiAssistant(GObject.Object):
             with open("/etc/os-release", "r") as f:
                 for line in f:
                     if line.startswith("PRETTY_NAME="):
-                        os_name = line.split("=", 1)[1].strip().strip('"')
+                        raw = line.split("=", 1)[1].strip().strip('"')
+                        os_name = TerminalAiAssistant._sanitize_os_value(raw)
                     elif line.startswith("ID_LIKE="):
-                        base_distro = line.split("=", 1)[1].strip().strip('"')
+                        raw = line.split("=", 1)[1].strip().strip('"')
+                        base_distro = TerminalAiAssistant._sanitize_os_value(raw)
         except Exception:
             pass
         return os_name, base_distro
@@ -109,7 +120,8 @@ class TerminalAiAssistant(GObject.Object):
             with open("/etc/lsb-release", "r") as f:
                 for line in f:
                     if line.startswith("DISTRIB_DESCRIPTION="):
-                        os_name = line.split("=", 1)[1].strip().strip('"')
+                        raw = line.split("=", 1)[1].strip().strip('"')
+                        os_name = TerminalAiAssistant._sanitize_os_value(raw)
                         break
         except Exception:
             pass
@@ -213,8 +225,10 @@ class TerminalAiAssistant(GObject.Object):
     def missing_configuration(self) -> List[str]:
         missing = []
         provider = self.settings_manager.get("ai_assistant_provider", "").strip()
-        
-        api_key = self.settings_manager.get(f"ai_assistant_{provider}_api_key", "").strip()
+
+        api_key = self.settings_manager.get(
+            f"ai_assistant_{provider}_api_key", ""
+        ).strip()
         if not api_key:
             api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
         if not provider:
@@ -339,7 +353,8 @@ class TerminalAiAssistant(GObject.Object):
         if key == "ai_assistant_enabled" and not new_value:
             self.clear_all_conversations()
         if (
-            key in {
+            key
+            in {
                 "ai_assistant_provider",
                 "ai_assistant_api_key",
                 "ai_assistant_model",
@@ -363,7 +378,7 @@ class TerminalAiAssistant(GObject.Object):
         if terminal_id not in self._terminal_refs:
             self._terminal_refs[terminal_id] = weakref.ref(
                 terminal,
-                lambda _ref, tid=terminal_id: self._cleanup_terminal_state(tid),
+                lambda _ref, tid=terminal_id: self._cleanup_terminal_state(tid),  # type: ignore[misc]
             )
         return terminal_id
 
@@ -375,7 +390,7 @@ class TerminalAiAssistant(GObject.Object):
         try:
             if self._should_decline_code_request(prompt):
                 self._build_messages(terminal_id, prompt)
-                refusal = "Desculpe, no momento não estou programado para gerar scripts complexos, apenas comandos diretos."
+                refusal = _("Sorry, I am not currently programmed to generate complex scripts, only direct commands.")
                 self._record_assistant_message(terminal_id, refusal)
                 # Save to history
                 self._history_manager.add_assistant_message(refusal)
@@ -447,10 +462,12 @@ class TerminalAiAssistant(GObject.Object):
     def _load_configuration(self) -> Dict[str, str]:
         provider = self.settings_manager.get("ai_assistant_provider", "").strip()
 
-        api_key = self.settings_manager.get(f"ai_assistant_{provider}_api_key", "").strip()
+        api_key = self.settings_manager.get(
+            f"ai_assistant_{provider}_api_key", ""
+        ).strip()
         if not api_key:
             api_key = self.settings_manager.get("ai_assistant_api_key", "").strip()
-            
+
         model = self.settings_manager.get(f"ai_assistant_{provider}_model", "").strip()
         if not model:
             model = self.settings_manager.get("ai_assistant_model", "").strip()
@@ -498,20 +515,20 @@ class TerminalAiAssistant(GObject.Object):
     ) -> Dict[str, Any]:
         """Make HTTP request and return parsed JSON response."""
         try:
-            terminal_id = getattr(self._thread_local, 'terminal_id', -1)
+            terminal_id = getattr(self._thread_local, "terminal_id", -1)
             with self._lock:
                 if self._cancel_flags.get(terminal_id):
                     raise RuntimeError(_("Request cancelled by user."))
-            
+
             response = requests.post(
                 url, headers=headers, json=payload, timeout=timeout
             )
-            
+
             with self._lock:
                 if self._cancel_flags.get(terminal_id):
                     response.close()
                     raise RuntimeError(_("Request cancelled by user."))
-                    
+
         except requests.RequestException as exc:
             raise RuntimeError(
                 f"Failed to query the {provider_name} service: {exc}"
@@ -591,30 +608,11 @@ class TerminalAiAssistant(GObject.Object):
 
     def _process_streaming_response(self, response) -> str:
         """Process streaming response and return full content."""
-        terminal_id = getattr(self._thread_local, 'terminal_id', -1)
-        
-        # Check if the server ignored stream=True or returned a JSON error
+        terminal_id = getattr(self._thread_local, "terminal_id", -1)
+
         content_type = response.headers.get("Content-Type", "")
         if "application/json" in content_type:
-            try:
-                data = response.json()
-            except ValueError:
-                data = {}
-            if "error" in data:
-                err_msg = data["error"].get("message", "Unknown API error inside JSON")
-                raise RuntimeError(err_msg)
-            # Maybe it just ignored stream=True and gave the full response
-            choices = data.get("choices", [])
-            if choices:
-                message = choices[0].get("message", {})
-                content = message.get("content", "")
-                if content:
-                    if self._streaming_callback:
-                        GLib.idle_add(self._streaming_callback, content, True)
-                    return content
-            # Fallback for unexpected JSON structure
-            err_msg = _("Provider returned JSON instead of an event stream: {}").format(str(data)[:100])
-            raise RuntimeError(err_msg)
+            return self._handle_json_response(response)
 
         full_content = ""
         try:
@@ -633,7 +631,7 @@ class TerminalAiAssistant(GObject.Object):
                     full_content += chunk
                     if self._streaming_callback:
                         GLib.idle_add(self._streaming_callback, chunk, False)
-        except Exception as exc:
+        except Exception:
             if self._cancel_flags.get(terminal_id):
                 raise RuntimeError(_("Request cancelled by user."))
             raise
@@ -647,6 +645,29 @@ class TerminalAiAssistant(GObject.Object):
             GLib.idle_add(self._streaming_callback, "", True)
 
         return full_content
+
+    def _handle_json_response(self, response) -> str:
+        """Handle a non-streaming JSON response (server ignored stream=True)."""
+        try:
+            data = response.json()
+        except ValueError:
+            data = {}
+        if "error" in data:
+            raise RuntimeError(
+                data["error"].get("message", "Unknown API error inside JSON")
+            )
+        choices = data.get("choices", [])
+        if choices:
+            content = choices[0].get("message", {}).get("content", "")
+            if content:
+                if self._streaming_callback:
+                    GLib.idle_add(self._streaming_callback, content, True)
+                return content
+        raise RuntimeError(
+            _("Provider returned JSON instead of an event stream: {}").format(
+                str(data)[:100]
+            )
+        )
 
     def _openai_compat_streaming(
         self,
@@ -664,7 +685,7 @@ class TerminalAiAssistant(GObject.Object):
             response = requests.post(
                 url, headers=headers, json=payload, timeout=timeout, stream=True
             )
-            terminal_id = getattr(self._thread_local, 'terminal_id', -1)
+            terminal_id = getattr(self._thread_local, "terminal_id", -1)
             with self._lock:
                 if self._cancel_flags.get(terminal_id):
                     response.close()

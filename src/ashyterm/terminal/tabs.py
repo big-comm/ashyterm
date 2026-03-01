@@ -2,6 +2,7 @@
 
 import re
 import threading
+import time
 import weakref
 from typing import TYPE_CHECKING, Callable, List, Optional
 
@@ -16,6 +17,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
 from ..helpers import create_themed_popover_menu
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager as SettingsManagerType
+from ..utils.accessibility import set_label as a11y_label, set_description as a11y_desc
 from ..utils.icons import icon_button, icon_image
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -406,45 +408,174 @@ class TabManager:
                 current_scroll_value + (widget_x + widget_width - viewport_width)
             )
 
-    def _on_terminal_scroll(self, controller, dx, dy):
-        """Handles terminal scroll events to apply custom sensitivity."""
-        try:
-            terminal = controller.get_widget()
-            scrolled_window = terminal.get_parent()
+    def _replace_sw_scroll_controller(self, sw: Gtk.ScrolledWindow) -> None:
+        """Replace ScrolledWindow's built-in scroll controller with ours.
 
-            if not isinstance(scrolled_window, Gtk.ScrolledWindow):
+        The SW's default EventControllerScroll (CAPTURE phase) would
+        consume all scroll events before child controllers can see them.
+        Replacing it gives us full control over sensitivity and kinetic.
+        """
+        # Remove SW's built-in EventControllerScroll
+        model = sw.observe_controllers()
+        to_remove = []
+        for i in range(model.get_n_items()):
+            ctrl = model.get_item(i)
+            if isinstance(ctrl, Gtk.EventControllerScroll):
+                to_remove.append(ctrl)
+        for ctrl in to_remove:
+            sw.remove_controller(ctrl)
+
+        # Add our controller on the ScrolledWindow itself
+        our_ctrl = Gtk.EventControllerScroll.new(
+            Gtk.EventControllerScrollFlags.VERTICAL
+        )
+        our_ctrl.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        our_ctrl.connect("scroll", self._on_terminal_scroll)
+        sw.add_controller(our_ctrl)
+
+    def _on_terminal_scroll(self, controller, dx, dy):
+        """Handles all terminal scroll events with custom sensitivity.
+
+        When kinetic scrolling is enabled, tracks scroll velocity and
+        starts a deceleration animation when the gesture ends.
+        """
+        try:
+            sw = controller.get_widget()
+            if not isinstance(sw, Gtk.ScrolledWindow):
                 return Gdk.EVENT_PROPAGATE
 
-            vadjustment = scrolled_window.get_vadjustment()
+            # Ctrl+Scroll → zoom, don't scroll
+            state = controller.get_current_event_state()
+            if state & Gdk.ModifierType.CONTROL_MASK:
+                self._handle_scroll_zoom(dy)
+                return Gdk.EVENT_STOP
+
+            vadjustment = sw.get_vadjustment()
             if not vadjustment:
                 return Gdk.EVENT_PROPAGATE
 
-            event = controller.get_current_event()
-            device = event.get_device() if event else None
-            source = device.get_source() if device else Gdk.InputSource.MOUSE
+            source = self._get_scroll_input_source(controller)
+            scroll_amount = self._calculate_scroll_amount(dy, vadjustment, source)
+            vadjustment.set_value(vadjustment.get_value() + scroll_amount)
 
-            if source == Gdk.InputSource.TOUCHPAD:
-                sensitivity_percent = self.terminal_manager.settings_manager.get(
-                    "touchpad_scroll_sensitivity", 30.0
-                )
-                sensitivity_factor = sensitivity_percent / 50.0
-            else:
-                sensitivity_percent = self.terminal_manager.settings_manager.get(
-                    "mouse_scroll_sensitivity", 30.0
-                )
-                sensitivity_factor = sensitivity_percent / 10.0
-
-            step = vadjustment.get_step_increment()
-            scroll_amount = dy * step * sensitivity_factor
-
-            new_value = vadjustment.get_value() + scroll_amount
-            vadjustment.set_value(new_value)
+            self._track_kinetic_scroll(sw, source, scroll_amount)
 
             return Gdk.EVENT_STOP
         except Exception as e:
             self.logger.warning(f"Error handling custom scroll: {e}")
-
         return Gdk.EVENT_PROPAGATE
+
+    def _handle_scroll_zoom(self, dy):
+        """Handle Ctrl+Scroll font size change."""
+        delta = 1 if dy < 0 else -1 if dy > 0 else 0
+        tm = self.terminal_manager
+        if delta and hasattr(tm, "settings_manager"):
+            font_string = tm.settings_manager.get("font", "Monospace 12")
+            parts = font_string.rsplit(" ", 1)
+            try:
+                family, size = parts[0], int(parts[1])
+            except (IndexError, ValueError):
+                family, size = "Monospace", 12
+            new_size = max(6, min(72, size + delta))
+            if new_size != size:
+                GLib.idle_add(tm._apply_font_size_change, family, new_size)
+
+    def _get_scroll_input_source(self, controller):
+        """Determine the input device source for a scroll event."""
+        event = controller.get_current_event()
+        device = event.get_device() if event else None
+        return device.get_source() if device else Gdk.InputSource.MOUSE
+
+    def _calculate_scroll_amount(self, dy, vadjustment, source):
+        """Calculate scroll delta based on device type and sensitivity settings."""
+        sm = self.terminal_manager.settings_manager
+        if source == Gdk.InputSource.TOUCHPAD:
+            sensitivity_factor = sm.get("touchpad_scroll_sensitivity", 30.0) / 50.0
+        else:
+            sensitivity_factor = sm.get("mouse_scroll_sensitivity", 30.0) / 10.0
+        step = vadjustment.get_step_increment()
+        return dy * step * sensitivity_factor
+
+    def _track_kinetic_scroll(self, sw, source, scroll_amount):
+        """Track scroll velocity for kinetic deceleration (touchpad only)."""
+        sm = self.terminal_manager.settings_manager
+        kinetic_raw = sm.get("kinetic_scrolling", 50)
+        # Backward compat: convert old boolean format
+        if isinstance(kinetic_raw, bool):
+            kinetic_raw = 50 if kinetic_raw else 0
+        kinetic_intensity = int(kinetic_raw)
+        if not kinetic_intensity or source != Gdk.InputSource.TOUCHPAD:
+            return
+
+        now = time.monotonic()
+        history = getattr(sw, "_k_history", None)
+        if history is None:
+            sw._k_history = []
+            history = sw._k_history
+
+        history.append((now, scroll_amount))
+        # Keep last 150 ms of history
+        cutoff = now - 0.15
+        sw._k_history = [(t, d) for t, d in history if t > cutoff]
+
+        # Cancel ongoing kinetic animation
+        anim = getattr(sw, "_k_anim", None)
+        if anim:
+            GLib.source_remove(anim)
+            sw._k_anim = None
+
+        # Reset idle-end timer (fires when no more scroll events arrive)
+        idle = getattr(sw, "_k_idle", None)
+        if idle:
+            GLib.source_remove(idle)
+        sw._k_idle = GLib.timeout_add(60, self._start_kinetic_deceleration, sw)
+
+    def _start_kinetic_deceleration(self, sw):
+        """Called ~60 ms after the last touchpad scroll event (finger lift)."""
+        sw._k_idle = None
+        history = getattr(sw, "_k_history", [])
+        if len(history) < 2:
+            sw._k_history = []
+            return GLib.SOURCE_REMOVE
+
+        # Compute average velocity (pixels per second)
+        total = sum(d for _, d in history)
+        duration = max(history[-1][0] - history[0][0], 0.016)
+        velocity = total / duration
+        sw._k_history = []
+
+        if abs(velocity) < 20:
+            return GLib.SOURCE_REMOVE
+
+        sw._k_vel = velocity
+        sw._k_time = time.monotonic()
+        # Map intensity (1-100) to friction (0.80-0.98).
+        # Higher intensity = higher friction = longer deceleration.
+        raw = self.terminal_manager.settings_manager.get("kinetic_scrolling", 50)
+        intensity = 50 if isinstance(raw, bool) and raw else int(raw) if raw else 50
+        sw._k_friction = 0.80 + max(1, min(100, intensity)) * 0.0018
+        sw._k_anim = GLib.timeout_add(16, self._kinetic_tick, sw)
+        return GLib.SOURCE_REMOVE
+
+    def _kinetic_tick(self, sw):
+        """Applies one frame of kinetic deceleration (~60 fps)."""
+        friction = getattr(sw, "_k_friction", 0.92)
+        MIN_VEL = 15.0  # pixels/second threshold to stop
+
+        now = time.monotonic()
+        dt = now - sw._k_time
+        sw._k_time = now
+
+        vadjustment = sw.get_vadjustment()
+        if not vadjustment or abs(sw._k_vel) < MIN_VEL:
+            sw._k_anim = None
+            return GLib.SOURCE_REMOVE
+
+        # Apply deceleration
+        vadjustment.set_value(vadjustment.get_value() + sw._k_vel * dt)
+        sw._k_vel *= friction ** (dt * 62.5)  # normalize to ~60 fps
+
+        return GLib.SOURCE_CONTINUE
 
     def _on_terminal_contents_changed(self, terminal: Vte.Terminal):
         """Handles smart scrolling on new terminal output."""
@@ -484,18 +615,46 @@ class TabManager:
 
             GLib.idle_add(scroll_to_end)
 
+    def _on_terminal_bell(self, terminal: Vte.Terminal) -> None:
+        """Flash the tab label briefly when a bell/BEL is received in a background tab."""
+        page = getattr(terminal, "ashy_parent_page", None)
+        if not page:
+            return
+
+        tab_widget = self._find_tab_for_page(page)
+        if not tab_widget or tab_widget == self.active_tab:
+            return
+
+        label = getattr(tab_widget, "label_widget", None)
+        if not label:
+            return
+
+        # Use CSS animation: add class, remove after timeout
+        if hasattr(tab_widget, "_bell_timeout_id"):
+            GLib.source_remove(tab_widget._bell_timeout_id)
+
+        tab_widget.add_css_class("tab-bell")
+
+        def _remove_bell_class():
+            tab_widget.remove_css_class("tab-bell")
+            if hasattr(tab_widget, "_bell_timeout_id"):
+                del tab_widget._bell_timeout_id
+            return GLib.SOURCE_REMOVE
+
+        tab_widget._bell_timeout_id = GLib.timeout_add(1500, _remove_bell_class)
+
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, session: SessionItem
     ) -> None:
-        scroll_controller = Gtk.EventControllerScroll()
-        scroll_controller.set_flags(Gtk.EventControllerScrollFlags.VERTICAL)
-        scroll_controller.connect("scroll", self._on_terminal_scroll)
-        terminal.add_controller(scroll_controller)
-
         terminal.connect("contents-changed", self._on_terminal_contents_changed)
+        terminal.connect("bell", self._on_terminal_bell)
 
         scrolled_window = Gtk.ScrolledWindow(child=terminal)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+
+        # Replace ScrolledWindow's built-in EventControllerScroll with our
+        # own so we have full control over scrolling (sensitivity + kinetic).
+        self._replace_sw_scroll_controller(scrolled_window)
 
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)
@@ -596,7 +755,10 @@ class TabManager:
         close_button = icon_button(
             "window-close-symbolic", css_classes=["circular", "flat"]
         )
+        a11y_label(close_button, _("Close tab"))
         tab_widget.append(close_button)
+        a11y_label(tab_widget, session.name)
+        a11y_desc(tab_widget, _("Terminal tab"))
 
         left_click = Gtk.GestureClick.new()
         left_click.connect("pressed", self._on_tab_clicked, tab_widget)
@@ -618,7 +780,7 @@ class TabManager:
 
         tab_widget.label_widget = label
         tab_widget.close_button = close_button  # Store direct reference
-        tab_widget._base_title = session.name
+        tab_widget._base_title = session.name or f"Terminal-{self.get_tab_count() + 1}"
         tab_widget._is_local = session.is_local()
         tab_widget.session_item = session
 
@@ -670,6 +832,14 @@ class TabManager:
         menu.append(_("Move Tab"), "win.move-tab")
         menu.append(_("Duplicate Tab"), "win.duplicate-tab")
         menu.append(_("Detach Tab"), "win.detach-tab")
+
+        color_section = Gio.Menu()
+        color_section.append(_("Tab Color…"), "win.tab-color")
+        session = getattr(tab_widget, "session_item", None)
+        if session and session.tab_color:
+            color_section.append(_("Clear Tab Color"), "win.clear-tab-color")
+        menu.append_section(None, color_section)
+
         popover = create_themed_popover_menu(menu, tab_widget)
 
         page = self.pages.get(tab_widget)
@@ -696,6 +866,23 @@ class TabManager:
                 "activate", lambda a, _, pg=page: self._request_detach_tab(pg)
             )
             action_group.add_action(action)
+
+            color_action = Gio.SimpleAction.new("tab-color", None)
+            color_action.connect(
+                "activate",
+                lambda _a, _p, tab=tab_widget, pop=popover: self._pick_tab_color(
+                    tab, pop
+                ),
+            )
+            action_group.add_action(color_action)
+
+            clear_color_action = Gio.SimpleAction.new("clear-tab-color", None)
+            clear_color_action.connect(
+                "activate",
+                lambda _a, _p, tab=tab_widget: self._clear_tab_color(tab),
+            )
+            action_group.add_action(clear_color_action)
+
             popover.insert_action_group("win", action_group)
 
         rect = Gdk.Rectangle()
@@ -703,6 +890,33 @@ class TabManager:
         rect.y = int(y)
         popover.set_pointing_to(rect)
         popover.popup()
+
+    def _pick_tab_color(self, tab_widget: Gtk.Box, popover: Gtk.Popover) -> None:
+        """Open color chooser dialog for a tab."""
+        popover.popdown()
+        dialog = Gtk.ColorDialog(title=_("Tab Color"))
+        dialog.choose_rgba(
+            self.window, None, None, self._on_tab_color_chosen, tab_widget
+        )
+
+    def _on_tab_color_chosen(self, dialog, result, tab_widget) -> None:
+        """Handle color chooser result."""
+        try:
+            color = dialog.choose_rgba_finish(result)
+        except GLib.Error:
+            return
+        color_str = f"rgba({int(color.red * 255)},{int(color.green * 255)},{int(color.blue * 255)},{color.alpha:.2f})"
+        self._apply_tab_color(tab_widget, color_str)
+        session = getattr(tab_widget, "session_item", None)
+        if session:
+            session.tab_color = color_str
+
+    def _clear_tab_color(self, tab_widget: Gtk.Box) -> None:
+        """Remove custom color from a tab."""
+        self._apply_tab_color(tab_widget, None)
+        session = getattr(tab_widget, "session_item", None)
+        if session:
+            session.tab_color = None
 
     def _request_detach_tab(self, page: Adw.ViewStackPage):
         if self.on_detach_tab_requested:
@@ -1114,9 +1328,65 @@ class TabManager:
             f"Close request for tab '{page.get_title()}' with {len(terminals_in_page)} terminals."
         )
 
+        # Check if any terminal has a foreground child process
+        if self._any_terminal_has_foreground_process(terminals_in_page):
+            self._confirm_close_tab(page, terminals_in_page)
+            return
+
         should_wait_for_exit = self._process_terminals_for_close(terminals_in_page)
 
         # If no terminal has a stable active process, close the tab immediately
+        if not should_wait_for_exit:
+            self._close_tab_by_page(page)
+
+    def _any_terminal_has_foreground_process(self, terminals: list) -> bool:
+        """Check if any terminal has a running foreground child process."""
+        try:
+            import psutil
+        except ImportError:
+            return False
+
+        for terminal in terminals:
+            terminal_id = getattr(terminal, "terminal_id", None)
+            if not terminal_id:
+                continue
+            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
+            if not info:
+                continue
+            pid = info.get("process_id")
+            if not pid or pid == -1:
+                continue
+            try:
+                proc = psutil.Process(pid)
+                children = proc.children()
+                if children:
+                    return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        return False
+
+    def _confirm_close_tab(self, page: Adw.ViewStackPage, terminals: list) -> None:
+        """Show confirmation dialog before closing tab with active process."""
+        dialog = Adw.AlertDialog(
+            heading=_("Close Tab?"),
+            body=_("A process is still running in this tab. Close anyway?"),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("close", _("Close"))
+        dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.connect("response", self._on_close_confirm_response, page, terminals)
+        dialog.present(self.window)
+
+    def _on_close_confirm_response(
+        self, dialog, response: str, page: Adw.ViewStackPage, terminals: list
+    ) -> None:
+        """Handle close confirmation dialog response."""
+        if response != "close":
+            return
+
+        should_wait_for_exit = self._process_terminals_for_close(terminals)
         if not should_wait_for_exit:
             self._close_tab_by_page(page)
 
@@ -1355,6 +1625,7 @@ class TabManager:
 
         tab_button.label_widget.set_text(display_title)
         page.set_title(display_title)
+        a11y_label(tab_button, display_title)
 
         if hasattr(self.terminal_manager.parent_window, "_update_tab_layout"):
             self.terminal_manager.parent_window._update_tab_layout()
@@ -2102,6 +2373,9 @@ class TabManager:
             self._on_move_to_tab_callback,
             self.terminal_manager.settings_manager,
         )
+        sw = new_pane.get_content()
+        if isinstance(sw, Gtk.ScrolledWindow):
+            self._replace_sw_scroll_controller(sw)
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
@@ -2120,13 +2394,17 @@ class TabManager:
                     path
                 )
             pane_to_replace.set_child(None)
-            return _create_terminal_pane(
+            wrapped = _create_terminal_pane(
                 focused_terminal,
                 title,
                 self.close_pane,
                 self._on_move_to_tab_callback,
                 self.terminal_manager.settings_manager,
             )
+            sw = wrapped.get_content()
+            if isinstance(sw, Gtk.ScrolledWindow):
+                self._replace_sw_scroll_controller(sw)
+            return wrapped
         return pane_to_replace
 
     def _insert_split_paned(
@@ -2176,15 +2454,71 @@ class TabManager:
     def _split_terminal(
         self, focused_terminal: Vte.Terminal, orientation: Gtk.Orientation
     ) -> None:
-        with self._creation_lock:
-            page = self.get_page_for_terminal(focused_terminal)
-            if not page:
-                self.logger.error("Cannot split: could not find parent page.")
-                return
+        page = self.get_page_for_terminal(focused_terminal)
+        if not page:
+            self.logger.error("Cannot split: could not find parent page.")
+            return
 
-            identifier, pane_title = self._get_terminal_identifier_and_title(
-                focused_terminal
+        identifier, pane_title = self._get_terminal_identifier_and_title(
+            focused_terminal
+        )
+
+        # If SSH, ask user whether the new split should be SSH or Local
+        if isinstance(identifier, SessionItem) and identifier.is_ssh():
+            self._show_split_type_dialog(
+                focused_terminal, orientation, identifier, pane_title, page
             )
+            return
+
+        self._perform_split(focused_terminal, orientation, identifier, pane_title, page)
+
+    def _show_split_type_dialog(
+        self,
+        focused_terminal: Vte.Terminal,
+        orientation: Gtk.Orientation,
+        identifier: SessionItem,
+        pane_title: str,
+        page,
+    ) -> None:
+        """Show dialog asking whether the new split pane should be SSH or Local."""
+        dialog = Adw.MessageDialog(
+            transient_for=self.terminal_manager.parent_window,
+            heading=_("Split Terminal"),
+            body=_("Open the new pane as SSH or Local terminal?"),
+            close_response="cancel",
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("local", _("Local"))
+        dialog.add_response("ssh", _("SSH"))
+        dialog.set_response_appearance("ssh", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("ssh")
+
+        def on_response(_dialog, response_id):
+            _dialog.close()
+            if response_id == "cancel":
+                return
+            if response_id == "local":
+                self._perform_split(
+                    focused_terminal, orientation, "Local", "Local", page
+                )
+            else:
+                self._perform_split(
+                    focused_terminal, orientation, identifier, pane_title, page
+                )
+
+        dialog.connect("response", on_response)
+        dialog.present()
+
+    def _perform_split(
+        self,
+        focused_terminal: Vte.Terminal,
+        orientation: Gtk.Orientation,
+        identifier,
+        pane_title: str,
+        page,
+    ) -> None:
+        """Execute the actual split after type has been determined."""
+        with self._creation_lock:
             new_terminal = self._create_split_terminal(identifier, pane_title)
             if not new_terminal:
                 self.logger.error("Failed to create new terminal for split.")
@@ -2406,6 +2740,9 @@ class TabManager:
             self._on_move_to_tab_callback,
             self.terminal_manager.settings_manager,
         )
+        sw = pane_widget.get_content()
+        if isinstance(sw, Gtk.ScrolledWindow):
+            self._replace_sw_scroll_controller(sw)
 
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)

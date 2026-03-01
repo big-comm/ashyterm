@@ -262,14 +262,66 @@ class BaseDialog(Adw.Window):
         value = entry.get_text().strip()
         if not value:
             entry.add_css_class("error")
-            self._validation_errors.append(_("{} is required").format(field_name))
+            error_msg = _("{} is required").format(field_name)
+            self._validation_errors.append(error_msg)
+            self._set_field_error(entry, error_msg)
             return False
         else:
             entry.remove_css_class("error")
+            self._clear_field_error(entry)
             return True
 
     def _clear_validation_errors(self):
         self._validation_errors.clear()
+
+    # =========================================================================
+    # Inline Field Error Helpers
+    # =========================================================================
+
+    _field_error_labels: dict = {}
+
+    def _set_field_error(self, widget, message: str) -> None:
+        """Show an inline error message below a form field."""
+        label = self._field_error_labels.get(id(widget))
+        if label is None:
+            label = Gtk.Label(xalign=0, wrap=True)
+            label.add_css_class("error")
+            label.add_css_class("caption")
+            label.set_margin_start(12)
+            label.set_margin_bottom(4)
+            self._field_error_labels[id(widget)] = label
+            # Insert after the widget's parent row if inside a list box
+            parent = widget.get_parent()
+            if parent and hasattr(parent, "get_parent"):
+                grandparent = parent.get_parent()
+                if isinstance(grandparent, Gtk.ListBox):
+                    row_idx = widget.get_parent().get_index()
+                    grandparent.insert(label, row_idx + 1)
+                elif isinstance(grandparent, Gtk.Box):
+                    grandparent.insert_child_after(label, parent)
+                else:
+                    parent.insert_child_after(label, widget)
+            else:
+                parent = widget.get_parent()
+                if parent:
+                    parent.insert_child_after(label, widget)
+        label.set_text(message)
+        label.set_visible(True)
+        # Also set accessible description for screen readers
+        try:
+            widget.update_property([Gtk.AccessibleProperty.DESCRIPTION], [message])
+        except Exception:
+            pass
+
+    def _clear_field_error(self, widget) -> None:
+        """Hide the inline error message for a form field."""
+        label = self._field_error_labels.get(id(widget))
+        if label is not None:
+            label.set_visible(False)
+        try:
+            widget.update_property([Gtk.AccessibleProperty.DESCRIPTION], [""])
+        except Exception:
+            pass
 
     # =========================================================================
     # Form Field Creation Helpers

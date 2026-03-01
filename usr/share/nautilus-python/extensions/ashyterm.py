@@ -8,9 +8,10 @@ GVFS mounts, and direct remote SSH connections.
 
 import gettext
 import os
+import re
 import shutil
 import subprocess
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 
 # Import 'gi' and explicitly require GTK and Nautilus versions.
 import gi
@@ -33,6 +34,8 @@ _ = gettext.gettext
 # --- Constants ---
 TERMINAL_EXECUTABLE = shutil.which("ashyterm")
 REMOTE_URI_SCHEMES = {"sftp", "ssh"}
+# Only allow safe characters in SSH hostnames and usernames
+_SAFE_SSH_RE = re.compile(r"^[a-zA-Z0-9._-]+$")
 
 
 class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
@@ -91,16 +94,26 @@ class AshyTerminalExtension(GObject.GObject, Nautilus.MenuProvider):
             hostname = parsed_uri.hostname
             if not hostname:
                 raise ValueError("Hostname is missing from the URI.")
+            if not _SAFE_SSH_RE.match(hostname):
+                raise ValueError(f"Invalid hostname: {hostname}")
 
             target = hostname
             if parsed_uri.username:
-                target = f"{parsed_uri.username}@{hostname}"
+                username = parsed_uri.username
+                if not _SAFE_SSH_RE.match(username):
+                    raise ValueError(f"Invalid username: {username}")
+                target = f"{username}@{hostname}"
 
             if parsed_uri.port:
-                target = f"{target}:{parsed_uri.port}"
+                port = int(parsed_uri.port)
+                if not (1 <= port <= 65535):
+                    raise ValueError(f"Invalid port: {port}")
+                target = f"{target}:{port}"
 
             if parsed_uri.path and parsed_uri.path != "/":
-                target = f"{target}{parsed_uri.path}"
+                # Decode percent-encoded path and normalize
+                decoded_path = unquote(parsed_uri.path)
+                target = f"{target}{decoded_path}"
 
             cmd = [TERMINAL_EXECUTABLE, "--ssh", target]
             self._launch(cmd)

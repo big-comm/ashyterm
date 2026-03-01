@@ -15,6 +15,7 @@ from ..utils.icons import icon_button
 from ..utils.logger import get_logger
 from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
+from ..utils.accessibility import set_label as a11y_label
 from .transfer_manager import TransferItem, TransferStatus, TransferType
 
 
@@ -136,6 +137,7 @@ class TransferRow(Gtk.Box):
         self.cancel_button.add_css_class("flat")
         self.cancel_button.add_css_class("circular")
         self.cancel_button.set_valign(Gtk.Align.CENTER)
+        a11y_label(self.cancel_button, _("Cancel transfer"))
         get_tooltip_helper().add_tooltip(self.cancel_button, _("Cancel"))
         self.cancel_button.connect(
             "clicked", lambda _: self.transfer_manager.cancel_transfer(self.transfer.id)
@@ -146,6 +148,7 @@ class TransferRow(Gtk.Box):
         self.remove_button.add_css_class("flat")
         self.remove_button.add_css_class("circular")
         self.remove_button.set_valign(Gtk.Align.CENTER)
+        a11y_label(self.remove_button, _("Remove transfer"))
         get_tooltip_helper().add_tooltip(self.remove_button, _("Remove"))
         self.remove_button.connect(
             "clicked", lambda _: self.on_remove_callback(self.transfer.id)
@@ -399,6 +402,7 @@ class TransferManagerDialog(Adw.Window):
         self.clear_button = Gtk.Button()
         self.clear_button.set_icon_name("user-trash-symbolic")
         self.clear_button.add_css_class("flat")
+        a11y_label(self.clear_button, _("Clear history"))
         get_tooltip_helper().add_tooltip(self.clear_button, _("Clear history"))
         self.clear_button.connect("clicked", self._on_clear_clicked)
         button_box.append(self.clear_button)
@@ -408,6 +412,7 @@ class TransferManagerDialog(Adw.Window):
         self.cancel_all_button.set_icon_name("media-playback-stop-symbolic")
         self.cancel_all_button.add_css_class("flat")
         self.cancel_all_button.add_css_class("destructive-action")
+        a11y_label(self.cancel_all_button, _("Cancel all transfers"))
         get_tooltip_helper().add_tooltip(self.cancel_all_button, _("Cancel all"))
         self.cancel_all_button.connect("clicked", self._on_cancel_all_clicked)
         button_box.append(self.cancel_all_button)

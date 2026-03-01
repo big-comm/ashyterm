@@ -12,6 +12,7 @@ from ..settings.config import DefaultSettings
 from ..settings.manager import SettingsManager
 from ..utils.icons import icon_button
 from ..utils.translation_utils import _
+from ..utils.accessibility import set_label as a11y_label
 
 
 class ThemeSelectorWidget(Gtk.Box):
@@ -29,6 +30,7 @@ class ThemeSelectorWidget(Gtk.Box):
         self.system_button = Gtk.CheckButton(tooltip_text=_("Follow System Style"))
         self.system_button.add_css_class("follow")
         self.system_button.add_css_class("theme-selector")
+        a11y_label(self.system_button, _("Follow System Style"))
         self.system_button.connect("toggled", self._on_theme_changed, "default")
 
         self.light_button = Gtk.CheckButton(
@@ -36,6 +38,7 @@ class ThemeSelectorWidget(Gtk.Box):
         )
         self.light_button.add_css_class("light")
         self.light_button.add_css_class("theme-selector")
+        a11y_label(self.light_button, _("Light Style"))
         self.light_button.connect("toggled", self._on_theme_changed, "light")
 
         self.dark_button = Gtk.CheckButton(
@@ -43,6 +46,7 @@ class ThemeSelectorWidget(Gtk.Box):
         )
         self.dark_button.add_css_class("dark")
         self.dark_button.add_css_class("theme-selector")
+        a11y_label(self.dark_button, _("Dark Style"))
         self.dark_button.connect("toggled", self._on_theme_changed, "dark")
 
         self.terminal_button = Gtk.CheckButton(
@@ -50,6 +54,7 @@ class ThemeSelectorWidget(Gtk.Box):
         )
         self.terminal_button.add_css_class("terminal")
         self.terminal_button.add_css_class("theme-selector")
+        a11y_label(self.terminal_button, _("Match Terminal Colors"))
         self.terminal_button.connect("toggled", self._on_theme_changed, "terminal")
 
         self.append(self.system_button)
@@ -92,9 +97,11 @@ class FontSizerWidget(Gtk.CenterBox):
         decrement_btn = icon_button("zoom-out-symbolic")
         decrement_btn.add_css_class("flat")
         decrement_btn.connect("clicked", self._on_decrement)
+        a11y_label(decrement_btn, _("Decrease font size"))
 
         font_size_button = Gtk.Button(css_classes=["flat"])
         font_size_button.connect("clicked", self._on_reset)
+        a11y_label(font_size_button, _("Reset font size"))
 
         self.font_size_label = Gtk.Label(label="12 pt", halign=Gtk.Align.CENTER)
         self.font_size_label.set_size_request(60, -1)
@@ -103,6 +110,7 @@ class FontSizerWidget(Gtk.CenterBox):
         increment_btn = icon_button("zoom-in-symbolic")
         increment_btn.add_css_class("flat")
         increment_btn.connect("clicked", self._on_increment)
+        a11y_label(increment_btn, _("Increase font size"))
 
         zoom_controls_box.append(decrement_btn)
         zoom_controls_box.append(font_size_button)
@@ -165,8 +173,9 @@ class MainApplicationMenu:
         main_box.append(font_sizer_widget)
         main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
 
-        menu_items = [
+        menu_items: list[dict[str, str] | str] = [
             {"label": _("New Window"), "action": "win.new-window"},
+            {"label": _("Command Palette"), "action": "win.command-palette"},
             {"label": _("Preferences"), "action": "win.preferences"},
             {
                 "label": _("Colors"),
@@ -181,6 +190,7 @@ class MainApplicationMenu:
         ]
         actions_that_close_menu = {
             "win.new-window",
+            "win.command-palette",
             "win.preferences",
             "win.highlight-settings",
             "win.configure-ai",
@@ -190,7 +200,7 @@ class MainApplicationMenu:
         app = parent_window.get_application()
 
         for item in menu_items:
-            if item == "---":
+            if isinstance(item, str):
                 main_box.append(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
             else:
                 button = Gtk.Button(
@@ -270,6 +280,27 @@ def create_root_menu(clipboard_has_content=False) -> Gio.Menu:
     return menu
 
 
+def _detect_url_at_click(terminal, click_x, click_y) -> Optional[str]:
+    """Detect a URL under the click coordinates in a VTE terminal."""
+    if click_x is None or click_y is None or not hasattr(terminal, "match_check"):
+        return None
+    try:
+        char_width = terminal.get_char_width()
+        char_height = terminal.get_char_height()
+        if char_width <= 0 or char_height <= 0:
+            return None
+        col = int(click_x / char_width)
+        row = int(click_y / char_height)
+        match_result = terminal.match_check(col, row)
+        if match_result and len(match_result) >= 2:
+            matched_text = match_result[0]
+            if matched_text and is_valid_url(matched_text):
+                return matched_text
+    except Exception:
+        pass
+    return None
+
+
 def create_terminal_menu(
     terminal,
     terminal_id: int,
@@ -280,23 +311,7 @@ def create_terminal_menu(
     """Factory function to create a terminal context menu model."""
     menu = Gio.Menu()
 
-    # URL detection
-    url_at_click = None
-    if click_x is not None and click_y is not None and hasattr(terminal, "match_check"):
-        try:
-            char_width = terminal.get_char_width()
-            char_height = terminal.get_char_height()
-            if char_width > 0 and char_height > 0:
-                col = int(click_x / char_width)
-                row = int(click_y / char_height)
-                match_result = terminal.match_check(col, row)
-                if match_result and len(match_result) >= 2:
-                    matched_text = match_result[0]
-                    if matched_text and is_valid_url(matched_text):
-                        url_at_click = matched_text
-        except Exception:
-            pass
-
+    url_at_click = _detect_url_at_click(terminal, click_x, click_y)
     if url_at_click:
         url_section = Gio.Menu()
         terminal._context_menu_url = url_at_click
@@ -304,9 +319,7 @@ def create_terminal_menu(
         url_section.append(_("Copy Link"), "win.copy-url")
         menu.append_section(None, url_section)
 
-    standard_section = Gio.Menu()
-
-    # AI Assistant section - only show if enabled and text is selected
+    # AI Assistant section
     try:
         if settings_manager and settings_manager.get("ai_assistant_enabled", False):
             has_selection = (
@@ -316,13 +329,14 @@ def create_terminal_menu(
             )
             if has_selection:
                 ai_section = Gio.Menu()
-                ai_item = Gio.MenuItem.new(_("Ask AI"), "win.ask-ai-selection")
-                # ai_item.set_icon(Gio.ThemedIcon.new("avatar-default-symbolic"))
-                ai_section.append_item(ai_item)
+                ai_section.append_item(
+                    Gio.MenuItem.new(_("Ask AI"), "win.ask-ai-selection")
+                )
                 menu.append_section(None, ai_section)
-    except Exception as e:
-        print(f"Error checking AI section: {e}")
+    except Exception:
+        pass
 
+    standard_section = Gio.Menu()
     standard_section.append(_("Copy"), "win.copy")
     standard_section.append(_("Paste"), "win.paste")
     standard_section.append(_("Select All"), "win.select-all")
@@ -330,13 +344,11 @@ def create_terminal_menu(
     menu.append_section(None, standard_section)
 
     split_section = Gio.Menu()
-    split_h_item = Gio.MenuItem.new(_("Split Left/Right"), "win.split-horizontal")
-    # split_h_item.set_icon(Gio.ThemedIcon.new("view-split-horizontal-symbolic"))
-    split_section.append_item(split_h_item)
-
-    split_v_item = Gio.MenuItem.new(_("Split Top/Bottom"), "win.split-vertical")
-    # split_v_item.set_icon(Gio.ThemedIcon.new("view-split-vertical-symbolic"))
-    split_section.append_item(split_v_item)
-
+    split_section.append_item(
+        Gio.MenuItem.new(_("Split Left/Right"), "win.split-horizontal")
+    )
+    split_section.append_item(
+        Gio.MenuItem.new(_("Split Top/Bottom"), "win.split-vertical")
+    )
     menu.append_section(None, split_section)
     return menu

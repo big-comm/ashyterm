@@ -164,8 +164,15 @@ class BackupManager:
             raise StorageReadError(
                 source_file_path, "Incorrect password or corrupted file."
             ) from e
+        # LZMA/corrupt data errors typically mean wrong password
+        err_msg = str(e).lower()
+        if "corrupt" in err_msg or "lzma" in err_msg or "decompress" in err_msg:
+            self.logger.error(f"Likely incorrect password (data error): {e}")
+            raise StorageReadError(
+                source_file_path, "Incorrect password or corrupted file."
+            ) from e
         self.logger.error(f"Failed to restore from encrypted backup: {e}")
-        raise StorageReadError(source_file_path, str(e)) from e
+        raise StorageReadError(source_file_path, "Could not restore backup.") from e
 
     def restore_from_encrypted_backup(
         self, source_file_path: str, password: str, config_dir: Path
