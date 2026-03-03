@@ -615,6 +615,26 @@ class SettingsManager:
             )
             window._transparency_css_provider = css_provider
 
+        # Ensure sidebar always has an opaque background when in flap mode
+        if hasattr(window, "sidebar_box") and window.sidebar_box:
+            sidebar = window.sidebar_box
+            auto_hide = self.get("auto_hide_sidebar", False)
+            if user_transparency > 0 and not auto_hide:
+                if not hasattr(window, "_sidebar_bg_css_provider"):
+                    sidebar_provider = Gtk.CssProvider()
+                    sidebar_provider.load_from_data(
+                        b".sidebar-container { background-color: @window_bg_color; }"
+                    )
+                    window._sidebar_bg_css_provider = sidebar_provider
+                sidebar.get_style_context().add_provider(
+                    window._sidebar_bg_css_provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1,
+                )
+            elif hasattr(window, "_sidebar_bg_css_provider"):
+                sidebar.get_style_context().remove_provider(
+                    window._sidebar_bg_css_provider
+                )
+
     def _apply_colors(self, terminal, window) -> None:
         """Apply color scheme, palette, and cursor color."""
         user_transparency = self.get("transparency", 0)

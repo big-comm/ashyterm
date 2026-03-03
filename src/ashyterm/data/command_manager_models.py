@@ -642,6 +642,41 @@ def get_builtin_commands() -> List[CommandButton]:
                 ),
             ],
         ),
+        # ping - network connectivity test
+        CommandButton(
+            id="builtin_ping",
+            name=_("ping"),
+            description=_("Test network connectivity to a host"),
+            command_template="ping {count_flag} {target}",
+            icon_name="network-transmit-receive-symbolic",
+            display_mode=DisplayMode.ICON_AND_TEXT,
+            execution_mode=ExecutionMode.SHOW_DIALOG,
+            is_builtin=True,
+            category=_("Network"),
+            sort_order=1,
+            form_fields=[
+                CommandFormField(
+                    id="target",
+                    label=_("Host"),
+                    field_type=FieldType.TEXT,
+                    default_value="",
+                    placeholder=_("e.g., google.com, 8.8.8.8"),
+                    tooltip=_("IP address or hostname to ping"),
+                    required=True,
+                    template_key="target",
+                ),
+                CommandFormField(
+                    id="count",
+                    label=_("Count"),
+                    field_type=FieldType.NUMBER,
+                    default_value="",
+                    placeholder=_("e.g., 4 (empty for unlimited)"),
+                    tooltip=_("Number of ping packets to send (leave empty for continuous)"),
+                    template_key="count_flag",
+                    min_value=1,
+                ),
+            ],
+        ),
     ]
 
 

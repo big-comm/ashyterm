@@ -259,6 +259,15 @@ class TerminalRegistry:
             if terminal_id in self._terminals:
                 self._terminals[terminal_id]["status"] = status
 
+    def get_terminal_id(self, terminal: Vte.Terminal) -> Optional[int]:
+        """Get terminal ID for a given terminal widget."""
+        with self._lock:
+            for tid, ref in self._terminal_refs.items():
+                t = ref()
+                if t is not None and t is terminal:
+                    return tid
+            return None
+
     def get_terminal(self, terminal_id: int) -> Optional[Vte.Terminal]:
         with self._lock:
             ref = self._terminal_refs.get(terminal_id)

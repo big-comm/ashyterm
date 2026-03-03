@@ -896,7 +896,7 @@ class TabManager:
         popover.popdown()
         dialog = Gtk.ColorDialog(title=_("Tab Color"))
         dialog.choose_rgba(
-            self.window, None, None, self._on_tab_color_chosen, tab_widget
+            self.view_stack.get_root(), None, None, self._on_tab_color_chosen, tab_widget
         )
 
     def _on_tab_color_chosen(self, dialog, result, tab_widget) -> None:
@@ -1377,7 +1377,7 @@ class TabManager:
         dialog.set_default_response("cancel")
         dialog.set_close_response("cancel")
         dialog.connect("response", self._on_close_confirm_response, page, terminals)
-        dialog.present(self.window)
+        dialog.present(self.view_stack.get_root())
 
     def _on_close_confirm_response(
         self, dialog, response: str, page: Adw.ViewStackPage, terminals: list
@@ -2489,6 +2489,7 @@ class TabManager:
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("local", _("Local"))
+        dialog.add_response("ssh_list", _("SSH from List"))
         dialog.add_response("ssh", _("SSH"))
         dialog.set_response_appearance("ssh", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response("ssh")
@@ -2501,12 +2502,106 @@ class TabManager:
                 self._perform_split(
                     focused_terminal, orientation, "Local", "Local", page
                 )
+            elif response_id == "ssh_list":
+                self._show_ssh_session_picker(
+                    focused_terminal, orientation, page
+                )
             else:
                 self._perform_split(
                     focused_terminal, orientation, identifier, pane_title, page
                 )
 
         dialog.connect("response", on_response)
+        dialog.present()
+
+    def _show_ssh_session_picker(
+        self,
+        focused_terminal: Vte.Terminal,
+        orientation: Gtk.Orientation,
+        page,
+    ) -> None:
+        """Show a filterable list of saved SSH sessions to choose from for the split."""
+        parent_window = self.terminal_manager.parent_window
+        session_store = getattr(parent_window, "session_store", None)
+        if not session_store:
+            self.logger.warning("No session store available for SSH session picker.")
+            return
+
+        ssh_sessions = []
+        for i in range(session_store.get_n_items()):
+            item = session_store.get_item(i)
+            if item.is_ssh():
+                ssh_sessions.append(item)
+
+        if not ssh_sessions:
+            toast = Adw.Toast(title=_("No saved SSH sessions found."))
+            if hasattr(parent_window, "toast_overlay"):
+                parent_window.toast_overlay.add_toast(toast)
+            return
+
+        dialog = Adw.Window(
+            transient_for=parent_window,
+            modal=True,
+            default_width=400,
+            default_height=450,
+            title=_("Choose SSH Session"),
+        )
+
+        toolbar_view = Adw.ToolbarView()
+        header = Adw.HeaderBar()
+        toolbar_view.add_top_bar(header)
+
+        content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        content_box.set_margin_start(12)
+        content_box.set_margin_end(12)
+        content_box.set_margin_top(8)
+        content_box.set_margin_bottom(12)
+
+        search_entry = Gtk.SearchEntry(placeholder_text=_("Filter sessions…"))
+        content_box.append(search_entry)
+
+        scrolled = Gtk.ScrolledWindow(vexpand=True)
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        listbox = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
+        listbox.add_css_class("boxed-list")
+        scrolled.set_child(listbox)
+        content_box.append(scrolled)
+
+        rows_data = []
+        for session in ssh_sessions:
+            row = Adw.ActionRow(
+                title=session.name,
+                subtitle=f"{session.user}@{session.host}",
+                activatable=True,
+            )
+            listbox.append(row)
+            rows_data.append((row, session))
+
+        def on_filter_changed(entry):
+            text = entry.get_text().lower()
+            for row, session in rows_data:
+                visible = (
+                    text in session.name.lower()
+                    or text in session.host.lower()
+                    or text in session.user.lower()
+                )
+                row.set_visible(visible)
+
+        search_entry.connect("search-changed", on_filter_changed)
+
+        def on_row_activated(_listbox, row):
+            for r, session in rows_data:
+                if r is row:
+                    dialog.close()
+                    self._perform_split(
+                        focused_terminal, orientation, session, session.name, page
+                    )
+                    return
+
+        listbox.connect("row-activated", on_row_activated)
+
+        toolbar_view.set_content(content_box)
+        dialog.set_content(toolbar_view)
         dialog.present()
 
     def _perform_split(
