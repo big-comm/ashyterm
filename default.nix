@@ -102,6 +102,7 @@ python3Packages.buildPythonApplication {
     wrapProgram $out/bin/ashyterm \
       "''${gappsWrapperArgs[@]}" \
       --prefix PATH : "${python3Packages.python}/bin" \
+      --prefix PYTHONPATH : "$PYTHONPATH" \
   '' + lib.optionalString useAllocator ''
       --set LD_PRELOAD "${libchildenv}/lib/libchildenv.so:${allocatorCfg.package}/lib/${allocatorCfg.soName}" \
       ${allocatorCfg.envArgs} \
