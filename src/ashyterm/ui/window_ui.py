@@ -735,6 +735,7 @@ class WindowUIBuilder:
         a11y_label(self.sidebar_search_entry, _("Search sessions"))
         self.sidebar_search_entry.set_margin_start(6)
         self.sidebar_search_entry.set_margin_end(6)
+        self.sidebar_search_entry.set_margin_bottom(12)
         search_container.append(self.sidebar_search_entry)
         normal_view.append(search_container)
 

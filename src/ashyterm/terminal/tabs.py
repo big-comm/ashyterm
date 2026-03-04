@@ -156,17 +156,7 @@ class TabManager:
 
     def _on_setting_changed(self, key: str, old_value, new_value):
         """Callback for settings changes to update UI elements live."""
-        if key == "headerbar_transparency" or key == "gtk_theme":
-            self._update_all_pane_headers_transparency()
-
-    def _update_all_pane_headers_transparency(self):
-        """Iterates through all panes in all tabs and reapplies transparency."""
-        for page in self.pages.values():
-            panes = []
-            self._find_panes_recursive(page.get_child(), panes)
-            for pane in panes:
-                # Transparency is handled by .header-bar CSS class globally
-                pass
+        pass
 
     def _find_panes_recursive(self, widget, panes_list: List[Adw.ToolbarView]):
         """Recursively find all Adw.ToolbarView panes within a container."""
