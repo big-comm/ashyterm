@@ -124,17 +124,11 @@ class SidebarManager:
         self, auto_hide_enabled: bool, is_initial_setup: bool = False
     ):
         """Switches the sidebar between normal (flap) and auto-hide (popover) modes."""
-        current_parent = self.sidebar_box.get_parent()
-
-        # Safely unparent the sidebar_box from its current container
-        if current_parent:
-            if isinstance(current_parent, Adw.Flap):
-                if current_parent.get_flap() == self.sidebar_box:
-                    current_parent.set_flap(None)
-            elif hasattr(current_parent, "set_child"):  # For Popover, Bin, etc.
-                current_parent.set_child(None)
-            elif hasattr(current_parent, "remove"):  # For Box, etc.
-                current_parent.remove(self.sidebar_box)
+        # Safely unparent the sidebar_box from its known containers.
+        if self.flap.get_flap() == self.sidebar_box:
+            self.flap.set_flap(None)
+        if hasattr(self.sidebar_popover, "get_child") and self.sidebar_popover.get_child() == self.sidebar_box:
+            self.sidebar_popover.set_child(None)
 
         if auto_hide_enabled:
             # Now that it's unparented, set it as the child of the popover

@@ -196,51 +196,172 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         self.logger.info("Main window initialization completed")
 
     def _show_first_run_tips(self) -> None:
-        """Show welcome overlay for first-time users."""
-        status = Adw.StatusPage(
-            title=_("Welcome to Ashy Terminal!"),
-            description="\n".join(
-                [
-                    _("Ctrl+Shift+, — Settings"),
-                    _("Ctrl+Shift+S — SSH Sessions"),
-                    _("Right-click tabs for split view"),
-                ]
-            ),
-            icon_name="utilities-terminal-symbolic",
+        """Show modern welcome overlay for first-time users."""
+        # CSS for welcome overlay styling
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(
+            b"""
+            .welcome-backdrop {
+                background: alpha(@window_bg_color, 0.94);
+            }
+            .welcome-card {
+                background: alpha(@card_bg_color, 0.85);
+                border-radius: 16px;
+                padding: 32px 40px;
+                border: 1px solid alpha(@borders, 0.3);
+                box-shadow: 0 8px 32px alpha(black, 0.3);
+            }
+            .welcome-title {
+                font-size: 22px;
+                font-weight: 800;
+            }
+            .welcome-subtitle {
+                font-size: 13px;
+                color: alpha(@theme_fg_color, 0.65);
+            }
+            .welcome-icon {
+                opacity: 0.8;
+                -gtk-icon-size: 64px;
+            }
+            .shortcut-button {
+                background: alpha(@theme_fg_color, 0.06);
+                border-radius: 12px;
+                padding: 10px 16px;
+                border: 1px solid alpha(@borders, 0.15);
+                transition: background 200ms ease;
+            }
+            .shortcut-button:hover {
+                background: alpha(@theme_fg_color, 0.12);
+            }
+            .shortcut-key {
+                font-family: monospace;
+                font-size: 11px;
+                font-weight: 700;
+                background: alpha(@theme_fg_color, 0.1);
+                border-radius: 6px;
+                padding: 3px 8px;
+                border: 1px solid alpha(@borders, 0.2);
+                min-width: 120px;
+            }
+            .shortcut-desc {
+                font-size: 13px;
+                color: alpha(@theme_fg_color, 0.85);
+            }
+            .welcome-dismiss {
+                padding: 10px 32px;
+                font-weight: 600;
+                font-size: 14px;
+            }
+            """
         )
-        status.add_css_class("compact")
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
+
+        # App icon (monochromatic symbolic)
+        app_icon = icon_image("ashyterm-symbolic", size=64)
+        app_icon.add_css_class("welcome-icon")
+        app_icon.set_halign(Gtk.Align.CENTER)
+        app_icon.set_pixel_size(64)
+
+        # Title
+        title_label = Gtk.Label(label=_("Welcome to Ashy Terminal!"))
+        title_label.add_css_class("welcome-title")
+        title_label.set_halign(Gtk.Align.CENTER)
+
+        # Subtitle
+        subtitle_label = Gtk.Label(
+            label=_("Here are some shortcuts to get you started")
+        )
+        subtitle_label.add_css_class("welcome-subtitle")
+        subtitle_label.set_halign(Gtk.Align.CENTER)
+
+        # Shortcut definitions: (key_combo, description, action_name_or_None)
+        shortcuts = [
+            ("Ctrl+Shift+,", _("Settings"), "win.preferences"),
+            ("Ctrl+Shift+S", _("SSH Sessions"), "win.toggle-sidebar"),
+            ("Ctrl+Shift+F", _("Search in Terminal"), "win.toggle-search"),
+            (_("Right-click tab"), _("Split view"), None),
+        ]
+
+        # Shortcut buttons grid
+        shortcuts_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, spacing=8
+        )
+        shortcuts_box.set_halign(Gtk.Align.CENTER)
+
+        for key_combo, description, action_name in shortcuts:
+            btn = Gtk.Button()
+            btn.add_css_class("flat")
+            btn.add_css_class("shortcut-button")
+
+            row_box = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL, spacing=14
+            )
+            row_box.set_halign(Gtk.Align.START)
+
+            # Key badge
+            key_label = Gtk.Label(label=key_combo)
+            key_label.add_css_class("shortcut-key")
+            key_label.set_halign(Gtk.Align.CENTER)
+            key_label.set_xalign(0.5)
+
+            # Description
+            desc_label = Gtk.Label(label=description)
+            desc_label.add_css_class("shortcut-desc")
+            desc_label.set_xalign(0)
+            desc_label.set_hexpand(True)
+
+            row_box.append(key_label)
+            row_box.append(desc_label)
+            btn.set_child(row_box)
+
+            # Connect action if available
+            if action_name:
+                btn.set_action_name(action_name)
+
+            shortcuts_box.append(btn)
+
+        # Dismiss button
         dismiss_btn = Gtk.Button(label=_("Get Started"))
         dismiss_btn.set_halign(Gtk.Align.CENTER)
         dismiss_btn.add_css_class("suggested-action")
         dismiss_btn.add_css_class("pill")
+        dismiss_btn.add_css_class("welcome-dismiss")
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        box.set_valign(Gtk.Align.CENTER)
-        box.set_halign(Gtk.Align.CENTER)
-        box.append(status)
-        box.append(dismiss_btn)
+        # Card layout
+        card = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, spacing=20
+        )
+        card.add_css_class("welcome-card")
+        card.set_halign(Gtk.Align.CENTER)
+        card.set_valign(Gtk.Align.CENTER)
+        card.append(app_icon)
+        card.append(title_label)
+        card.append(subtitle_label)
+        card.append(shortcuts_box)
+        card.append(dismiss_btn)
 
-        # Semi-transparent backdrop
-        bg = Gtk.Box()
-        bg.set_vexpand(True)
-        bg.set_hexpand(True)
-        provider = Gtk.CssProvider()
-        provider.load_from_data(
-            b".welcome-bg { background: alpha(@window_bg_color, 0.92); }"
-        )
-        bg.add_css_class("welcome-bg")
-        bg.get_style_context().add_provider(
-            provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
+        # Backdrop
+        backdrop = Gtk.Box()
+        backdrop.set_vexpand(True)
+        backdrop.set_hexpand(True)
+        backdrop.add_css_class("welcome-backdrop")
 
         welcome_overlay = Gtk.Overlay()
-        welcome_overlay.set_child(bg)
-        welcome_overlay.add_overlay(box)
+        welcome_overlay.set_child(backdrop)
+        welcome_overlay.add_overlay(card)
 
-        self.toast_overlay.add_overlay(welcome_overlay)
+        self.content_overlay.add_overlay(welcome_overlay)
 
         def on_dismiss(_btn):
-            self.toast_overlay.remove_overlay(welcome_overlay)
+            self.content_overlay.remove_overlay(welcome_overlay)
+            # Clean up CSS provider
+            Gtk.StyleContext.remove_provider_for_display(
+                Gdk.Display.get_default(), css_provider
+            )
 
         dismiss_btn.connect("clicked", on_dismiss)
 
@@ -323,6 +444,7 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         self.single_tab_title_widget = self.ui_builder.single_tab_title_widget
         self.title_stack = self.ui_builder.title_stack
         self.toast_overlay = self.ui_builder.toast_overlay
+        self.content_overlay = self.ui_builder.content_overlay
         self.search_bar = self.ui_builder.search_bar
         self.search_button = self.ui_builder.search_button
         self.broadcast_bar = self.ui_builder.broadcast_bar
