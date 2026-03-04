@@ -763,29 +763,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self.emit("setting-changed", key, value)
 
     def _on_auto_hide_sidebar_changed(self, new_value: bool) -> None:
-        """Handle auto-hide sidebar setting change with informational dialog."""
-        current_value = self.settings_manager.get("auto_hide_sidebar", True)
-
-        # If user is disabling auto-hide sidebar, show informational dialog
-        if current_value and not new_value:
-            self._show_sidebar_info_dialog()
-
-        # Apply the setting
+        """Handle auto-hide sidebar setting change (applies in real-time)."""
         self._on_setting_changed("auto_hide_sidebar", new_value)
-
-    def _show_sidebar_info_dialog(self) -> None:
-        """Show informational dialog about sidebar visibility changes."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading=_("Sessions Panel Visibility"),
-            body=_(
-                "The sessions panel visibility change will take effect when you close and reopen the application. "
-                "You can also toggle the sessions panel manually using Ctrl+Shift+H."
-            ),
-        )
-        dialog.add_response("ok", _("OK"))
-        dialog.set_default_response("ok")
-        dialog.present()
 
     def _on_reset_settings_clicked(self, button) -> None:
         dialog = Adw.MessageDialog(

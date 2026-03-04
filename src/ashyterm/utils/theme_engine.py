@@ -15,7 +15,7 @@ class ThemeEngine:
 
     @staticmethod
     def get_theme_params(
-        scheme: Dict[str, Any], transparency: int = 0
+        scheme: Dict[str, Any], transparency: int = 0, terminal_transparency: int = 0
     ) -> Dict[str, Any]:
         """Extract and compute theme parameters from color scheme."""
         bg_color = scheme.get("background", "#000000")
@@ -34,6 +34,7 @@ class ThemeEngine:
             "fg_color": fg_color,
             "header_bg_color": header_bg_color,
             "user_transparency": transparency,
+            "terminal_transparency": terminal_transparency,
             "luminance": luminance,
             "is_dark_theme": is_dark_theme,
         }
@@ -66,25 +67,40 @@ class ThemeEngine:
         fg = params["fg_color"]
         bg = params["bg_color"]
         header_bg = params["header_bg_color"]
+        term_transparency = params.get("terminal_transparency", 0)
+
+        # Use adaptive alpha calculation logic matching the terminal engine
+        luminance = params["luminance"]
+        boost_factor = 0.3
+        adjustment_factor = 1.0 + (boost_factor * (1.0 - luminance))
+        adjusted_transparency = min(100.0, term_transparency * adjustment_factor)
+        final_alpha = max(0.0, min(1.0, 1.0 - (adjusted_transparency / 100.0) ** 1.6))
+        
+        if final_alpha < 1.0:
+            bg_css = f"rgba({int(bg[1:3], 16)}, {int(bg[3:5], 16)}, {int(bg[5:7], 16)}, {final_alpha})"
+            header_bg_css = f"rgba({int(header_bg[1:3], 16)}, {int(header_bg[3:5], 16)}, {int(header_bg[5:7], 16)}, {final_alpha})"
+        else:
+            bg_css = bg
+            header_bg_css = header_bg
 
         return f"""
         :root {{
             /* Window and View Colors */
-            --window-bg-color: {bg};
+            --window-bg-color: {bg_css};
             --window-fg-color: {fg};
-            --view-bg-color: {bg};
+            --view-bg-color: {bg_css};
             --view-fg-color: {fg};
             
             /* Headerbar Colors */
-            --headerbar-bg-color: {header_bg};
+            --headerbar-bg-color: {header_bg_css};
             --headerbar-fg-color: {fg};
-            --headerbar-backdrop-color: {header_bg};
+            --headerbar-backdrop-color: {header_bg_css};
             --headerbar-shade-color: color-mix(in srgb, {header_bg}, black 7%);
             
             /* Popover and Dialog Colors */
-            --popover-bg-color: {bg};
+            --popover-bg-color: {bg_css};
             --popover-fg-color: {fg};
-            --dialog-bg-color: {bg};
+            --dialog-bg-color: {bg_css};
             --dialog-fg-color: {fg};
             
             /* Card and Thumbnail Colors (Common in lists) */
@@ -92,20 +108,22 @@ class ThemeEngine:
             --card-fg-color: {fg};
             
             /* Sidebar (if using split view naming) */
-            --sidebar-bg-color: {header_bg};
+            --sidebar-bg-color: {header_bg_css};
             --sidebar-fg-color: {fg};
         }}
 
-        popover.ashyterm-popover,
-        popover.sidebar-popover {{
+        popover.ashyterm-popover {{
             background-color: transparent; 
             color: var(--popover-fg-color);
         }}
 
+        popover.sidebar-popover {{
+            background-color: transparent; 
+            color: var(--sidebar-fg-color);
+        }}
+
         popover.ashyterm-popover > contents,
-        popover.sidebar-popover > contents,
-        popover.ashyterm-popover > arrow,
-        popover.sidebar-popover > arrow {{
+        popover.ashyterm-popover > arrow {{
             background-color: var(--popover-bg-color);
             color: inherit;
         }}
@@ -121,19 +139,33 @@ class ThemeEngine:
     @staticmethod
     def _get_headerbar_css(params: Dict[str, Any], gtk_theme_name: str) -> str:
         """Generate CSS purely for headerbar transparency, if enabled."""
-        user_transparency = params["user_transparency"]
+        user_transparency = params.get("user_transparency", 0)
+        
         if user_transparency == 0:
             return ""
-
+            
+        header_opacity_float = (100 - user_transparency) / 100.0
+        
+        # Calculate raw absolute RGBA bypasses GTK CSS function limitations with `var()`
         if gtk_theme_name == "terminal":
-            base_bg = params["header_bg_color"]
+            header_bg = params["header_bg_color"]
+            term_transparency = params.get("terminal_transparency", 0)
+            luminance = params["luminance"]
+            
+            # Recreate base terminal alpha factor
+            boost_factor = 0.3
+            adjustment_factor = 1.0 + (boost_factor * (1.0 - luminance))
+            adjusted_term_transparency = min(100.0, term_transparency * adjustment_factor)
+            term_alpha = max(0.0, min(1.0, 1.0 - (adjusted_term_transparency / 100.0) ** 1.6))
+            
+            # Multiply header transparency over terminal transparency
+            final_alpha = term_alpha * header_opacity_float
+            bg_css_value = f"rgba({int(header_bg[1:3], 16)}, {int(header_bg[3:5], 16)}, {int(header_bg[5:7], 16)}, {final_alpha})"
         else:
             style_manager = Adw.StyleManager.get_default()
             is_dark = style_manager.get_dark()
-            base_bg = "#303030" if is_dark else "#f0f0f0"
-
-        opacity_percent = 100 - user_transparency
-        bg_css_value = f"color-mix(in srgb, {base_bg} {opacity_percent}%, transparent)"
+            fallback_bg = "#303030" if is_dark else "#f0f0f0"
+            bg_css_value = f"rgba({int(fallback_bg[1:3], 16)}, {int(fallback_bg[3:5], 16)}, {int(fallback_bg[5:7], 16)}, {header_opacity_float})"
 
         selectors = """
         window headerbar.main-header-bar,

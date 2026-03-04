@@ -615,25 +615,7 @@ class SettingsManager:
             )
             window._transparency_css_provider = css_provider
 
-        # Ensure sidebar always has an opaque background when in flap mode
-        if hasattr(window, "sidebar_box") and window.sidebar_box:
-            sidebar = window.sidebar_box
-            auto_hide = self.get("auto_hide_sidebar", False)
-            if user_transparency > 0 and not auto_hide:
-                if not hasattr(window, "_sidebar_bg_css_provider"):
-                    sidebar_provider = Gtk.CssProvider()
-                    sidebar_provider.load_from_data(
-                        b".sidebar-container { background-color: @window_bg_color; }"
-                    )
-                    window._sidebar_bg_css_provider = sidebar_provider
-                sidebar.get_style_context().add_provider(
-                    window._sidebar_bg_css_provider,
-                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION + 1,
-                )
-            elif hasattr(window, "_sidebar_bg_css_provider"):
-                sidebar.get_style_context().remove_provider(
-                    window._sidebar_bg_css_provider
-                )
+        # Remove opaque sidebar hack to allow global transparency to penetrate
 
     def _apply_colors(self, terminal, window) -> None:
         """Apply color scheme, palette, and cursor color."""
@@ -780,9 +762,10 @@ class SettingsManager:
 
             scheme = self.get_color_scheme_data()
             gtk_theme = self.get("gtk_theme")
-            transparency = self.get("headerbar_transparency", 0)
+            header_transparency = self.get("headerbar_transparency", 0)
+            terminal_transparency = self.get("transparency", 0)
 
-            params = ThemeEngine.get_theme_params(scheme, transparency)
+            params = ThemeEngine.get_theme_params(scheme, header_transparency, terminal_transparency)
             full_css = ThemeEngine.generate_app_css(params, gtk_theme)
 
             self._app_css_provider.load_from_data(full_css.encode("utf-8"))
