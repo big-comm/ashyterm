@@ -1,12 +1,13 @@
 """Command Form Dialog — form-based command parameter entry."""
 
+import shlex
 from typing import Any, Dict, Optional
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GObject, Gtk, Pango
+from gi.repository import Adw, Gdk, Gio, GObject, Gtk, Pango
 
 from ....data.command_manager_models import (
     CommandButton,
@@ -163,24 +164,45 @@ class CommandFormDialog(Adw.Window):
         cancel_button.connect("clicked", lambda _: self.close())
         header.pack_start(cancel_button)
 
-        # Action buttons
+        # Action buttons with split button for multi-terminal option
         button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
 
-        insert_button = Gtk.Button(label=_("Insert"))
+        insert_menu = Gio.Menu()
+        insert_menu.append(_("Insert in Multiple Terminals"), "form.insert-many")
+
+        insert_button = Adw.SplitButton(
+            label=_("Insert"),
+            menu_model=insert_menu,
+        )
         get_tooltip_helper().add_tooltip(
             insert_button, _("Insert command into terminal without executing")
         )
         insert_button.connect("clicked", self._on_insert_clicked)
         button_box.append(insert_button)
 
-        execute_button = Gtk.Button(
-            label=_("Execute"), css_classes=[BaseDialog.CSS_CLASS_SUGGESTED]
+        execute_menu = Gio.Menu()
+        execute_menu.append(_("Execute in Multiple Terminals"), "form.execute-many")
+
+        execute_button = Adw.SplitButton(
+            label=_("Execute"),
+            menu_model=execute_menu,
         )
+        execute_button.add_css_class("suggested-action")
         get_tooltip_helper().add_tooltip(
             execute_button, _("Insert and execute command (Ctrl+Enter)")
         )
         execute_button.connect("clicked", self._on_execute_clicked)
         button_box.append(execute_button)
+
+        # Action group for dropdown menus
+        form_action_group = Gio.SimpleActionGroup()
+        insert_many_action = Gio.SimpleAction.new("insert-many", None)
+        insert_many_action.connect("activate", self._on_insert_to_many)
+        form_action_group.add_action(insert_many_action)
+        execute_many_action = Gio.SimpleAction.new("execute-many", None)
+        execute_many_action.connect("activate", self._on_execute_to_many)
+        form_action_group.add_action(execute_many_action)
+        self.insert_action_group("form", form_action_group)
 
         header.pack_end(button_box)
 
@@ -414,6 +436,8 @@ class CommandFormDialog(Adw.Window):
             return self._build_journalctl_command(values)
         elif self.command.id == "builtin_pacman":
             return self._build_pacman_command(values)
+        elif self.command.id == "builtin_ping":
+            return self._build_ping_command(values)
 
         # Generic handling for other commands
         return self.command.build_command(values)
@@ -629,16 +653,49 @@ class CommandFormDialog(Adw.Window):
             # Show command template even without package
             return f"sudo pacman {action}"
 
+    def _build_ping_command(self, values: Dict[str, Any]) -> str:
+        """Build ping command with optional count flag."""
+        parts = ["ping"]
+
+        count = values.get("count", "").strip()
+        if count:
+            try:
+                n = int(count)
+                if n > 0:
+                    parts.append(f"-c {n}")
+            except (ValueError, TypeError):
+                pass
+
+        target = values.get("target", "").strip()
+        if target:
+            parts.append(shlex.quote(target))
+
+        return " ".join(parts)
+
     def _on_insert_clicked(self, button):
         """Insert command without executing."""
         values = self._get_field_values()
         command = self._build_command_from_values(values)
-        self.emit("command-ready", command, False, self.send_to_all)
+        self.emit("command-ready", command, False, False)
         self.close()
 
     def _on_execute_clicked(self, button):
         """Insert and execute command."""
         values = self._get_field_values()
         command = self._build_command_from_values(values)
-        self.emit("command-ready", command, True, self.send_to_all)
+        self.emit("command-ready", command, True, False)
+        self.close()
+
+    def _on_insert_to_many(self, action, param):
+        """Insert command to multiple terminals."""
+        values = self._get_field_values()
+        command = self._build_command_from_values(values)
+        self.emit("command-ready", command, False, True)
+        self.close()
+
+    def _on_execute_to_many(self, action, param):
+        """Execute command in multiple terminals."""
+        values = self._get_field_values()
+        command = self._build_command_from_values(values)
+        self.emit("command-ready", command, True, True)
         self.close()

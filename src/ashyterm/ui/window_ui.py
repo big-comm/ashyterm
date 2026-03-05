@@ -98,6 +98,7 @@ class WindowUIBuilder:
         self.single_tab_title_widget = None
         self.title_stack = None
         self.toast_overlay = None
+        self.content_overlay = None
         self.search_bar = None
         self.search_button = None
         self.broadcast_bar = None
@@ -734,6 +735,7 @@ class WindowUIBuilder:
         a11y_label(self.sidebar_search_entry, _("Search sessions"))
         self.sidebar_search_entry.set_margin_start(6)
         self.sidebar_search_entry.set_margin_end(6)
+        self.sidebar_search_entry.set_margin_bottom(12)
         search_container.append(self.sidebar_search_entry)
         normal_view.append(search_container)
 
@@ -761,9 +763,15 @@ class WindowUIBuilder:
         self.toast_overlay = Adw.ToastOverlay(child=view_stack)
         self.toast_overlay.set_vexpand(True)
 
+        # Wrap toast_overlay in a Gtk.Overlay for general-purpose overlays
+        # (e.g. the first-run welcome screen). Adw.ToastOverlay only supports
+        # toasts; Gtk.Overlay provides add_overlay()/remove_overlay().
+        self.content_overlay = Gtk.Overlay(child=self.toast_overlay)
+        self.content_overlay.set_vexpand(True)
+
         # Use Paned for AI panel resize capability
         self.ai_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
-        self.ai_paned.set_start_child(self.toast_overlay)
+        self.ai_paned.set_start_child(self.content_overlay)
         self.ai_paned.set_resize_start_child(True)
         self.ai_paned.set_shrink_start_child(False)
 

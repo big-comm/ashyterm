@@ -30,6 +30,16 @@ class FileTransferMixin:
             modal=True,
             accept_label=_("Download Here"),
         )
+
+        # Remember last download folder
+        last_folder = getattr(self, "_last_download_folder", None)
+        if not last_folder and hasattr(self, "settings_manager") and self.settings_manager:
+            last_folder = self.settings_manager.get("last_download_folder", "")
+        if last_folder:
+            folder_file = Gio.File.new_for_path(last_folder)
+            if folder_file.query_exists():
+                dialog.set_initial_folder(folder_file)
+
         dialog.select_folder(
             self.parent_window, None, self._on_download_dialog_response, items
         )
@@ -41,6 +51,12 @@ class FileTransferMixin:
                 return
 
             dest_path = Path(dest_folder.get_path())
+
+            # Persist selected folder for next time
+            self._last_download_folder = str(dest_path)
+            if hasattr(self, "settings_manager") and self.settings_manager:
+                self.settings_manager.set("last_download_folder", str(dest_path))
+
             threading.Thread(
                 target=self._prepare_and_start_downloads,
                 args=(items, dest_path),
@@ -143,6 +159,16 @@ class FileTransferMixin:
             modal=True,
             accept_label=_("Upload"),
         )
+
+        # Remember last upload folder
+        last_folder = getattr(self, "_last_upload_folder", None)
+        if not last_folder and hasattr(self, "settings_manager") and self.settings_manager:
+            last_folder = self.settings_manager.get("last_upload_folder", "")
+        if last_folder:
+            folder_file = Gio.File.new_for_path(last_folder)
+            if folder_file.query_exists():
+                dialog.set_initial_folder(folder_file)
+
         dialog.open_multiple(self.parent_window, None, self._on_upload_dialog_response)
 
     def _on_upload_dialog_response(self, source, result):
@@ -150,6 +176,13 @@ class FileTransferMixin:
             files = source.open_multiple_finish(result)
             if files:
                 local_paths = [Path(gio_file.get_path()) for gio_file in files]
+
+                # Persist selected folder for next time
+                first_parent = str(local_paths[0].parent)
+                self._last_upload_folder = first_parent
+                if hasattr(self, "settings_manager") and self.settings_manager:
+                    self.settings_manager.set("last_upload_folder", first_parent)
+
                 self._prepare_and_start_uploads(local_paths)
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):

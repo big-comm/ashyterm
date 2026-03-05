@@ -236,7 +236,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         """
         Periodic check to detect manual SSH sessions in local terminals.
 
-        This runs every 2 seconds and checks for manual SSH sessions.
+        This runs every 3 seconds and checks for manual SSH sessions.
         Note: Context-aware highlighting is now handled by CommandDetector
         which parses the terminal output stream in real-time.
         """

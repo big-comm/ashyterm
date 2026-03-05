@@ -6,7 +6,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GLib, GObject, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk
 
 from ....data.command_manager_models import (
     CommandButton,
@@ -150,14 +150,6 @@ class CommandManagerDialog(Adw.Window):
             margin_end=16,
         )
 
-        # Subtle hint label
-        hint_label = Gtk.Label(
-            label=_("Send to all terminals"),
-            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL, "caption"],
-            halign=Gtk.Align.START,
-        )
-        input_section.append(hint_label)
-
         # Unified container with text input and button using overlay
         input_overlay = Gtk.Overlay()
 
@@ -186,15 +178,27 @@ class CommandManagerDialog(Adw.Window):
         input_frame.set_child(scrolled_text)
         input_overlay.set_child(input_frame)
 
-        # Execute button overlaid on the right side, vertically centered
-        self.execute_button = Gtk.Button(
+        # Execute split button overlaid on the right side, vertically centered
+        execute_menu = Gio.Menu()
+        execute_menu.append(_("Execute in Multiple Terminals"), "execute.send-to-many")
+
+        self.execute_button = Adw.SplitButton(
             label=_("Execute"),
-            css_classes=[BaseDialog.CSS_CLASS_SUGGESTED],
+            menu_model=execute_menu,
             halign=Gtk.Align.END,
             valign=Gtk.Align.CENTER,
             margin_end=8,
         )
+        self.execute_button.add_css_class("suggested-action")
         self.execute_button.connect("clicked", self._on_execute_clicked)
+
+        # Action group for the dropdown menu
+        execute_action_group = Gio.SimpleActionGroup()
+        send_many_action = Gio.SimpleAction.new("send-to-many", None)
+        send_many_action.connect("activate", self._on_execute_to_many)
+        execute_action_group.add_action(send_many_action)
+        self.insert_action_group("execute", execute_action_group)
+
         input_overlay.add_overlay(self.execute_button)
 
         input_section.append(input_overlay)
@@ -325,7 +329,6 @@ class CommandManagerDialog(Adw.Window):
     def _on_command_activated(self, widget, command: CommandButton):
         """Handle command button click."""
         if command.execution_mode == ExecutionMode.SHOW_DIALOG:
-            # Show form dialog first
             dialog = CommandFormDialog(
                 self.parent_window,
                 command,
@@ -335,7 +338,6 @@ class CommandManagerDialog(Adw.Window):
             dialog.connect("command-ready", self._on_form_command_ready)
             dialog.present()
         else:
-            # Send command directly to the current terminal
             cmd_text = command.command_template
             execute = command.execution_mode == ExecutionMode.INSERT_AND_EXECUTE
             self.emit("command-selected", cmd_text, execute)
@@ -564,12 +566,22 @@ class CommandManagerDialog(Adw.Window):
             self.close()
 
     def _on_execute_clicked(self, button):
-        """Handle execute button click - shows terminal selection dialog."""
+        """Handle execute button click - sends to current terminal."""
         command = self.command_textview.get_text().strip()
         if not command:
             return
 
-        self._show_terminal_selection_dialog(command, execute=True)
+        self.emit("command-selected", command, True)
+        self.command_textview.set_text("")
+        self.close()
+
+    def _on_execute_to_many(self, action, param):
+        """Handle 'Execute in Multiple Terminals' from dropdown menu."""
+        command = self.command_textview.get_text().strip()
+        if not command:
+            return
+
+        self._show_terminal_selection_dialog(command, execute=True, pre_select_all=True)
         self.command_textview.set_text("")
 
     def _on_add_clicked(self, button):

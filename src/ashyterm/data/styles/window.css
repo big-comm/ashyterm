@@ -129,9 +129,17 @@ popover.menu separator {
 
 /* Tab bell animation */
 @keyframes tab-bell-flash {
-    0%   { background: @warning_bg_color; }
-    50%  { background: transparent; }
-    100% { background: @warning_bg_color; }
+    0% {
+        background: @warning_bg_color;
+    }
+
+    50% {
+        background: transparent;
+    }
+
+    100% {
+        background: @warning_bg_color;
+    }
 }
 
 .custom-tab-button.tab-bell {
@@ -219,15 +227,25 @@ popover.menu separator {
     background: transparent;
 }
 
+/* Sidebar popover overrides for a perfectly flat, borderless look */
+popover.sidebar-popover>contents {
+    padding: 0;
+    background: var(--sidebar-bg-color, @view_bg_color);
+}
+
+popover.sidebar-popover>arrow {
+    background: var(--sidebar-bg-color, @view_bg_color);
+}
+
 /* Sidebar container - simple box layout */
 .sidebar-container {
     min-width: 350px;
-    background: var(--bg-color);
+    background: var(--sidebar-bg-color, @view_bg_color);
 }
 
 /* Sidebar toolbar */
 .sidebar-toolbar {
-    background: var(--bg-color);
+    background: var(--sidebar-bg-color, @view_bg_color);
     padding-top: 2px;
 }
 

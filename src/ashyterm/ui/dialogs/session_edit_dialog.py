@@ -141,11 +141,9 @@ class SessionEditDialog(BaseDialog):
 
             # Create all sections
             self._create_name_section(prefs_page)
-            if self.folder_store:
-                self._create_folder_section(prefs_page)
-            self._create_highlighting_section(prefs_page)
             self._create_local_terminal_section(prefs_page)
             self._create_ssh_section(prefs_page)
+            self._create_additional_section(prefs_page)
 
             self._update_ssh_visibility()
             self._update_local_visibility()
@@ -210,7 +208,13 @@ class SessionEditDialog(BaseDialog):
         )
         name_group.add(self.type_combo)
 
-        # Tab Color - using Adw.ActionRow with color button
+        parent.add(name_group)
+
+    def _create_additional_section(self, parent: Adw.PreferencesPage) -> None:
+        """Create the additional settings section: Tab Color, Folder, Highlighting."""
+        additional_group = Adw.PreferencesGroup()
+
+        # Tab Color
         color_row = Adw.ActionRow(
             title=_("Tab Color"),
             subtitle=_("Choose a color to identify this session's tab"),
@@ -219,13 +223,10 @@ class SessionEditDialog(BaseDialog):
         color_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         color_box.set_valign(Gtk.Align.CENTER)
 
-        # Replaced Gtk.ColorButton with standard Gtk.Button + Gtk.ColorDialog (Async)
-        # to prevent segmentation faults on Wayland during dialog destruction.
         self.color_button = Gtk.Button(valign=Gtk.Align.CENTER)
         self.color_button.connect("clicked", self._on_select_color_clicked)
         a11y_label(self.color_button, _("Select tab color"))
 
-        # Initial color setup
         initial_rgba = Gdk.RGBA()
         if self.editing_session.tab_color and initial_rgba.parse(
             self.editing_session.tab_color
@@ -245,17 +246,23 @@ class SessionEditDialog(BaseDialog):
         color_box.append(self.color_button)
         color_box.append(clear_button)
         color_row.add_suffix(color_box)
-        name_group.add(color_row)
+        additional_group.add(color_row)
 
-        parent.add(name_group)
+        # Folder (ExpanderRow)
+        if self.folder_store:
+            self._add_folder_expander(additional_group)
 
-    def _create_folder_section(self, parent: Adw.PreferencesPage) -> None:
-        """Create the folder organization section."""
-        folder_group = Adw.PreferencesGroup(
+        # Highlighting (ExpanderRow)
+        self._add_highlighting_expander(additional_group)
+
+        parent.add(additional_group)
+
+    def _add_folder_expander(self, group: Adw.PreferencesGroup) -> None:
+        """Add folder selection as a collapsible ExpanderRow to a group."""
+        folder_expander = Adw.ExpanderRow(
             title=_("Organization"),
-            description=_("Choose where to store this session"),
+            subtitle=_("Choose where to store this session"),
         )
-
         folder_row = Adw.ComboRow(
             title=_("Folder"),
             subtitle=_("Select a folder to organize this session"),
@@ -288,8 +295,89 @@ class SessionEditDialog(BaseDialog):
         folder_row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_folder_changed)
         self.folder_combo = folder_row
 
-        folder_group.add(folder_row)
-        parent.add(folder_group)
+        folder_expander.add_row(folder_row)
+        group.add(folder_expander)
+
+    def _add_highlighting_expander(self, group: Adw.PreferencesGroup) -> None:
+        """Add highlighting settings as a collapsible ExpanderRow to a group."""
+        self._updating_highlighting_ui = False
+
+        highlight_expander = Adw.ExpanderRow(
+            title=_("Highlighting"),
+            subtitle=_(
+                "Override global highlighting preferences per session"
+            ),
+        )
+        warning_row = Adw.ActionRow(
+            title=_("Experimental Feature"),
+            subtitle=_(
+                "Per-session highlighting overrides are experimental and may change."
+            ),
+        )
+        warning_row.add_prefix(Gtk.Image.new_from_icon_name("dialog-warning-symbolic"))
+        highlight_expander.add_row(warning_row)
+
+        has_custom_overrides = any(
+            getattr(self.editing_session, key, None) is not None
+            for key in (
+                "output_highlighting",
+                "command_specific_highlighting",
+                "cat_colorization",
+                "shell_input_highlighting",
+            )
+        )
+
+        self.highlighting_customize_switch = Adw.SwitchRow(
+            title=_("Customize highlighting for this session"),
+            subtitle=_("When off, this session uses the global highlighting settings"),
+        )
+        self.highlighting_customize_switch.set_active(has_custom_overrides)
+        self.highlighting_customize_switch.connect(
+            BaseDialog.SIGNAL_NOTIFY_ACTIVE,
+            self._on_highlighting_customize_switch_changed,
+        )
+        highlight_expander.add_row(self.highlighting_customize_switch)
+
+        self.output_highlighting_row = self._create_tristate_combo_row(
+            title=_("Output Highlighting"),
+            subtitle=_("Enable/disable output highlighting for this session"),
+            initial_value=getattr(self.editing_session, "output_highlighting", None),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        highlight_expander.add_row(self.output_highlighting_row)
+
+        self.command_specific_highlighting_row = self._create_tristate_combo_row(
+            title=_("Command-Specific Highlighting"),
+            subtitle=_("Use context-aware rules for specific commands"),
+            initial_value=getattr(
+                self.editing_session, "command_specific_highlighting", None
+            ),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        highlight_expander.add_row(self.command_specific_highlighting_row)
+
+        self.cat_colorization_row = self._create_tristate_combo_row(
+            title=_("{} Command Colorization").format("cat"),
+            subtitle=_("Colorize file content output using syntax highlighting"),
+            initial_value=getattr(self.editing_session, "cat_colorization", None),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        highlight_expander.add_row(self.cat_colorization_row)
+
+        self.shell_input_highlighting_row = self._create_tristate_combo_row(
+            title=_("Shell Input Highlighting"),
+            subtitle=_("Highlight commands as you type at the shell prompt"),
+            initial_value=getattr(
+                self.editing_session, "shell_input_highlighting", None
+            ),
+            on_changed=self._on_highlighting_override_changed,
+        )
+        highlight_expander.add_row(self.shell_input_highlighting_row)
+
+        self._set_highlighting_overrides_visible(has_custom_overrides)
+        highlight_expander.set_expanded(has_custom_overrides)
+
+        group.add(highlight_expander)
 
     # ---------------------------------------------------------------------
     # Highlighting overrides
@@ -393,92 +481,9 @@ class SessionEditDialog(BaseDialog):
         # Sync editing_session state.
         self._on_highlighting_override_changed()
 
-    def _create_highlighting_section(self, parent: Adw.PreferencesPage) -> None:
-        group = Adw.PreferencesGroup(
-            title=_("Highlighting"),
-            description=_(
-                "Highlighting adds colors to make terminal text easier to read. You can override global preferences per session."
-            ),
-        )
-
-        warning_row = Adw.ActionRow(
-            title=_("Experimental Feature"),
-            subtitle=_(
-                "Per-session highlighting overrides are experimental and may change."
-            ),
-        )
-        warning_row.add_prefix(Gtk.Image.new_from_icon_name("dialog-warning-symbolic"))
-        group.add(warning_row)
-
-        has_custom_overrides = any(
-            getattr(self.editing_session, key, None) is not None
-            for key in (
-                "output_highlighting",
-                "command_specific_highlighting",
-                "cat_colorization",
-                "shell_input_highlighting",
-            )
-        )
-
-        self.highlighting_customize_switch = Adw.SwitchRow(
-            title=_("Customize highlighting for this session"),
-            subtitle=_("When off, this session uses the global highlighting settings"),
-        )
-        self.highlighting_customize_switch.set_active(has_custom_overrides)
-        self.highlighting_customize_switch.connect(
-            BaseDialog.SIGNAL_NOTIFY_ACTIVE,
-            self._on_highlighting_customize_switch_changed,
-        )
-        group.add(self.highlighting_customize_switch)
-
-        self.output_highlighting_row = self._create_tristate_combo_row(
-            title=_("Output Highlighting"),
-            subtitle=_("Enable/disable output highlighting for this session"),
-            initial_value=getattr(self.editing_session, "output_highlighting", None),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        group.add(self.output_highlighting_row)
-
-        self.command_specific_highlighting_row = self._create_tristate_combo_row(
-            title=_("Command-Specific Highlighting"),
-            subtitle=_("Use context-aware rules for specific commands"),
-            initial_value=getattr(
-                self.editing_session, "command_specific_highlighting", None
-            ),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        group.add(self.command_specific_highlighting_row)
-
-        # NOTE: 'cat' is a terminal command, so we don't translate it
-        # Use format string to keep 'cat' untranslated while translating the rest
-        self.cat_colorization_row = self._create_tristate_combo_row(
-            title=_("{} Command Colorization").format("cat"),
-            subtitle=_("Colorize file content output using syntax highlighting"),
-            initial_value=getattr(self.editing_session, "cat_colorization", None),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        group.add(self.cat_colorization_row)
-
-        self.shell_input_highlighting_row = self._create_tristate_combo_row(
-            title=_("Shell Input Highlighting"),
-            subtitle=_("Highlight commands as you type at the shell prompt"),
-            initial_value=getattr(
-                self.editing_session, "shell_input_highlighting", None
-            ),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        group.add(self.shell_input_highlighting_row)
-
-        # Only show the per-setting overrides when customization is enabled.
-        self._set_highlighting_overrides_visible(has_custom_overrides)
-
-        parent.add(group)
-
     def _create_local_terminal_section(self, parent: Adw.PreferencesPage) -> None:
-        """Create the Local Terminal configuration section."""
-        local_group = Adw.PreferencesGroup(
-            title=_("Local Terminal Options"),
-        )
+        """Create the Local Terminal configuration section (no title)."""
+        local_group = Adw.PreferencesGroup()
 
         # Start in Folder - using Adw.ActionRow with entry and browse button
         working_dir_row = Adw.ActionRow(
@@ -516,18 +521,18 @@ class SessionEditDialog(BaseDialog):
         working_dir_row.add_suffix(working_dir_box)
         local_group.add(working_dir_row)
 
-        parent.add(local_group)
-
-        # Startup Commands - separate group for better visual organization
-        startup_commands_group = Adw.PreferencesGroup(
+        # Startup Commands as collapsible ExpanderRow
+        startup_expander = Adw.ExpanderRow(
             title=_("Startup Commands"),
-            description=_(
-                "Commands executed when the terminal starts (one per line). "
-                "You can write multiple commands like a small script."
+            subtitle=_(
+                "Commands executed when the terminal starts"
             ),
         )
+        # Container for BashTextView
+        startup_container = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL, spacing=0
+        )
 
-        # Create a scrolled window with BashTextView for syntax-highlighted multi-line input
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_min_content_height(130)
         scrolled.set_max_content_height(220)
@@ -538,18 +543,15 @@ class SessionEditDialog(BaseDialog):
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled.add_css_class("startup-commands-container")
 
-        # Use BashTextView for syntax highlighting (no auto-resize since we have scrolled window)
         self.local_startup_command_view = BashTextView(
             auto_resize=False, min_lines=3, max_lines=10
         )
-        # Use default BashTextView spacing - no need to override pixels_above/below_lines
         self.local_startup_command_view.set_top_margin(10)
         self.local_startup_command_view.set_bottom_margin(10)
         self.local_startup_command_view.set_left_margin(12)
         self.local_startup_command_view.set_right_margin(12)
         self.local_startup_command_view.add_css_class("startup-commands-text")
 
-        # Set initial text
         self.local_startup_command_view.set_text(
             self.editing_session.local_startup_command or ""
         )
@@ -557,46 +559,49 @@ class SessionEditDialog(BaseDialog):
             "changed", self._on_local_startup_command_changed
         )
 
-        # Apply color scheme if available
         self._apply_bash_colors(self.local_startup_command_view)
 
         scrolled.set_child(self.local_startup_command_view)
-        startup_commands_group.add(scrolled)
+        startup_container.append(scrolled)
+        startup_expander.add_row(startup_container)
 
-        # Store reference to the startup commands group for visibility control
-        self.startup_commands_group = startup_commands_group
-        parent.add(startup_commands_group)
+        # Expand if there are existing startup commands
+        has_commands = bool(
+            self.editing_session.local_startup_command
+            and self.editing_session.local_startup_command.strip()
+        )
+        startup_expander.set_expanded(has_commands)
 
-        # Store reference to the local terminal group for visibility control
+        local_group.add(startup_expander)
+
+        # Both controlled together for visibility
+        self.startup_commands_group = None
         self.local_terminal_group = local_group
+        parent.add(local_group)
 
     def _create_ssh_section(self, parent: Adw.PreferencesPage) -> None:
         """Create the SSH configuration section with proper Adw widgets."""
-        ssh_group = Adw.PreferencesGroup(
-            title=_("SSH Configuration"),
-        )
+        ssh_group = Adw.PreferencesGroup()
 
-        # Server Address - using helper
-        self.host_row = self._create_entry_row(
-            title=_("Server Address"),
-            text=self.editing_session.host or "",
-            on_changed=self._on_host_changed,
-        )
-        ssh_group.add(self.host_row)
-        # Keep reference with old name for compatibility
-        self.host_entry = self.host_row
-
-        # Username - using helper
+        # Username first
         self.user_row = self._create_entry_row(
             title=_("Username"),
             text=self.editing_session.user or "",
             on_changed=self._on_user_changed,
         )
         ssh_group.add(self.user_row)
-        # Keep reference with old name for compatibility
         self.user_entry = self.user_row
 
-        # Port - using helper
+        # Server Address
+        self.host_row = self._create_entry_row(
+            title=_("Server Address"),
+            text=self.editing_session.host or "",
+            on_changed=self._on_host_changed,
+        )
+        ssh_group.add(self.host_row)
+        self.host_entry = self.host_row
+
+        # Port
         self.port_row = self._create_spin_row(
             title=_("Port"),
             value=self.editing_session.port or 22,
@@ -605,7 +610,6 @@ class SessionEditDialog(BaseDialog):
             on_changed=lambda val: self._on_port_changed(val),
         )
         ssh_group.add(self.port_row)
-        # Keep reference with old name for compatibility
         self.port_entry = self.port_row
 
         # Authentication Method - using Adw.ComboRow
@@ -614,7 +618,10 @@ class SessionEditDialog(BaseDialog):
             subtitle=_("Choose how to authenticate with the server"),
         )
         self.auth_combo.set_model(Gtk.StringList.new([_("SSH Key"), _("Password")]))
-        self.auth_combo.set_selected(0 if self.editing_session.uses_key_auth() else 1)
+        if self.is_new_item:
+            self.auth_combo.set_selected(1)  # Default to Password for new sessions
+        else:
+            self.auth_combo.set_selected(0 if self.editing_session.uses_key_auth() else 1)
         self.auth_combo.connect(
             BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_auth_changed
         )
@@ -692,16 +699,16 @@ class SessionEditDialog(BaseDialog):
         self.ssh_box = ssh_group
         parent.add(ssh_group)
 
-        # Create additional SSH options in a separate group
-        self._create_ssh_options_group(parent)
+        # Create SSH options as ExpanderRow inside the same group
+        self._create_ssh_options_group(ssh_group)
 
-    def _create_ssh_options_group(self, parent: Adw.PreferencesPage) -> None:
-        """Create additional SSH options like post-login command, X11, SFTP."""
-        # Post-login command section - dedicated group with switch and command input
-        post_login_group = Adw.PreferencesGroup(
+    def _create_ssh_options_group(self, ssh_group: Adw.PreferencesGroup) -> None:
+        """Create additional SSH options in a collapsible expander."""
+
+        ssh_options_expander = Adw.ExpanderRow(
             title=_("SSH Options"),
+            subtitle=_("Post-login commands, forwarding, and SFTP"),
         )
-
         # Post-login command toggle using SwitchRow
         self.post_login_switch = Adw.SwitchRow(
             title=_("Run Command After Login"),
@@ -712,7 +719,7 @@ class SessionEditDialog(BaseDialog):
         self.post_login_switch.connect(
             BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_post_login_toggle
         )
-        post_login_group.add(self.post_login_switch)
+        ssh_options_expander.add_row(self.post_login_switch)
 
         # Command input container - shown/hidden based on switch
         self.post_login_command_container = Gtk.Box(
@@ -753,18 +760,13 @@ class SessionEditDialog(BaseDialog):
 
         post_login_scrolled.set_child(self.post_login_text_view)
         self.post_login_command_container.append(post_login_scrolled)
-        post_login_group.add(self.post_login_command_container)
+        ssh_options_expander.add_row(self.post_login_command_container)
 
         # Keep legacy references
         self.post_login_entry = self.post_login_text_view
         self.post_login_expander = None
         self.post_login_command_row = self.post_login_switch
-        self.post_login_command_group = post_login_group
-
-        parent.add(post_login_group)
-
-        # Other SSH options in a separate group
-        options_group = Adw.PreferencesGroup()
+        self.post_login_command_group = ssh_group
 
         # X11 Forwarding toggle
         self.x11_switch = Adw.SwitchRow(
@@ -773,7 +775,7 @@ class SessionEditDialog(BaseDialog):
         )
         self.x11_switch.set_active(self.editing_session.x11_forwarding)
         self.x11_switch.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_x11_toggled)
-        options_group.add(self.x11_switch)
+        ssh_options_expander.add_row(self.x11_switch)
 
         # SFTP toggle
         self.sftp_switch = Adw.SwitchRow(
@@ -782,7 +784,7 @@ class SessionEditDialog(BaseDialog):
         )
         self.sftp_switch.set_active(self.editing_session.sftp_session_enabled)
         self.sftp_switch.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_sftp_toggle)
-        options_group.add(self.sftp_switch)
+        ssh_options_expander.add_row(self.sftp_switch)
 
         # SFTP Local Directory - using helper
         self.sftp_local_entry = self._create_entry_row(
@@ -790,7 +792,7 @@ class SessionEditDialog(BaseDialog):
             text=self.editing_session.sftp_local_directory or "",
             on_changed=self._on_validated_entry_changed,
         )
-        options_group.add(self.sftp_local_entry)
+        ssh_options_expander.add_row(self.sftp_local_entry)
         self.sftp_local_row = self.sftp_local_entry
 
         # SFTP Remote Directory - using helper
@@ -799,14 +801,14 @@ class SessionEditDialog(BaseDialog):
             text=self.editing_session.sftp_remote_directory or "",
             on_changed=self._on_sftp_remote_changed,
         )
-        options_group.add(self.sftp_remote_entry)
+        ssh_options_expander.add_row(self.sftp_remote_entry)
         self.sftp_remote_row = self.sftp_remote_entry
 
-        # Port Forwarding section (inside SSH Options)
-        self._create_port_forward_widgets(options_group)
+        # Port Forwarding section (inside SSH Options expander)
+        self._create_port_forward_widgets_expander(ssh_options_expander)
 
-        self.ssh_options_group = options_group
-        parent.add(options_group)
+        ssh_group.add(ssh_options_expander)
+        self.ssh_options_group = ssh_group
 
         # Update initial visibility
         self._update_post_login_command_state()
@@ -853,6 +855,46 @@ class SessionEditDialog(BaseDialog):
         # Keep reference for visibility control (use parent_group as proxy)
         self.port_forward_group = parent_group
 
+        self._refresh_port_forward_list()
+
+    def _create_port_forward_widgets_expander(
+        self, parent_expander: Adw.ExpanderRow
+    ) -> None:
+        """Create port forwarding widgets inside an ExpanderRow."""
+        port_forward_header = Adw.ActionRow(
+            title=_("Port Forwarding"),
+            subtitle=_("Create SSH tunnels to forward ports"),
+        )
+        port_forward_header.set_activatable(False)
+        parent_expander.add_row(port_forward_header)
+
+        add_row = Adw.ActionRow(
+            title=_("Add Port Forward"),
+            subtitle=_("Create a new SSH tunnel"),
+        )
+        add_row.set_activatable(True)
+        add_button = Gtk.Button(icon_name="list-add-symbolic")
+        add_button.set_valign(Gtk.Align.CENTER)
+        add_button.add_css_class(BaseDialog.CSS_CLASS_FLAT)
+        a11y_label(add_button, _("Add port forward"))
+        add_row.add_suffix(add_button)
+        add_row.set_activatable_widget(add_button)
+        add_button.connect("clicked", self._on_add_port_forward_clicked)
+        parent_expander.add_row(add_row)
+        self.port_forward_add_button = add_button
+        self.port_forward_add_row = add_row
+
+        self.port_forward_list = Gtk.ListBox()
+        self.port_forward_list.set_selection_mode(Gtk.SelectionMode.NONE)
+        self.port_forward_list.add_css_class(BaseDialog.CSS_CLASS_BOXED_LIST)
+        a11y_label(self.port_forward_list, _("Port forwarding rules"))
+
+        list_row = Adw.ActionRow()
+        list_row.set_child(self.port_forward_list)
+        parent_expander.add_row(list_row)
+        self.port_forward_list_row = list_row
+
+        self.port_forward_group = None
         self._refresh_port_forward_list()
 
     def _create_port_forward_section(self, parent: Adw.PreferencesPage) -> None:
@@ -1144,13 +1186,6 @@ class SessionEditDialog(BaseDialog):
         self._mark_changed()
 
     def _on_type_changed(self, combo_row, param) -> None:
-        if (
-            combo_row.get_selected() == 1
-            and self.is_new_item
-            and self.auth_combo.get_selected() == 0
-            and not self.key_path_entry.get_text().strip()
-        ):
-            self.key_path_entry.set_text(f"{get_ssh_directory()}/id_rsa")
         self._update_ssh_visibility()
         self._update_local_visibility()
         self._mark_changed()
@@ -1178,8 +1213,6 @@ class SessionEditDialog(BaseDialog):
             self._set_field_error(self.port_row, _("Port must be between 1 and 65535"))
 
     def _on_auth_changed(self, combo_row, param) -> None:
-        if combo_row.get_selected() == 0 and not self.key_path_entry.get_text().strip():
-            self.key_path_entry.set_text(f"{get_ssh_directory()}/id_rsa")
         self._update_auth_visibility()
         self._mark_changed()
 
@@ -1240,8 +1273,6 @@ class SessionEditDialog(BaseDialog):
         # Update visibility
         visible_widgets = [
             self.ssh_box,
-            self.ssh_options_group,
-            self.post_login_command_group,
             self.test_button,
         ]
         for widget in visible_widgets:

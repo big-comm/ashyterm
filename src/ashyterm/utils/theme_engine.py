@@ -96,24 +96,27 @@ class ThemeEngine:
             --sidebar-fg-color: {fg};
         }}
 
-        popover.ashyterm-popover,
-        popover.sidebar-popover {{
+        popover.ashyterm-popover {{
             background-color: transparent; 
             color: var(--popover-fg-color);
         }}
 
         popover.ashyterm-popover > contents,
-        popover.sidebar-popover > contents,
-        popover.ashyterm-popover > arrow,
-        popover.sidebar-popover > arrow {{
+        popover.ashyterm-popover > arrow {{
             background-color: var(--popover-bg-color);
             color: inherit;
         }}
         
         popover.ashyterm-popover listview,
-        popover.sidebar-popover listview,
-        popover.ashyterm-popover scrolledwindow,
-        popover.sidebar-popover scrolledwindow {{
+        popover.ashyterm-popover scrolledwindow {{
+            background-color: transparent;
+        }}
+
+        /* Sidebar popover: let GTK default styling apply */
+        popover.sidebar-popover .sidebar-container {{
+            background-color: transparent;
+        }}
+        popover.sidebar-popover .sidebar-toolbar {{
             background-color: transparent;
         }}
         """
@@ -143,6 +146,7 @@ class ThemeEngine:
         .top-bar,
         searchbar,
         searchbar > box,
+        searchbar > revealer > box,
         .command-toolbar
         """
 

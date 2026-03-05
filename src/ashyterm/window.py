@@ -185,66 +185,13 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
                         )
                     )
                 )
-            # First-run tips for new users
-            if not self.settings_manager.get("first_run_shown", False):
-                self._show_first_run_tips()
-                self.settings_manager.set("first_run_shown", True)
             return GLib.SOURCE_REMOVE
 
         GLib.idle_add(_deferred_init)
 
         self.logger.info("Main window initialization completed")
 
-    def _show_first_run_tips(self) -> None:
-        """Show welcome overlay for first-time users."""
-        status = Adw.StatusPage(
-            title=_("Welcome to Ashy Terminal!"),
-            description="\n".join(
-                [
-                    _("Ctrl+Shift+, — Settings"),
-                    _("Ctrl+Shift+S — SSH Sessions"),
-                    _("Right-click tabs for split view"),
-                ]
-            ),
-            icon_name="utilities-terminal-symbolic",
-        )
-        status.add_css_class("compact")
-        dismiss_btn = Gtk.Button(label=_("Get Started"))
-        dismiss_btn.set_halign(Gtk.Align.CENTER)
-        dismiss_btn.add_css_class("suggested-action")
-        dismiss_btn.add_css_class("pill")
-
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        box.set_valign(Gtk.Align.CENTER)
-        box.set_halign(Gtk.Align.CENTER)
-        box.append(status)
-        box.append(dismiss_btn)
-
-        # Semi-transparent backdrop
-        bg = Gtk.Box()
-        bg.set_vexpand(True)
-        bg.set_hexpand(True)
-        provider = Gtk.CssProvider()
-        provider.load_from_data(
-            b".welcome-bg { background: alpha(@window_bg_color, 0.92); }"
-        )
-        bg.add_css_class("welcome-bg")
-        bg.get_style_context().add_provider(
-            provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-
-        welcome_overlay = Gtk.Overlay()
-        welcome_overlay.set_child(bg)
-        welcome_overlay.add_overlay(box)
-
-        self.toast_overlay.add_overlay(welcome_overlay)
-
-        def on_dismiss(_btn):
-            self.toast_overlay.remove_overlay(welcome_overlay)
-
-        dismiss_btn.connect("clicked", on_dismiss)
-
-    # NEW: Method to apply all visual settings on window creation.
+    # Method to apply all visual settings on window creation.
     def _apply_initial_visual_settings(self) -> None:
         """Applies all visual settings upon window creation."""
         self.logger.info("Applying initial visual settings to new window.")
@@ -323,6 +270,7 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         self.single_tab_title_widget = self.ui_builder.single_tab_title_widget
         self.title_stack = self.ui_builder.title_stack
         self.toast_overlay = self.ui_builder.toast_overlay
+        self.content_overlay = self.ui_builder.content_overlay
         self.search_bar = self.ui_builder.search_bar
         self.search_button = self.ui_builder.search_button
         self.broadcast_bar = self.ui_builder.broadcast_bar

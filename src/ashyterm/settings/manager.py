@@ -177,7 +177,6 @@ class SettingsManager:
             self._settings = self._defaults.copy()
             self.custom_schemes = {}
             self._dirty = True
-            self._dirty = True
 
         # Initial theme application
         try:
@@ -614,6 +613,36 @@ class SettingsManager:
                 css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
             window._transparency_css_provider = css_provider
+
+        # Apply matching transparency to sidebar
+        if hasattr(window, "_sidebar_transparency_provider"):
+            Gtk.StyleContext.remove_provider_for_display(
+                Gdk.Display.get_default(), window._sidebar_transparency_provider
+            )
+            del window._sidebar_transparency_provider
+        if user_transparency > 0:
+            color_scheme = self.get_color_scheme_data()
+            bg_hex = color_scheme.get("background", "#000000")
+            sidebar_hex = color_scheme.get("headerbar_background", bg_hex)
+            alpha = self._calculate_adaptive_alpha(bg_hex, user_transparency)
+
+            # Sidebar (flap mode) uses headerbar colors with transparency
+            sr, sg, sb = int(sidebar_hex[1:3], 16), int(sidebar_hex[3:5], 16), int(sidebar_hex[5:7], 16)
+            sidebar_rgba = f"rgba({sr}, {sg}, {sb}, {alpha:.4f})"
+
+            sidebar_css = (
+                f".sidebar-container {{ background-color: {sidebar_rgba}; }}\n"
+                f".sidebar-toolbar {{ background-color: transparent; }}\n"
+                f"popover.sidebar-popover .sidebar-container {{ background-color: transparent; }}\n"
+            )
+            sidebar_provider = Gtk.CssProvider()
+            sidebar_provider.load_from_data(sidebar_css.encode("utf-8"))
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                sidebar_provider,
+                Gtk.STYLE_PROVIDER_PRIORITY_USER + 1,
+            )
+            window._sidebar_transparency_provider = sidebar_provider
 
     def _apply_colors(self, terminal, window) -> None:
         """Apply color scheme, palette, and cursor color."""

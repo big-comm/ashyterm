@@ -71,8 +71,8 @@ class CommandPalette(Adw.Dialog):
         self.settings_manager = window.settings_manager
         self._filtered_commands = list(PALETTE_COMMANDS)
 
-        self.set_content_width(500)
-        self.set_content_height(400)
+        self.set_content_width(700)
+        self.set_content_height(530)
         self.set_title("")
         self.add_css_class("command-palette")
 
