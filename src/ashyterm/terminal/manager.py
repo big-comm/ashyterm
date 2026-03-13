@@ -123,8 +123,8 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         def prepare_background():
             try:
                 # Prepare shell environment
-                cmd, env, temp_dir_path = self.spawner._prepare_shell_environment()
-                self._precreated_env_data = (cmd, env, temp_dir_path)
+                cmd, env, temp_dir_path, shell_name = self.spawner._prepare_shell_environment()
+                self._precreated_env_data = (cmd, env, temp_dir_path, shell_name)
                 self.logger.debug("Pre-prepared shell environment in background")
             except Exception as e:
                 self.logger.warning(f"Failed to pre-prepare shell environment: {e}")

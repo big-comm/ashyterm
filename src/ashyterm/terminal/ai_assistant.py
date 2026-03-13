@@ -35,20 +35,6 @@ def _get_requests():
     return _requests_module
 
 
-# Pre-compiled regex patterns for text formatting
-_INLINE_CODE_PATTERN = re.compile(r"`([^`]+)`")
-_PLUS_WHITESPACE_PATTERN = re.compile(r"\s*\+\s*")
-_SEMICOLON_NEWLINE_PATTERN = re.compile(r";\s*\n")
-_SEMICOLON_SENTENCE_PATTERN = re.compile(r";\s*(?=[A-ZÁÀÃÂÉÊÍÓÔÕÚÜÇ0-9])")
-_BOLD_ASTERISK_PATTERN = re.compile(r"\*\*([^*]+)\*\*")
-_BOLD_UNDERSCORE_PATTERN = re.compile(r"__([^_]+)__")
-_NUMBERED_LIST_START_PATTERN = re.compile(r"(?<!\n)(\d+\.)")
-_NUMBERED_LIST_FIX_PATTERN = re.compile(r"\n\s*(\d+)\s*(?=\n\d)\n")
-_DASH_LIST_PATTERN = re.compile(r"\n\s*-\s+")
-_ASTERISK_LIST_PATTERN = re.compile(r"\n\s*\*\s+")
-_MULTIPLE_NEWLINES_PATTERN = re.compile(r"\n{3,}")
-
-
 class TerminalAiAssistant(GObject.Object):
     """Coordinates conversations with an external AI service."""
 
@@ -68,6 +54,9 @@ class TerminalAiAssistant(GObject.Object):
     DEFAULT_GROQ_MODEL = "llama-3.1-8b-instant"
     DEFAULT_OPENROUTER_MODEL = "openrouter/polaris-alpha"
     DEFAULT_LOCAL_MODEL = "llama3.2"
+    DEFAULT_CEREBRAS_MODEL = "llama-3.3-70b"
+    DEFAULT_GITHUB_MODEL = "gpt-4o-mini"
+    DEFAULT_MISTRAL_MODEL = "mistral-small-latest"
 
     # PROMPT OTIMIZADO, DIRETO E DINÂMICO
     _SYSTEM_PROMPT_TEMPLATE = (
@@ -234,7 +223,7 @@ class TerminalAiAssistant(GObject.Object):
         if not provider:
             missing.append("provider")
             return missing
-        if provider in {"groq", "gemini", "openrouter"}:
+        if provider in {"groq", "gemini", "openrouter", "cerebras", "github", "mistral"}:
             if not api_key:
                 missing.append("api_key")
         elif provider == "local":
@@ -358,8 +347,6 @@ class TerminalAiAssistant(GObject.Object):
                 "ai_assistant_provider",
                 "ai_assistant_api_key",
                 "ai_assistant_model",
-                "ai_openrouter_site_url",
-                "ai_openrouter_site_name",
                 "ai_local_base_url",
             }
             or key.endswith("_api_key")
@@ -388,21 +375,6 @@ class TerminalAiAssistant(GObject.Object):
             self._cancel_flags[terminal_id] = False
 
         try:
-            if self._should_decline_code_request(prompt):
-                self._build_messages(terminal_id, prompt)
-                refusal = _("Sorry, I am not currently programmed to generate complex scripts, only direct commands.")
-                self._record_assistant_message(terminal_id, refusal)
-                # Save to history
-                self._history_manager.add_assistant_message(refusal)
-                GLib.idle_add(
-                    self._display_assistant_reply,
-                    terminal_id,
-                    refusal,
-                    [],
-                    [],
-                )
-                return
-
             messages = self._build_messages(terminal_id, prompt)
             config = self._load_configuration()
 
@@ -477,12 +449,6 @@ class TerminalAiAssistant(GObject.Object):
             "model": model,
             "api_key": api_key,
         }
-        config["openrouter_site_url"] = self.settings_manager.get(
-            "ai_openrouter_site_url", ""
-        ).strip()
-        config["openrouter_site_name"] = self.settings_manager.get(
-            "ai_openrouter_site_name", ""
-        ).strip()
         config["local_base_url"] = self.settings_manager.get(
             "ai_local_base_url", "http://localhost:11434/v1"
         ).strip()
@@ -498,6 +464,12 @@ class TerminalAiAssistant(GObject.Object):
             config["model"] = self.DEFAULT_OPENROUTER_MODEL
         elif config["provider"] == "local" and not config["model"]:
             config["model"] = self.DEFAULT_LOCAL_MODEL
+        elif config["provider"] == "cerebras" and not config["model"]:
+            config["model"] = self.DEFAULT_CEREBRAS_MODEL
+        elif config["provider"] == "github" and not config["model"]:
+            config["model"] = self.DEFAULT_GITHUB_MODEL
+        elif config["provider"] == "mistral" and not config["model"]:
+            config["model"] = self.DEFAULT_MISTRAL_MODEL
         return config
 
     # -------------------------------------------------------------------------
@@ -717,6 +689,12 @@ class TerminalAiAssistant(GObject.Object):
             return self._perform_openrouter_request(config, messages)
         if provider == "local":
             return self._perform_local_request(config, messages)
+        if provider == "cerebras":
+            return self._perform_cerebras_request(config, messages)
+        if provider == "github":
+            return self._perform_github_request(config, messages)
+        if provider == "mistral":
+            return self._perform_mistral_request(config, messages)
         raise RuntimeError(f"Provider '{provider}' is not supported in this version.")
 
     def _perform_streaming_request(
@@ -730,6 +708,12 @@ class TerminalAiAssistant(GObject.Object):
             return self._perform_openrouter_streaming_request(config, messages)
         if provider == "groq":
             return self._perform_groq_streaming_request(config, messages)
+        if provider == "cerebras":
+            return self._perform_cerebras_streaming_request(config, messages)
+        if provider == "github":
+            return self._perform_github_streaming_request(config, messages)
+        if provider == "mistral":
+            return self._perform_mistral_streaming_request(config, messages)
         # Fall back to non-streaming for providers that don't support it well
         return self._perform_request(config, messages)
 
@@ -815,12 +799,6 @@ class TerminalAiAssistant(GObject.Object):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
         }
-        site_url = config.get("openrouter_site_url")
-        site_name = config.get("openrouter_site_name")
-        if site_url:
-            headers["HTTP-Referer"] = site_url
-        if site_name:
-            headers["X-Title"] = site_name
 
         payload: Dict[str, Any] = {
             "model": model,
@@ -926,18 +904,138 @@ class TerminalAiAssistant(GObject.Object):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
         }
-        site_url = config.get("openrouter_site_url")
-        site_name = config.get("openrouter_site_name")
-        if site_url:
-            headers["HTTP-Referer"] = site_url
-        if site_name:
-            headers["X-Title"] = site_name
 
         payload: Dict[str, Any] = {
             "model": model,
             "messages": self._build_openai_messages(messages),
         }
         return self._openai_compat_request(url, headers, payload, "OpenRouter")
+
+    def _perform_cerebras_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        """Perform non-streaming request to Cerebras API."""
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the Cerebras API key in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_CEREBRAS_MODEL
+        url = "https://api.cerebras.ai/v1/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_request(url, headers, payload, "Cerebras")
+
+    def _perform_cerebras_streaming_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        """Perform streaming request to Cerebras API."""
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the Cerebras API key in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_CEREBRAS_MODEL
+        url = "https://api.cerebras.ai/v1/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_streaming(url, headers, payload, "Cerebras")
+
+    def _perform_github_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        """Perform non-streaming request to GitHub Models API."""
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the GitHub Personal Access Token in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_GITHUB_MODEL
+        url = "https://models.inference.ai.azure.com/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_request(url, headers, payload, "GitHub Models")
+
+    def _perform_github_streaming_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        """Perform streaming request to GitHub Models API."""
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the GitHub Personal Access Token in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_GITHUB_MODEL
+        url = "https://models.inference.ai.azure.com/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_streaming(url, headers, payload, "GitHub Models")
+
+    def _perform_mistral_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        """Perform non-streaming request to Mistral API."""
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the Mistral API key in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_MISTRAL_MODEL
+        url = "https://api.mistral.ai/v1/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_request(url, headers, payload, "Mistral")
+
+    def _perform_mistral_streaming_request(
+        self, config: Dict[str, str], messages: List[Dict[str, str]]
+    ) -> str:
+        """Perform streaming request to Mistral API."""
+        api_key = config.get("api_key", "").strip()
+        if not api_key:
+            raise RuntimeError("Configure the Mistral API key in Preferences.")
+
+        model = config.get("model", "").strip() or self.DEFAULT_MISTRAL_MODEL
+        url = "https://api.mistral.ai/v1/chat/completions"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        }
+        payload: Dict[str, Any] = {
+            "model": model,
+            "messages": self._build_openai_messages(messages),
+        }
+        return self._openai_compat_streaming(url, headers, payload, "Mistral")
 
     def _format_api_error(self, response: Any, provider_name: str) -> str:
         """Format error from HTTP response. Response type is requests.Response."""
@@ -968,12 +1066,25 @@ class TerminalAiAssistant(GObject.Object):
         extra = f" ({' | '.join(details)})" if details else ""
 
         clean_message = message or fallback
-        return _("{provider} responded with HTTP {status}: {message}{detail}").format(
+        base = _("{provider} responded with HTTP {status}: {message}{detail}").format(
             provider=provider_name,
             status=status,
             message=clean_message,
             detail=extra,
         )
+
+        # Add helpful hint for common OpenRouter errors
+        if provider_name == "OpenRouter" and status == 404:
+            msg_lower = (clean_message or "").lower()
+            if "guardrail" in msg_lower or "data policy" in msg_lower:
+                base += "\n" + _(
+                    "Tip: check your privacy settings at "
+                    "https://openrouter.ai/settings/privacy — "
+                    "some providers require enabling free endpoints "
+                    "or allowing data collection."
+                )
+
+        return base
 
     def _build_gemini_conversation(
         self, messages: List[Dict[str, str]]
@@ -1120,82 +1231,10 @@ class TerminalAiAssistant(GObject.Object):
             commands.append({"command": value.strip(), "description": ""})
         return commands
 
-    @staticmethod
-    def _should_decline_code_request(prompt: str) -> bool:
-        """Detect requests that explicitly ask for code or scripts."""
-        if not isinstance(prompt, str):
-            return False
-        lowered = prompt.lower()
-        if not lowered:
-            return False
-        code_terms = {
-            "codigo",
-            "código",
-            "code",
-            "script",
-            "shell script",
-            "programa",
-            "programação",
-            "function",
-            "função",
-            "classe",
-            "snippet",
-            "trecho de código",
-            "escreva um",
-        }
-        request_terms = {
-            "gere",
-            "gerar",
-            "crie",
-            "criar",
-            "escreva",
-            "escrever",
-            "forneça",
-            "mostrar",
-            "mostre",
-            "faça",
-            "montar",
-            "monta",
-            "me dê",
-            "me mostre",
-            "me forneça",
-            "poderia",
-            "pode",
-        }
-        has_code_term = any(term in lowered for term in code_terms) or "```" in lowered
-        has_request_term = any(term in lowered for term in request_terms)
-        return has_code_term and has_request_term
-
     def _record_assistant_message(self, terminal_id: int, message: str) -> None:
         with self._lock:
             history = self._conversations.setdefault(terminal_id, [])
             history.append({"role": "assistant", "content": message})
-
-    def _feed_fallback_to_terminal(
-        self,
-        terminal,
-        reply: str,
-        commands: List[Dict[str, str]],
-        code_snippets: List[Dict[str, str]],
-    ) -> None:
-        """Feed AI response to terminal as fallback when dialog unavailable."""
-        terminal.feed(("\n[AI Assistant] {}\n".format(reply.strip())).encode("utf-8"))
-        for info in commands:
-            command_text = info.get("command") if isinstance(info, dict) else ""
-            if command_text:
-                terminal.feed(
-                    ("[AI Assistant] Command: {}\n".format(command_text)).encode(
-                        "utf-8"
-                    )
-                )
-        for snippet in code_snippets:
-            code_text = snippet.get("code") if isinstance(snippet, dict) else ""
-            if code_text:
-                terminal.feed(
-                    ("[AI Assistant] Code suggestion:\n{}\n".format(code_text)).encode(
-                        "utf-8"
-                    )
-                )
 
     def _display_assistant_reply(
         self,
@@ -1208,68 +1247,7 @@ class TerminalAiAssistant(GObject.Object):
             cmd.get("command", "") for cmd in commands if isinstance(cmd, dict)
         ]
         self.emit("response-ready", reply, command_strings)
-
-        if terminal_id == -1:
-            return False
-
-        terminal = self._get_terminal(terminal_id)
-        window = self._window_ref()
-
-        if not terminal or not window:
-            if terminal:
-                self._feed_fallback_to_terminal(
-                    terminal, reply, commands, code_snippets
-                )
-            return False
-
-        try:
-            formatted_reply = self._format_reply_for_dialog(reply)
-            window.show_ai_response_dialog(
-                terminal, formatted_reply, commands, code_snippets
-            )
-        except Exception as exc:  # pylint: disable=broad-except
-            self.logger.error("Failed to show AI response dialog: %s", exc)
-            terminal.feed(
-                (
-                    "\n[AI Assistant] {}\n".format(self._format_reply_for_dialog(reply))
-                ).encode("utf-8")
-            )
         return False
-
-    @staticmethod
-    def _format_reply_for_dialog(text: str) -> str:
-        """Improve readability by normalizing inline code and list formatting."""
-        if not isinstance(text, str):
-            return ""
-
-        cleaned = text
-        cleaned = cleaned.replace("\r\n", "\n")
-        cleaned = cleaned.replace("\\n", "\n").replace("\\t", "\t")
-        cleaned = _INLINE_CODE_PATTERN.sub(r"\1", cleaned)
-        cleaned = _PLUS_WHITESPACE_PATTERN.sub(" ", cleaned)
-        cleaned = _SEMICOLON_NEWLINE_PATTERN.sub("\n", cleaned)
-        cleaned = _SEMICOLON_SENTENCE_PATTERN.sub(".\n", cleaned)
-        cleaned = _BOLD_ASTERISK_PATTERN.sub(r"\1", cleaned)
-        cleaned = _BOLD_UNDERSCORE_PATTERN.sub(r"\1", cleaned)
-        cleaned = _NUMBERED_LIST_START_PATTERN.sub(r"\n\1", cleaned)
-        cleaned = _NUMBERED_LIST_FIX_PATTERN.sub(r"\n\1", cleaned)
-        cleaned = _DASH_LIST_PATTERN.sub("\n• ", cleaned)
-        cleaned = _ASTERISK_LIST_PATTERN.sub("\n• ", cleaned)
-        cleaned = _MULTIPLE_NEWLINES_PATTERN.sub("\n\n", cleaned)
-
-        lines = []
-        previous_blank = False
-        for raw_line in cleaned.splitlines():
-            line = raw_line.strip()
-            if not line:
-                if not previous_blank:
-                    lines.append("")
-                    previous_blank = True
-                continue
-            lines.append(line)
-            previous_blank = False
-
-        return "\n".join(lines).strip()
 
     def _display_error_reply(self, terminal_id: int, message: str) -> bool:
         self._queue_toast(message)

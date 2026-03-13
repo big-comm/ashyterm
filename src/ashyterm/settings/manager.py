@@ -620,29 +620,56 @@ class SettingsManager:
                 Gdk.Display.get_default(), window._sidebar_transparency_provider
             )
             del window._sidebar_transparency_provider
-        if user_transparency > 0:
-            color_scheme = self.get_color_scheme_data()
-            bg_hex = color_scheme.get("background", "#000000")
-            sidebar_hex = color_scheme.get("headerbar_background", bg_hex)
-            alpha = self._calculate_adaptive_alpha(bg_hex, user_transparency)
 
-            # Sidebar (flap mode) uses headerbar colors with transparency
+        # Always apply sidebar foreground color from color scheme.
+        # Sidebar popover doesn't inherit VTE terminal colors, so we must
+        # explicitly set the foreground to match the user's color scheme.
+        color_scheme = self.get_color_scheme_data()
+        bg_hex = color_scheme.get("background", "#000000")
+        sidebar_hex = color_scheme.get("headerbar_background", bg_hex)
+
+        sidebar_css_parts = []
+        if user_transparency > 0:
+            alpha = self._calculate_adaptive_alpha(bg_hex, user_transparency)
             sr, sg, sb = int(sidebar_hex[1:3], 16), int(sidebar_hex[3:5], 16), int(sidebar_hex[5:7], 16)
             sidebar_rgba = f"rgba({sr}, {sg}, {sb}, {alpha:.4f})"
+            sidebar_css_parts.append(
+                f".sidebar-container {{ background-color: {sidebar_rgba}; }}"
+            )
+            sidebar_css_parts.append(
+                f".sidebar-toolbar {{ background-color: transparent; }}"
+            )
+            sidebar_css_parts.append(
+                f"popover.sidebar-popover .sidebar-container {{ background-color: transparent; }}"
+            )
 
-            sidebar_css = (
-                f".sidebar-container {{ background-color: {sidebar_rgba}; }}\n"
-                f".sidebar-toolbar {{ background-color: transparent; }}\n"
-                f"popover.sidebar-popover .sidebar-container {{ background-color: transparent; }}\n"
-            )
-            sidebar_provider = Gtk.CssProvider()
-            sidebar_provider.load_from_data(sidebar_css.encode("utf-8"))
-            Gtk.StyleContext.add_provider_for_display(
-                Gdk.Display.get_default(),
-                sidebar_provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_USER + 1,
-            )
-            window._sidebar_transparency_provider = sidebar_provider
+        # Use GTK named color (@window_fg_color) so the sidebar text/icons
+        # follow the system theme (e.g. beige) rather than terminal foreground.
+        sidebar_css_parts.append(
+            "popover.sidebar-popover > contents { color: @window_fg_color; }"
+        )
+        sidebar_css_parts.append(
+            "popover.sidebar-popover .sidebar-container { color: @window_fg_color; }"
+        )
+        sidebar_css_parts.append(
+            "popover.sidebar-popover .sidebar-toolbar button { color: @window_fg_color; }"
+        )
+        sidebar_css_parts.append(
+            "popover.sidebar-popover .inline-context-menu { color: @window_fg_color; }"
+        )
+        sidebar_css_parts.append(
+            "popover.sidebar-popover .inline-context-menu button { color: @window_fg_color; }"
+        )
+
+        sidebar_css = "\n".join(sidebar_css_parts) + "\n"
+        sidebar_provider = Gtk.CssProvider()
+        sidebar_provider.load_from_data(sidebar_css.encode("utf-8"))
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            sidebar_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER + 1,
+        )
+        window._sidebar_transparency_provider = sidebar_provider
 
     def _apply_colors(self, terminal, window) -> None:
         """Apply color scheme, palette, and cursor color."""

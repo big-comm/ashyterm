@@ -195,9 +195,8 @@ class _SchemeEditorDialog(BaseDialog):
         """Intercept close to confirm discarding unsaved changes."""
         if not self._has_changes:
             return False  # Allow close
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            title=_("Discard Changes?"),
+        dialog = Adw.AlertDialog(
+            heading=_("Discard Changes?"),
             body=_("You have unsaved changes. Discard them?"),
         )
         dialog.add_response("cancel", _("Cancel"))
@@ -208,10 +207,9 @@ class _SchemeEditorDialog(BaseDialog):
             if response_id == "discard":
                 self._has_changes = False
                 self.close()
-            dlg.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self)
         return True  # Block close until confirmed
 
     def _build_ui(self):
@@ -315,13 +313,12 @@ class _SchemeEditorDialog(BaseDialog):
     def _show_error_dialog(
         self, title: str, message: str, details: Optional[str] = None
     ):
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=title,
             body=message,
         )
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+        dialog.present(self)
 
     def _on_save(self, button):
         new_name = self.name_entry.get_text().strip()
@@ -704,23 +701,21 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
             self.schemes_listbox.select_row(new_row_to_select)
 
         # Show a modal dialog notification
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Theme Saved"),
             body=_("The theme '{name}' has been created and applied.").format(
                 name=new_data["name"]
             ),
         )
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+        dialog.present(self)
 
     def _on_delete_clicked(self, button):
         selected_row = self.schemes_listbox.get_selected_row()
         if not selected_row or not selected_row.is_custom:
             return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Delete Scheme?"),
             body=_(
                 "Are you sure you want to delete the scheme '{name}'? This cannot be undone."
@@ -732,7 +727,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         dialog.add_response("delete", _("Delete"))
         dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.connect("response", self._on_delete_confirm, selected_row.scheme_key)
-        dialog.present()
+        dialog.present(self)
 
     def _on_delete_confirm(self, dialog, response, scheme_key):
         if response == "delete":

@@ -804,7 +804,7 @@ class SessionTreeView:
                     self.parent_window.toggle_sidebar_button.set_active(False)
                 else:
                     # We're in normal flap mode
-                    self.parent_window.flap.set_reveal_flap(False)
+                    self.parent_window.flap.set_show_sidebar(False)
                     self.parent_window.settings_manager.set_sidebar_visible(False)
                     self.parent_window.toggle_sidebar_button.set_active(False)
                     # Transfer focus to terminal in flap mode

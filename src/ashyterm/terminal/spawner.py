@@ -187,7 +187,7 @@ class ProcessSpawner:
 
     def _prepare_shell_environment(
         self,
-    ) -> Tuple[List[str], Dict[str, str], Optional[str]]:
+    ) -> Tuple[List[str], Dict[str, str], Optional[str], str]:
         """
         Prepare the shell environment for local terminal spawning.
 
@@ -201,8 +201,10 @@ class ProcessSpawner:
             working_directory: Optional directory to start the shell in.
 
         Returns:
-            A tuple of (command_list, environment_dict, temp_dir_path).
+            A tuple of (command_list, environment_dict, temp_dir_path, shell_name).
             temp_dir_path is the path to the temporary ZDOTDIR for zsh, or None.
+            shell_name is the effective shell name for highlighting decisions
+            (e.g. "blesh" if ble.sh is detected in bash).
         """
         shell = Vte.get_user_shell()
         shell_basename = os.path.basename(shell)
@@ -261,7 +263,7 @@ class ProcessSpawner:
         else:
             cmd = [shell]
 
-        return cmd, env, temp_dir_path
+        return cmd, env, temp_dir_path, shell_basename
 
     def _create_pty_preexec_fn(
         self, slave_fd: int, master_fd: int
@@ -483,10 +485,10 @@ class ProcessSpawner:
 
             # Use pre-prepared environment if available, otherwise prepare now
             if precreated_env and not working_directory:
-                cmd, env, temp_dir_path = precreated_env
+                cmd, env, temp_dir_path, _shell_name = precreated_env
                 self.logger.debug("Using pre-prepared shell environment")
             else:
-                cmd, env, temp_dir_path = self._prepare_shell_environment()
+                cmd, env, temp_dir_path, _shell_name = self._prepare_shell_environment()
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             # Wrap user_data to include the temp dir path for zsh cleanup
@@ -689,12 +691,13 @@ class ProcessSpawner:
             if not working_dir:
                 working_dir = str(self.platform_info.home_dir)
 
-            cmd, env, temp_dir_path = self._prepare_shell_environment()
+            cmd, env, temp_dir_path, shell_name = self._prepare_shell_environment()
 
             proxy = HighlightedTerminalProxy(
                 terminal,
                 "local",
                 proxy_id=terminal_id,
+                shell_name=shell_name,
             )
 
             process_name = str(user_data) if user_data else "Terminal"

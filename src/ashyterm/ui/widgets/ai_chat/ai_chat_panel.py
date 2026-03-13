@@ -175,7 +175,7 @@ class AIChatPanel(Gtk.Box):
         self._quick_prompts_box = Gtk.FlowBox()
         self._quick_prompts_box.set_selection_mode(Gtk.SelectionMode.NONE)
         self._quick_prompts_box.set_max_children_per_line(3)
-        self._quick_prompts_box.set_min_children_per_line(4)
+        self._quick_prompts_box.set_min_children_per_line(1)
         self._quick_prompts_box.set_margin_start(8)
         self._quick_prompts_box.set_margin_end(8)
         self._quick_prompts_box.set_margin_bottom(8)
@@ -755,10 +755,13 @@ class AIChatPanel(Gtk.Box):
         error_icon.add_css_class("warning")
         error_content.append(error_icon)
 
-        error_label = Gtk.Label(label=error_msg)
+        error_label = Gtk.Label()
         error_label.set_wrap(True)
+        error_label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
         error_label.set_xalign(0)
         error_label.set_hexpand(True)
+        error_label.set_selectable(True)
+        error_label.set_markup(self._linkify_error(error_msg))
         error_content.append(error_label)
 
         error_box.append(error_content)
@@ -796,6 +799,26 @@ class AIChatPanel(Gtk.Box):
     def _on_bubble_run(self, bubble: MessageBubble, command: str):
         """Handle run command from a bubble (execute in terminal)."""
         self.emit("run-command", command)
+
+    @staticmethod
+    def _linkify_error(text: str) -> str:
+        """Escape markup and convert URLs into clickable Pango links."""
+        import re
+        _URL_RE = re.compile(r'https?://[^\s<>"]+')
+        parts: list[str] = []
+        last = 0
+        for m in _URL_RE.finditer(text):
+            url = m.group()
+            # Strip trailing punctuation not part of the URL
+            while url and url[-1] in ')],;:.!?':
+                if url[-1] == ')' and url.count('(') >= url.count(')'):
+                    break
+                url = url[:-1]
+            parts.append(GLib.markup_escape_text(text[last:m.start()]))
+            parts.append(f'<a href="{GLib.markup_escape_text(url)}">{GLib.markup_escape_text(url)}</a>')
+            last = m.start() + len(url)
+        parts.append(GLib.markup_escape_text(text[last:]))
+        return "".join(parts)
 
     def _on_retry_clicked(self, button: Gtk.Button, error_box: Gtk.Box):
         """Handle retry button click - resend the last request."""
@@ -1068,4 +1091,8 @@ class AIChatPanel(Gtk.Box):
     def set_initial_text(self, text: str):
         """Set initial text in the input field."""
         self._set_input_text(text)
+        self._text_view.grab_focus()
+
+    def focus_input(self) -> None:
+        """Focus the text input field."""
         self._text_view.grab_focus()

@@ -81,9 +81,6 @@ class OutputHighlighter:
 
         self.logger.info("Using regex module (PCRE2) for high-performance highlighting")
 
-        # Reusable buffer for collecting matches (avoids allocation per line)
-        self._match_buffer: List[Tuple[int, int, str]] = []
-
         self._refresh_rules()
         self._manager.connect("rules-changed", self._on_rules_changed)
 
@@ -523,8 +520,7 @@ class OutputHighlighter:
             return line
 
         line_lower = line.lower()
-        matches = self._match_buffer
-        matches.clear()
+        matches: List[Tuple[int, int, str]] = []
 
         self._collect_matches(line, line_lower, rules, matches)
 

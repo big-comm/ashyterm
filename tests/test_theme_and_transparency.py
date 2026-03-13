@@ -130,14 +130,14 @@ class TestThemeEngineCSS:
         assert css == ""
 
     def test_popover_selectors_unified(self):
-        """Both ashyterm-popover and sidebar-popover must share contents CSS."""
+        """Both ashyterm-popover and sidebar-popover must have styled CSS."""
         from ashyterm.utils.theme_engine import ThemeEngine
 
         scheme = {"background": "#282828", "foreground": "#ebdbb2"}
         params = ThemeEngine.get_theme_params(scheme)
         css = ThemeEngine._get_root_vars_css(params, "terminal")
 
-        assert "popover.sidebar-popover > contents" in css
+        assert "popover.sidebar-popover .sidebar-container" in css
         assert "popover.ashyterm-popover > contents" in css
 
     def test_headerbar_css_empty_when_no_transparency(self):

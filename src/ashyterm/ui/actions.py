@@ -569,9 +569,8 @@ class WindowActions:
         self, item: Union[SessionItem, SessionFolder], is_session: bool
     ) -> None:
         item_type = _("Session") if is_session else _("Folder")
-        dialog = Adw.MessageDialog(
-            transient_for=self.window,
-            title=_("Rename {type}").format(type=item_type),
+        dialog = Adw.AlertDialog(
+            heading=_("Rename {type}").format(type=item_type),
             body=_('Enter new name for "{name}":').format(name=item.name),
         )
         entry = Gtk.Entry(text=item.name)
@@ -609,10 +608,9 @@ class WindowActions:
                         from ..core.signals import AppSignals
 
                         AppSignals.get().emit("folder-updated", item.name)
-            dlg.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self.window)
 
     def _show_delete_confirmation(
         self, items: List[Union[SessionItem, SessionFolder, LayoutItem]]
@@ -623,8 +621,8 @@ class WindowActions:
         item = items[0]
         title, body_text = self._build_delete_text(items, count, item)
 
-        dialog = Adw.MessageDialog(
-            transient_for=self.window, title=title, body=body_text
+        dialog = Adw.AlertDialog(
+            heading=title, body=body_text
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("delete", _("Delete"))
@@ -640,10 +638,9 @@ class WindowActions:
                         else _("Deleted {count} items").format(count=count)
                     )
                     self._show_undo_toast(label, deleted_snapshots)
-            dlg.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self.window)
 
     def _get_item_type_name(self, item) -> str:
         """Return translated type name for a sidebar item."""

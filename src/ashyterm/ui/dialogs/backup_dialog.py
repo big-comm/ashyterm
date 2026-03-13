@@ -73,12 +73,10 @@ class BackupRestoreHandler:
 
     def _prompt_for_backup_password(self, target_path: str, parent_window: Gtk.Window):
         """Shows a dialog to get and confirm a password for the backup."""
-        dialog = Adw.MessageDialog(
-            transient_for=parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Set Backup Password"),
             body=_("Please enter a password to encrypt the backup file."),
             close_response="cancel",
-            modal=True,
         )
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         pass_entry = Gtk.PasswordEntry(
@@ -103,33 +101,19 @@ class BackupRestoreHandler:
                 pwd2 = confirm_entry.get_text()
                 if not pwd1:
                     self._show_error_dialog(
-                        _("Password Error"), _("Password cannot be empty."), parent=d
+                        _("Password Error"), _("Password cannot be empty."), parent=parent_window
                     )
                     return
                 if pwd1 != pwd2:
                     self._show_error_dialog(
-                        _("Password Error"), _("Passwords do not match."), parent=d
+                        _("Password Error"), _("Passwords do not match."), parent=parent_window
                     )
                     return
 
-                d.close()
                 self._execute_backup(target_path, pwd1, parent_window)
-            else:
-                d.close()
 
         dialog.connect("response", on_response)
-
-        # Explicitly set properties to assist WS/WM
-        dialog.set_transient_for(parent_window)
-        dialog.set_modal(True)
-        dialog.set_destroy_with_parent(True)
-
-        # Defer presentation via idle_add using a helper to force parent focus
-        def present_dialog():
-            parent_window.present()
-            dialog.present()
-
-        GLib.idle_add(present_dialog)
+        dialog.present(parent_window)
 
     def _execute_backup(
         self, target_path: str, password: str, parent_window: Gtk.Window
@@ -182,39 +166,24 @@ class BackupRestoreHandler:
 
     def start_restore_flow(self, parent_window: Gtk.Window):
         """Starts the restore backup flow."""
-        dialog = Adw.MessageDialog(
-            transient_for=parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Restore from Backup?"),
             body=_(
                 "Restoring from a backup will overwrite all your current sessions, settings, and layouts. This action cannot be undone.\n\n<b>The application will need to be restarted after restoring.</b>"
             ),
             body_use_markup=True,
             close_response="cancel",
-            modal=True,
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("restore", _("Choose File and Restore"))
-        dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.connect(
             "response",
             lambda d, r: self._on_restore_confirmation(d, r, parent_window),
         )
-
-        # Explicitly set properties to assist WS/WM
-        dialog.set_transient_for(parent_window)
-        dialog.set_modal(True)
-        dialog.set_destroy_with_parent(True)
-
-        # Defer presentation via idle_add using a helper to force parent focus
-        def present_dialog():
-            parent_window.present()
-            dialog.present()
-
-        GLib.idle_add(present_dialog)
+        dialog.present(parent_window)
 
     def _on_restore_confirmation(self, dialog, response_id, parent_window):
-        dialog.close()
         if response_id == "restore":
             file_dialog = Gtk.FileDialog(title=_("Select Backup File"), modal=True)
             file_filter = Gtk.FileFilter()
@@ -243,12 +212,10 @@ class BackupRestoreHandler:
 
     def _prompt_for_restore_password(self, source_path: str, parent_window: Gtk.Window):
         """Shows a dialog to get the password for the backup file."""
-        dialog = Adw.MessageDialog(
-            transient_for=parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Enter Backup Password"),
             body=_("Please enter the password for the selected backup file."),
             close_response="cancel",
-            modal=True,
         )
         pass_entry = Gtk.PasswordEntry(
             placeholder_text=_("Password"), show_peek_icon=True
@@ -265,21 +232,9 @@ class BackupRestoreHandler:
                 password = pass_entry.get_text()
                 if password:
                     self._execute_restore(source_path, password, parent_window)
-            d.close()
 
         dialog.connect("response", on_response)
-
-        # Explicitly set properties to assist WS/WM
-        dialog.set_transient_for(parent_window)
-        dialog.set_modal(True)
-        dialog.set_destroy_with_parent(True)
-
-        # Defer presentation via idle_add using a helper to force parent focus
-        def present_dialog():
-            parent_window.present()
-            dialog.present()
-
-        GLib.idle_add(present_dialog)
+        dialog.present(parent_window)
 
     def _execute_restore(
         self, source_path: str, password: str, parent_window: Gtk.Window
@@ -310,69 +265,29 @@ class BackupRestoreHandler:
         threading.Thread(target=restore_thread, daemon=True).start()
 
     def _show_restore_success_dialog(self, parent_window: Gtk.Window):
-        dialog = Adw.MessageDialog(
-            transient_for=parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Restore Complete"),
             body=_(
                 "Data has been restored successfully. Please restart Ashy Terminal for the changes to take effect."
             ),
             close_response="ok",
-            modal=True,
         )
         dialog.add_response("ok", _("OK"))
-
-        # Explicitly set properties to assist WS/WM
-        dialog.set_transient_for(parent_window)
-        dialog.set_modal(True)
-        dialog.set_destroy_with_parent(True)
-
-        def present_dialog():
-            parent_window.present()
-            dialog.present()
-
-        GLib.idle_add(present_dialog)
+        dialog.present(parent_window)
         return False
 
     def _show_error_dialog(self, title: str, message: str, parent=None) -> None:
         """Show error dialog to user."""
         if parent is None:
             parent = self.app.get_active_window()
-        dialog = Adw.MessageDialog(
-            transient_for=parent, title=title, body=message, modal=True
-        )
+        dialog = Adw.AlertDialog(heading=title, body=message)
         dialog.add_response("ok", _("OK"))
-
-        if parent:
-            dialog.set_transient_for(parent)
-            dialog.set_destroy_with_parent(True)
-
-        dialog.set_modal(True)
-
-        def present_dialog():
-            if parent:
-                parent.present()
-            dialog.present()
-
-        GLib.idle_add(present_dialog)
+        dialog.present(parent)
 
     def _show_info_dialog(self, title: str, message: str, parent=None) -> None:
         """Show info dialog to user."""
         if parent is None:
             parent = self.app.get_active_window()
-        dialog = Adw.MessageDialog(
-            transient_for=parent, title=title, body=message, modal=True
-        )
+        dialog = Adw.AlertDialog(heading=title, body=message)
         dialog.add_response("ok", _("OK"))
-
-        if parent:
-            dialog.set_transient_for(parent)
-            dialog.set_destroy_with_parent(True)
-
-        dialog.set_modal(True)
-
-        def present_dialog():
-            if parent:
-                parent.present()
-            dialog.present()
-
-        GLib.idle_add(present_dialog)
+        dialog.present(parent)

@@ -248,8 +248,6 @@ class DefaultSettings:
             "ai_assistant_provider",
             "ai_assistant_model",
             "ai_assistant_api_key",
-            "ai_openrouter_site_url",
-            "ai_openrouter_site_name",
             "ai_local_base_url",
             "ai_custom_quick_prompts",
         ],
@@ -270,6 +268,7 @@ class DefaultSettings:
             "shell_input_dark_theme",
             "shell_input_light_theme",
             "shell_input_pygments_theme",
+            "command_not_found_highlighting",
         ],
         "shortcuts": [
             "shortcuts",
@@ -339,8 +338,6 @@ class DefaultSettings:
             "ai_assistant_provider": "groq",
             "ai_assistant_model": "llama-3.1-8b-instant",
             "ai_assistant_api_key": "",
-            "ai_openrouter_site_url": "",
-            "ai_openrouter_site_name": "",
             "ai_local_base_url": "http://localhost:11434/v1",
             "ai_custom_quick_prompts": [],  # List of {"emoji": "🔧", "text": "prompt"}
             # Search Settings
@@ -404,6 +401,9 @@ class DefaultSettings:
             "shell_input_light_theme": "blinds-light",
             # Legacy setting kept for backwards compatibility - now only used if mode is "manual"
             "shell_input_pygments_theme": "monokai",
+            # Highlight unknown commands in red while typing
+            # Requires shell_input_highlighting_enabled to be active
+            "command_not_found_highlighting": True,
             # Icon Theme Strategy: "ashy" (bundled) or "system"
             # Using Ashy Icons by default speeds up GTK4 startup
             "icon_theme_strategy": "ashy",

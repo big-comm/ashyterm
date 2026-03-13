@@ -112,12 +112,17 @@ class ThemeEngine:
             background-color: transparent;
         }}
 
-        /* Sidebar popover: let GTK default styling apply */
+        /* Sidebar popover: inherit colors from contents */
         popover.sidebar-popover .sidebar-container {{
             background-color: transparent;
+            color: inherit;
         }}
         popover.sidebar-popover .sidebar-toolbar {{
             background-color: transparent;
+            color: inherit;
+        }}
+        popover.sidebar-popover .inline-context-menu {{
+            color: inherit;
         }}
         """
 

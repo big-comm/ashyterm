@@ -29,6 +29,9 @@ class AIConfigDialog(Adw.PreferencesWindow):
         ("groq", "Groq", "https://api.groq.com/openai/v1"),
         ("gemini", "Gemini", "https://generativelanguage.googleapis.com"),
         ("openrouter", "OpenRouter", "https://openrouter.ai/api/v1"),
+        ("cerebras", "Cerebras", "https://api.cerebras.ai/v1"),
+        ("github", "GitHub Models", "https://models.inference.ai.azure.com"),
+        ("mistral", "Mistral AI", "https://api.mistral.ai/v1"),
         ("local", "Local (Ollama/LM Studio)", "http://localhost:11434/v1"),
     ]
 
@@ -36,6 +39,9 @@ class AIConfigDialog(Adw.PreferencesWindow):
         "groq": "llama-3.1-8b-instant",
         "gemini": "gemini-2.5-flash",
         "openrouter": "openrouter/polaris-alpha",
+        "cerebras": "llama-3.3-70b",
+        "github": "gpt-4o-mini",
+        "mistral": "mistral-small-latest",
         "local": "llama3.2",
     }
 
@@ -147,33 +153,6 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.browse_models_row.set_activatable_widget(self.browse_models_button)
         model_group.add(self.browse_models_row)
 
-        # OpenRouter-specific settings group
-        self.openrouter_group = Adw.PreferencesGroup(
-            title=_("OpenRouter Settings"),
-            description=_("Additional settings for OpenRouter API rankings."),
-        )
-        page.add(self.openrouter_group)
-
-        # Site URL row
-        self.site_url_row = Adw.EntryRow(
-            title=_("Site URL (optional)"),
-        )
-        self.site_url_row.set_text(
-            self.settings_manager.get("ai_openrouter_site_url", "")
-        )
-        self.site_url_row.connect("changed", self._on_site_url_changed)
-        self.openrouter_group.add(self.site_url_row)
-
-        # Site name row
-        self.site_name_row = Adw.EntryRow(
-            title=_("Site Name (optional)"),
-        )
-        self.site_name_row.set_text(
-            self.settings_manager.get("ai_openrouter_site_name", "")
-        )
-        self.site_name_row.connect("changed", self._on_site_name_changed)
-        self.openrouter_group.add(self.site_name_row)
-
         # Update UI based on current provider
         self._update_ui_for_provider(current_provider)
 
@@ -205,9 +184,6 @@ class AIConfigDialog(Adw.PreferencesWindow):
         # Show/hide browse models button (OpenRouter and Local)
         self.browse_models_row.set_visible(True)
 
-        # OpenRouter-specific settings
-        self.openrouter_group.set_visible(is_openrouter)
-
         # Update button URLs and titles
         self.get_key_button.set_visible(not is_local)
 
@@ -231,6 +207,27 @@ class AIConfigDialog(Adw.PreferencesWindow):
             self.get_key_button.set_uri("https://openrouter.ai/keys")
             self.browse_models_row.set_subtitle(
                 _("Search and select from available OpenRouter models.")
+            )
+        elif provider_id == "cerebras":
+            self.model_row.set_title(_("Model Identifier"))
+            self.api_key_box.set_title(_("Cerebras API Key"))
+            self.get_key_button.set_uri("https://cloud.cerebras.ai/")
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available Cerebras models.")
+            )
+        elif provider_id == "github":
+            self.model_row.set_title(_("Model Identifier"))
+            self.api_key_box.set_title(_("GitHub Personal Access Token"))
+            self.get_key_button.set_uri("https://github.com/settings/tokens")
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available GitHub models.")
+            )
+        elif provider_id == "mistral":
+            self.model_row.set_title(_("Model Identifier"))
+            self.api_key_box.set_title(_("Mistral API Key"))
+            self.get_key_button.set_uri("https://console.mistral.ai/api-keys")
+            self.browse_models_row.set_subtitle(
+                _("Search and select from available Mistral models.")
             )
         elif provider_id == "local":
             self.model_row.set_title(_("Model Name"))
@@ -284,18 +281,6 @@ class AIConfigDialog(Adw.PreferencesWindow):
         self.settings_manager.set(f"ai_assistant_{provider_id}_model", model)
         self.emit("setting-changed", "ai_assistant_model", model)
 
-    def _on_site_url_changed(self, entry_row) -> None:
-        """Handle site URL change."""
-        url = entry_row.get_text().strip()
-        self.settings_manager.set("ai_openrouter_site_url", url)
-        self.emit("setting-changed", "ai_openrouter_site_url", url)
-
-    def _on_site_name_changed(self, entry_row) -> None:
-        """Handle site name change."""
-        name = entry_row.get_text().strip()
-        self.settings_manager.set("ai_openrouter_site_name", name)
-        self.emit("setting-changed", "ai_openrouter_site_name", name)
-
     def _on_enable_changed(self, switch_row, _param) -> None:
         """Handle enable/disable change."""
         enabled = switch_row.get_active()
@@ -319,6 +304,12 @@ class AIConfigDialog(Adw.PreferencesWindow):
             base_url = "https://api.groq.com/openai/v1"
         elif provider_id == "gemini":
             base_url = "https://generativelanguage.googleapis.com/v1beta"
+        elif provider_id == "cerebras":
+            base_url = "https://api.cerebras.ai/v1"
+        elif provider_id == "github":
+            base_url = "https://models.inference.ai.azure.com"
+        elif provider_id == "mistral":
+            base_url = "https://api.mistral.ai/v1"
         elif provider_id == "local":
             base_url = self.settings_manager.get(
                 "ai_local_base_url", "http://localhost:11434/v1"
@@ -364,10 +355,11 @@ class ModelBrowserDialog(Adw.Window):
         self.base_url = base_url
         self.api_key = api_key
         self.logger = get_logger("ashyterm.ui.dialogs.model_browser")
-        self._all_models: List[Tuple[str, str]] = []
-        self._filtered_models: List[Tuple[str, str]] = []
+        self._all_models: List[Tuple[str, str, bool]] = []
+        self._filtered_models: List[Tuple[str, str, bool]] = []
         self._fetching = False
         self._cancel_requested = False
+        self._show_free_only = False
 
         self._setup_ui()
         self._fetch_models()
@@ -400,12 +392,31 @@ class ModelBrowserDialog(Adw.Window):
         toolbar_view.set_content(main_box)
 
         # Search entry
+        # Search row with filter toggle
+        search_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         self.search_entry = Gtk.SearchEntry(
-            placeholder_text=_("Search models by name or ID...")
+            placeholder_text=_("Search models by name or ID..."),
+            hexpand=True,
         )
         a11y_label(self.search_entry, _("Search models"))
         self.search_entry.connect("search-changed", self._on_search_changed)
-        main_box.append(self.search_entry)
+        search_box.append(self.search_entry)
+
+        # Free filter toggle (only for OpenRouter)
+        self._free_filter_btn = Gtk.ToggleButton(
+            label=_("Free"),
+            valign=Gtk.Align.CENTER,
+            tooltip_text=_(
+                "Show only free models."
+            ),
+        )
+        self._free_filter_btn.add_css_class("flat")
+        a11y_label(self._free_filter_btn, _("Show only free models"))
+        self._free_filter_btn.connect("toggled", self._on_free_filter_toggled)
+        self._free_filter_btn.set_visible(self.provider_id == "openrouter")
+        search_box.append(self._free_filter_btn)
+
+        main_box.append(search_box)
 
         # Status label / spinner
         self.status_box = Gtk.Box(
@@ -525,9 +536,23 @@ class ModelBrowserDialog(Adw.Window):
             if self.provider_id == "gemini" and model_id.startswith("models/"):
                 model_id = model_id[7:]
             model_name = model.get("name", model.get("display_name", model_id))
+            is_free = self._is_model_free(model)
             if model_id:
-                model_list.append((model_id, model_name))
+                model_list.append((model_id, model_name, is_free))
         return model_list
+
+    @staticmethod
+    def _is_model_free(model: dict) -> bool:
+        """Check if a model is free based on pricing data."""
+        pricing = model.get("pricing", {})
+        if not pricing:
+            return False
+        try:
+            prompt_cost = float(pricing.get("prompt", "1"))
+            completion_cost = float(pricing.get("completion", "1"))
+            return prompt_cost == 0 and completion_cost == 0
+        except (ValueError, TypeError):
+            return False
 
     def _on_fetch_success(self, models: List[Tuple[str, str]]) -> None:
         """Handle successful model fetch."""
@@ -561,19 +586,30 @@ class ModelBrowserDialog(Adw.Window):
         self.status_label.set_text(_("Fetch cancelled"))
         self.status_label.remove_css_class("error")
 
+    def _on_free_filter_toggled(self, button) -> None:
+        """Toggle free models filter."""
+        self._show_free_only = button.get_active()
+        self._apply_filters()
+
     def _on_search_changed(self, search_entry) -> None:
         """Filter models based on search text."""
-        search_text = search_entry.get_text().lower().strip()
+        self._apply_filters()
 
-        if not search_text:
-            self._filtered_models = self._all_models
-        else:
-            self._filtered_models = [
-                (mid, name)
-                for mid, name in self._all_models
-                if search_text in mid.lower() or search_text in name.lower()
+    def _apply_filters(self) -> None:
+        """Apply search text and free filter to model list."""
+        search_text = self.search_entry.get_text().lower().strip()
+        result = self._all_models
+
+        if search_text:
+            result = [
+                m for m in result
+                if search_text in m[0].lower() or search_text in m[1].lower()
             ]
 
+        if self._show_free_only:
+            result = [m for m in result if m[2]]
+
+        self._filtered_models = result
         self._update_model_list()
 
     def _update_model_list(self) -> None:
@@ -597,8 +633,8 @@ class ModelBrowserDialog(Adw.Window):
         self.count_label.set_visible(True)
 
         # Add filtered models (limit to first 100 for performance)
-        for model_id, model_name in self._filtered_models[:100]:
-            row = self._create_model_row(model_id, model_name)
+        for model_id, model_name, is_free in self._filtered_models[:100]:
+            row = self._create_model_row(model_id, model_name, is_free)
             self.list_box.append(row)
 
         if len(self._filtered_models) > 100:
@@ -611,7 +647,7 @@ class ModelBrowserDialog(Adw.Window):
             hint_row = Gtk.ListBoxRow(child=hint_label, selectable=False)
             self.list_box.append(hint_row)
 
-    def _create_model_row(self, model_id: str, model_name: str) -> Gtk.ListBoxRow:
+    def _create_model_row(self, model_id: str, model_name: str, is_free: bool = False) -> Gtk.ListBoxRow:
         """Create a row for a model."""
         row = Gtk.ListBoxRow()
         row.model_id = model_id  # Store ID for later retrieval
@@ -625,15 +661,31 @@ class ModelBrowserDialog(Adw.Window):
             margin_end=12,
         )
 
-        # Model name (prominent)
+        # Name row with optional Free badge
+        name_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         name_label = Gtk.Label(
             label=model_name,
             xalign=0,
             css_classes=["heading"],
             wrap=True,
             wrap_mode=2,  # WORD_CHAR
+            hexpand=True,
         )
-        box.append(name_label)
+        name_box.append(name_label)
+
+        if is_free:
+            free_badge = Gtk.Label(
+                label=_("Free"),
+                css_classes=["success", "caption"],
+                valign=Gtk.Align.CENTER,
+                tooltip_text=_(
+                    "Free model — some providers may log or train on "
+                    "prompts. Check OpenRouter privacy settings."
+                ),
+            )
+            name_box.append(free_badge)
+
+        box.append(name_box)
 
         # Model ID (smaller, dim)
         id_label = Gtk.Label(

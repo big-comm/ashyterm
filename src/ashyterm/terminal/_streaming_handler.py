@@ -9,6 +9,7 @@ gi.require_version("Vte", "3.91")
 gi.require_version("GLib", "2.0")
 from gi.repository import GLib, Vte
 
+from .highlighter.command_validator import CommandValidator as _CommandValidator
 from .highlighter.constants import (
     ALL_ESCAPE_SEQ_PATTERN as _ALL_ESCAPE_SEQ_PATTERN,
 )
@@ -18,6 +19,13 @@ from .highlighter.constants import (
 
 # Sentinel for "continue normal processing" in shell input handling
 _CONTINUE_PROCESSING = object()
+
+# Sentinel token type for "command not found" — red underline
+_COMMAND_NOT_FOUND = object()
+
+# ANSI escape for command-not-found: red text + underline
+_COMMAND_NOT_FOUND_START = "\033[4;31m"
+_COMMAND_NOT_FOUND_END = "\033[24;39m"
 
 
 class StreamingHandler:
@@ -847,6 +855,10 @@ class StreamingHandler:
                 WARNING_COMMANDS = {"sudo", "doas", "pkexec", "rm", "dd"}
                 if token_value in WARNING_COMMANDS:
                     return Token.Name.Exception
+                # Validate command exists in $PATH or as builtin
+                validator = _CommandValidator.get_instance()
+                if validator.enabled and not validator.is_valid_command(token_value):
+                    return _COMMAND_NOT_FOUND
                 return Token.Name.Function
 
         return token_type
@@ -916,6 +928,24 @@ class StreamingHandler:
 
         self._prev_shell_input_token_type = enhanced_token_type
         self._prev_shell_input_token_len = current_token_len
+
+        # Handle command-not-found with hardcoded red underline
+        if enhanced_token_type is _COMMAND_NOT_FOUND:
+            ansi_start = _COMMAND_NOT_FOUND_START
+            ansi_end = _COMMAND_NOT_FOUND_END
+            if should_retroactive_recolor and actual_token_value:
+                self._apply_retroactive_recolor(
+                    term,
+                    actual_token_value,
+                    current_token_len,
+                    prev_token_len,
+                    ansi_start,
+                    ansi_end,
+                )
+                return b""
+            highlighted_text = f"{ansi_start}{text}{ansi_end}"
+            term.feed(highlighted_text.encode("utf-8"))
+            return b""
 
         # Get style codes
         if not hasattr(formatter, "style_string"):

@@ -23,6 +23,8 @@ import json
 import re
 import threading
 from dataclasses import dataclass, field
+
+from ashyterm.utils.re_engine import engine as _re_engine
 from importlib import resources
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Pattern, Set, Tuple
@@ -164,9 +166,9 @@ class HighlightRule:
         if not self.pattern:
             return False
         try:
-            re.compile(self.pattern)
+            _re_engine.compile(self.pattern)
             return True
-        except re.error:
+        except _re_engine.error:
             return False
 
 

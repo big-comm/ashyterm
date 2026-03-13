@@ -24,6 +24,7 @@ class AIHistoryManager:
         self._conversations: List[Dict[str, Any]] = []
         self._current_conversation_id: Optional[str] = None
         self._max_conversations = 100  # Limit number of conversations
+        self._max_messages_per_conversation = 200  # Limit messages per conversation
         self._load_history()
 
     def _load_history(self) -> None:
@@ -80,6 +81,12 @@ class AIHistoryManager:
             # Trim conversations if too many
             if len(self._conversations) > self._max_conversations:
                 self._conversations = self._conversations[-self._max_conversations :]
+
+            # Trim messages per conversation if too many
+            for conv in self._conversations:
+                msgs = conv.get("messages", [])
+                if len(msgs) > self._max_messages_per_conversation:
+                    conv["messages"] = msgs[-self._max_messages_per_conversation :]
 
             data = {
                 "conversations": self._conversations,

@@ -223,7 +223,7 @@ class BaseDialog(Adw.Window):
         self, title: str, message: str, details: Optional[str] = None
     ) -> None:
         try:
-            dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
+            dialog = Adw.AlertDialog(heading=title, body=message)
             if details:
                 dialog.set_body_use_markup(True)
                 full_body = (
@@ -231,7 +231,7 @@ class BaseDialog(Adw.Window):
                 )
                 dialog.set_body(full_body)
             dialog.add_response("ok", _("OK"))
-            dialog.present()
+            dialog.present(self)
             self.logger.warning(f"Error dialog shown: {title} - {message}")
         except Exception as e:
             self.logger.error(f"Failed to show error dialog: {e}")
@@ -240,7 +240,7 @@ class BaseDialog(Adw.Window):
         self, title: str, message: str, on_confirm: Optional[Callable] = None
     ) -> None:
         try:
-            dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
+            dialog = Adw.AlertDialog(heading=title, body=message)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("confirm", _("Continue"))
             dialog.set_response_appearance(
@@ -250,10 +250,9 @@ class BaseDialog(Adw.Window):
             def on_response(dlg, response_id):
                 if response_id == "confirm" and on_confirm:
                     on_confirm()
-                dlg.close()
 
             dialog.connect("response", on_response)
-            dialog.present()
+            dialog.present(self)
         except Exception as e:
             self.logger.error(f"Failed to show warning dialog: {e}")
 
@@ -526,17 +525,16 @@ def show_delete_confirmation_dialog(
         delete_label: Label for the delete button.
         cancel_label: Label for the cancel button.
     """
-    dialog = Adw.MessageDialog(
-        transient_for=parent,
+    dialog = Adw.AlertDialog(
         heading=heading,
         body=body,
+        close_response="cancel",
     )
     dialog.add_response("cancel", cancel_label)
     dialog.add_response("delete", delete_label)
     dialog.set_response_appearance("delete", Adw.ResponseAppearance.DESTRUCTIVE)
 
-    def on_response(dlg: Adw.MessageDialog, response: str) -> None:
-        dlg.close()
+    def on_response(dlg: Adw.AlertDialog, response: str) -> None:
         if response == "delete":
             on_confirm()
 
@@ -550,7 +548,7 @@ def show_delete_confirmation_dialog(
     except Exception:
         pass
 
-    dialog.present()
+    dialog.present(parent)
 
 
 def create_mapped_combo_row(

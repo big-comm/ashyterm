@@ -469,7 +469,7 @@ class CommandFormDialog(Adw.Window):
 
         name_pattern = values.get("name_pattern", "").strip()
         if name_pattern:
-            parts.append(f"-name '{name_pattern}'")
+            parts.append(f"-name {shlex.quote(name_pattern)}")
 
         if not values.get("recursive", True):
             parts.append("-maxdepth 1")
@@ -488,7 +488,7 @@ class CommandFormDialog(Adw.Window):
 
         grep_pattern = values.get("grep_pattern", "").strip()
         if grep_pattern:
-            parts.append(f"-exec grep -l '{grep_pattern}' {{}} \\\\;")
+            parts.append(f"-exec grep -l {shlex.quote(grep_pattern)} {{}} \\;")
 
         return " ".join(parts)
 
@@ -499,11 +499,13 @@ class CommandFormDialog(Adw.Window):
         archive_format = values.get("format", "tar.xz")
 
         # Use placeholder if no input specified
-        input_display = input_path if input_path else "<files>"
+        input_display = shlex.quote(input_path) if input_path else "<files>"
 
         # Generate default output name based on format if not specified
         if not output_path:
             output_path = f"archive.{archive_format}"
+        else:
+            output_path = shlex.quote(output_path)
 
         if archive_format == "zip":
             return f"zip -r {output_path} {input_display}"
@@ -528,7 +530,7 @@ class CommandFormDialog(Adw.Window):
         output_path = values.get("output", "").strip()
 
         # Use placeholder if no input
-        input_display = input_path if input_path else "<archive>"
+        input_display = shlex.quote(input_path) if input_path else "<archive>"
 
         # Find matching extraction command
         for (
@@ -547,7 +549,7 @@ class CommandFormDialog(Adw.Window):
                 )
 
         # Default to tar with auto-detection
-        dest_flag = f"-C {output_path}" if output_path else ""
+        dest_flag = f"-C {shlex.quote(output_path)}" if output_path else ""
         return f"tar -xvf {input_display} {dest_flag}".strip()
 
     def _format_extract_template(
@@ -571,9 +573,10 @@ class CommandFormDialog(Adw.Window):
             Formatted command string.
         """
         if output_path:
-            dest_flag = f"-C {output_path}" if uses_dest_flag else ""
+            escaped_output = shlex.quote(output_path)
+            dest_flag = f"-C {escaped_output}" if uses_dest_flag else ""
             return template_with_output.format(
-                input=input_display, dest=dest_flag, output=output_path
+                input=input_display, dest=dest_flag, output=escaped_output
             ).strip()
         return template_without.format(input=input_display)
 
@@ -598,7 +601,7 @@ class CommandFormDialog(Adw.Window):
         parts.append(action)
 
         if action not in list_actions and service:
-            parts.append(service)
+            parts.append(shlex.quote(service))
 
         return " ".join(parts)
 
@@ -609,7 +612,7 @@ class CommandFormDialog(Adw.Window):
         # Unit filter
         unit = values.get("unit", "").strip()
         if unit:
-            parts.append(f"-u {unit}")
+            parts.append(f"-u {shlex.quote(unit)}")
 
         # Follow flag
         if values.get("follow", False):
@@ -648,7 +651,7 @@ class CommandFormDialog(Adw.Window):
         if action in no_pkg_actions:
             return f"sudo pacman {action}"
         elif package:
-            return f"sudo pacman {action} {package}"
+            return f"sudo pacman {action} {shlex.quote(package)}"
         else:
             # Show command template even without package
             return f"sudo pacman {action}"

@@ -61,7 +61,7 @@ class SidebarManager:
         )
         self.sidebar_popover.add_controller(popover_key_controller)
 
-        self.flap.connect("notify::folded", self._on_sidebar_folded_changed)
+        self.flap.connect("notify::collapsed", self._on_sidebar_folded_changed)
 
         # MODIFIED: Connect the buttons to intermediate methods in this class
         self.add_session_button.connect("clicked", self._on_add_session_clicked)
@@ -125,23 +125,23 @@ class SidebarManager:
     ):
         """Switches the sidebar between normal (flap) and auto-hide (popover) modes."""
         # Safely unparent the sidebar_box from its known containers.
-        if self.flap.get_flap() == self.sidebar_box:
-            self.flap.set_flap(None)
+        if self.flap.get_sidebar() == self.sidebar_box:
+            self.flap.set_sidebar(None)
         if hasattr(self.sidebar_popover, "get_child") and self.sidebar_popover.get_child() == self.sidebar_box:
             self.sidebar_popover.set_child(None)
 
         if auto_hide_enabled:
             # Now that it's unparented, set it as the child of the popover
             self.sidebar_popover.set_child(self.sidebar_box)
-            self.flap.set_reveal_flap(False)
+            self.flap.set_show_sidebar(False)
             if not is_initial_setup:
                 self.sidebar_popover.popdown()
             self.toggle_sidebar_button.set_active(False)
         else:  # Normal mode
             # Now that it's unparented, set it as the flap widget
-            self.flap.set_flap(self.sidebar_box)
+            self.flap.set_sidebar(self.sidebar_box)
             initial_visible = self.settings_manager.get_sidebar_visible()
-            self.flap.set_reveal_flap(initial_visible)
+            self.flap.set_show_sidebar(initial_visible)
             self.toggle_sidebar_button.set_active(initial_visible)
             if initial_visible:
                 self._update_flap_size()
@@ -164,7 +164,7 @@ class SidebarManager:
             else:
                 self.sidebar_popover.popdown()
         else:
-            self.flap.set_reveal_flap(is_active)
+            self.flap.set_show_sidebar(is_active)
             self.settings_manager.set_sidebar_visible(is_active)
             if is_active:
                 self._update_flap_size()
@@ -264,7 +264,7 @@ class SidebarManager:
                 self.toggle_sidebar_button, _("Show Sessions")
             )
         else:
-            is_visible = self.flap.get_reveal_flap()
+            is_visible = self.flap.get_show_sidebar()
             icon_name = (
                 "sidebar-hide-symbolic" if is_visible else "sidebar-show-symbolic"
             )
@@ -292,7 +292,7 @@ class SidebarManager:
             if self.sidebar_popover.get_visible():
                 self._update_popover_size()
         else:
-            if self.flap.get_reveal_flap():
+            if self.flap.get_show_sidebar():
                 self._update_flap_size()
 
     def _update_flap_size(self):

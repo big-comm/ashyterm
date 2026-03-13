@@ -16,6 +16,10 @@ from ...utils.logger import get_logger
 _shell_input_highlighter_instance: Optional["ShellInputHighlighter"] = None
 _shell_input_highlighter_lock = threading.Lock()
 
+# Default fallback colors
+_DEFAULT_FG = "#ffffff"
+_DEFAULT_BG = "#000000"
+
 
 class ShellInputHighlighter:
     """
@@ -60,7 +64,7 @@ class ShellInputHighlighter:
 
         # Color palette from terminal color scheme
         self._palette: Optional[List[str]] = None
-        self._foreground: str = "#ffffff"
+        self._foreground: str = _DEFAULT_FG
 
         self._lock = threading.Lock()
         self._refresh_settings()
@@ -72,6 +76,11 @@ class ShellInputHighlighter:
 
             settings = get_settings_manager()
             self._enabled = settings.get("shell_input_highlighting_enabled", False)
+
+            # Command not found highlighting (red underline for unknown commands)
+            cmd_not_found = settings.get("command_not_found_highlighting", True)
+            from .command_validator import CommandValidator
+            CommandValidator.get_instance().enabled = self._enabled and cmd_not_found
 
             # Get theme mode: "auto" or "manual"
             self._theme_mode = settings.get("shell_input_theme_mode", "auto")
@@ -86,12 +95,12 @@ class ShellInputHighlighter:
             if gtk_theme == "terminal":
                 scheme = settings.get_color_scheme_data()
                 self._palette = scheme.get("palette", [])
-                self._foreground = scheme.get("foreground", "#ffffff")
-                self._background = scheme.get("background", "#000000")
+                self._foreground = scheme.get("foreground", _DEFAULT_FG)
+                self._background = scheme.get("background", _DEFAULT_BG)
             else:
                 self._palette = None
-                self._foreground = "#ffffff"
-                self._background = "#000000"
+                self._foreground = _DEFAULT_FG
+                self._background = _DEFAULT_BG
 
             if self._enabled:
                 config_key = f"{self._theme_mode}:{self._theme}:{self._dark_theme}:{self._light_theme}:{self._background}"
@@ -260,65 +269,6 @@ class ShellInputHighlighter:
         """Clear the command buffer for a proxy."""
         with self._lock:
             self._command_buffers[proxy_id] = ""
-
-    def get_highlighted_char(self, proxy_id: int, char: str) -> str:
-        """
-        Get the highlighted version of a character being echoed.
-
-        This is called when a character is echoed back from the PTY.
-        It returns the character with appropriate ANSI color codes
-        based on its context in the current command buffer.
-
-        Args:
-            proxy_id: The proxy ID
-            char: The character being echoed
-
-        Returns:
-            The character with ANSI color codes, or the plain character
-            if highlighting is disabled or not applicable.
-        """
-        if not self.enabled:
-            return char
-
-        with self._lock:
-            if not self._at_prompt.get(proxy_id, False):
-                return char
-
-            buffer = self._command_buffers.get(proxy_id, "")
-            if not buffer:
-                return char
-
-            # Find position of this char in the buffer
-            # This is a simplified approach - we highlight based on the full buffer
-            return self._highlight_buffer_char(buffer, char)
-
-    def _highlight_buffer_char(self, buffer: str, char: str) -> str:
-        """
-        Get the color for a character based on its position in the buffer.
-
-        Tokenizes the full buffer and finds the token containing the last
-        character to determine its color.
-        """
-        if not self._lexer or not self._formatter:
-            return char
-
-        try:
-            from pygments import highlight
-
-            # Highlight the full buffer
-            highlighted = highlight(buffer, self._lexer, self._formatter)
-
-            # For single char, just return it with color from the end of buffer
-            # This is a simplified approach that colors the whole buffer
-            if len(buffer) == 1:
-                return highlighted.rstrip("\n")
-
-            # Return just the character (the actual coloring happens in
-            # highlight_input_line for full line redraw)
-            return char
-
-        except Exception:
-            return char
 
     def highlight_input_line(self, proxy_id: int, line: str) -> str:
         """

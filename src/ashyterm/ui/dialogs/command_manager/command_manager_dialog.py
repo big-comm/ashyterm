@@ -171,9 +171,6 @@ class CommandManagerDialog(Adw.Window):
         self.command_textview.set_right_margin(85)
 
         # Placeholder handling
-        placeholder_buffer = self.command_textview.get_buffer()
-        placeholder_buffer.connect("changed", self._on_textview_changed)
-
         scrolled_text.set_child(self.command_textview)
         input_frame.set_child(scrolled_text)
         input_overlay.set_child(input_frame)
@@ -261,10 +258,6 @@ class CommandManagerDialog(Adw.Window):
         main_box.append(bottom_bar)
 
         toolbar_view.set_content(main_box)
-
-    def _on_textview_changed(self, buffer):
-        """Handle textview content changes."""
-        pass  # Placeholder for future functionality
 
     def _filter_command(self, flow_box_child) -> bool:
         """Filter function for command buttons based on search."""
@@ -406,8 +399,7 @@ class CommandManagerDialog(Adw.Window):
             return
 
         count = len(all_terminals)
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Confirm sending of command"),
             body=_(
                 "Select which of the <b>{count}</b> open terminals should receive the command below."
@@ -506,7 +498,7 @@ class CommandManagerDialog(Adw.Window):
             execute,
             selection_controls,
         )
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _get_terminal_display_name(self, terminal) -> str:
         """Get display name for a terminal."""

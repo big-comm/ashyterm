@@ -31,7 +31,6 @@ from .utils.icons import icon_image
 from .utils.logger import get_logger
 from .utils.security import validate_session_data
 from .utils.translation_utils import _
-from .window_ai_dialog import AIDialogBuilder
 from .window_file_drop import FileDragDropManager
 
 # Constants
@@ -42,7 +41,7 @@ PASTE_START = b"\x1b[200~"
 PASTE_END = b"\x1b[201~"
 
 
-class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWindow):
+class CommTerminalWindow(FileDragDropManager, Adw.ApplicationWindow):
     """
     Main application window. Acts as the central orchestrator for all major
     components (managers), handling high-level
@@ -692,6 +691,41 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         if key == "hide_headerbar_buttons_when_maximized":
             self.ui_builder._update_headerbar_buttons_visibility()
 
+    def _on_ai_assistant_requested(self, *_args) -> None:
+        """Toggle the AI assistant panel."""
+        if not getattr(self, "ai_assistant", None):
+            return
+
+        if not self.settings_manager.get("ai_assistant_enabled", False):
+            self.toast_overlay.add_toast(
+                Adw.Toast(
+                    title=_(
+                        "Enable the AI assistant in Preferences > Terminal > AI Assistant."
+                    )
+                )
+            )
+            return
+
+        missing = self.ai_assistant.missing_configuration()
+        if missing:
+            labels = {
+                "provider": _("Provider"),
+                "model": _("Model"),
+                "api_key": _("API key"),
+                "base_url": _("Base URL"),
+            }
+            readable = ", ".join(labels.get(item, item) for item in missing)
+            self.toast_overlay.add_toast(
+                Adw.Toast(
+                    title=_("Configure {items} in AI Assistant settings.").format(
+                        items=readable
+                    )
+                )
+            )
+            return
+
+        self.ui_builder.toggle_ai_panel()
+
     def _handle_ai_assistant_setting_change(self, new_value) -> None:
         """Handle AI assistant enabled/disabled."""
         self.ui_builder.update_ai_button_visibility()
@@ -952,8 +986,7 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
     def _show_close_multiple_tabs_dialog(self) -> None:
         """Show dialog when closing with multiple tabs open."""
         tab_count = self.tab_manager.get_tab_count()
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Close {} Tabs?").format(tab_count),
             body=_(
                 "You have {} open tabs. Would you like to save them to restore next time?"
@@ -968,11 +1001,10 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         dialog.set_default_response("save")
 
         dialog.connect("response", self._on_close_multiple_tabs_dialog_response)
-        dialog.present()
+        dialog.present(self)
 
     def _on_close_multiple_tabs_dialog_response(self, dialog, response_id):
         """Handle response from close multiple tabs dialog."""
-        dialog.close()
         if response_id == "save":
             self.state_manager.save_session_state()
             self._continue_close_process(force_close=True)
@@ -994,9 +1026,8 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         return Gdk.EVENT_PROPAGATE
 
     def _show_window_ssh_close_confirmation(self) -> None:
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            title=_("Close Window"),
+        dialog = Adw.AlertDialog(
+            heading=_("Close Window"),
             body=_(
                 "This window has active SSH connections. Closing will disconnect them. Are you sure?"
             ),
@@ -1011,10 +1042,9 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
                 self._force_closing = True
                 self._perform_cleanup()
                 self.close()
-            dlg.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self)
 
     def _perform_cleanup(self) -> None:
         if self._cleanup_performed:
@@ -1146,9 +1176,9 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
             self.file_manager_button.set_active(False)
 
     def _show_error_dialog(self, title: str, message: str) -> None:
-        dialog = Adw.MessageDialog(transient_for=self, title=title, body=message)
+        dialog = Adw.AlertDialog(heading=title, body=message)
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+        dialog.present(self)
 
     def _on_terminal_exit(self, terminal, child_status, identifier):
         if getattr(self, "ai_assistant", None):
@@ -1276,8 +1306,7 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
     def _on_clear_all_temp_files_clicked(self, button):
         """Show confirmation and then clear all temp files."""
         self.cleanup_popover.popdown()
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Clear All Temporary Files?"),
             body=_(
                 "This will remove all locally downloaded files for remote editing. "
@@ -1289,10 +1318,9 @@ class CommTerminalWindow(AIDialogBuilder, FileDragDropManager, Adw.ApplicationWi
         dialog.add_response("clear", _("Clear All"))
         dialog.set_response_appearance("clear", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.connect("response", self._on_clear_all_confirm)
-        dialog.present()
+        dialog.present(self)
 
     def _on_clear_all_confirm(self, dialog, response_id):
-        dialog.close()
         if response_id == "clear":
             self.logger.info("User confirmed clearing all temporary files.")
             for fm in self.tab_manager.file_managers.values():
