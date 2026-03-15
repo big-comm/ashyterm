@@ -21,15 +21,17 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Gio, GObject, Nautilus
 
 # --- Internationalization (i18n) Setup ---
-APP_NAME = "comm-ashyterm"
+APP_NAME = "ashyterm"
 
 try:
     gettext.bindtextdomain(APP_NAME, "/usr/share/locale")
-    gettext.textdomain(APP_NAME)
 except Exception as e:
     print(f"Ashy Terminal Extension: Could not set up localization: {e}")
 
-_ = gettext.gettext
+
+def _(message):
+    """Domain-specific translation to avoid conflict with Nautilus' own textdomain."""
+    return gettext.dgettext(APP_NAME, message)
 
 # --- Constants ---
 TERMINAL_EXECUTABLE = shutil.which("ashyterm")
