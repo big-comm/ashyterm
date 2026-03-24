@@ -729,14 +729,13 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
     def _show_restart_required_dialog(self, title: str, message: str) -> None:
         """Show a dialog informing the user that a restart is required."""
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=title,
             body=message,
         )
         dialog.add_response("ok", _("OK"))
         dialog.set_default_response("ok")
-        dialog.present()
+        dialog.present(self)
 
     def _on_word_chars_changed(self, entry_row):
         text = entry_row.get_text()
@@ -767,9 +766,8 @@ class PreferencesDialog(Adw.PreferencesWindow):
         self._on_setting_changed("auto_hide_sidebar", new_value)
 
     def _on_reset_settings_clicked(self, button) -> None:
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            title=_("Reset All Settings"),
+        dialog = Adw.AlertDialog(
+            heading=_("Reset All Settings"),
             body=_(
                 "Are you sure you want to reset all settings to their default values? This action cannot be undone."
             ),
@@ -782,26 +780,23 @@ class PreferencesDialog(Adw.PreferencesWindow):
             if response_id == "reset":
                 try:
                     self.settings_manager.reset_to_defaults()
-                    success_dialog = Adw.MessageDialog(
-                        transient_for=self,
-                        title=_("Settings Reset"),
+                    success_dialog = Adw.AlertDialog(
+                        heading=_("Settings Reset"),
                         body=_(
                             "All settings have been reset to their default values. Please restart the application for all changes to take effect."
                         ),
                     )
                     success_dialog.add_response("ok", _("OK"))
-                    success_dialog.present()
+                    success_dialog.present(self)
                     self.logger.info("All settings reset to defaults")
                 except Exception as e:
                     self.logger.error(f"Failed to reset settings: {e}")
-                    error_dialog = Adw.MessageDialog(
-                        transient_for=self,
-                        title=_("Reset Failed"),
+                    error_dialog = Adw.AlertDialog(
+                        heading=_("Reset Failed"),
                         body=_("Failed to reset settings: {}").format(e),
                     )
                     error_dialog.add_response("ok", _("OK"))
-                    error_dialog.present()
-            dlg.close()
+                    error_dialog.present(self)
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self)

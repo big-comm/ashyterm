@@ -1468,16 +1468,15 @@ class SessionEditDialog(BaseDialog):
                     _("Please fill in all required SSH fields first."),
                 )
                 return
-            self.testing_dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=_("Testing Connection..."),
+            self.testing_dialog = Adw.AlertDialog(
+                heading=_("Testing Connection..."),
                 body=_("Attempting to connect to {host}...").format(
                     host=test_session.host
                 ),
             )
             spinner = Gtk.Spinner(spinning=True, halign=Gtk.Align.CENTER, margin_top=12)
             self.testing_dialog.set_extra_child(spinner)
-            self.testing_dialog.present()
+            self.testing_dialog.present(self)
             thread = threading.Thread(
                 target=self._run_test_in_thread, args=(test_session,)
             )
@@ -1525,13 +1524,12 @@ class SessionEditDialog(BaseDialog):
         if self.testing_dialog:
             self.testing_dialog.close()
         if success:
-            result_dialog = Adw.MessageDialog(
-                transient_for=self,
-                title=_("Connection Successful"),
+            result_dialog = Adw.AlertDialog(
+                heading=_("Connection Successful"),
                 body=_("Successfully connected to the SSH server."),
             )
             result_dialog.add_response("ok", _("OK"))
-            result_dialog.present()
+            result_dialog.present(self)
         else:
             self._show_error_dialog(
                 _("Connection Failed"),

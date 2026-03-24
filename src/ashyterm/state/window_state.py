@@ -94,8 +94,7 @@ class WindowStateManager:
 
     def save_current_layout(self):
         """Prompts for a name and saves the current window layout."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.window,
+        dialog = Adw.AlertDialog(
             heading=_("Save Layout"),
             body=_("Enter a name for the current layout:"),
             close_response="cancel",
@@ -112,10 +111,9 @@ class WindowStateManager:
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response("save")
         dialog.connect("response", self._on_save_layout_dialog_response, entry)
-        dialog.present()
+        dialog.present(self.window)
 
     def _on_save_layout_dialog_response(self, dialog, response_id, entry):
-        dialog.close()
         if response_id != "save":
             return
 
@@ -162,8 +160,7 @@ class WindowStateManager:
             )
             return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self.window,
+        dialog = Adw.AlertDialog(
             heading=_("Restore Saved Layout?"),
             body=_(
                 "This will close all current tabs and restore the '{name}' layout. Are you sure?"
@@ -175,10 +172,9 @@ class WindowStateManager:
         dialog.set_response_appearance("restore", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_default_response("cancel")
         dialog.connect("response", self._on_restore_layout_dialog_response, layout_file)
-        dialog.present()
+        dialog.present(self.window)
 
     def _on_restore_layout_dialog_response(self, dialog, response_id, layout_file):
-        dialog.close()
         if response_id == "restore":
             self._perform_layout_restore(layout_file)
 
@@ -208,8 +204,7 @@ class WindowStateManager:
     def delete_saved_layout(self, layout_name: str, confirm: bool = True):
         """Deletes a saved layout file."""
         if confirm:
-            dialog = Adw.MessageDialog(
-                transient_for=self.window,
+            dialog = Adw.AlertDialog(
                 heading=_("Delete Layout?"),
                 body=_(
                     "Are you sure you want to permanently delete the layout '{name}'?"
@@ -222,12 +217,11 @@ class WindowStateManager:
             dialog.connect(
                 "response", self._on_delete_layout_dialog_response, layout_name
             )
-            dialog.present()
+            dialog.present(self.window)
         else:
             self._perform_delete_layout(layout_name)
 
     def _on_delete_layout_dialog_response(self, dialog, response_id, layout_name):
-        dialog.close()
         if response_id == "delete":
             self._perform_delete_layout(layout_name)
 

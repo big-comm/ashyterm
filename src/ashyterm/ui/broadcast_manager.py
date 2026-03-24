@@ -107,8 +107,7 @@ class BroadcastManager(GObject.Object):
 
     def show_confirmation_dialog(self, command: str, all_terminals: List[Vte.Terminal]):
         """Show the confirmation dialog for broadcasting."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.window,
+        dialog = Adw.AlertDialog(
             heading=_("Confirm sending of command"),
             body=_(
                 "Select which of the <b>{count}</b> open terminals should receive the command below."
@@ -197,7 +196,7 @@ class BroadcastManager(GObject.Object):
             selection_controls,
             remember_check,
         )
-        dialog.present()
+        dialog.present(self.window)
 
     def _on_dialog_response(
         self, dialog, response_id, command, controls, remember_check

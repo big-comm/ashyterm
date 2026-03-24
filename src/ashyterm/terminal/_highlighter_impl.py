@@ -84,6 +84,7 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         terminal: Vte.Terminal,
         terminal_type: str = "local",
         proxy_id: Optional[int] = None,
+        shell_name: str = "",
     ):
         """
         Initialize a highlighted terminal proxy.
@@ -157,6 +158,14 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         # Track previous token type for retroactive recoloring
         self._prev_shell_input_token_type = None
         self._prev_shell_input_token_len = 0
+
+        # Shell name stored for informational logging.
+        # NOTE: Shell input highlighting compatibility (zsh ZLE, fish, ble.sh)
+        # is handled dynamically by the NUL byte marker mechanism in
+        # _detect_interactive_marker(). Shells with their own line editors
+        # don't produce NUL-prefixed echo, so chunk_is_likely_user_input
+        # is naturally False and highlighting is not applied.
+        self._shell_name = shell_name
 
         # Pause flag: when True, skip highlighting and feed raw data
         self._highlight_paused = False

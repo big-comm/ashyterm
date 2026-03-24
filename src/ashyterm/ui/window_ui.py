@@ -261,10 +261,10 @@ class WindowUIBuilder:
         self.command_toolbar = self._create_command_toolbar()
         main_box.append(self.command_toolbar)
 
-        # Create the main content area (Flap)
-        self.flap = Adw.Flap(transition_type=Adw.FlapTransitionType.SLIDE)
+        # Create the main content area (OverlaySplitView)
+        self.flap = Adw.OverlaySplitView()
         self.sidebar_box = self._create_sidebar()
-        self.flap.set_flap(self.sidebar_box)
+        self.flap.set_sidebar(self.sidebar_box)
 
         self.sidebar_popover = Gtk.Popover(
             position=Gtk.PositionType.BOTTOM, has_arrow=True, autohide=True
@@ -278,7 +278,7 @@ class WindowUIBuilder:
         content_area = self._create_content_area()
         self.flap.set_content(content_area)
 
-        # Add the Flap as the main content of the window, which will be revealed/hidden by the SearchBar
+        # Add the OverlaySplitView as the main content of the window
         main_box.append(self.flap)
         return main_box
 
@@ -507,6 +507,8 @@ class WindowUIBuilder:
         # Wrap toolbar in WindowHandle to enable window dragging
         window_handle = Gtk.WindowHandle()
         window_handle.set_child(toolbar)
+        # Start hidden — only shown after deferred population finds pinned commands
+        window_handle.set_visible(False)
 
         # Store reference to the inner toolbar for population
         self._toolbar_inner = toolbar
@@ -530,12 +532,19 @@ class WindowUIBuilder:
         command_manager = get_command_button_manager()
         pinned_commands = command_manager.get_pinned_commands()
 
-        # Hide toolbar if no pinned commands
+        # Control visibility on the WindowHandle parent, not just the inner Box
+        parent_handle = self.command_toolbar
         if not pinned_commands:
             toolbar.set_visible(False)
+            parent_handle.set_visible(False)
             return
 
+        self.logger.debug(
+            f"Command toolbar: showing {len(pinned_commands)} pinned commands: "
+            f"{[c.id for c in pinned_commands]}"
+        )
         toolbar.set_visible(True)
+        parent_handle.set_visible(True)
 
         for cmd in pinned_commands:
             btn = self._create_toolbar_command_button(cmd)
@@ -883,6 +892,9 @@ class WindowUIBuilder:
             self.ai_paned.set_position(target_pos)
 
             self._ai_panel_visible = True
+
+        # Focus the input field after the panel is mapped
+        GLib.idle_add(self.ai_chat_panel.focus_input)
 
     def hide_ai_panel(self) -> None:
         """Hide the AI chat panel."""

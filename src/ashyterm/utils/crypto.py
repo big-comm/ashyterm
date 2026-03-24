@@ -4,27 +4,30 @@ from typing import Dict, Optional
 
 import gi
 
-gi.require_version("Secret", "1")
-from gi.repository import Gio, Secret
-
 from .exceptions import AshyTerminalError
 from .logger import get_logger
 
-# Schema to identify Ashy Terminal passwords in the system keyring.
-SECRET_SCHEMA = Secret.Schema.new(
-    "org.communitybig.ashyterm.Password",
-    Secret.SchemaFlags.NONE,
-    {"session_name": Secret.SchemaAttributeType.STRING},
-)
+try:
+    gi.require_version("Secret", "1")
+    from gi.repository import Secret
+
+    SECRET_SCHEMA = Secret.Schema.new(
+        "org.communitybig.ashyterm.Password",
+        Secret.SchemaFlags.NONE,
+        {"session_name": Secret.SchemaAttributeType.STRING},
+    )
+    _SECRET_AVAILABLE = True
+except (ValueError, ImportError):
+    Secret = None  # type: ignore[assignment,misc]
+    SECRET_SCHEMA = None  # type: ignore[assignment]
+    _SECRET_AVAILABLE = False
+
+from gi.repository import Gio
 
 
 def is_encryption_available() -> bool:
     """Checks if the libsecret library is available."""
-    try:
-        # A successful import is already a good indication.
-        return True
-    except (ImportError, ValueError):
-        return False
+    return _SECRET_AVAILABLE
 
 
 def store_password(session_name: str, password: str) -> bool:

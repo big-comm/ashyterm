@@ -6,6 +6,7 @@ and display customization.
 """
 
 import json
+import os
 import shlex
 import threading
 import uuid
@@ -753,8 +754,12 @@ class CommandButtonManager:
         """
         try:
             filepath.parent.mkdir(parents=True, exist_ok=True)
-            with open(filepath, "w", encoding="utf-8") as f:
+            temp_file = filepath.with_suffix(".tmp")
+            with open(temp_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            temp_file.replace(filepath)
             self.logger.info(f"{label} saved successfully.")
         except Exception as e:
             self.logger.error(f"Failed to save {label}: {e}")
@@ -794,8 +799,21 @@ class CommandButtonManager:
                 self.custom_commands_file, [], "custom commands"
             )
             try:
-                self._custom_commands = [CommandButton.from_dict(cmd) for cmd in data]
-                if data:
+                all_cmds = [CommandButton.from_dict(cmd) for cmd in data]
+                # Deduplicate by ID, keeping only the last occurrence
+                seen_ids: Dict[str, int] = {}
+                for i, cmd in enumerate(all_cmds):
+                    seen_ids[cmd.id] = i
+                self._custom_commands = [
+                    cmd for i, cmd in enumerate(all_cmds) if seen_ids[cmd.id] == i
+                ]
+                if len(self._custom_commands) < len(all_cmds):
+                    removed = len(all_cmds) - len(self._custom_commands)
+                    self.logger.warning(
+                        f"Removed {removed} duplicate custom commands on load."
+                    )
+                    self.save_custom_commands()
+                if self._custom_commands:
                     self.logger.info(
                         f"Loaded {len(self._custom_commands)} custom commands."
                     )
@@ -848,6 +866,14 @@ class CommandButtonManager:
             self._command_prefs = self._load_json_file(
                 self.command_prefs_file, {}, "command preferences"
             )
+            # Diagnostic: log any commands that are loaded as pinned
+            pinned_ids = [
+                cmd_id
+                for cmd_id, prefs in self._command_prefs.items()
+                if prefs.get("pinned")
+            ]
+            if pinned_ids:
+                self.logger.info(f"Loaded pinned commands from prefs: {pinned_ids}")
 
     def _save_command_prefs(self):
         """Save per-command preferences."""
@@ -989,9 +1015,15 @@ class CommandButtonManager:
     def add_custom_command(self, command: CommandButton):
         """Add a new custom command."""
         with self._data_lock:
-            # Generate ID if not provided
             if not command.id:
                 command.id = generate_id()
+            # Prevent duplicate IDs
+            existing_ids = {cmd.id for cmd in self._custom_commands}
+            if command.id in existing_ids:
+                self.logger.warning(
+                    f"Duplicate command ID rejected: {command.id}"
+                )
+                return
             command.is_builtin = False
             self._custom_commands.append(command)
             self.save_custom_commands()
@@ -1016,8 +1048,9 @@ class CommandButtonManager:
                     self.save_custom_commands()
                     return
 
-            # If not found, add it as new custom command
-            self.add_custom_command(command)
+            self.logger.warning(
+                f"Command not found for update: {command.id}"
+            )
 
     def restore_builtin_default(self, command_id: str):
         """Restore a builtin command to its default configuration."""

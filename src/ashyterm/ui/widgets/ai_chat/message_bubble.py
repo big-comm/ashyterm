@@ -452,77 +452,16 @@ class MessageBubble(Gtk.Box):
 
     @staticmethod
     def _dracula_color_map() -> dict:
-        """Default Dracula color scheme for Pygments tokens."""
+        """Default Dracula color scheme for Pygments tokens (uses fallback colors)."""
+        colors = {
+            name: fallback
+            for name, (_idx, fallback) in MessageBubble._PALETTE_COLORS.items()
+        }
         m: dict[str, str] = {}
-        for k in (
-            "Token.Keyword",
-            "Token.Keyword.Namespace",
-            "Token.Keyword.Constant",
-            "Token.Keyword.Declaration",
-            "Token.Keyword.Pseudo",
-            "Token.Keyword.Reserved",
-        ):
-            m[k] = "#ff79c6"
-        m["Token.Keyword.Type"] = "#8be9fd"
-        for k in (
-            "Token.Name.Builtin",
-            "Token.Name.Function",
-            "Token.Name.Class",
-            "Token.Name.Decorator",
-        ):
-            m[k] = "#50fa7b"
-        for k in (
-            "Token.Name.Variable",
-            "Token.Name.Variable.Global",
-            "Token.Name.Variable.Instance",
-        ):
-            m[k] = "#8be9fd"
-        for k in (
-            "Token.String",
-            "Token.String.Doc",
-            "Token.String.Double",
-            "Token.String.Single",
-            "Token.String.Backtick",
-            "Token.String.Interpol",
-        ):
-            m[k] = "#f1fa8c"
-        m["Token.String.Escape"] = "#ffb86c"
-        for k in (
-            "Token.Literal",
-            "Token.Literal.String",
-            "Token.Literal.String.Double",
-            "Token.Literal.String.Single",
-            "Token.Literal.String.Backtick",
-            "Token.Literal.String.Doc",
-            "Token.Literal.String.Escape",
-            "Token.Literal.String.Interpol",
-            "Token.Literal.String.Heredoc",
-        ):
-            m[k] = "#f1fa8c"
-        m["Token.Literal.String.Escape"] = "#ffb86c"
-        for k in (
-            "Token.Literal.Number",
-            "Token.Literal.Number.Integer",
-            "Token.Literal.Number.Float",
-            "Token.Literal.Number.Hex",
-            "Token.Literal.Number.Oct",
-            "Token.Literal.Number.Bin",
-            "Token.Number",
-            "Token.Number.Integer",
-            "Token.Number.Float",
-        ):
-            m[k] = "#bd93f9"
-        for k in (
-            "Token.Comment",
-            "Token.Comment.Single",
-            "Token.Comment.Multiline",
-            "Token.Comment.Hashbang",
-            "Token.Comment.Preproc",
-        ):
-            m[k] = "#6272a4"
-        for k in ("Token.Operator", "Token.Operator.Word"):
-            m[k] = "#ff79c6"
-        m["Token.Punctuation"] = "#f8f8f2"
+        for color_name, tokens in MessageBubble._TOKEN_COLOR_GROUPS:
+            color = colors[color_name]
+            for token in tokens:
+                m[token] = color
         return m
 
     def _get_syntax_colors(self) -> dict:

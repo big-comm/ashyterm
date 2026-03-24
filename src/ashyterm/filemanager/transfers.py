@@ -360,8 +360,7 @@ class FileTransferMixin:
 
     def _show_upload_confirmation_dialog(self, local_paths: List[Path]):
         count = len(local_paths)
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Confirm Upload"),
             body=_(
                 "You are about to upload {count} item(s) to:\n<b>{dest}</b>\n\nDo you want to proceed?"
@@ -385,7 +384,7 @@ class FileTransferMixin:
         dialog.set_response_appearance("upload", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response("upload")
         dialog.connect("response", self._on_upload_confirmation_response, local_paths)
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _on_upload_confirmation_response(self, dialog, response_id, local_paths):
         if response_id == "upload":
@@ -437,8 +436,7 @@ class FileTransferMixin:
             self._download_and_execute(file_item, self._open_and_monitor_local_file)
 
     def _show_conflict_on_open_dialog(self, local_path, remote_path, file_item):
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("File Has Changed on Server"),
             body=_(
                 "The file '{filename}' has been modified on the server since you last opened it. Your local changes will be lost if you download the new version."
@@ -457,10 +455,9 @@ class FileTransferMixin:
                 self._open_local_file(local_path)
             elif response_id == "download-new":
                 self._download_and_execute(file_item, self._open_and_monitor_local_file)
-            d.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _on_open_with_action(self, _action, _param, items: List[FileItem]):
         if not items:
@@ -612,8 +609,7 @@ class FileTransferMixin:
             else:
                 return f"{size_bytes / (1024 * 1024 * 1024):.2f} GB"
 
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Insufficient Disk Space"),
             body=_(
                 "There is not enough free space at the destination to complete this transfer."
@@ -634,7 +630,7 @@ class FileTransferMixin:
             Gtk.Label(label=details, use_markup=True, wrap=True, xalign=0)
         )
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _show_permission_error_dialog(self, transfer_id: str, message: str):
         """Shows a specific dialog for permission errors."""
@@ -644,8 +640,7 @@ class FileTransferMixin:
         if not transfer:
             return
 
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Transfer Failed: Permission Denied"),
             body=_("Could not complete the transfer of '{filename}'.").format(
                 filename=transfer.filename
@@ -663,7 +658,7 @@ class FileTransferMixin:
         )
         dialog.set_extra_child(Gtk.Label(label=details, use_markup=True, wrap=True))
         dialog.add_response("ok", _("OK"))
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _show_open_with_dialog(
         self,
@@ -687,6 +682,7 @@ class FileTransferMixin:
                             self._open_and_monitor_local_file(
                                 local_path, remote_path, app_info, initial_timestamp
                             )
+                        else:
                             self._open_local_file(local_path, app_info)
                 # Defer destruction to avoid segfaults in Wayland callbacks
                 GLib.idle_add(d.destroy)
@@ -818,8 +814,7 @@ class FileTransferMixin:
 
     def _show_conflict_dialog(self, local_path: Path, remote_path: str):
         """Shows a dialog to the user to resolve an edit conflict."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("File Conflict"),
             body=_(
                 "The file '{filename}' has been modified on the server since you started editing it. How would you like to proceed?"
@@ -837,15 +832,13 @@ class FileTransferMixin:
                 self._upload_on_save_thread(local_path, remote_path)
             elif response_id == "save-as":
                 self._prompt_for_new_filename_and_upload(local_path, remote_path)
-            d.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _prompt_for_new_filename_and_upload(self, local_path: Path, remote_path: str):
         """Prompts for a new filename and uploads the file."""
-        dialog = Adw.MessageDialog(
-            transient_for=self.parent_window,
+        dialog = Adw.AlertDialog(
             heading=_("Save As"),
             body=_("Enter a new name for the file on the server:"),
             close_response="cancel",
@@ -862,10 +855,9 @@ class FileTransferMixin:
                 if new_name:
                     new_remote_path = str(Path(remote_path).parent / new_name)
                     self._upload_on_save_thread(local_path, new_remote_path)
-            d.close()
 
         dialog.connect("response", on_response)
-        dialog.present()
+        dialog.present(self.parent_window)
 
     def _on_save_upload_complete(self, transfer_id, success, message):
         """Callback to finalize transfer and show system notification."""

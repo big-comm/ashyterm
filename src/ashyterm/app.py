@@ -496,9 +496,7 @@ class CommTerminalApp(Adw.Application):
     def _on_about_action(self, _action, _param) -> None:
         """Handle about action."""
         try:
-            about_dialog = Adw.AboutWindow(
-                transient_for=self.get_active_window(),
-                modal=True,
+            about_dialog = Adw.AboutDialog(
                 application_name=APP_TITLE,
                 application_icon="ashyterm",
                 developer_name=DEVELOPER_NAME,
@@ -514,7 +512,7 @@ class CommTerminalApp(Adw.Application):
                 debug_info += f"Architecture: {self.platform_info.architecture}\n"
                 debug_info += f"Shell: {os.environ.get('SHELL', 'N/A')}"
                 about_dialog.set_debug_info(debug_info)
-            about_dialog.present()
+            about_dialog.present(self.get_active_window())
         except Exception as e:
             self.logger.error(f"Failed to show about dialog: {e}")
 
@@ -566,9 +564,8 @@ class CommTerminalApp(Adw.Application):
             if not active_window:
                 self.quit()
                 return
-            dialog = Adw.MessageDialog(
-                transient_for=active_window,
-                title=_("Close Application"),
+            dialog = Adw.AlertDialog(
+                heading=_("Close Application"),
                 body=_(
                     "There are active SSH connections. Closing will disconnect all sessions.\n\nAre you sure you want to close the application?"
                 ),
@@ -583,13 +580,11 @@ class CommTerminalApp(Adw.Application):
                     if response_id == "close":
                         self.logger.info("User confirmed quit with active SSH sessions")
                         self.quit()
-                    dlg.close()
                 except Exception as e:
                     self.logger.error(f"SSH close confirmation response failed: {e}")
-                    dlg.close()
 
             dialog.connect("response", on_response)
-            dialog.present()
+            dialog.present(active_window)
         except Exception as e:
             self.logger.error(f"SSH close confirmation dialog failed: {e}")
             self.quit()
@@ -637,13 +632,12 @@ class CommTerminalApp(Adw.Application):
     def _show_startup_error(self, error_message: str) -> None:
         """Show startup error dialog."""
         try:
-            dialog = Adw.MessageDialog(
-                transient_for=self.get_active_window(),
+            dialog = Adw.AlertDialog(
                 heading=_("Startup Error"),
                 body=_("Application failed to start: {}").format(error_message),
             )
             dialog.add_response("ok", _("OK"))
-            dialog.present()
+            dialog.present(self.get_active_window())
         except Exception:
             print(f"STARTUP ERROR: {error_message}")
 
@@ -652,9 +646,9 @@ class CommTerminalApp(Adw.Application):
         try:
             if parent is None:
                 parent = self.get_active_window()
-            dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
+            dialog = Adw.AlertDialog(heading=title, body=message)
             dialog.add_response("ok", _("OK"))
-            dialog.present()
+            dialog.present(parent)
         except Exception as e:
             self.logger.error(f"Failed to show error dialog: {e}")
 
@@ -662,9 +656,9 @@ class CommTerminalApp(Adw.Application):
         """Show info dialog to user."""
         try:
             parent = self.get_active_window()
-            dialog = Adw.MessageDialog(transient_for=parent, title=title, body=message)
+            dialog = Adw.AlertDialog(heading=title, body=message)
             dialog.add_response("ok", _("OK"))
-            dialog.present()
+            dialog.present(parent)
         except Exception as e:
             self.logger.error(f"Failed to show info dialog: {e}")
 

@@ -641,8 +641,7 @@ class CommandEditorDialog(Adw.Window):
     def _on_pick_icon_clicked(self, mode: str):
         """Open system icon picker dialog."""
         # Create a simple icon chooser dialog
-        dialog = Adw.MessageDialog(
-            transient_for=self,
+        dialog = Adw.AlertDialog(
             heading=_("Choose Icon"),
             body=_("Enter icon name or select from common icons:"),
             default_response="select",
@@ -705,7 +704,7 @@ class CommandEditorDialog(Adw.Window):
             "response",
             lambda d, r: self._on_icon_dialog_response(d, r, selected_icon_name, mode),
         )
-        dialog.present()
+        dialog.present(self)
 
     def _select_icon(self, icon_name, dialog, selected_ref, mode: str):
         """Handle icon selection from grid."""
@@ -714,7 +713,7 @@ class CommandEditorDialog(Adw.Window):
             self.simple_icon_entry.set_text(icon_name)
         else:
             self.form_icon_entry.set_text(icon_name)
-        dialog.close()
+        dialog.force_close()
 
     def _on_icon_dialog_response(self, dialog, response, selected_ref, mode: str):
         """Handle icon picker dialog response."""
@@ -1105,12 +1104,6 @@ class CommandEditorDialog(Adw.Window):
         self.simple_execution_mode_row.set_selected(exec_mode_idx)
 
         self.wizard_stack.set_visible_child_name("simple")
-
-    def _parse_template_to_fields(self, template: str):
-        """Parse a command template string into form fields data."""
-        # For now, form_fields_data is already populated from stored form_fields
-        # This method is a placeholder for future parsing logic
-        pass
 
     def _field_type_to_string(self, field_type: FieldType) -> str:
         """Convert FieldType enum to string."""
