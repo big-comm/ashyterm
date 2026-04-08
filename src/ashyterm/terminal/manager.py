@@ -91,18 +91,18 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         self._highlight_manager = None
         # Track when commands start for long-running command notifications
         self._command_start_times: Dict[int, float] = {}
-        # Process check timer runs every 3 seconds to reduce main thread load
-        # (psutil calls can be blocking and cause UI freezes on some systems)
-        self._process_check_timer_id = GLib.timeout_add_seconds(
-            3, self._periodic_process_check
+        # Process check timer — runs every second to keep tab titles
+        # up-to-date via /proc/<pid>/cwd polling (readlink is near-instant).
+        self._process_check_timer_id = GLib.timeout_add(
+            1000, self._periodic_process_check
         )
         self.logger.info("Terminal manager initialized")
 
     def _ensure_process_check_timer(self) -> None:
         """Re-arm the periodic process check timer if it was stopped."""
         if self._process_check_timer_id is None:
-            self._process_check_timer_id = GLib.timeout_add_seconds(
-                3, self._periodic_process_check
+            self._process_check_timer_id = GLib.timeout_add(
+                1000, self._periodic_process_check
             )
 
     def prepare_initial_terminal(self) -> None:
@@ -241,11 +241,11 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
 
     def _periodic_process_check(self) -> bool:
         """
-        Periodic check to detect manual SSH sessions in local terminals.
+        Periodic check to detect manual SSH sessions and update CWD titles.
 
-        This runs every 3 seconds and checks for manual SSH sessions.
-        Note: Context-aware highlighting is now handled by CommandDetector
-        which parses the terminal output stream in real-time.
+        This runs every 3 seconds and checks for:
+        - Manual SSH sessions in local terminals
+        - Current working directory changes via /proc/<pid>/cwd
         """
         # Stop timer if no terminals are registered
         if not self.registry.get_all_terminal_ids():
@@ -261,9 +261,41 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
                     if terminal_id is not None:
                         # Check for manual SSH sessions
                         self.manual_ssh_tracker.check_process_tree(terminal_id)
+
+            # Poll /proc/<pid>/cwd for all local terminals to keep tab titles updated
+            self._poll_terminal_cwd()
         except Exception as e:
             self.logger.debug(f"Periodic check error: {e}")
         return True
+
+    def _poll_terminal_cwd(self) -> None:
+        """Read /proc/<pid>/cwd for tracked processes and update tab titles."""
+        tracker = self.spawner.process_tracker
+        with tracker._lock:
+            processes = dict(tracker._processes)
+
+        for pid, info in processes.items():
+            if info.get("type") != "local":
+                continue
+            terminal = info.get("terminal")
+            if not terminal:
+                continue
+            try:
+                cwd = os.readlink(f"/proc/{pid}/cwd")
+            except OSError:
+                continue
+
+            # Only update if directory actually changed
+            last_cwd = getattr(terminal, "_last_polled_cwd", None)
+            if cwd == last_cwd:
+                continue
+            terminal._last_polled_cwd = cwd
+
+            osc7_info = parse_directory_uri(
+                f"file://{os.uname().nodename}{cwd}", self.osc7_tracker.parser
+            )
+            if osc7_info:
+                self._update_title(terminal, osc7_info)
 
     def _on_manual_ssh_state_changed(self, terminal: Vte.Terminal):
         self._update_title(terminal)
@@ -448,6 +480,15 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             uri = terminal.get_current_directory_uri()
             if uri:
                 osc7_info = parse_directory_uri(uri, self.osc7_tracker.parser)
+
+        # Fallback: use last polled CWD from /proc/<pid>/cwd
+        if osc7_info is None:
+            last_cwd = getattr(terminal, "_last_polled_cwd", None)
+            if last_cwd:
+                osc7_info = parse_directory_uri(
+                    f"file://{os.uname().nodename}{last_cwd}",
+                    self.osc7_tracker.parser,
+                )
 
         new_title = self._compute_terminal_title(
             terminal_info, terminal_id, terminal, osc7_info

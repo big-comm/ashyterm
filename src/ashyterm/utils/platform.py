@@ -127,6 +127,17 @@ class EnvironmentManager:
         env = os.environ.copy()
         env["TERM"] = "xterm-256color"
         env["COLORTERM"] = "truecolor"
+        # VTE_VERSION is required by /etc/profile.d/vte.sh for OSC7 shell integration
+        try:
+            import gi
+            gi.require_version("Vte", "3.91")
+            from gi.repository import Vte
+            major = Vte.MAJOR_VERSION
+            minor = Vte.MINOR_VERSION
+            micro = Vte.MICRO_VERSION
+            env["VTE_VERSION"] = str(major * 10000 + minor * 100 + micro)
+        except Exception:
+            env["VTE_VERSION"] = "8203"
         if "LANG" not in env:
             import locale
 
