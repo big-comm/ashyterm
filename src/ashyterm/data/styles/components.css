@@ -108,15 +108,15 @@
 
 .tab-moving {
     background-image: none;
-    background-color: @accent_bg_color;
+    background-color: alpha(@accent_bg_color, 0.4);
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    border: 2px dashed @theme_fg_color;
-    opacity: 0.85;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        border: 2px dashed @accent_bg_color;
+        opacity: 0.5;
 }
 
 .tab-bar-move-mode {
-    background-color: alpha(@accent_bg_color, 0.15);
+    background-color: alpha(@accent_bg_color, 0.08);
     border-radius: 8px;
     padding: 2px;
 }
@@ -128,15 +128,17 @@
 }
 
 .tab-drop-left {
-    background-color: alpha(@theme_fg_color, 0.2);
+    background-color: alpha(@accent_bg_color, 0.15);
     border-radius: 6px;
     box-shadow: inset 4px 0 0 0 @accent_bg_color;
+    transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 
 .tab-drop-right {
-    background-color: alpha(@theme_fg_color, 0.2);
+    background-color: alpha(@accent_bg_color, 0.15);
     border-radius: 6px;
     box-shadow: inset -4px 0 0 0 @accent_bg_color;
+    transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 
 /* ==========================================================================

@@ -1,0 +1,55 @@
+/* ── Tab group chip (Chrome-style group label) ───────────── */
+.tab-group-chip {
+    padding: 4px 10px;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.82em;
+    font-weight: 600;
+    margin: 0;
+    margin-top: 2px;
+    min-height: 22px;
+    transition: background 150ms ease, opacity 150ms ease;
+}
+
+.tab-group-chip:hover {
+    filter: brightness(1.1);
+}
+
+.tab-group-chip .group-name-label {
+    margin: 0 4px;
+    color: inherit;
+}
+
+/* ── Unnamed chip: show as small colored dot/circle ────── */
+.tab-group-chip.unnamed {
+    min-width: 12px;
+    min-height: 12px;
+    padding: 6px;
+    border-radius: 50%;
+}
+
+/* ── Collapsed chip: pílula compacta ───────────────────────── */
+.tab-group-chip.collapsed {
+    border-radius: 8px;
+    opacity: 0.9;
+    padding: 4px 8px;
+}
+
+.tab-group-chip.collapsed.unnamed {
+    border-radius: 50%;
+    padding: 6px;
+}
+
+/* ── Grouped tabs: Chrome-style colored underline ──────────── */
+.custom-tab-button.in-group {
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+    padding-bottom: 2px;
+}
+
+/* Reduce spacing between grouped tabs for "connected" feel */
+.tab-group-chip + .custom-tab-button.in-group,
+.custom-tab-button.in-group + .custom-tab-button.in-group {
+    margin-left: 0;
+}

@@ -149,11 +149,12 @@ class WindowUIBuilder:
         self._load_css("components.css")
 
         # Deferred: not needed for initial window render
-        def load_dialog_styles():
+        def load_deferred_styles():
+            self._load_css("tab_groups.css")
             self._load_css("dialogs.css")
             return GLib.SOURCE_REMOVE
 
-        GLib.idle_add(load_dialog_styles, priority=GLib.PRIORITY_LOW)
+        GLib.idle_add(load_deferred_styles, priority=GLib.PRIORITY_LOW)
 
         # Separate provider for window borders (conditional on maximized state)
         self.border_provider = Gtk.CssProvider()

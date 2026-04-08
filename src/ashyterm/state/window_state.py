@@ -30,8 +30,19 @@ class WindowStateManager:
     splits, and user-defined layouts.
     """
 
-    SCHEMA_VERSION = 1
-    MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {}
+    SCHEMA_VERSION = 2
+
+    @staticmethod
+    def _migrate_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
+        """Add empty groups list and null group_id to each tab."""
+        data.setdefault("groups", [])
+        for tab in data.get("tabs", []):
+            tab.setdefault("group_id", None)
+        return data
+
+    MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {
+        1: _migrate_v1_to_v2.__func__,  # type: ignore[attr-defined]
+    }
 
     def __init__(self, window: "CommTerminalWindow"):
         self.window = window
@@ -42,12 +53,23 @@ class WindowStateManager:
 
     def save_session_state(self):
         """Serializes the current tab and pane layout to a state file."""
-        state = stamp_version({"tabs": []}, self.SCHEMA_VERSION)
-        for page in self.tab_manager.pages.values():
+        state = stamp_version({"groups": [], "tabs": []}, self.SCHEMA_VERSION)
+
+        # Serialize groups
+        state["groups"] = self.tab_manager.group_manager.to_list()
+
+        for tab_widget in self.tab_manager.tabs:
+            page = self.tab_manager.pages.get(tab_widget)
+            if not page:
+                continue
             tab_content = page.get_child()
             if tab_content:
                 tab_structure = self._serialize_widget_tree(tab_content)
                 if tab_structure:
+                    # Attach group_id
+                    tab_id = self.tab_manager.get_tab_id(tab_widget)
+                    group = self.tab_manager.group_manager.get_group_for_tab(tab_id)
+                    tab_structure["group_id"] = group.id if group else None
                     state["tabs"].append(tab_structure)
 
         try:
@@ -76,9 +98,22 @@ class WindowStateManager:
         if not state.get("tabs"):
             return False
 
+        # Restore groups metadata
+        if state.get("groups"):
+            self.tab_manager.group_manager.load_from_list(state["groups"])
+
         self.logger.info(f"Restoring {len(state['tabs'])} tabs from previous session.")
         for tab_structure in state["tabs"]:
+            group_id = tab_structure.pop("group_id", None)
             self.tab_manager.recreate_tab_from_structure(tab_structure)
+            # Re-assign group membership using the last-created tab
+            if group_id and self.tab_manager.tabs:
+                new_tab = self.tab_manager.tabs[-1]
+                tab_id = self.tab_manager.get_tab_id(new_tab)
+                self.tab_manager.group_manager.add_tab_to_group(group_id, tab_id)
+
+        # Rebuild tab bar to show group chips
+        self.tab_manager._rebuild_tab_bar_order()
 
         self.clear_session_state()
         return True

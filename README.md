@@ -1,7 +1,7 @@
 # Ashy Terminal
 
 <p align="center">
-  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.9.1-blue.svg" alt="Version"/></a>
+  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.8.8-blue.svg" alt="Version"/></a>
   <a href="https://communitybig.org">
   <img src="https://img.shields.io/badge/BigCommunity-Platform-blue" alt="BigCommunity Platform">
 </a>
@@ -89,7 +89,8 @@ This gives you a clearer, more readable view of command output—especially in e
 ### 🖥️ Core Terminal Functionality
 -   **Session Management**: Save, organize (with folders), and launch Local, SSH, and SFTP sessions.
 -   **Flexible Layouts**: Split panes horizontally and vertically; save and restore complex window layouts.
--   **Directory Tracking**: Updates tab titles automatically based on the current working directory (OSC7 support).
+-   **Tab Groups**: Chrome-style tab grouping with color-coded chips, drag-to-reorder, collapse/expand, and auto-join. Group names follow alphabetical sequence (A, B, ..., Z, 1A, 1B, ...).
+-   **Live Directory Tracking**: Tab titles update in real-time to show the current working directory via `/proc/<pid>/cwd` polling, with full path tooltip on hover.
 -   **Deep Customization**: Visual theme editor, font sizing, transparency (window and headerbar), and extensive keyboard shortcuts.
 
 

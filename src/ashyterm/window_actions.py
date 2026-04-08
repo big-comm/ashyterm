@@ -50,6 +50,8 @@ class WindowActionsMixin:
             return Gdk.EVENT_STOP
         if self._handle_search_shortcut(keyval, state):
             return Gdk.EVENT_STOP
+        if self._handle_tab_group_shortcuts(keyval, state):
+            return Gdk.EVENT_STOP
         accel_string = Gtk.accelerator_name(
             keyval, state & Gtk.accelerator_get_default_mod_mask()
         )
@@ -144,6 +146,19 @@ class WindowActionsMixin:
         if keyval == Gdk.KEY_Escape and (state & ctrl_shift) == ctrl_shift:
             self.logger.warning("Emergency dialog close triggered (Ctrl+Shift+Escape)")
             self._force_close_all_dialogs()
+            return True
+        return False
+
+    def _handle_tab_group_shortcuts(self, keyval, state) -> bool:
+        """Handle Ctrl+Shift+G (new group) and Ctrl+Shift+U (ungroup)."""
+        ctrl_shift = Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK
+        if (state & ctrl_shift) != ctrl_shift:
+            return False
+        if keyval in (Gdk.KEY_g, Gdk.KEY_G):
+            self.tab_manager.create_group_from_active_tab()
+            return True
+        if keyval in (Gdk.KEY_u, Gdk.KEY_U):
+            self.tab_manager.ungroup_active_tab()
             return True
         return False
 
