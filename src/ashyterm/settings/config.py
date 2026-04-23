@@ -336,6 +336,10 @@ class DefaultSettings:
             "cjk_ambiguous_width": 1,
             "word_char_exceptions": "-_.:/~",  # For word selection on double-click
             "ssh_control_persist_duration": 60,  # Duration in seconds for SSH connection multiplexing
+            # SSH host key verification: "ask" (prompt), "accept-new" (auto-add new hosts),
+            # "yes" (reject unknown hosts), "no" (disable — DISCOURAGED).
+            "ssh_strict_host_key_checking": "accept-new",
+            "ssh_connect_timeout": 30,
             # Logging Settings
             "log_to_file": False,
             "console_log_level": "ERROR",

@@ -379,3 +379,20 @@ def log_error_with_context(
     """Log an error with context information."""
     logger = get_logger(logger_name)
     logger.error(f"Error in {context}: {str(error)}", exc_info=True)
+
+
+def log_swallowed_exception(
+    exc: BaseException, logger_name: Optional[str] = None
+) -> None:
+    """Emit a debug-level log entry for a non-fatal exception.
+
+    Used in places where the right call is to continue without error
+    (e.g. UI widgets being destroyed, cleanup during shutdown). Never
+    raises; worst-case writes to stderr via the root logger.
+    """
+    try:
+        get_logger(logger_name).debug(f"Swallowed non-fatal exception: {exc}")
+    except Exception:
+        # If even logging failed, stay silent to preserve the
+        # non-fatal semantics of the original `except Exception: pass`.
+        pass

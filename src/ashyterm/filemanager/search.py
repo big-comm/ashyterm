@@ -3,7 +3,6 @@
 
 import shlex
 import subprocess
-import threading
 from pathlib import PurePosixPath
 from typing import List, Optional
 
@@ -142,13 +141,15 @@ class FileSearchMixin:
             self.search_entry.set_sensitive(False)
             self._update_search_placeholder(_("Searching..."))
 
-        thread = threading.Thread(
-            target=self._recursive_search_thread,
-            args=(generation, base_path, search_term, show_hidden),
-            daemon=True,
-            name="RecursiveSearchThread",
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(
+            self._recursive_search_thread,
+            generation,
+            base_path,
+            search_term,
+            show_hidden,
         )
-        thread.start()
 
     def _recursive_search_thread(
         self, generation: int, base_path: str, search_term: str, show_hidden: bool

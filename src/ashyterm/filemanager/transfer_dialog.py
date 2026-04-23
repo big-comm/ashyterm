@@ -179,11 +179,13 @@ class TransferRow(Gtk.Box):
         self.cancel_button.set_visible(not is_final_state)
         self.remove_button.set_visible(is_final_state)
 
-        # Build date string for completed transfers
+        # Build date string for completed transfers (explicit local tz).
         date_str = ""
         if self.transfer.start_time:
-            dt = datetime.fromtimestamp(self.transfer.start_time)
-            today = datetime.now().date()
+            dt = datetime.fromtimestamp(
+                self.transfer.start_time, tz=datetime.now().astimezone().tzinfo
+            )
+            today = datetime.now().astimezone().date()
             if dt.date() == today:
                 date_str = dt.strftime("%H:%M")
             else:

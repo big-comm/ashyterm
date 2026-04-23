@@ -20,6 +20,7 @@ from .rules import (
     extract_literal_keywords,
     extract_prefilter,
 )
+from ...utils.logger import log_swallowed_exception
 
 if TYPE_CHECKING:
     from ...settings.highlights import HighlightManager
@@ -253,8 +254,8 @@ class OutputHighlighter:
                     self._context_rules_cache[name] = self._compile_rules_for_context(
                         name
                     )
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_swallowed_exception(exc)
 
     def set_context(
         self, command_name: str, proxy_id: int = 0, full_command: str = ""

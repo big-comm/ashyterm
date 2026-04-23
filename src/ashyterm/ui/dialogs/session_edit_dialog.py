@@ -1,7 +1,6 @@
 # ashyterm/ui/dialogs/session_edit_dialog.py
 
 import copy
-import threading
 from pathlib import Path
 from typing import Optional
 
@@ -1296,10 +1295,9 @@ class SessionEditDialog(BaseDialog):
             spinner = Gtk.Spinner(spinning=True, halign=Gtk.Align.CENTER, margin_top=12)
             self.testing_dialog.set_extra_child(spinner)
             self.testing_dialog.present(self)
-            thread = threading.Thread(
-                target=self._run_test_in_thread, args=(test_session,)
-            )
-            thread.start()
+            from ...core.tasks import AsyncTaskManager
+
+            AsyncTaskManager.get().submit_io(self._run_test_in_thread, test_session)
         except Exception as e:
             self.logger.error(f"Test connection setup failed: {e}")
             if self.testing_dialog:

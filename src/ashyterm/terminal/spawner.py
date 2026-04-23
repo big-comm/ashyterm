@@ -10,6 +10,7 @@ from ..utils.logger import get_logger
 from .local_spawn_mixin import LocalSpawnMixin
 from .process_tracker import ProcessTracker
 from .ssh_spawn_mixin import SSHSpawnMixin
+from ..utils.logger import log_swallowed_exception
 
 LOGGER_NAME_SPAWNER = "ashyterm.spawner"
 
@@ -74,14 +75,18 @@ def get_ssh_connection_checker():
 
 
 def cleanup_spawner() -> None:
-    """Clean up spawner resources and terminate tracked processes."""
+    """Clean up spawner resources and terminate tracked processes.
+
+    Also sweeps stale ashyterm_zsh_* ZDOTDIR directories that might have
+    leaked if a previous session crashed before the spawn callback ran.
+    """
     global _spawner_instance, _checker_instance
 
     if _checker_instance is not None:
         try:
             _checker_instance.cleanup_stale_sockets()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     if _spawner_instance is not None:
         with _spawner_lock:
@@ -91,3 +96,27 @@ def cleanup_spawner() -> None:
 
     with _checker_lock:
         _checker_instance = None
+
+    _sweep_orphan_zsh_tmpdirs()
+
+
+def _sweep_orphan_zsh_tmpdirs() -> None:
+    """Remove leftover /tmp/ashyterm_zsh_* directories from crashed sessions."""
+    import shutil
+    import tempfile
+    from pathlib import Path
+
+    logger = get_logger(LOGGER_NAME_SPAWNER)
+    tmp_root = Path(tempfile.gettempdir())
+    try:
+        candidates = list(tmp_root.glob("ashyterm_zsh_*"))
+    except OSError as exc:
+        logger.debug(f"Could not scan {tmp_root} for orphan zsh dirs: {exc}")
+        return
+
+    for path in candidates:
+        try:
+            if path.is_dir():
+                shutil.rmtree(path, ignore_errors=True)
+        except OSError as exc:
+            logger.debug(f"Could not remove orphan zsh dir {path}: {exc}")

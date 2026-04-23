@@ -9,6 +9,7 @@ from ....settings.manager import get_settings_manager
 from ....utils.accessibility import set_label as a11y_label
 from ....utils.translation_utils import _
 from ..base_dialog import BaseDialog, create_icon_button
+from ....utils.logger import log_swallowed_exception
 
 if TYPE_CHECKING:
     from .highlight_dialog import HighlightDialog
@@ -337,8 +338,8 @@ class ColorSchemeDelegate:
 
             highlighter = get_shell_input_highlighter()
             highlighter.refresh_settings()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     def _on_editor_save(
         self, editor, original_key: str, new_key: str, scheme_data: dict

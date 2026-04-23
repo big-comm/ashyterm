@@ -1,6 +1,5 @@
 # ashyterm/ui/dialogs/backup_dialog.py
 
-import threading
 from datetime import datetime
 from pathlib import Path
 
@@ -162,7 +161,9 @@ class BackupRestoreHandler:
             finally:
                 GLib.idle_add(toast.dismiss)
 
-        threading.Thread(target=backup_thread, daemon=True).start()
+        from ...core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(backup_thread)
 
     def start_restore_flow(self, parent_window: Gtk.Window):
         """Starts the restore backup flow."""
@@ -262,7 +263,9 @@ class BackupRestoreHandler:
             finally:
                 GLib.idle_add(toast.dismiss)
 
-        threading.Thread(target=restore_thread, daemon=True).start()
+        from ...core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(restore_thread)
 
     def _show_restore_success_dialog(self, parent_window: Gtk.Window):
         dialog = Adw.AlertDialog(

@@ -16,7 +16,16 @@ license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = ["PyGObject", "pycairo", "setproctitle", "requests", "psutil", "regex; extra == 'performance'", "Pygments; extra == 'syntax-highlighting'", "py7zr; extra == 'backup'"]
+dependencies = [
+    "PyGObject",
+    "pycairo",
+    "setproctitle",
+    "requests",
+    "psutil",
+    "regex",
+    "Pygments",
+    "py7zr",
+]
 
 [project.gui-scripts]
 ashyterm = "ashyterm:main"

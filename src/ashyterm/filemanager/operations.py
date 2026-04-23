@@ -53,16 +53,17 @@ def _drain_stderr_to_list(stderr_stream, output_list: list):
         stderr_stream: The stderr pipe from the subprocess
         output_list: A list to append stderr lines to (thread-safe with append)
     """
+    _drain_logger = get_logger("ashyterm.filemanager.operations")
     try:
         for line in iter(stderr_stream.readline, ""):
             output_list.append(line)
-    except Exception:
-        pass  # Ignore errors during stderr reading
+    except Exception as exc:
+        _drain_logger.debug(f"stderr drain ended with error: {exc}")
     finally:
         try:
             stderr_stream.close()
-        except Exception:
-            pass
+        except Exception as exc:
+            _drain_logger.debug(f"Could not close stderr stream: {exc}")
 
 
 # --- End of process management setup ---
@@ -117,17 +118,28 @@ class FileOperations:
     def _get_session_key(self, session: SessionItem) -> str:
         return f"{session.user or ''}@{session.host}:{session.port or 22}"
 
+    def _prune_expired_cache(self, now: float) -> None:
+        """Remove cache entries past their TTL (per-session + session-level)."""
+        for session_key in list(self._command_cache):
+            entries = self._command_cache[session_key]
+            for cmd in list(entries):
+                _available, cached_at = entries[cmd]
+                if now - cached_at >= self._cache_ttl:
+                    del entries[cmd]
+            if not entries:
+                del self._command_cache[session_key]
+
     def _is_command_available(
         self, session: SessionItem, command: str, use_cache: bool = True
     ) -> bool:
         session_key = self._get_session_key(session)
+        now = time.monotonic()
         if use_cache:
-            if (
-                session_key in self._command_cache
-                and command in self._command_cache[session_key]
-            ):
-                available, cached_at = self._command_cache[session_key][command]
-                if time.monotonic() - cached_at < self._cache_ttl:
+            self._prune_expired_cache(now)
+            cached = self._command_cache.get(session_key, {}).get(command)
+            if cached is not None:
+                available, cached_at = cached
+                if now - cached_at < self._cache_ttl:
                     return available
 
         check_command = ["command", "-v", command]
@@ -136,7 +148,9 @@ class FileOperations:
         )
 
         if session_key not in self._command_cache:
-            # Evict oldest sessions if cache exceeds size limit
+            # Evict oldest sessions if cache exceeds size limit. Uses the
+            # most-recently-updated timestamp per session so we evict truly
+            # idle sessions first.
             if len(self._command_cache) >= self._max_cache_sessions:
                 oldest_key = min(
                     self._command_cache,
@@ -148,7 +162,7 @@ class FileOperations:
                 )
                 del self._command_cache[oldest_key]
             self._command_cache[session_key] = {}
-        self._command_cache[session_key][command] = (success, time.monotonic())
+        self._command_cache[session_key][command] = (success, now)
         return success
 
     def check_command_available(
@@ -482,17 +496,32 @@ class FileOperations:
                         "sftp", session
                     )
 
+                    def _sftp_quote(raw: str) -> str:
+                        """Quote a path for inclusion in an sftp batch line.
+
+                        sftp's batch parser uses double quotes with backslash
+                        escapes. Backslash and double-quote are the only
+                        metacharacters we need to escape.
+                        """
+                        return '"' + raw.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
                     # For SFTP directory copy, destination must be the parent directory
                     if is_download:
                         sftp_dest = (
                             str(Path(dest_path).parent) if is_directory else dest_path
                         )
-                        sftp_batch = f'get -r "{source_path}" "{sftp_dest}"\nquit\n'
+                        sftp_batch = (
+                            f"get -r {_sftp_quote(source_path)} "
+                            f"{_sftp_quote(sftp_dest)}\nquit\n"
+                        )
                     else:
                         sftp_dest = (
                             str(Path(dest_path).parent) if is_directory else dest_path
                         )
-                        sftp_batch = f'put -r "{source_path}" "{sftp_dest}"\nquit\n'
+                        sftp_batch = (
+                            f"put -r {_sftp_quote(source_path)} "
+                            f"{_sftp_quote(sftp_dest)}\nquit\n"
+                        )
 
                     with tempfile.NamedTemporaryFile(
                         mode="w", delete=False, suffix=".sftp"

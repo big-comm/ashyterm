@@ -13,6 +13,7 @@ from ..settings.manager import SettingsManager
 from ..utils.icons import icon_button
 from ..utils.translation_utils import _
 from ..utils.accessibility import set_label as a11y_label
+from ..utils.logger import log_swallowed_exception
 
 
 class ThemeSelectorWidget(Gtk.Box):
@@ -297,8 +298,8 @@ def _detect_url_at_click(terminal, click_x, click_y) -> Optional[str]:
             matched_text = match_result[0]
             if matched_text and is_valid_url(matched_text):
                 return matched_text
-    except Exception:
-        pass
+    except Exception as exc:
+        log_swallowed_exception(exc)
     return None
 
 
@@ -334,8 +335,8 @@ def create_terminal_menu(
                     Gio.MenuItem.new(_("Ask AI"), "win.ask-ai-selection")
                 )
                 menu.append_section(None, ai_section)
-    except Exception:
-        pass
+    except Exception as exc:
+        log_swallowed_exception(exc)
 
     standard_section = Gio.Menu()
     standard_section.append(_("Copy"), "win.copy")

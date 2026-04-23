@@ -42,7 +42,7 @@ class HighlightColorResolver:
                     "palette": scheme["palette"],
                 }
         except Exception:
-            # Fallback on any erro de leitura de esquema
+            # Fallback on any scheme read error
             pass
         self._current_theme_name = "default"
         return self._get_default_palette()

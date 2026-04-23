@@ -5,7 +5,7 @@ gi.require_version("Gtk", "4.0")
 import re
 from datetime import datetime
 
-from gi.repository import Gio, GObject
+from gi.repository import Gio, GLib, GObject
 
 
 class FileItem(GObject.GObject):
@@ -50,7 +50,7 @@ class FileItem(GObject.GObject):
             "Size",
             "File size",
             0,
-            GObject.G_MAXINT,
+            GLib.MAXINT,
             0,
             GObject.ParamFlags.READABLE,
         ),

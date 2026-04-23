@@ -55,6 +55,7 @@ from .ssh_session_ops import (
     disconnect_all_for_session as _disconnect_all_for_session,
     get_session_connection_status as _get_session_connection_status,
 )
+from ..utils.logger import log_swallowed_exception
 
 
 class SSHLifecycleMixin:
@@ -429,8 +430,8 @@ class SSHLifecycleMixin:
 
             try:
                 setattr(terminal, "_closed_by_user", True)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
             if info.get("status") in [
                 TerminalState.EXITED.value, TerminalState.SPAWN_FAILED.value,

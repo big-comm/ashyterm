@@ -29,8 +29,9 @@ class SecurityConfig:
     MAX_USERNAME_LENGTH = 32
     MAX_SSH_KEY_SIZE = 16384
     MAX_PATH_LENGTH = 4096
-    FORBIDDEN_PATH_CHARS = ["<", ">", ":", '"', "|", "?", "*", "\0"]
-    FORBIDDEN_PATH_SEQUENCES = ["../", "..\\"]
+    # Control and reserved characters rejected anywhere in a session path.
+    # '/' and ':' are legitimate in Unix paths so they are NOT included.
+    FORBIDDEN_PATH_CHARS = ["<", ">", '"', "|", "?", "*", "\0"]
     MAX_SESSION_NAME_LENGTH = 128
     SECURE_FILE_PERMISSIONS = 0o600
     SECURE_DIR_PERMISSIONS = 0o700
@@ -97,8 +98,9 @@ class HostnameValidator:
     def resolve_hostname(hostname: str, timeout: float = 5.0) -> Optional[str]:
         """Resolve a hostname to an IP address.
 
-        Uses a separate socket with timeout instead of socket.setdefaulttimeout()
-        to avoid affecting global socket behavior for other parts of the application.
+        Runs socket.gethostbyname in a worker thread so the timeout works
+        regardless of which thread called us (SIGALRM only works in the
+        main thread of the main interpreter and is therefore unsafe here).
 
         Args:
             hostname: The hostname to resolve
@@ -107,28 +109,27 @@ class HostnameValidator:
         Returns:
             The resolved IP address or None if resolution fails
         """
+        import concurrent.futures
+
         logger = get_logger("ashyterm.security")
+
+        def _resolve():
+            return socket.gethostbyname(hostname)
+
         try:
-            # Use getaddrinfo with a timeout via socket options instead of
-            # setdefaulttimeout() which affects ALL sockets globally
-            import signal
-
-            def timeout_handler(_signum, _frame):
-                raise socket.timeout(f"Hostname resolution timed out for {hostname}")
-
-            # Set up signal-based timeout (works on Unix)
-            old_handler = signal.signal(signal.SIGALRM, timeout_handler)
-            signal.setitimer(signal.ITIMER_REAL, timeout)
-
-            try:
-                result = socket.gethostbyname(hostname)
-                return result
-            finally:
-                # Cancel the timer and restore old handler
-                signal.setitimer(signal.ITIMER_REAL, 0)
-                signal.signal(signal.SIGALRM, old_handler)
-
-        except (socket.gaierror, socket.timeout) as e:
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix="ashy-dns"
+            ) as executor:
+                future = executor.submit(_resolve)
+                try:
+                    return future.result(timeout=timeout)
+                except concurrent.futures.TimeoutError:
+                    logger.debug(
+                        f"Hostname resolution timed out for {hostname} after {timeout}s"
+                    )
+                    future.cancel()
+                    return None
+        except socket.gaierror as e:
             logger.debug(f"Hostname resolution failed for {hostname}: {e}")
             return None
         except Exception as e:
@@ -224,19 +225,43 @@ class PathValidator:
 
     @staticmethod
     def is_safe_path(path: str, base_path: Optional[str] = None) -> bool:
+        """Return True when *path* looks safe to use as a filesystem path.
+
+        Rejects:
+        - Empty / overly long paths
+        - Paths that contain forbidden control characters
+        - Paths whose resolved form escapes *base_path* (when given)
+
+        When *base_path* is given, uses pathlib.Path.resolve(strict=False)
+        followed by Path.is_relative_to(...). This correctly handles '..'
+        segments, symlinks that point outside the base, and absolute paths
+        that happen to normalise to something inside the base.
+        """
         if not path:
             return False
         try:
-            normalized = os.path.normpath(path)
-            if ".." in normalized.split(os.sep):
+            if len(path) > SecurityConfig.MAX_PATH_LENGTH:
                 return False
+
             for char in SecurityConfig.FORBIDDEN_PATH_CHARS:
-                if char in normalized:
+                if char in path:
                     return False
-            if base_path and not normalized.startswith(os.path.normpath(base_path)):
+
+            # Reject raw '..' path components even without a base_path:
+            # callers that treat the value as a relative path should not
+            # have traversal segments smuggled in.
+            parts = Path(path).parts
+            if ".." in parts:
                 return False
-            if len(normalized) > SecurityConfig.MAX_PATH_LENGTH:
-                return False
+
+            if base_path:
+                base_resolved = Path(base_path).resolve(strict=False)
+                candidate_resolved = Path(path).resolve(strict=False)
+                try:
+                    candidate_resolved.relative_to(base_resolved)
+                except ValueError:
+                    return False
+
             return True
         except Exception:
             return False
@@ -362,10 +387,11 @@ def atomic_json_write(
     ensure_ascii: bool = False,
     secure_permissions: bool = True,
 ) -> None:
-    """Write JSON data atomically using a temporary file and rename.
+    """Write JSON data atomically using a unique temp file + rename.
 
-    This ensures that the file is either fully written or not modified at all,
-    preventing data corruption from partial writes or crashes.
+    Each call uses tempfile.NamedTemporaryFile (unique suffix) so concurrent
+    writers cannot race over a single ``<name>.tmp`` path. Rename is atomic
+    on POSIX within the same filesystem.
 
     Args:
         file_path: Path to the destination JSON file.
@@ -378,27 +404,43 @@ def atomic_json_write(
         OSError: If file operations fail.
     """
     import json
+    import tempfile
 
-    # Ensure parent directory exists
+    logger = get_logger("ashyterm.security.atomic_write")
+
     file_path.parent.mkdir(parents=True, exist_ok=True)
 
-    temp_file = file_path.with_suffix(".tmp")
+    # delete=False so we can rename it into place before cleanup runs.
+    tmp = tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=str(file_path.parent),
+        prefix=f".{file_path.name}.",
+        suffix=".tmp",
+        delete=False,
+    )
+    tmp_path = Path(tmp.name)
     try:
-        with open(temp_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=indent, ensure_ascii=ensure_ascii)
-
-        temp_file.replace(file_path)
-
+        with tmp:
+            json.dump(data, tmp, indent=indent, ensure_ascii=ensure_ascii)
+            tmp.flush()
+            try:
+                os.fsync(tmp.fileno())
+            except OSError:
+                pass
+        tmp_path.replace(file_path)
+        tmp_path = None  # ownership transferred
         if secure_permissions:
             try:
                 file_path.chmod(SecurityConfig.SECURE_FILE_PERMISSIONS)
-            except OSError:
-                pass  # Non-critical - log if logger available
-    except Exception:
-        # Clean up temp file on failure
-        if temp_file.exists():
-            temp_file.unlink()
-        raise
+            except OSError as exc:
+                logger.debug(f"Could not chmod {file_path}: {exc}")
+    finally:
+        if tmp_path is not None:
+            try:
+                tmp_path.unlink()
+            except OSError as exc:
+                logger.debug(f"Could not remove leftover temp file {tmp_path}: {exc}")
 
 
 def ensure_secure_directory_permissions(dir_path: str) -> None:
@@ -413,6 +455,50 @@ def ensure_secure_directory_permissions(dir_path: str) -> None:
 def create_security_auditor() -> SecurityAuditor:
     """Create a new security auditor instance."""
     return SecurityAuditor()
+
+
+_SECRET_KEY_SUBSTRINGS = (
+    "api_key",
+    "apikey",
+    "password",
+    "passwd",
+    "secret",
+    "token",
+    "authorization",
+)
+_REDACTED = "***redacted***"
+
+
+def redact_secrets(value: Any) -> Any:
+    """Return a copy of *value* with likely secret fields masked.
+
+    Use on dicts/strings/exceptions before feeding them to a logger or
+    user-facing dialog. Detection is key-name based, so the caller doesn't
+    need to know which providers are in play.
+    """
+    if isinstance(value, dict):
+        redacted: Dict[Any, Any] = {}
+        for k, v in value.items():
+            key_lower = str(k).lower()
+            if any(hint in key_lower for hint in _SECRET_KEY_SUBSTRINGS):
+                redacted[k] = _REDACTED if v else v
+            else:
+                redacted[k] = redact_secrets(v)
+        return redacted
+    if isinstance(value, (list, tuple)):
+        cls = type(value)
+        return cls(redact_secrets(v) for v in value)
+    if isinstance(value, str):
+        # Scrub obvious "Authorization: Bearer <token>" style strings
+        import re as _re
+
+        return _re.sub(
+            r"(Bearer\s+)([A-Za-z0-9\-._~+/]{8,})",
+            r"\1" + _REDACTED,
+            value,
+            flags=_re.IGNORECASE,
+        )
+    return value
 
 
 def _validate_session_name(session_data: Dict[str, Any], errors: List[str]) -> None:

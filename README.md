@@ -101,11 +101,15 @@ To build and run Ashy Terminal, you will need:
 -   **VTE for GTK4** (`vte4` >= 0.76 recommended)
 -   **Python Libraries**:
     -   `PyGObject` (GTK bindings)
-    -   `cryptography` (Secure password storage)
     -   `requests` (For AI API connectivity)
     -   `pygments` (For syntax highlighting)
-    -   `psutil` (Optional, for advanced process tracking)
-    -   `regex` (Optional, for high-performance highlighting patterns)
+    -   `psutil` (For advanced process tracking)
+    -   `regex` (For high-performance highlighting patterns)
+    -   `py7zr` (For 7z backup/restore archives)
+-   **System Libraries**:
+    -   `libsecret` (Secure password storage via GNOME Keyring / KWallet)
+    -   `sshpass` (Required only for SSH password authentication)
+    -   `rsync` (Faster SFTP-like transfers; falls back to sftp when absent)
 
 On an Arch/Manjaro-based system:
 ```bash

@@ -214,8 +214,23 @@ class CommTerminalApp(Adw.Application):
             self.set_accels_for_action("app.preferences", ["<Control><Shift>comma"])
             self.set_accels_for_action("win.command-palette", ["<Control><Shift>p"])
             self._update_window_shortcuts()
+            # React to live shortcut changes in Preferences without restart.
+            if self.settings_manager is not None:
+                self.settings_manager.add_change_listener(
+                    self._on_setting_changed_for_shortcuts
+                )
         except Exception as e:
             self.logger.error(f"Failed to setup keyboard shortcuts: {e}")
+
+    def _on_setting_changed_for_shortcuts(
+        self, key: str, _old_value, _new_value
+    ) -> None:
+        """Reload window-level accelerators whenever a shortcut setting moves."""
+        if key.startswith("shortcuts.") or key == "shortcuts":
+            try:
+                self._update_window_shortcuts()
+            except Exception as e:
+                self.logger.debug(f"Shortcut refresh failed after '{key}' change: {e}")
 
     def _update_window_shortcuts(self) -> None:
         """Update window-level keyboard shortcuts from settings."""
@@ -540,7 +555,10 @@ class CommTerminalApp(Adw.Application):
                 "detached_terminals_data": kwargs.get("detached_terminals_data"),
                 "detached_file_manager": kwargs.get("detached_file_manager"),
             }
-            assert self.settings_manager is not None
+            if self.settings_manager is None:
+                raise RuntimeError(
+                    "settings_manager must be initialized before creating a window"
+                )
             window = CommTerminalWindow(
                 application=self, settings_manager=self.settings_manager, **init_args
             )

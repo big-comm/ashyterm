@@ -166,8 +166,9 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             finally:
                 self._highlights_ready.set()
 
-        bg_thread = threading.Thread(target=prepare_background, daemon=True)
-        bg_thread.start()
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_cpu(prepare_background)
 
     def get_precreated_terminal(self) -> "Optional[Vte.Terminal]":
         """

@@ -8,6 +8,7 @@ import gi
 
 gi.require_version("Vte", "3.91")
 from gi.repository import Vte
+from ..utils.logger import log_swallowed_exception
 
 
 def decode_exit_code(child_status: int) -> int:
@@ -97,8 +98,8 @@ def check_ssh_auth_error(child_status: int, terminal: Vte.Terminal) -> bool:
             ]:
                 if pattern in text_lower:
                     return True
-    except Exception:
-        pass
+    except Exception as exc:
+        log_swallowed_exception(exc)
 
     return False
 
@@ -117,8 +118,8 @@ def extract_terminal_text(terminal: Vte.Terminal, max_rows: int = 50) -> Optiona
         )
         if result and len(result) > 0 and result[0]:
             return result[0]
-    except Exception:
-        pass
+    except Exception as exc:
+        log_swallowed_exception(exc)
     return None
 
 

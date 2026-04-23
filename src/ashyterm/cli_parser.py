@@ -67,9 +67,17 @@ class CliArgParser:
 
     def handle_generic_arg(self, arg: str, result: dict, i: int) -> int:
         """Handle positional arguments or unknown flags."""
-        # Positional working directory (if not already set)
-        if not arg.startswith("-") and result["working_directory"] is None:
-            result["working_directory"] = arg
+        # Positional working directory (first positional only)
+        if not arg.startswith("-"):
+            if result["working_directory"] is None:
+                result["working_directory"] = arg
+            else:
+                self.logger.warning(
+                    "Ignoring extra positional argument '%s' "
+                    "(working directory already set to %r).",
+                    arg,
+                    result["working_directory"],
+                )
 
         return i + 1
 
@@ -137,7 +145,10 @@ class CliArgParser:
     def process_and_execute_args(self, arguments: list) -> None:
         """Parse arguments and decide what action to take."""
         args = self.parse_command_line_args(arguments)
-        assert self._app.settings_manager is not None
+        if self._app.settings_manager is None:
+            raise RuntimeError(
+                "settings_manager must be initialized before processing CLI args"
+            )
         behavior = self._app.settings_manager.get("new_instance_behavior", "new_tab")
         windows = self._app.get_windows()
         target_window = windows[0] if windows else None

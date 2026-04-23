@@ -30,6 +30,7 @@ from .config import (
     DefaultSettings,
     get_config_paths,
 )
+from ..utils.logger import log_swallowed_exception
 
 
 @dataclass(slots=True)
@@ -285,10 +286,18 @@ class SettingsManager:
             import hashlib
 
             settings_json = json.dumps(settings, sort_keys=True, separators=(",", ":"))
-            current_checksum = hashlib.md5(
-                settings_json.encode("utf-8"), usedforsecurity=False
+            current_checksum = hashlib.sha256(
+                settings_json.encode("utf-8")
             ).hexdigest()
-            if current_checksum != self._metadata.checksum:  # type: ignore[union-attr]
+            stored = self._metadata.checksum if self._metadata else ""
+            # Backward compatibility: old files used md5.
+            if stored and len(stored) == 32:
+                legacy_checksum = hashlib.md5(
+                    settings_json.encode("utf-8"), usedforsecurity=False
+                ).hexdigest()
+                if legacy_checksum == stored:
+                    return
+            if current_checksum != stored:
                 self.logger.warning(
                     "Settings checksum mismatch - file may be corrupted"
                 )
@@ -403,8 +412,8 @@ class SettingsManager:
                     settings_json = json.dumps(
                         settings_to_save, sort_keys=True, separators=(",", ":")
                     )
-                    self._metadata.checksum = hashlib.md5(
-                        settings_json.encode("utf-8"), usedforsecurity=False
+                    self._metadata.checksum = hashlib.sha256(
+                        settings_json.encode("utf-8")
                     ).hexdigest()
                     save_data = stamp_version(
                         {
@@ -413,11 +422,15 @@ class SettingsManager:
                         },
                         self.SCHEMA_VERSION,
                     )
-                    self.settings_file.parent.mkdir(parents=True, exist_ok=True)
-                    temp_file = self.settings_file.with_suffix(".tmp")
-                    with open(temp_file, "w", encoding="utf-8") as f:
-                        json.dump(save_data, f, indent=2, ensure_ascii=False)
-                    temp_file.replace(self.settings_file)
+                    from ..utils.security import atomic_json_write
+
+                    atomic_json_write(
+                        self.settings_file,
+                        save_data,
+                        indent=2,
+                        ensure_ascii=False,
+                        secure_permissions=False,
+                    )
                     try:
                         ensure_secure_file_permissions(str(self.settings_file))
                     except Exception as e:
@@ -427,7 +440,9 @@ class SettingsManager:
                     log_error_with_context(e, "async settings saving", self._LOG_AREA)
                     self._dirty = True
 
-        threading.Thread(target=save_task, daemon=True).start()
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(save_task)
 
     def set(self, key: str, value: Any, save_immediately: bool = True) -> None:
         with self._lock:
@@ -871,8 +886,8 @@ class SettingsManager:
                         Gtk.StyleContext.remove_provider_for_display(
                             Gdk.Display.get_default(), getattr(window, attr)
                         )
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        log_swallowed_exception(exc)
                     delattr(window, attr)
 
             # Re-apply headerbar transparency to restore default appearance if needed
@@ -951,8 +966,8 @@ class SettingsManager:
         """Safely remove a provider from a display."""
         try:
             Gtk.StyleContext.remove_provider_for_display(display, provider)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
 
 _settings_manager: Optional[SettingsManager] = None

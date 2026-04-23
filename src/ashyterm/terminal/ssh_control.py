@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
+from ..utils.logger import log_swallowed_exception
 
 if TYPE_CHECKING:
     from ..sessions.models import SessionItem
@@ -139,8 +140,8 @@ class SSHConnectionChecker:
                 except subprocess.TimeoutExpired:
                     socket_file.unlink(missing_ok=True)
                     cleaned += 1
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_swallowed_exception(exc)
 
         if cleaned > 0:
             self.logger.info(f"Cleaned up {cleaned} stale SSH control sockets")

@@ -12,6 +12,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 
+from ...utils.logger import log_swallowed_exception
 from ..colors import SYNTAX_DARK_COLORS, SYNTAX_LIGHT_COLORS
 from .base_syntax_text_view import BaseSyntaxTextView
 
@@ -268,8 +269,8 @@ class BashTextView(BaseSyntaxTextView):
 
             # Additional pass for paths and flags (not well detected by Pygments)
             self._apply_extra_highlighting(text)
-        except Exception:
-            pass  # Silently fail highlighting on errors
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
         return False
 

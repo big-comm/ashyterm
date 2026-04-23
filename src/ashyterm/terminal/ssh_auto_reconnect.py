@@ -12,6 +12,7 @@ from gi.repository import GLib
 
 from ..sessions.models import SessionItem
 from ..utils.translation_utils import _
+from ..utils.logger import log_swallowed_exception
 
 
 def start_auto_reconnect(
@@ -131,8 +132,8 @@ def cancel_auto_reconnect(terminal, logger) -> None:
     if timer_id is not None:
         try:
             GLib.source_remove(timer_id)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
         terminal._auto_reconnect_timer_id = None
 
     logger.info(

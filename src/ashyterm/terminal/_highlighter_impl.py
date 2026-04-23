@@ -57,6 +57,7 @@ from .highlighter.shell_input import ShellInputHighlighter, get_shell_input_high
 # Import mixins
 from ._cat_handler import CatModeHandler, _PROMPT_MARKER
 from ._streaming_handler import StreamingHandler
+from ..utils.logger import log_swallowed_exception
 
 # Re-export _PROMPT_MARKER for any external consumers
 __all__ = [
@@ -481,8 +482,8 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
                 | termios.IEXTEN
             )
             termios.tcsetattr(slave_fd, termios.TCSANOW, attrs)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     def set_window_size(self, rows: int, cols: int) -> None:
         # If destroyed, do nothing.
@@ -581,8 +582,8 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             if self._io_watch_id is not None:
                 try:
                     GLib.source_remove(self._io_watch_id)
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_swallowed_exception(exc)
                 self._io_watch_id = None
 
     def pause_highlighting(self) -> None:
@@ -719,8 +720,8 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             try:
                 if term is not None and not self._widget_destroyed:
                     term.feed(data)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
             return True
 
     def _verify_terminal_valid(self, term: Vte.Terminal | None) -> bool:

@@ -4,8 +4,8 @@ Composes HighlightLoader (file I/O) + HighlightColorResolver (theme colors).
 Re-exports all data models for API compatibility.
 """
 
+import concurrent.futures
 import re
-import signal as _sig
 import threading
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Set, Tuple
@@ -325,25 +325,30 @@ class HighlightManager(GObject.GObject):
     # ── Validation ──────────────────────────────────────────────────
 
     def validate_pattern(self, pattern: str) -> Tuple[bool, str]:
-        """Validate regex pattern + basic ReDoS complexity check."""
+        """Validate regex pattern + basic ReDoS complexity check.
+
+        Uses a worker thread so we can apply a timeout regardless of which
+        thread called us (SIGALRM is main-thread-only on POSIX).
+        """
         if not pattern:
             return False, "Pattern cannot be empty"
         try:
             compiled = re.compile(pattern)
-            def _timeout_handler(_signum, _frame):
-                raise TimeoutError()
-            old_handler = _sig.signal(_sig.SIGALRM, _timeout_handler)
-            _sig.alarm(2)
-            try:
-                compiled.search("a" * 1000)
-            finally:
-                _sig.alarm(0)
-                _sig.signal(_sig.SIGALRM, old_handler)
-            return True, ""
-        except TimeoutError:
-            return False, "Pattern is too complex (potential ReDoS)"
         except re.error as e:
             return False, str(e)
+
+        try:
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=1, thread_name_prefix="ashy-redos"
+            ) as executor:
+                future = executor.submit(compiled.search, "a" * 1000)
+                try:
+                    future.result(timeout=2)
+                except concurrent.futures.TimeoutError:
+                    return False, "Pattern is too complex (potential ReDoS)"
+        except Exception as e:
+            return False, str(e)
+        return True, ""
 
     def is_enabled_for_terminal_type(self, terminal_type: str) -> bool:
         """Check if highlighting enabled for terminal type."""

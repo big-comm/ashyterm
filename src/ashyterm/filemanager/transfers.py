@@ -1,8 +1,6 @@
 # ashyterm/filemanager/transfers.py
 """File transfer mixin: download, upload, drag-drop, workers, edit/monitor/conflict."""
 
-import subprocess
-import threading
 from functools import partial
 from pathlib import Path
 from typing import List, Optional
@@ -57,11 +55,11 @@ class FileTransferMixin:
             if hasattr(self, "settings_manager") and self.settings_manager:
                 self.settings_manager.set("last_download_folder", str(dest_path))
 
-            threading.Thread(
-                target=self._prepare_and_start_downloads,
-                args=(items, dest_path),
-                daemon=True,
-            ).start()
+            from ..core.tasks import AsyncTaskManager
+
+            AsyncTaskManager.get().submit_io(
+                self._prepare_and_start_downloads, items, dest_path
+            )
 
         except GLib.Error as e:
             if not e.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
@@ -311,7 +309,9 @@ class FileTransferMixin:
 
                 GLib.idle_add(show_error)
 
-        threading.Thread(target=prepare_uploads, daemon=True).start()
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(prepare_uploads)
 
     def _on_upload_clicked(self, button):
         self._on_upload_action(None, None, None)
@@ -509,10 +509,11 @@ class FileTransferMixin:
         if not transfer:
             return
 
-        thread = threading.Thread(
-            target=worker_func, args=(transfer_id, on_success_callback), daemon=True
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(
+            worker_func, transfer_id, on_success_callback
         )
-        thread.start()
 
     def _background_download_worker(self, transfer_id, on_success_callback):
         transfer = self.transfer_manager.get_transfer(transfer_id)
@@ -710,7 +711,10 @@ class FileTransferMixin:
             if app_info:
                 app_info.launch([local_gio_file], None)
             else:
-                subprocess.Popen(["xdg-open", str(local_path)])
+                # Fall back to the desktop-provided handler for the URI.
+                # Uses xdg-portal/xdg-open under the hood, with proper error
+                # propagation and without leaking a subprocess.
+                Gio.AppInfo.launch_default_for_uri(local_gio_file.get_uri(), None)
         except Exception as e:
             self.logger.error(f"Failed to open local file {local_path}: {e}")
             self.parent_window.toast_overlay.add_toast(
@@ -737,7 +741,10 @@ class FileTransferMixin:
         if app_info:
             app_info.launch([local_gio_file], None)
         else:
-            subprocess.Popen(["xdg-open", str(local_path)])
+            try:
+                Gio.AppInfo.launch_default_for_uri(local_gio_file.get_uri(), None)
+            except Exception as e:
+                self.logger.error(f"Failed to open {local_path}: {e}")
 
         edit_key = (self.session_item.name, remote_path)
 
@@ -771,11 +778,11 @@ class FileTransferMixin:
         self, _monitor, _file, _other_file, event_type, remote_path, local_path
     ):
         if event_type == Gio.FileMonitorEvent.CHANGES_DONE_HINT:
-            threading.Thread(
-                target=self._check_conflict_and_upload,
-                args=(local_path, remote_path),
-                daemon=True,
-            ).start()
+            from ..core.tasks import AsyncTaskManager
+
+            AsyncTaskManager.get().submit_io(
+                self._check_conflict_and_upload, local_path, remote_path
+            )
 
     def _check_conflict_and_upload(self, local_path: Path, remote_path: str):
         """Checks for remote changes before uploading the local file."""

@@ -9,6 +9,7 @@ gi.require_version("GLib", "2.0")
 from gi.repository import GLib
 
 from .ssh_error_analyzer import has_connection_error, has_shell_prompt
+from ..utils.logger import log_swallowed_exception
 
 
 def is_process_alive(pid: int) -> bool:
@@ -52,8 +53,8 @@ def check_terminal_connection_status(
                 logger.info(f"SSH connected for terminal {terminal_id}")
                 return False  # Resolved: connected
 
-    except Exception:
-        pass
+    except Exception as exc:
+        log_swallowed_exception(exc)
 
     return None  # Still unknown — continue monitoring
 
@@ -120,8 +121,8 @@ def on_connection_success(terminal, tab_manager=None, cancel_auto_reconnect=None
         if timer_id:
             try:
                 GLib.source_remove(timer_id)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
             terminal._auto_reconnect_timer_id = None
 
     # Clear retry flag

@@ -12,6 +12,7 @@ from gi.repository import Adw, GLib, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
+from ..utils.logger import log_swallowed_exception
 
 if TYPE_CHECKING:
     from .tabs import TabManager
@@ -358,8 +359,8 @@ class BannerManager:
                     f"Banner already exists and is valid for terminal {terminal_id}"
                 )
                 return True
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
         terminal._error_banner = None
         terminal._banner_box = None

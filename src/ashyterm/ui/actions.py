@@ -9,6 +9,7 @@ from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
 from ..utils.translation_utils import _
+from ..utils.logger import log_swallowed_exception
 
 if TYPE_CHECKING:
     from ..window import CommTerminalWindow
@@ -221,8 +222,8 @@ class WindowActions:
                             "visible": is_visible,
                         }
                     )
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
         if modal_windows:
             self.logger.warning(f"[MODAL_DEBUG] {context}: {modal_windows}")

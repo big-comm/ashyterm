@@ -2,7 +2,6 @@
 
 """AI Assistant configuration dialog."""
 
-import threading
 from typing import List, Tuple
 
 import gi
@@ -468,11 +467,9 @@ class ModelBrowserDialog(Adw.Window):
         self._cancel_fetch_btn.set_visible(True)
         self.count_label.set_visible(False)
 
-        thread = threading.Thread(
-            target=self._fetch_models_thread,
-            daemon=True,
-        )
-        thread.start()
+        from ...core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(self._fetch_models_thread)
 
     def _fetch_models_thread(self) -> None:
         """Fetch models in a background thread."""
@@ -501,7 +498,9 @@ class ModelBrowserDialog(Adw.Window):
             GLib.idle_add(self._on_fetch_success, model_list)
 
         except Exception as e:
-            GLib.idle_add(self._on_fetch_error, str(e))
+            from ...utils.security import redact_secrets
+
+            GLib.idle_add(self._on_fetch_error, redact_secrets(str(e)))
 
     def _build_auth_headers(self) -> dict:
         """Build HTTP headers with provider-specific auth."""

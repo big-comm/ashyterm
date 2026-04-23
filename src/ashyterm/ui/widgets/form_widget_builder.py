@@ -18,6 +18,7 @@ from gi.repository import Adw, Gdk, Gtk
 
 from ...utils.translation_utils import _
 from ...utils.tooltip_helper import get_tooltip_helper
+from ...utils.logger import log_swallowed_exception
 
 
 @dataclass(slots=True)
@@ -555,8 +556,8 @@ class FormWidgetBuilder:
             rgba = Gdk.RGBA()
             rgba.parse(default_color)
             color_btn.set_rgba(rgba)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
         # Store format from extra_config
         color_btn._color_format = config.extra_config.get("color_format", "hex")

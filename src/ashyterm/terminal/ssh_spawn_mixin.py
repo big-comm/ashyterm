@@ -145,6 +145,7 @@ class SSHSpawnMixin:
                     f"{command_type.upper()} to {session.get_connection_string()}",
                 )
             except Exception as e:
+                self._cleanup_pending_sshpass_file()
                 self.logger.error(
                     f"{command_type.upper()} session launch failed for {session.name}: {e}"
                 )
@@ -258,6 +259,7 @@ class SSHSpawnMixin:
                 return spawn_result
 
             except Exception as e:
+                self._cleanup_pending_sshpass_file()
                 self.logger.error(f"Highlighted SSH spawn failed: {e}")
                 if "proxy" in locals():
                     proxy.stop()
@@ -292,14 +294,27 @@ class SSHSpawnMixin:
                 f"Executing remote command (timeout={timeout}s): {' '.join(full_cmd)}"
             )
 
+            pass_file = None
             run_env = None
-            if sshpass_env:
-                run_env = os.environ.copy()
-                run_env.update(sshpass_env)
+            if sshpass_env and "_ASHYTERM_SSHPASS_FILE" in sshpass_env:
+                pass_file = sshpass_env["_ASHYTERM_SSHPASS_FILE"]
 
-            proc_result = subprocess.run(
-                full_cmd, capture_output=True, text=True, timeout=timeout, env=run_env
-            )
+            try:
+                proc_result = subprocess.run(
+                    full_cmd,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    env=run_env,
+                )
+            finally:
+                if pass_file:
+                    try:
+                        Path(pass_file).unlink(missing_ok=True)
+                    except OSError as unlink_exc:
+                        self.logger.debug(
+                            f"Could not remove sshpass temp file {pass_file}: {unlink_exc}"
+                        )
 
             if proc_result.returncode == 0:
                 return True, proc_result.stdout
@@ -365,8 +380,15 @@ class SSHSpawnMixin:
     def _build_ssh_test_command(
         self, session: "SessionItem"
     ) -> Tuple[Optional[List[str]], Optional[dict] | str]:
-        """Build SSH test command and environment. Returns (command, env) or (None, error)."""
-        raw_password = getattr(session, "_auth_value", "") or ""
+        """Build SSH test command and environment. Returns (command, env) or (None, error).
+
+        Reads password via the session.auth_value property (which pulls from
+        the keyring) instead of the raw _auth_value attribute, which is
+        intentionally blank for password-auth sessions.
+        """
+        raw_password = (
+            session.auth_value if session.uses_password_auth() else ""
+        ) or ""
         use_password = session.uses_password_auth() and bool(raw_password)
 
         ssh_options = self._build_ssh_test_options(session, use_password)
@@ -377,12 +399,26 @@ class SSHSpawnMixin:
 
         return self._wrap_sshpass(cmd, raw_password)
 
+    _ALLOWED_STRICT_HOSTKEY = ("ask", "accept-new", "yes", "no")
+
+    def _get_strict_host_key_checking(self) -> str:
+        """Return the configured StrictHostKeyChecking policy, clamped to valid values."""
+        value = self.settings_manager.get(
+            "ssh_strict_host_key_checking", "accept-new"
+        )
+        if value in self._ALLOWED_STRICT_HOSTKEY:
+            return value
+        self.logger.warning(
+            f"Invalid ssh_strict_host_key_checking={value!r}, falling back to accept-new"
+        )
+        return "accept-new"
+
     def _build_ssh_test_options(self, session, use_password: bool) -> dict:
         """Build SSH option dict for test connections."""
         opts = {
             "BatchMode": "no" if use_password else "yes",
             "ConnectTimeout": "10",
-            "StrictHostKeyChecking": "accept-new",
+            "StrictHostKeyChecking": self._get_strict_host_key_checking(),
             "PasswordAuthentication": "yes" if use_password else "no",
         }
         if getattr(session, "x11_forwarding", False):
@@ -406,29 +442,60 @@ class SSHSpawnMixin:
         return cmd
 
     def _wrap_sshpass(self, cmd: list, password: str):
-        """Wrap command with sshpass for password authentication."""
+        """Wrap command with sshpass for password authentication.
+
+        Always uses -f <file> (mode 0600); never -e env var.
+        The caller must delete the returned password file after use
+        (see _execute_ssh_test's try/finally). Returns (None, error_str)
+        if sshpass is unavailable or the temp file cannot be created.
+        """
         if not has_command("sshpass"):
             return (
                 None,
                 "sshpass is not installed, cannot test password authentication.",
             )
         pass_file = self._create_sshpass_file(password)
+        if not pass_file:
+            return (
+                None,
+                "Could not create secure temporary file for SSH password.",
+            )
         run_env = os.environ.copy()
         run_env["LC_ALL"] = "C"
-        if pass_file:
-            cmd = ["sshpass", "-f", pass_file] + cmd
-        else:
-            cmd = ["sshpass", "-e"] + cmd
-            run_env["SSHPASS"] = password
+        cmd = ["sshpass", "-f", pass_file] + cmd
+        # Piggy-back path on env dict so the caller can unlink it.
+        run_env["_ASHYTERM_SSHPASS_FILE"] = pass_file
         return cmd, run_env
 
     def _execute_ssh_test(
         self, cmd: List[str], run_env: Optional[dict], session_name: str
     ) -> Tuple[bool, str]:
-        """Execute SSH test command and return result."""
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=15, env=run_env
-        )
+        """Execute SSH test command and return result.
+
+        Removes the ephemeral sshpass password file (if any) before returning,
+        regardless of success, timeout, or exception.
+        """
+        pass_file = None
+        env_to_pass = run_env
+        if run_env is not None and "_ASHYTERM_SSHPASS_FILE" in run_env:
+            # Don't leak the marker into the child's environment.
+            env_to_pass = {
+                k: v for k, v in run_env.items() if k != "_ASHYTERM_SSHPASS_FILE"
+            }
+            pass_file = run_env["_ASHYTERM_SSHPASS_FILE"]
+
+        try:
+            result = subprocess.run(
+                cmd, capture_output=True, text=True, timeout=15, env=env_to_pass
+            )
+        finally:
+            if pass_file:
+                try:
+                    Path(pass_file).unlink(missing_ok=True)
+                except OSError as exc:
+                    self.logger.debug(
+                        f"Could not remove sshpass temp file {pass_file}: {exc}"
+                    )
 
         if result.returncode == 0:
             self.logger.info(f"SSH connection test successful for {session_name}")
@@ -464,7 +531,7 @@ class SSHSpawnMixin:
             "ConnectTimeout": str(connect_timeout),
             "ServerAliveInterval": "30",
             "ServerAliveCountMax": "3",
-            "StrictHostKeyChecking": "accept-new",
+            "StrictHostKeyChecking": self._get_strict_host_key_checking(),
             "UpdateHostKeys": "yes",
             "ControlMaster": "auto",
             "ControlPath": self._get_ssh_control_path(session),
@@ -565,22 +632,29 @@ class SSHSpawnMixin:
     def _wrap_with_sshpass(
         self, cmd: List[str], session: "SessionItem"
     ) -> Tuple[List[str], Optional[Dict[str, str]]]:
-        """Wrap command with sshpass for password auth. Uses -f file (mode 0600)."""
-        sshpass_env: Optional[Dict[str, str]] = None
+        """Wrap command with sshpass for password auth. Uses -f file (mode 0600).
 
-        if session.uses_password_auth() and session.auth_value:
-            if has_command("sshpass"):
-                pass_file = self._create_sshpass_file(session.auth_value)
-                if pass_file:
-                    cmd = ["sshpass", "-f", pass_file] + cmd
-                    self._last_sshpass_file = pass_file
-                else:
-                    cmd = ["sshpass", "-e"] + cmd
-                    sshpass_env = {"SSHPASS": session.auth_value}
-            else:
-                self.logger.warning("sshpass not available for password authentication")
+        Never falls back to SSHPASS env var because env is exposed via
+        /proc/PID/environ to any process of the same user.
+        """
+        if not (session.uses_password_auth() and session.auth_value):
+            return (cmd, None)
 
-        return (cmd, sshpass_env)
+        if not has_command("sshpass"):
+            raise SSHConnectionError(
+                session.host,
+                "sshpass is required for password authentication but is not installed",
+            )
+
+        pass_file = self._create_sshpass_file(session.auth_value)
+        if not pass_file:
+            raise SSHConnectionError(
+                session.host,
+                "Could not create secure temporary file for SSH password",
+            )
+
+        self._last_sshpass_file = pass_file
+        return (["sshpass", "-f", pass_file] + cmd, None)
 
     def _create_sshpass_file(self, password: str) -> Optional[str]:
         """Create secure temp file containing SSH password (mode 0600)."""
@@ -601,6 +675,21 @@ class SSHSpawnMixin:
         except Exception as e:
             self.logger.error(f"Failed to create sshpass temp file: {e}")
             return None
+
+    def _cleanup_pending_sshpass_file(self) -> None:
+        """Unlink and clear the last created sshpass password file, if any.
+
+        Called when a spawn fails before the file gets transferred to the
+        ProcessTracker. Otherwise the password would linger in cache_dir.
+        """
+        path = self._last_sshpass_file
+        if not path:
+            return
+        self._last_sshpass_file = None
+        try:
+            Path(path).unlink(missing_ok=True)
+        except OSError as exc:
+            self.logger.debug(f"Could not remove sshpass temp file {path}: {exc}")
 
     def _build_remote_command_secure(
         self,
@@ -653,6 +742,7 @@ class SSHSpawnMixin:
             "BatchMode": "yes",
             "ServerAliveInterval": "5",
             "ServerAliveCountMax": "2",
+            "StrictHostKeyChecking": self._get_strict_host_key_checking(),
         }
         if persist_duration > 0:
             ssh_options["ControlPersist"] = str(persist_duration)
@@ -679,17 +769,24 @@ class SSHSpawnMixin:
         remote_command_str = " ".join(shlex.quote(part) for part in command)
         cmd.append(remote_command_str)
 
+        # "sshpass_env" here is repurposed to tell execute_remote_command_sync
+        # the path of the password file it must unlink when done. We never
+        # expose the password via SSHPASS env var.
         sshpass_env: Optional[Dict[str, str]] = None
         if session.uses_password_auth() and session.auth_value:
-            if has_command("sshpass"):
-                pass_file = self._create_sshpass_file(session.auth_value)
-                if pass_file:
-                    cmd = ["sshpass", "-f", pass_file] + cmd
-                else:
-                    cmd = ["sshpass", "-e"] + cmd
-                    sshpass_env = {"SSHPASS": session.auth_value}
-            else:
-                self.logger.warning("sshpass not available for password authentication")
+            if not has_command("sshpass"):
+                raise SSHConnectionError(
+                    session.host,
+                    "sshpass is required for password authentication but is not installed",
+                )
+            pass_file = self._create_sshpass_file(session.auth_value)
+            if not pass_file:
+                raise SSHConnectionError(
+                    session.host,
+                    "Could not create secure temporary file for SSH password",
+                )
+            cmd = ["sshpass", "-f", pass_file] + cmd
+            sshpass_env = {"_ASHYTERM_SSHPASS_FILE": pass_file}
         return (cmd, sshpass_env)
 
     def _extract_spawn_callback_data(
@@ -728,6 +825,10 @@ class SSHSpawnMixin:
         actual_data: Any,
     ) -> None:
         """Handle spawn error — log and show error in terminal."""
+        # The VTE spawn rejected the child (no PID was created); if a
+        # password file was staged for this spawn it must be removed now.
+        self._cleanup_pending_sshpass_file()
+
         event_type = (
             f"{spawn_type}_launch_failed" if spawn_type == "ssh" else "launch_failed"
         )

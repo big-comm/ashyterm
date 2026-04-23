@@ -181,8 +181,8 @@ class BaseDialog(Adw.Window):
 
         try:
             get_tooltip_helper().hide_all()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
         # Track if we successfully mapped
         self._dialog_mapped = False
@@ -309,8 +309,8 @@ class BaseDialog(Adw.Window):
         # Also set accessible description for screen readers
         try:
             widget.update_property([Gtk.AccessibleProperty.DESCRIPTION], [message])
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     def _clear_field_error(self, widget) -> None:
         """Hide the inline error message for a form field."""
@@ -319,8 +319,8 @@ class BaseDialog(Adw.Window):
             label.set_visible(False)
         try:
             widget.update_property([Gtk.AccessibleProperty.DESCRIPTION], [""])
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     # =========================================================================
     # Form Field Creation Helpers
@@ -503,6 +503,7 @@ class BaseDialog(Adw.Window):
 # Re-export create_icon_button — convenience import for dialog modules
 # noqa: E402 — re-export after module body; F401 — re-export for consumers
 from ...utils.icons import create_icon_button  # noqa: E402, F401 — re-export
+from ...utils.logger import log_swallowed_exception
 
 
 def show_delete_confirmation_dialog(
@@ -546,8 +547,8 @@ def show_delete_confirmation_dialog(
 
     try:
         get_tooltip_helper().hide_all()
-    except Exception:
-        pass
+    except Exception as exc:
+        log_swallowed_exception(exc)
 
     dialog.present(parent)
 

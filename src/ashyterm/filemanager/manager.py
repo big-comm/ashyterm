@@ -7,7 +7,6 @@ gi.require_version("Vte", "3.91")
 import os
 import shlex
 import tempfile
-import threading
 import weakref
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
@@ -332,9 +331,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
             rsync_available = self._check_rsync_on_remote(ops_ref, session_ref, key)
             GLib.idle_add(lambda: self._finalize_rsync_check(key, rsync_available))
 
-        threading.Thread(
-            target=worker, args=(session, operations, session_key), daemon=True
-        ).start()
+        AsyncTaskManager.get().submit_io(worker, session, operations, session_key)
 
     def _check_rsync_on_remote(
         self, ops_ref: FileOperations, session_ref: SessionItem, key: str

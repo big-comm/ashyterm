@@ -20,6 +20,7 @@ from ..conversation_history import ConversationHistoryPanel
 from ._helpers import _extract_reply_from_json, _normalize_commands
 from ._prompts import get_random_quick_prompts
 from .message_bubble import LoadingIndicator, MessageBubble
+from ....utils.logger import log_swallowed_exception
 
 if TYPE_CHECKING:
     from ....terminal.ai_assistant import AIAssistant
@@ -365,8 +366,8 @@ class AIChatPanel(Gtk.Box):
                     Gtk.StyleContext.remove_provider_for_display(
                         Gdk.Display.get_default(), self._transparency_provider
                     )
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_swallowed_exception(exc)
 
             provider = Gtk.CssProvider()
             provider.load_from_data(css.encode("utf-8"))

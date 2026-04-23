@@ -2,7 +2,6 @@
 """URL detection, hyperlink handling, and command detection mixin."""
 
 import re
-import subprocess
 from typing import Optional
 from urllib.parse import urlparse
 
@@ -10,7 +9,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import Gdk, Gtk, Vte
+from gi.repository import Gdk, Gio, Gtk, Vte
 
 from ..helpers import is_valid_url
 from ..settings.config import PROMPT_TERMINATOR_PATTERN
@@ -289,12 +288,9 @@ class URLHandlerMixin:
 
             self.logger.info(f"Opening hyperlink: {uri}")
 
-            subprocess.run(["xdg-open", uri], check=True, timeout=10)
+            Gio.AppInfo.launch_default_for_uri(uri, None)
             return True
 
-        except subprocess.TimeoutExpired:
-            self.logger.error(f"Timeout opening hyperlink: {uri}")
-            return False
         except Exception as e:
             self.logger.error(f"Failed to open hyperlink '{uri}': {e}")
             return False

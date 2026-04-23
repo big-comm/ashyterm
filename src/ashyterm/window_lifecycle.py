@@ -1,6 +1,5 @@
 """Window lifecycle mixin — init, destroy, cleanup, window state, settings."""
 
-import threading
 import weakref
 from typing import Any, List
 
@@ -313,7 +312,9 @@ class WindowLifecycleMixin:
             except Exception as e:
                 GLib.idle_add(self._handle_load_error, e)
 
-        threading.Thread(target=load_data_background, daemon=True).start()
+        from .core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(load_data_background)
 
     def _update_stores_with_data(self, sessions_data, folders_data):
         """Callback to update stores on main thread after background load."""

@@ -20,6 +20,7 @@ from gi.repository import Adw, GLib, GObject
 from ..data.ai_history_manager import get_ai_history_manager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from ..utils.logger import log_swallowed_exception
 
 # Lazy-loaded requests module (avoid import overhead on startup)
 _requests_module = None
@@ -97,8 +98,8 @@ class TerminalAiAssistant(GObject.Object):
                     elif line.startswith("ID_LIKE="):
                         raw = line.split("=", 1)[1].strip().strip('"')
                         base_distro = TerminalAiAssistant._sanitize_os_value(raw)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
         return os_name, base_distro
 
     @staticmethod
@@ -112,8 +113,8 @@ class TerminalAiAssistant(GObject.Object):
                         raw = line.split("=", 1)[1].strip().strip('"')
                         os_name = TerminalAiAssistant._sanitize_os_value(raw)
                         break
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
         return os_name
 
     @classmethod
@@ -268,10 +269,11 @@ class TerminalAiAssistant(GObject.Object):
         # Save user message to history
         self._history_manager.add_user_message(prompt)
 
-        worker = threading.Thread(
-            target=self._process_request_thread, args=(terminal_id, prompt), daemon=True
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(
+            self._process_request_thread, terminal_id, prompt
         )
-        worker.start()
         return True
 
     def request_assistance_simple(
@@ -306,10 +308,11 @@ class TerminalAiAssistant(GObject.Object):
         # Save user message to history
         self._history_manager.add_user_message(prompt)
 
-        worker = threading.Thread(
-            target=self._process_request_thread, args=(terminal_id, prompt), daemon=True
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_io(
+            self._process_request_thread, terminal_id, prompt
         )
-        worker.start()
         return True
 
     def clear_conversation_for_terminal(self, terminal) -> None:
@@ -342,8 +345,8 @@ class TerminalAiAssistant(GObject.Object):
                 if response:
                     try:
                         response.close()
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        log_swallowed_exception(exc)
 
     def handle_setting_changed(self, key: str, _old_value: Any, new_value: Any) -> None:
         if key == "ai_assistant_enabled" and not new_value:
@@ -411,8 +414,12 @@ class TerminalAiAssistant(GObject.Object):
                 code_snippets,
             )
         except Exception as exc:  # pylint: disable=broad-except
-            self.logger.error("AI assistant request failed: %s", exc)
-            error_message = "Sorry, I couldn't complete the request: {}".format(exc)
+            from ..utils.security import redact_secrets
+
+            self.logger.error("AI assistant request failed: %s", redact_secrets(str(exc)))
+            error_message = "Sorry, I couldn't complete the request: {}".format(
+                redact_secrets(str(exc))
+            )
             self._record_assistant_message(terminal_id, error_message)
             GLib.idle_add(
                 self._display_error_reply,
@@ -428,13 +435,31 @@ class TerminalAiAssistant(GObject.Object):
                 self._active_responses.pop(terminal_id, None)
                 self._streaming_callback = None
 
+    # Hard upper bound on a single prompt sent to an AI provider.
+    _MAX_PROMPT_CHARS = 50_000
+    _MAX_MESSAGE_CHARS = 50_000
+
+    @staticmethod
+    def _truncate_for_prompt(text: str, limit: int) -> str:
+        if len(text) <= limit:
+            return text
+        return text[:limit] + f"\n\n…[truncated {len(text) - limit} characters]"
+
     def _build_messages(self, terminal_id: int, prompt: str) -> List[Dict[str, str]]:
+        prompt = self._truncate_for_prompt(prompt, self._MAX_PROMPT_CHARS)
         with self._lock:
             history = self._conversations.setdefault(terminal_id, [])
             history.append({"role": "user", "content": prompt})
-            # Cap conversation length to prevent unbounded memory growth
+            # Cap conversation length to prevent unbounded memory growth.
             if len(history) > self._max_conversation_messages:
                 history[:] = history[-self._max_conversation_messages :]
+            # Cap per-message size so long echoed replies don't bloat
+            # subsequent requests (provider charges per token).
+            for msg in history:
+                if isinstance(msg.get("content"), str):
+                    msg["content"] = self._truncate_for_prompt(
+                        msg["content"], self._MAX_MESSAGE_CHARS
+                    )
             messages: List[Dict[str, str]] = [
                 {"role": "system", "content": self._get_system_prompt()}
             ]
@@ -620,8 +645,8 @@ class TerminalAiAssistant(GObject.Object):
         finally:
             try:
                 response.close()
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
         if self._streaming_callback:
             GLib.idle_add(self._streaming_callback, "", True)

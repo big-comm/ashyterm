@@ -14,6 +14,7 @@ from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from ..utils.accessibility import set_label as a11y_label
 from .dialogs.base_dialog import BaseDialog
+from ..utils.logger import log_swallowed_exception
 
 
 # NEW: Custom widget for editing a color with a hex entry field.
@@ -114,8 +115,8 @@ class _ColorEditRow(Adw.ActionRow):
             entry.remove_css_class("error")
             try:
                 entry.update_property([Gtk.AccessibleProperty.DESCRIPTION], [""])
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
         else:
             entry.add_css_class("error")
             try:
@@ -123,8 +124,8 @@ class _ColorEditRow(Adw.ActionRow):
                     [Gtk.AccessibleProperty.DESCRIPTION],
                     [_("Invalid hex color format")],
                 )
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
 
 class _SchemeEditorDialog(BaseDialog):

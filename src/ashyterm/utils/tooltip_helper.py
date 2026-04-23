@@ -19,6 +19,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, Gtk
+from .logger import log_swallowed_exception
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +57,8 @@ class TooltipHelper:
             style_manager = Adw.StyleManager.get_default()
             style_manager.connect("notify::dark", self._on_theme_changed)
             style_manager.connect("notify::color-scheme", self._on_theme_changed)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     def _on_theme_changed(self, style_manager, _pspec):
         """Auto-update colors when system theme changes."""
@@ -111,8 +112,8 @@ popover.custom-tooltip-static label {
                 Gtk.StyleContext.remove_provider_for_display(
                     display, self._color_css_provider
                 )
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
         from ..utils.css_helpers import apply_inline_css
 
@@ -172,8 +173,8 @@ popover.custom-tooltip-static label {
                 if hasattr(widget, "_custom_tooltip_popover"):
                     popover, _ = widget._custom_tooltip_popover
                     popover.popdown()
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
     def _on_window_active_changed(self, window, _pspec):
         """Hide all tooltips when any tracked window loses focus."""
@@ -189,8 +190,8 @@ popover.custom-tooltip-static label {
                     if hasattr(widget, "_custom_tooltip_popover"):
                         popover, _ = widget._custom_tooltip_popover
                         popover.popdown()
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_swallowed_exception(exc)
 
     def _add_controller(self, widget):
         if getattr(widget, "_has_custom_tooltip_controller", False):
@@ -229,8 +230,8 @@ popover.custom-tooltip-static label {
             try:
                 self.closing_popover.popdown()
                 self.closing_popover.remove_css_class("visible")
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
             self.closing_popover = None
 
     def _on_enter(self, controller, x, y, widget):
@@ -336,22 +337,22 @@ popover.custom-tooltip-static label {
 
             try:
                 popover_to_hide.remove_css_class("visible")
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)
 
             if immediate:
                 # Hide immediately (no animation wait)
                 try:
                     popover_to_hide.popdown()
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_swallowed_exception(exc)
             else:
                 # Wait for animation then popdown
                 def do_popdown():
                     try:
                         popover_to_hide.popdown()
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        log_swallowed_exception(exc)
                     self.hide_timer_id = None
                     self.closing_popover = None
                     return GLib.SOURCE_REMOVE
@@ -375,5 +376,5 @@ popover.custom-tooltip-static label {
                 if hasattr(widget, "_custom_tooltip_popover"):
                     popover, _ = widget._custom_tooltip_popover
                     popover.popdown()
-            except Exception:
-                pass
+            except Exception as exc:
+                log_swallowed_exception(exc)

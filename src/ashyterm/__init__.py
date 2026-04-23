@@ -30,19 +30,27 @@ def _get_translation():
 
 
 def setup_signal_handlers():
-    """Set up signal handlers for graceful shutdown on Linux."""
+    """Set up signal handlers for graceful shutdown on Linux.
+
+    The handler body is kept minimal: we look up the already-imported
+    Gtk module via sys.modules instead of re-running `gi.require_version`,
+    which would fail if the import machinery is in an odd state when the
+    signal fires (for example right after the interpreter forked).
+    """
     _ = _get_translation()
 
     def signal_handler(sig, frame):
         print("\n" + _("Received signal {}, shutting down gracefully...").format(sig))
         try:
-            import gi
-
-            gi.require_version("Gtk", "4.0")
-            from gi.repository import Gtk
-
-            app = Gtk.Application.get_default()
-            if app:
+            gtk_module = sys.modules.get("gi.repository.Gtk") or sys.modules.get(
+                "gi.repository"
+            )
+            app = None
+            if gtk_module is not None:
+                app_cls = getattr(gtk_module, "Application", None)
+                if app_cls is not None:
+                    app = app_cls.get_default()
+            if app is not None:
                 app.quit()
             else:
                 sys.exit(0)
