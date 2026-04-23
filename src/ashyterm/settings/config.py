@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.8.8"
+    APP_VERSION = "1.9.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -129,15 +129,7 @@ class DefaultSettings:
     @staticmethod
     @lru_cache(maxsize=1)
     def get_available_default_font() -> str:
-        """
-        Detects the first available monospace font on the system.
-
-        Tests fonts in priority order and returns the first one that exists.
-        Falls back to generic 'Monospace' if none are found.
-
-        Returns:
-            str: Font description string (e.g., "Ubuntu Mono 12")
-        """
+        """First available monospace font by priority; falls back to ``Monospace``."""
         # Font priority list: Nerd Fonts -> Popular distro fonts -> Universal fallback
         font_candidates = [
             "Noto Mono Nerd Font Medium 12",
@@ -227,6 +219,8 @@ class DefaultSettings:
             "close_multiple_tabs_policy",
         ],
         "terminal": [
+            "copy_on_select",
+            "paste_warning_enabled",
             "scrollback_lines",
             "mouse_scroll_sensitivity",
             "touchpad_scroll_sensitivity",
@@ -315,6 +309,8 @@ class DefaultSettings:
             "scroll_on_output": True,  # Enables smart scrolling
             "scroll_on_keystroke": True,
             "scroll_on_insert": True,  # Scroll to bottom on paste
+            "copy_on_select": False,  # Auto-copy selection to clipboard
+            "paste_warning_enabled": True,  # Confirm multi-line / risky paste
             "mouse_autohide": True,
             "cursor_blink": 0,
             "new_instance_behavior": "new_tab",
@@ -441,6 +437,8 @@ class DefaultSettings:
                 "split-horizontal": "<Control><Shift>o",
                 "split-vertical": "<Control><Shift>d",
                 "close-pane": "<Control><Shift>k",
+                "zoom-pane": "<Control><Shift>z",
+                "balance-panes": "<Control><Shift>equal",
                 "next-tab": "<Control>Page_Down",
                 "previous-tab": "<Control>Page_Up",
                 "move-tab-left": "<Control><Shift>Page_Up",
@@ -491,7 +489,7 @@ try:
 except Exception as e:
     if UTILS_AVAILABLE:
         get_logger("ashyterm.settings.config").warning(
-            "Configuration initialization failed: %s", e
+            f"Configuration initialization failed: {e}"
         )
     else:
         print(f"WARNING: Configuration initialization failed: {e}")

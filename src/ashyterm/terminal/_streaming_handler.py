@@ -16,6 +16,25 @@ from .highlighter.constants import (
 from .highlighter.constants import (
     SHELL_NAME_PROMPT_PATTERN as _SHELL_NAME_PROMPT_PATTERN,
 )
+from .shell_prompt_detect import (
+    FANCY_PROMPT_CHARS,
+    PROMPT_TRIGGER_CHARS,
+    READLINE_SEQUENCES,
+    SEARCH_PROMPT_PATTERNS,
+    TRADITIONAL_PROMPT_CHARS,
+    extract_last_line as _extract_last_line_impl,
+    extract_line_content_and_ending as _extract_line_impl,
+    is_readline_redraw as _is_readline_redraw_impl,
+    is_valid_shell_input as _is_valid_shell_input_impl,
+    is_valid_traditional_prompt as _is_valid_traditional_prompt_impl,
+    looks_like_prompt as _looks_like_prompt_impl,
+)
+from .stream_buffering import (
+    classify_burst as _classify_burst_impl,
+    is_remainder_interactive as _is_remainder_interactive_impl,
+    should_skip_line_highlight as _should_skip_line_highlight_impl,
+    split_partial_line as _split_partial_line_impl,
+)
 
 # Sentinel for "continue normal processing" in shell input handling
 _CONTINUE_PROCESSING = object()
@@ -137,42 +156,13 @@ class StreamingHandler:
 
         return False
 
-    # Readline escape sequences that indicate cursor/line editing redraw
-    _READLINE_SEQUENCES = frozenset(
-        (
-            b"\x1b[D",  # Cursor left
-            b"\x1b[C",  # Cursor right
-            b"\x1b[K",  # Erase to end of line
-            b"\x1b[0K",  # Erase to end of line (explicit)
-            b"\x1b[1D",  # Move cursor left 1
-            b"\x1b[1C",  # Move cursor right 1
-            b"\x1b[A",  # Cursor up
-            b"\x1b[B",  # Cursor down
-            b"\x1b[J",  # Erase display
-            b"\x1b[0J",  # Erase display (explicit)
-            b"\x1b[H",  # Cursor home
-            b"\x1b[?25l",  # Hide cursor
-            b"\x1b[?25h",  # Show cursor
-            b"\x1b[P",  # Delete char
-            b"\x1b[@",  # Insert char
-        )
-    )
-
-    _SEARCH_PROMPT_PATTERNS = (
-        b"(reverse-i-search)",
-        b"(i-search)",
-        b"(bck-i-search)",
-        b"(fwd-i-search)",
-        b"(failed ",
-    )
+    # Byte-level readline patterns live in shell_prompt_detect. Kept as
+    # class attributes too so external subclasses can still reach them.
+    _READLINE_SEQUENCES = READLINE_SEQUENCES
+    _SEARCH_PROMPT_PATTERNS = SEARCH_PROMPT_PATTERNS
 
     def _is_readline_redraw(self, data: bytes) -> bool:
-        """Check if data contains readline redraw sequences."""
-        if b"\r" in data:
-            return True
-        return any(seq in data for seq in self._READLINE_SEQUENCES) or any(
-            pat in data for pat in self._SEARCH_PROMPT_PATTERNS
-        )
+        return _is_readline_redraw_impl(data)
 
     def _combine_streaming_partial_data(self, data: bytes) -> bytes:
         """Combine current data with partial buffer."""
@@ -184,46 +174,35 @@ class StreamingHandler:
     def _handle_streaming_safety_limits(
         self, data: bytes, data_len: int, term: Vte.Terminal
     ) -> bool:
-        """Handle safety limits. Returns True if should exit."""
-        # Hard limit (1MB)
-        if data_len > 1048576:
-            self._burst_counter = 100
-            self._flush_queue(term)
-            term.feed(data)
-            return True
+        """Update burst counter and feed raw if the chunk is too big.
 
-        # Adaptive burst detection
-        if data_len > 1024:
-            self._burst_counter += 1
-        else:
-            self._burst_counter = 0
+        Returns True when we bailed (caller should stop processing).
+        """
+        threshold = getattr(self, "_burst_threshold", 15)
+        new_counter, is_burst = _classify_burst_impl(
+            data_len, self._burst_counter, threshold
+        )
+        self._burst_counter = new_counter
 
-        if self._burst_counter > getattr(self, "_burst_threshold", 15):
-            if self._at_shell_prompt or b"\x1b]7;" in data or b"\033]7;" in data:
-                self._reset_input_buffer()
-            self._flush_queue(term)
-            term.feed(data)
-            return True
+        if not is_burst:
+            return False
 
-        return False
+        # Reset the input buffer if the burst contains shell-input
+        # state — OSC7 or already-at-prompt means any buffered input
+        # is stale.
+        if self._at_shell_prompt or b"\x1b]7;" in data or b"\033]7;" in data:
+            self._reset_input_buffer()
+        self._flush_queue(term)
+        term.feed(data)
+        return True
 
     def _handle_streaming_partial_lines(self, data: bytes, data_len: int) -> bytes:
-        """Handle partial line buffering."""
-        last_newline_pos = data.rfind(b"\n")
-
-        if last_newline_pos != -1 and last_newline_pos < data_len - 1:
-            remainder = data[last_newline_pos + 1 :]
-
-            is_interactive = False
-            if len(remainder) < 200:
-                rem_str = remainder.decode("utf-8", errors="ignore")
-                is_interactive = self._is_remainder_interactive(rem_str)
-
-            if not is_interactive and not self._at_shell_prompt:
-                self._partial_line_buffer = remainder
-                data = data[: last_newline_pos + 1]
-
-        return data
+        emit, remainder = _split_partial_line_impl(
+            data, at_shell_prompt=self._at_shell_prompt
+        )
+        if remainder:
+            self._partial_line_buffer = remainder
+        return emit
 
     def _process_streaming_text(
         self, data: bytes, text: str, term: Vte.Terminal
@@ -285,14 +264,7 @@ class StreamingHandler:
             self._need_color_reset = True
 
     def _looks_like_prompt(self, text: str) -> bool:
-        """Check if text looks like a shell prompt."""
-        return bool(
-            _SHELL_NAME_PROMPT_PATTERN.match(text)
-            or "@" in text
-            or ":" in text
-            or text.endswith("~")
-            or text.endswith("/")
-        )
+        return _looks_like_prompt_impl(text)
 
     def _process_interactive_markers(
         self, data: bytes, text: str, term: Vte.Terminal
@@ -337,7 +309,6 @@ class StreamingHandler:
                     self._input_highlight_buffer += "\n"
             else:
                 self._at_shell_prompt = False
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, False)
 
         self._suppress_shell_input_highlighting = False
 
@@ -345,7 +316,6 @@ class StreamingHandler:
         """Activate shell prompt mode."""
         if not self._at_shell_prompt:
             self._at_shell_prompt = True
-            self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
             self._reset_input_buffer()
             self._need_color_reset = True
             self._suppress_shell_input_highlighting = False
@@ -525,36 +495,20 @@ class StreamingHandler:
         self, line: str, index: int, skip_first: bool, highlight_line, rules
     ) -> bytes:
         """Process a single line for streaming highlighting."""
-        # Skip first line if needed
-        if skip_first and index == 0:
+        if _should_skip_line_highlight_impl(
+            line, index=index, skip_first=skip_first
+        ):
             return line.encode("utf-8", errors="replace")
 
-        # Empty or whitespace-only lines
-        if not line or line in ("\n", "\r", "\r\n"):
-            return line.encode("utf-8")
-
-        # OSC7 sequences
-        if "\x1b]7;" in line or "\033]7;" in line:
-            return line.encode("utf-8", errors="replace")
-
-        # Apply highlighting
         content, ending = self._extract_line_content_and_ending(line)
         if content:
             highlighted = highlight_line(content, rules) + ending
         else:
             highlighted = ending
-
         return highlighted.encode("utf-8", errors="replace")
 
     def _extract_line_content_and_ending(self, line: str) -> tuple[str, str]:
-        """Extract content and ending from a line."""
-        if line[-1] == "\n":
-            if len(line) > 1 and line[-2] == "\r":
-                return line[:-2], "\r\n"
-            return line[:-1], "\n"
-        elif line[-1] == "\r":
-            return line[:-1], "\r"
-        return line, ""
+        return _extract_line_impl(line)
 
     def _reset_input_buffer(self) -> None:
         """Reset shell input highlighting buffer state."""
@@ -572,7 +526,7 @@ class StreamingHandler:
         Returns True if a prompt was detected.
         """
         # Early exit: if no potential prompt characters, skip expensive processing
-        if not any(c in text for c in "$#%>❯"):
+        if not any(c in text for c in PROMPT_TRIGGER_CHARS):
             return False
 
         stripped_text = _ALL_ESCAPE_SEQ_PATTERN.sub("", text).replace("\x00", "")
@@ -594,7 +548,6 @@ class StreamingHandler:
     def _set_continuation_prompt_state(self) -> bool:
         """Set prompt state for continuation prompt (>)."""
         self._at_shell_prompt = True
-        self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
         if self._input_highlight_buffer and not self._input_highlight_buffer.endswith(
             "\n"
         ):
@@ -604,43 +557,32 @@ class StreamingHandler:
         return True
 
     def _extract_last_line(self, text: str) -> str:
-        """Extract last line from text, handling both \\n and \\r."""
-        last_line = text.rsplit("\n", 1)[-1].strip()
-        return last_line.rsplit("\r", 1)[-1].strip()
+        return _extract_last_line_impl(text)
 
     def _check_prompt_ending(self, last_line: str) -> bool:
-        """Check if last_line ends with a prompt character."""
-        # Check for modern prompts (Starship, Oh-My-Zsh, Powerlevel10k, etc.)
-        fancy_prompt_chars = ("❯", "➜", "λ", "›")
-        traditional_prompt_chars = ("#", "%")
+        """Check if ``last_line`` ends with a prompt character and, if so,
+        flip the detector into prompt-mode.
 
-        for char in fancy_prompt_chars + traditional_prompt_chars:
+        Fancy chars (Starship/P10k/Oh-My-Zsh) are accepted on sight;
+        traditional chars (``#``/``%``) also need
+        :func:`is_valid_traditional_prompt` to agree so we don't misread
+        ``#``-comments in command output as a new prompt.
+        """
+        for char in FANCY_PROMPT_CHARS + TRADITIONAL_PROMPT_CHARS:
             if last_line.endswith(char):
-                if char in fancy_prompt_chars:
+                if char in FANCY_PROMPT_CHARS:
                     return self._set_prompt_detected_state()
-                # For traditional prompts, verify it looks like a shell prompt
                 if self._is_valid_traditional_prompt(last_line[:-1].strip()):
                     return self._set_prompt_detected_state()
 
         return False
 
     def _is_valid_traditional_prompt(self, prompt_part: str) -> bool:
-        """Check if prompt_part looks like a valid traditional shell prompt."""
-        # Match shell name patterns: sh-5.3, bash, etc.
-        if _SHELL_NAME_PROMPT_PATTERN.match(prompt_part):
-            return True
-        # Match paths like ~ or /home/user or user@host:~
-        return (
-            prompt_part.endswith("~")
-            or prompt_part.endswith("/")
-            or "@" in prompt_part
-            or ":" in prompt_part
-        )
+        return _is_valid_traditional_prompt_impl(prompt_part)
 
     def _set_prompt_detected_state(self) -> bool:
         """Update state when a prompt is detected."""
         self._at_shell_prompt = True
-        self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
         self._reset_input_buffer()
         self._need_color_reset = True
         # Clear highlighting context when returning to prompt
@@ -651,19 +593,7 @@ class StreamingHandler:
     def _apply_shell_input_highlighting(
         self, text: str, term: Vte.Terminal
     ) -> Optional[bytes]:
-        """
-        Apply syntax highlighting to shell input being echoed.
-
-        This method handles the case where we're at a shell prompt and
-        characters are being echoed back as the user types.
-
-        Args:
-            text: The echoed text from PTY
-            term: The VTE terminal
-
-        Returns:
-            bytes if handled, None if shell input highlighting didn't apply
-        """
+        """Highlight echoed shell-input text. Returns ``None`` if not applicable."""
         if not self._shell_input_highlighter.enabled:
             return None
 
@@ -740,25 +670,7 @@ class StreamingHandler:
         return None
 
     def _is_valid_shell_input(self, text: str) -> bool:
-        """Check if text is valid for shell input highlighting."""
-        # Only printable characters
-        if not all(c.isprintable() or c == " " for c in text):
-            return False
-
-        # Filter out literal escape sequences
-        if "^[" in text:
-            return False
-
-        # Arrow keys shown as literal text
-        if text in ("[A", "[B", "[C", "[D", "[H", "[F"):
-            return False
-
-        # Continuation prompt
-        text_stripped = text.strip()
-        if text_stripped in (">", "> "):
-            return False
-
-        return True
+        return _is_valid_shell_input_impl(text)
 
     def _handle_color_reset_if_needed(self, text: str, term: Vte.Terminal) -> None:
         """Send color reset if needed before input highlighting."""
@@ -938,12 +850,7 @@ class StreamingHandler:
         actual_token_value,
         formatter,
     ) -> Optional[bytes]:
-        """Apply token highlighting to the terminal.
-
-        Returns:
-            b"" if highlighting was applied successfully
-            None if no highlighting was applied (raw text was fed)
-        """
+        """Recolour the current token. ``b""`` if applied, ``None`` if raw was fed."""
         # Check for retroactive recolor
         prev_token_type = self._prev_shell_input_token_type
         prev_token_len = self._prev_shell_input_token_len
@@ -1051,19 +958,7 @@ class StreamingHandler:
             term.feed(f"{ansi_start}{actual_token_value}{ansi_end}".encode("utf-8"))
 
     def _process_line_queue(self, term: Vte.Terminal) -> bool:
-        """
-        Process multiple lines from queue per callback for efficiency.
-
-        This is the SINGLE consumer for the line queue. It processes
-        a batch of lines per callback, balancing responsiveness with efficiency.
-
-        Uses deque.popleft() for O(1) performance.
-
-        Returns:
-            bool: GTK callback convention - GLib.SOURCE_REMOVE removes callback.
-                  This method always returns SOURCE_REMOVE because it
-                  re-schedules itself via idle_add if more work is pending.
-        """
+        """Drain the line queue in batches. Re-schedules via ``idle_add`` when needed."""
         if not self._running or self._widget_destroyed:
             self._queue_processing = False
             return GLib.SOURCE_REMOVE
@@ -1106,15 +1001,4 @@ class StreamingHandler:
         return lines  # Remove this callback
 
     def _is_remainder_interactive(self, rem_str: str) -> bool:
-        """Check if remainder looks like interactive prompt content."""
-        stripped = rem_str.strip()
-        # Check prompt endings
-        if stripped.endswith(("$", "#", "%", ">", ":")):
-            return True
-        # Check prompt with space (current input)
-        if any(t in rem_str for t in ("$ ", "# ", "% ", "> ")):
-            return True
-        # Check for escape sequences (prompt styling, OSC7)
-        if "\x1b[" in rem_str or "\x1b]7;" in rem_str or "\033]7;" in rem_str:
-            return True
-        return False
+        return _is_remainder_interactive_impl(rem_str)

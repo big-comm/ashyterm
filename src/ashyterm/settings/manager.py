@@ -31,6 +31,7 @@ from .config import (
     get_config_paths,
 )
 from ..utils.logger import log_swallowed_exception
+from .validator import SettingsValidator
 
 
 @dataclass(slots=True)
@@ -41,96 +42,6 @@ class SettingsMetadata:
     created_at: float
     modified_at: float
     checksum: Optional[str] = None
-
-
-class SettingsValidator:
-    """Validates settings values and structure."""
-
-    def __init__(self):
-        self.logger = get_logger("ashyterm.settings.validator")
-
-    def validate_color_scheme(self, value: Any, num_schemes: int) -> bool:
-        if not isinstance(value, int):
-            return False
-        return 0 <= value < num_schemes
-
-    def validate_transparency(self, value: Any) -> bool:
-        if not isinstance(value, (int, float)):
-            return False
-        return 0 <= value <= 100
-
-    def validate_font(self, value: Any) -> bool:
-        if not isinstance(value, str) or not value.strip():
-            return False
-        try:
-            return Pango.FontDescription.from_string(value).get_family() is not None
-        except Exception:
-            return False
-
-    def validate_shortcut(self, value: Any) -> bool:
-        if not isinstance(value, str):
-            return False
-        if not value:
-            return True
-        try:
-            success, _, _ = Gtk.accelerator_parse(value)
-            return success
-        except Exception as e:
-            self.logger.debug(f"Shortcut validation failed for '{value}': {e}")
-            return False
-
-    def validate_shortcuts(self, shortcuts: Dict[str, str]) -> List[str]:
-        errors = []
-        if not isinstance(shortcuts, dict):
-            errors.append("Shortcuts must be a dictionary")
-            return errors
-        shortcut_values = [v for v in shortcuts.values() if v]
-        if len(shortcut_values) != len(set(shortcut_values)):
-            errors.append("Duplicate keyboard shortcuts detected")
-        for action, shortcut in shortcuts.items():
-            if not isinstance(action, str):
-                errors.append(f"Invalid action name: {action}")
-                continue
-            if not self.validate_shortcut(shortcut):
-                errors.append(f"Invalid shortcut for action '{action}': {shortcut}")
-        return errors
-
-    def validate_settings_structure(
-        self, settings: Dict[str, Any], num_schemes: int
-    ) -> List[str]:
-        errors = []
-        required_keys = ["color_scheme", "font", "shortcuts"]
-        for key in required_keys:
-            if key not in settings:
-                errors.append(f"Missing required setting: {key}")
-
-        validators = {
-            "color_scheme": lambda v: self.validate_color_scheme(v, num_schemes),
-            "transparency": self.validate_transparency,
-            "font": self.validate_font,
-        }
-        for key, validator in validators.items():
-            if key in settings and not validator(settings[key]):
-                errors.append(f"Invalid value for setting '{key}': {settings[key]}")
-
-        if "shortcuts" in settings:
-            errors.extend(self.validate_shortcuts(settings["shortcuts"]))
-        boolean_settings = [
-            "sidebar_visible",
-            "auto_hide_sidebar",
-            "scroll_on_output",
-            "scroll_on_keystroke",
-            "mouse_autohide",
-            "bell_sound",
-            "log_to_file",
-            "ai_assistant_enabled",
-        ]
-        for key in boolean_settings:
-            if key in settings and not isinstance(settings[key], bool):
-                errors.append(
-                    f"Setting '{key}' must be boolean, got {type(settings[key]).__name__}"
-                )
-        return errors
 
 
 class SettingsManager:
@@ -643,7 +554,7 @@ class SettingsManager:
         if user_transparency > 0:
             css_provider = Gtk.CssProvider()
             css = ".terminal-tab-view > .view { background-color: transparent; } .background { background: transparent; }"
-            css_provider.load_from_data(css.encode("utf-8"))
+            css_provider.load_from_string(css)
             style_context.add_provider(
                 css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             )
@@ -698,7 +609,7 @@ class SettingsManager:
 
         sidebar_css = "\n".join(sidebar_css_parts) + "\n"
         sidebar_provider = Gtk.CssProvider()
-        sidebar_provider.load_from_data(sidebar_css.encode("utf-8"))
+        sidebar_provider.load_from_string(sidebar_css)
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             sidebar_provider,
@@ -856,7 +767,7 @@ class SettingsManager:
             params = ThemeEngine.get_theme_params(scheme, transparency)
             full_css = ThemeEngine.generate_app_css(params, gtk_theme)
 
-            self._app_css_provider.load_from_data(full_css.encode("utf-8"))
+            self._app_css_provider.load_from_string(full_css)
 
             # Force redraw if window provided
             if window:

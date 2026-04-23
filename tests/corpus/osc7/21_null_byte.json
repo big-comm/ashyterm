@@ -1,0 +1,6 @@
+{
+  "description": "Null byte in URI — urlparse raises internally or None; parser returns None.",
+  "uri": "file://localhost/\u0000bad",
+  "expected": null,
+  "accept_any_result": true
+}

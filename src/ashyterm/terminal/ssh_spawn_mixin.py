@@ -24,6 +24,14 @@ from ..utils.security import (
     validate_ssh_key_file,
 )
 from ..utils.translation_utils import _
+from .ssh_options import (
+    ALLOWED_STRICT_HOSTKEY,
+    apply_x11_and_tunnel_options as _apply_x11_and_tunnel_options_impl,
+    build_base_ssh_options as _build_base_ssh_options_impl,
+    build_ssh_test_options as _build_ssh_test_options_impl,
+    needs_x11_flag as _needs_x11_flag_impl,
+    resolve_strict_host_key_checking as _resolve_strict_host_key_checking_impl,
+)
 
 # Logger name constant
 LOGGER_NAME_SPAWNER = "ashyterm.spawner"
@@ -399,32 +407,27 @@ class SSHSpawnMixin:
 
         return self._wrap_sshpass(cmd, raw_password)
 
-    _ALLOWED_STRICT_HOSTKEY = ("ask", "accept-new", "yes", "no")
+    _ALLOWED_STRICT_HOSTKEY = ALLOWED_STRICT_HOSTKEY
 
     def _get_strict_host_key_checking(self) -> str:
-        """Return the configured StrictHostKeyChecking policy, clamped to valid values."""
+        """Return the configured StrictHostKeyChecking policy, clamped."""
         value = self.settings_manager.get(
             "ssh_strict_host_key_checking", "accept-new"
         )
-        if value in self._ALLOWED_STRICT_HOSTKEY:
-            return value
-        self.logger.warning(
-            f"Invalid ssh_strict_host_key_checking={value!r}, falling back to accept-new"
-        )
-        return "accept-new"
+        resolved = _resolve_strict_host_key_checking_impl(value)
+        if resolved != value:
+            self.logger.warning(
+                f"Invalid ssh_strict_host_key_checking={value!r}, "
+                f"falling back to {resolved}"
+            )
+        return resolved
 
     def _build_ssh_test_options(self, session, use_password: bool) -> dict:
-        """Build SSH option dict for test connections."""
-        opts = {
-            "BatchMode": "no" if use_password else "yes",
-            "ConnectTimeout": "10",
-            "StrictHostKeyChecking": self._get_strict_host_key_checking(),
-            "PasswordAuthentication": "yes" if use_password else "no",
-        }
-        if getattr(session, "x11_forwarding", False):
-            opts["ForwardX11"] = "yes"
-            opts["ForwardX11Trusted"] = "yes"
-        return opts
+        return _build_ssh_test_options_impl(
+            session,
+            use_password=use_password,
+            strict_host_key=self._get_strict_host_key_checking(),
+        )
 
     def _build_ssh_base_cmd(self, session, ssh_options: dict) -> list:
         """Build base SSH command list for testing."""
@@ -521,26 +524,15 @@ class SSHSpawnMixin:
                     raise SSHKeyError(session.auth_value, str(e)) from e
 
     def _get_base_ssh_options(self, session: "SessionItem") -> Dict[str, str]:
-        """Build base SSH options dictionary."""
-        persist_duration = self.settings_manager.get(
-            "ssh_control_persist_duration", 600
+        return _build_base_ssh_options_impl(
+            session,
+            strict_host_key=self._get_strict_host_key_checking(),
+            connect_timeout=self.settings_manager.get("ssh_connect_timeout", 30),
+            control_persist_duration=self.settings_manager.get(
+                "ssh_control_persist_duration", 600
+            ),
+            control_path=self._get_ssh_control_path(session),
         )
-        connect_timeout = self.settings_manager.get("ssh_connect_timeout", 30)
-
-        ssh_options = {
-            "ConnectTimeout": str(connect_timeout),
-            "ServerAliveInterval": "30",
-            "ServerAliveCountMax": "3",
-            "StrictHostKeyChecking": self._get_strict_host_key_checking(),
-            "UpdateHostKeys": "yes",
-            "ControlMaster": "auto",
-            "ControlPath": self._get_ssh_control_path(session),
-        }
-
-        if persist_duration > 0:
-            ssh_options["ControlPersist"] = str(persist_duration)
-
-        return ssh_options
 
     def _apply_x11_and_tunnel_options(
         self,
@@ -548,35 +540,18 @@ class SSHSpawnMixin:
         session: "SessionItem",
         command_type: str,
     ) -> None:
-        """Apply X11 forwarding and port forwarding options in-place."""
-        has_x11 = command_type == "ssh" and getattr(session, "x11_forwarding", False)
-        has_tunnels = command_type == "ssh" and getattr(
-            session, "port_forwardings", None
-        )
-
-        if has_x11 or has_tunnels:
-            ssh_options.pop("ControlPersist", None)
-            ssh_options.pop("ControlMaster", None)
-            ssh_options.pop("ControlPath", None)
-
-        if has_tunnels:
-            ssh_options["ExitOnForwardFailure"] = "yes"
-
-        if has_x11:
-            ssh_options["ForwardX11"] = "yes"
-            ssh_options["ForwardX11Trusted"] = "yes"
+        _apply_x11_and_tunnel_options_impl(ssh_options, session, command_type)
 
     def _add_x11_flag_to_command(
         self, cmd: List[str], session: "SessionItem", command_type: str
     ) -> None:
-        """Add -Y flag for X11 forwarding if needed."""
-        if command_type != "ssh":
+        """Add ``-Y`` to ``cmd`` if the session wants trusted X11 forwarding."""
+        if not _needs_x11_flag_impl(session, command_type):
             return
-        if not getattr(session, "x11_forwarding", False):
+        if "-Y" in cmd:
             return
-        if "-Y" not in cmd:
-            insertion_index = 1 if len(cmd) > 1 else len(cmd)
-            cmd.insert(insertion_index, "-Y")
+        insertion_index = 1 if len(cmd) > 1 else len(cmd)
+        cmd.insert(insertion_index, "-Y")
 
     def _add_port_forwarding_args(
         self, cmd: List[str], session: "SessionItem", command_type: str

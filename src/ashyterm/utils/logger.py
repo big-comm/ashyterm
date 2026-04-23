@@ -1,9 +1,8 @@
 # ashyterm/utils/logger.py
-"""
-Logging utilities for Ashy Terminal.
+"""ThreadSafeLogger + helpers.
 
-Performance-optimized: Heavy imports and directory creation are deferred
-until actually needed to minimize startup time.
+Heavy imports (logging.handlers, pathlib, datetime) are lazy so --help and
+--version don't pay for them.
 """
 
 import logging
@@ -22,7 +21,6 @@ _datetime = None
 
 
 def _get_logging_handlers():
-    """Lazy import of logging.handlers."""
     global _logging_handlers
     if _logging_handlers is None:
         import logging.handlers as lh
@@ -32,7 +30,6 @@ def _get_logging_handlers():
 
 
 def _get_pathlib():
-    """Lazy import of pathlib."""
     global _pathlib
     if _pathlib is None:
         import pathlib
@@ -42,7 +39,6 @@ def _get_pathlib():
 
 
 def _get_datetime():
-    """Lazy import of datetime."""
     global _datetime
     if _datetime is None:
         from datetime import datetime as dt
@@ -52,7 +48,7 @@ def _get_datetime():
 
 
 class LogLevel:
-    """Log levels for the application (lightweight enum alternative)."""
+    """Shortcut constants mirroring stdlib log levels."""
 
     DEBUG = logging.DEBUG
     INFO = logging.INFO
@@ -62,15 +58,11 @@ class LogLevel:
 
 
 class LoggerConfig:
-    """
-    Configuration for the logging system.
-
-    Directory creation is deferred until file logging is actually enabled.
-    """
+    """Logging config. Directory creation deferred until file logging turns on."""
 
     def __init__(self):
-        self._log_dir = None  # Lazy initialization
-        self.max_file_size = 10 * 1024 * 1024  # 10MB
+        self._log_dir = None
+        self.max_file_size = 10 * 1024 * 1024  # 10 MB
         self.backup_count = 5
         self.log_to_file = False
         self.console_level = LogLevel.ERROR
@@ -79,7 +71,6 @@ class LoggerConfig:
 
     @property
     def log_dir(self) -> "Path":
-        """Get log directory, creating it if necessary."""
         if self._log_dir is None:
             Path = _get_pathlib().Path
             self._log_dir = Path.home() / ".config" / "ashyterm" / "logs"
@@ -88,17 +79,15 @@ class LoggerConfig:
 
     @property
     def main_log_file(self) -> "Path":
-        """Get main log file path."""
         return self.log_dir / "ashyterm.log"
 
     @property
     def error_log_file(self) -> "Path":
-        """Get error log file path."""
         return self.log_dir / "ashyterm_errors.log"
 
 
 class ColoredFormatter(logging.Formatter):
-    """Colored formatter for console output that preserves alignment."""
+    """Console formatter: ANSI-coloured levelname, right-padded for columns."""
 
     COLORS = {
         "DEBUG": "\033[36m",
@@ -110,33 +99,23 @@ class ColoredFormatter(logging.Formatter):
     }
 
     def format(self, record):
-        """
-        Applies color and padding to the log level name before formatting.
-        This ensures that the ANSI escape codes do not break the alignment
-        of the log columns.
-        """
         levelname = record.levelname
         original_levelname = record.levelname
-
-        # Standard padding width for log levels is 8 characters.
         padding_width = 8
 
         if levelname in self.COLORS:
             colored_levelname = (
                 f"{self.COLORS[levelname]}{levelname}{self.COLORS['RESET']}"
             )
-            # Manually pad the colored string to the correct visual width.
+            # Pad manually: ANSI escapes don't count in f-string width.
             padding = " " * (padding_width - len(levelname))
             record.levelname = f"{colored_levelname}{padding}"
         else:
-            # Ensure non-colored levels are also padded for alignment.
             record.levelname = f"{levelname:<{padding_width}}"
 
-        # Let the parent class handle the final formatting with our modified record.
         formatted_message = super().format(record)
 
-        # Restore the original levelname on the record object in case other
-        # handlers in the chain need it in its original state.
+        # Restore so downstream handlers see the original value.
         record.levelname = original_levelname
 
         return formatted_message

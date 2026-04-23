@@ -63,7 +63,6 @@ class SidebarManager:
 
         self.flap.connect("notify::collapsed", self._on_sidebar_folded_changed)
 
-        # MODIFIED: Connect the buttons to intermediate methods in this class
         self.add_session_button.connect("clicked", self._on_add_session_clicked)
         self.add_folder_button.connect("clicked", self._on_add_folder_clicked)
         self.edit_button.connect("clicked", self._on_edit_selected_clicked)

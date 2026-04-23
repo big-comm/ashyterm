@@ -1,0 +1,28 @@
+{
+  "description": "ControlPersist=0 drops only the ControlPersist key; Master/Path remain.",
+  "function": "build_base_ssh_options",
+  "session": {
+    "name": "s",
+    "session_type": "ssh",
+    "host": "example.com",
+    "user": "alice",
+    "port": 22,
+    "auth_type": "key",
+    "auth_value": "/home/alice/.ssh/id"
+  },
+  "kwargs": {
+    "strict_host_key": "accept-new",
+    "connect_timeout": 30,
+    "control_persist_duration": 0,
+    "control_path": "/tmp/cp-foo"
+  },
+  "expected_options": {
+    "ConnectTimeout": "30",
+    "ServerAliveInterval": "30",
+    "ServerAliveCountMax": "3",
+    "StrictHostKeyChecking": "accept-new",
+    "UpdateHostKeys": "yes",
+    "ControlMaster": "auto",
+    "ControlPath": "/tmp/cp-foo"
+  }
+}

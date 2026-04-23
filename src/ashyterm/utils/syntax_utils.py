@@ -1,9 +1,7 @@
 # ashyterm/utils/syntax_utils.py
-"""
-Centralized syntax highlighting utilities for bash commands.
+"""Pango markup generator for bash command syntax highlighting.
 
-This module provides Pango markup generation for bash command syntax highlighting,
-used by both the Command Manager dialogs and the BashTextView widget.
+Shared by the Command Manager dialogs and BashTextView.
 """
 
 import re
@@ -39,26 +37,11 @@ def get_bash_pango_markup(
     palette: Optional[List[str]] = None,
     foreground: str = "#ffffff",
 ) -> str:
-    """
-    Convert a bash command to Pango markup with syntax highlighting.
-    Uses custom regex-based highlighting for better results with shell commands.
-
-    Args:
-        command: The bash command to highlight
-        palette: Optional terminal color scheme palette (16 colors)
-            [0-7]: Normal colors (black, red, green, yellow, blue, magenta, cyan, white)
-            [8-15]: Bright colors (bright versions of above)
-        foreground: Foreground color for dimmed text (used when palette unavailable)
-
-    Returns:
-        A Pango markup string with syntax highlighting applied
-    """
+    """Bash command → Pango markup using a 16-color terminal palette."""
     colors = _build_color_map(palette)
     result = GLib.markup_escape_text(command)
 
-    # Apply pattern replacements using pre-compiled patterns
-    # Order matters - most specific patterns first
-
+    # Order matters — more specific patterns first so they win the replace.
     # URLs (before paths)
     result = _PATTERN_URL.sub(
         f'<span foreground="{colors["path"]}">' + r"\1</span>", result
@@ -124,18 +107,7 @@ def get_bash_pango_markup(
 
 
 def _build_color_map(palette: Optional[List[str]] = None) -> Dict[str, str]:
-    """
-    Build a color map for syntax highlighting from a terminal color palette.
-
-    Args:
-        palette: Optional terminal color scheme palette (16 colors).
-            Terminal color positions:
-            0=black, 1=red, 2=green, 3=yellow, 4=blue, 5=magenta, 6=cyan, 7=white
-            8-15 are bright variants of the above.
-
-    Returns:
-        Dictionary mapping syntax element names to hex color strings.
-    """
+    """Pick syntax colors from a 16-color palette (0-7 normal, 8-15 bright)."""
     if palette and len(palette) >= 8:
         return {
             "command": palette[2] if len(palette) > 2 else "#8ae234",  # Green

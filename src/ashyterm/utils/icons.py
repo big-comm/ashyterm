@@ -1,16 +1,7 @@
 # ashyterm/utils/icons.py
-"""
-Icon loading utilities for Ashy Terminal.
+"""Icon loader: bundled SVGs (default) with system-theme fallback.
 
-Provides icon loading from bundled SVG files with proper symbolic icon
-color adaptation via GTK's icon rendering system.
-
-Usage:
-    from ashyterm.utils.icons import icon_button, icon_image
-
-    # These automatically use bundled icons when setting is 'ashy'
-    button = icon_button("edit-find-symbolic")
-    image = icon_image("folder-symbolic", size=24)
+Public API: :func:`icon_image`, :func:`icon_button`, :func:`set_button_icon`.
 """
 
 import os
@@ -50,14 +41,7 @@ def _get_icon_dir() -> Optional[str]:
 
 
 def get_icon_path(icon_name: str) -> Optional[str]:
-    """Get the full path to a bundled icon SVG file.
-
-    Args:
-        icon_name: Icon name (with or without .svg extension)
-
-    Returns:
-        Full path to the SVG file, or None if not found
-    """
+    """Path to the bundled SVG, or ``None`` if missing."""
     icon_dir = _get_icon_dir()
     if not icon_dir:
         return None
@@ -73,23 +57,11 @@ def get_icon_path(icon_name: str) -> Optional[str]:
 
 
 def has_bundled_icon(icon_name: str) -> bool:
-    """Check if a bundled icon exists.
-
-    Args:
-        icon_name: Icon name (with or without .svg extension)
-
-    Returns:
-        True if the icon exists in the bundled icons directory
-    """
     return get_icon_path(icon_name) is not None
 
 
 def _create_image_from_file(icon_path: str, size: int) -> Gtk.Image:
-    """Create a Gtk.Image from a file path using GIcon.
-
-    Uses Gio.FileIcon which GTK can render with symbolic styling
-    when the image has the 'symbolic' CSS class.
-    """
+    """File → Gio.FileIcon → Gtk.Image (so symbolic recoloring works)."""
     gfile = Gio.File.new_for_path(icon_path)
     file_icon = Gio.FileIcon.new(gfile)
     image = Gtk.Image.new_from_gicon(file_icon)
@@ -103,46 +75,27 @@ def create_icon_image(
     use_bundled: Optional[bool] = None,
     fallback_to_system: bool = True,
 ) -> Gtk.Image:
-    """Create a Gtk.Image from an icon name.
-
-    When use_bundled=True, loads directly from bundled SVG files.
-    When use_bundled=False, uses system icons via GTK IconTheme.
-
-    Args:
-        icon_name: Icon name (e.g., "edit-find-symbolic")
-        size: Icon size in pixels (default: 16)
-        use_bundled: Try bundled icons first (None = use global setting)
-        fallback_to_system: Fall back to system icons (default: True)
-
-    Returns:
-        Gtk.Image widget with the icon loaded
-    """
-    # Use global setting if not explicitly specified
+    """Gtk.Image from ``icon_name``. Bundled SVG first, then system theme."""
     if use_bundled is None:
         use_bundled = _use_bundled_icons
 
-    # Try bundled icon first
     if use_bundled:
         icon_path = get_icon_path(icon_name)
         if icon_path:
             image = _create_image_from_file(icon_path, size)
-            # Add symbolic CSS class for theme color adaptation
             if icon_name.endswith("-symbolic"):
                 image.add_css_class("icon-symbolic")
             return image
 
-    # Fall back to system icons via icon name
     if fallback_to_system:
         image = Gtk.Image.new_from_icon_name(icon_name)
         image.set_pixel_size(size)
         return image
 
-    # Return empty image if nothing works
     return Gtk.Image()
 
 
 def _create_button_from_bundled_icon(icon_name: str, size: int) -> Optional[Gtk.Button]:
-    """Create button from bundled icon if available."""
     icon_path = get_icon_path(icon_name)
     if not icon_path:
         return None
@@ -155,7 +108,6 @@ def _create_button_from_bundled_icon(icon_name: str, size: int) -> Optional[Gtk.
 
 
 def _create_button_from_system_icon(icon_name: str, size: int) -> Gtk.Button:
-    """Create button from system icon."""
     button = Gtk.Button.new_from_icon_name(icon_name)
     child = button.get_child()
     if isinstance(child, Gtk.Image):
@@ -164,7 +116,7 @@ def _create_button_from_system_icon(icon_name: str, size: int) -> Gtk.Button:
 
 
 def _apply_button_tooltip(button: Gtk.Button, tooltip: Optional[str]) -> None:
-    """Apply tooltip and accessible label to button if specified."""
+    """Tooltip + a11y label so screen readers announce the button."""
     if not tooltip:
         return
     helper = get_tooltip_helper()
@@ -172,7 +124,6 @@ def _apply_button_tooltip(button: Gtk.Button, tooltip: Optional[str]) -> None:
         helper.add_tooltip(button, tooltip)
     else:
         button.set_tooltip_text(tooltip)
-    # Set accessible label so screen readers announce the button
     button.update_property(
         [Gtk.AccessibleProperty.LABEL],
         [tooltip],
@@ -185,7 +136,6 @@ def _apply_button_styling(
     flat: bool,
     valign: Optional[Gtk.Align],
 ) -> None:
-    """Apply CSS classes and alignment to button."""
     if flat:
         button.add_css_class("flat")
     if css_classes:
@@ -206,25 +156,7 @@ def create_icon_button(
     callback_args: tuple = (),
     valign: Optional[Gtk.Align] = None,
 ) -> Gtk.Button:
-    """Create a Gtk.Button with an icon.
-
-    When use_bundled=True, loads directly from bundled SVG files.
-    When use_bundled=False, uses system icons via GTK IconTheme.
-
-    Args:
-        icon_name: Icon name (e.g., "edit-find-symbolic")
-        size: Icon size in pixels (default: 16)
-        use_bundled: Try bundled icons first (None = use global setting)
-        tooltip: Optional tooltip text
-        css_classes: Optional list of CSS classes to add
-        flat: If True, adds "flat" CSS class (default: False)
-        on_clicked: Optional callback for "clicked" signal
-        callback_args: Tuple of additional arguments for on_clicked
-        valign: Optional vertical alignment (e.g., Gtk.Align.CENTER)
-
-    Returns:
-        Gtk.Button with the icon
-    """
+    """Gtk.Button with icon, tooltip, optional CSS/flat/valign, and handler."""
     if use_bundled is None:
         use_bundled = _use_bundled_icons
 
@@ -250,22 +182,10 @@ def set_image_from_icon(
     size: int = 16,
     use_bundled: Optional[bool] = None,
 ) -> None:
-    """Set a Gtk.Image's content from an icon name.
-
-    When use_bundled=True, loads directly from bundled SVG files.
-    When use_bundled=False, uses system icons via GTK IconTheme.
-
-    Args:
-        image: Existing Gtk.Image widget to update
-        icon_name: Icon name (e.g., "folder-symbolic")
-        size: Icon size in pixels (default: 16)
-        use_bundled: Try bundled icons first (None = use global setting)
-    """
-    # Use global setting if not explicitly specified
+    """Swap an existing Gtk.Image's content to ``icon_name``."""
     if use_bundled is None:
         use_bundled = _use_bundled_icons
 
-    # Try bundled icon first
     if use_bundled:
         icon_path = get_icon_path(icon_name)
         if icon_path:
@@ -273,12 +193,10 @@ def set_image_from_icon(
             file_icon = Gio.FileIcon.new(gfile)
             image.set_from_gicon(file_icon)
             image.set_pixel_size(size)
-            # Add symbolic CSS class for theme color adaptation
             if icon_name.endswith("-symbolic"):
                 image.add_css_class("icon-symbolic")
             return
 
-    # Fall back to system icon
     image.set_from_icon_name(icon_name)
     image.set_pixel_size(size)
 
@@ -289,30 +207,14 @@ def set_button_icon(
     size: int = 16,
     use_bundled: Optional[bool] = None,
 ) -> None:
-    """Set a Gtk.Button's icon from an icon name.
-
-    When use_bundled=True, loads directly from bundled SVG files.
-    When use_bundled=False, uses system icons via GTK IconTheme.
-
-    This function properly handles bundled icons, unlike button.set_icon_name()
-    which only works with system icons.
-
-    Args:
-        button: Existing Gtk.Button widget to update
-        icon_name: Icon name (e.g., "folder-symbolic")
-        size: Icon size in pixels (default: 16)
-        use_bundled: Try bundled icons first (None = use global setting)
-    """
-    # Check if button already has an image child we can update
+    """Swap a button's icon. ``set_icon_name()`` only works for system icons."""
     child = button.get_child()
     if isinstance(child, Gtk.Image):
         set_image_from_icon(child, icon_name, size, use_bundled)
     else:
-        # Create new image and set as button child
         image = create_icon_image(icon_name, size, use_bundled)
         button.set_child(image)
 
 
-# Convenience aliases for cleaner imports
 icon_image = create_icon_image
 icon_button = create_icon_button

@@ -1,7 +1,7 @@
 # Ashy Terminal
 
 <p align="center">
-  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.8.8-blue.svg" alt="Version"/></a>
+  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.9.0-blue.svg" alt="Version"/></a>
   <a href="https://communitybig.org">
   <img src="https://img.shields.io/badge/BigCommunity-Platform-blue" alt="BigCommunity Platform">
 </a>

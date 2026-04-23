@@ -1,0 +1,14 @@
+{
+  "description": "IDN-like unicode in ssh target — must pass through verbatim.",
+  "argv": [
+    "ashyterm",
+    "--ssh=alice@münchen.example"
+  ],
+  "expected": {
+    "working_directory": null,
+    "execute_command": null,
+    "ssh_target": "alice@münchen.example",
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

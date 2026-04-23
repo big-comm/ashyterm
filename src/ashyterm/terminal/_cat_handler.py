@@ -362,18 +362,8 @@ class CatModeHandler:
             terminal = self._terminal
             if terminal is None:
                 return False
-
-            # Get background color
-            bg_rgba = terminal.get_color_background_for_draw()
-            if bg_rgba is None:
-                return False
-
-            # Calculate luminance using standard formula
-            r = bg_rgba.red
-            g = bg_rgba.green
-            b = bg_rgba.blue
-            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-            return luminance > 0.5
+            from ..utils.color_luminance import is_light_gdk_rgba
+            return is_light_gdk_rgba(terminal.get_color_background_for_draw())
         except Exception:
             return False
 
@@ -398,19 +388,7 @@ class CatModeHandler:
             return "blinds-dark"
 
     def _highlight_line_with_pygments(self, line: str, filename: str) -> str:
-        """
-        Highlight a single line using Pygments.
-
-        For PHP files, we track multi-line comment state manually to ensure
-        lines inside /* ... */ blocks are highlighted as comments.
-
-        Args:
-            line: Single line of text (without line ending)
-            filename: Filename for lexer detection
-
-        Returns:
-            Highlighted line with ANSI escape codes
-        """
+        """Pygments-highlight one line, tracking PHP ``/* */`` state manually."""
         try:
             from pygments import highlight
 
@@ -602,16 +580,7 @@ class CatModeHandler:
     def _process_cat_queue_batch(
         self, term: Vte.Terminal, immediate: bool = False
     ) -> bool:
-        """
-        Process a batch of lines from the cat queue.
-
-        Args:
-            term: VTE terminal to feed output to
-            immediate: If True, process smaller batch for immediate display
-
-        Returns:
-            True if prompt was detected (signals end of output)
-        """
+        """Flush N cat lines into ``term``; returns True when the prompt lands."""
         queue = getattr(self, "_cat_queue", None)
         if not queue:
             return False
@@ -698,18 +667,7 @@ class CatModeHandler:
             term.feed(b"".join(drain_lines))
 
     def _process_cat_queue(self, term: Vte.Terminal) -> bool:
-        """
-        Process lines from cat queue in batches via GTK idle callback.
-
-        Processes lines in small batches for responsive streaming.
-        Uses GLib.idle_add to yield to GTK main loop between batches.
-
-        Args:
-            term: VTE terminal to feed output to
-
-        Returns:
-            False to remove from idle queue when done
-        """
+        """GLib idle callback that drains the cat queue in small batches."""
         if not self._running or self._widget_destroyed:
             self._cat_queue_processing = False
             return False
@@ -757,15 +715,7 @@ class CatModeHandler:
             delattr(self, "_pygments_formatter")
 
     def _extract_filename_from_cat_command(self, command: str) -> Optional[str]:
-        """
-        Extract the filename from a cat command for language detection.
-
-        Args:
-            command: The full cat command (e.g., "cat file.py", "cat -n file.sh")
-
-        Returns:
-            The first filename found, or None
-        """
+        """First filename argument of a ``cat`` command (for lexer detection)."""
         if not command:
             return None
 

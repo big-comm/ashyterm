@@ -547,7 +547,7 @@ class FormWidgetBuilder:
         if config.tooltip:
             row.set_subtitle(config.tooltip)
 
-        color_btn = Gtk.ColorButton()
+        color_btn = Gtk.ColorDialogButton(dialog=Gtk.ColorDialog())
         color_btn.set_valign(Gtk.Align.CENTER)
         color_btn.set_sensitive(interactive)
 
@@ -563,7 +563,7 @@ class FormWidgetBuilder:
         color_btn._color_format = config.extra_config.get("color_format", "hex")
 
         if on_change and interactive:
-            color_btn.connect("color-set", lambda *_: on_change())
+            color_btn.connect("notify::rgba", lambda *_: on_change())
 
         row.add_suffix(color_btn)
         return row, color_btn

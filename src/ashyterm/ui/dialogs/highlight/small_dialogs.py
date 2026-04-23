@@ -82,6 +82,7 @@ class SingleEntryDialog(Adw.Dialog):
         content_box.append(name_group)
 
         self._validation_label = Gtk.Label()
+        self._validation_label.set_xalign(0)
         self._validation_label.add_css_class("dim-label")
         content_box.append(self._validation_label)
 
@@ -172,6 +173,7 @@ class ContextNameDialog(Adw.Dialog):
         content_box.append(name_group)
 
         self._validation_label = Gtk.Label()
+        self._validation_label.set_xalign(0)
         self._validation_label.add_css_class("dim-label")
         content_box.append(self._validation_label)
 
@@ -269,6 +271,7 @@ class AddTriggerDialog(Adw.Dialog):
         content_box.append(name_group)
 
         self._validation_label = Gtk.Label()
+        self._validation_label.set_xalign(0)
         self._validation_label.add_css_class("dim-label")
         content_box.append(self._validation_label)
 
@@ -350,6 +353,7 @@ class AddIgnoredCommandDialog(Adw.Dialog):
         content_box.append(name_group)
 
         self._validation_label = Gtk.Label()
+        self._validation_label.set_xalign(0)
         self._validation_label.add_css_class("dim-label")
         content_box.append(self._validation_label)
 

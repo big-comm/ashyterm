@@ -11,13 +11,11 @@ Tests for previously untested highlighting components:
 """
 
 import os
-import re
 import stat
-import sys
 import tempfile
 import threading
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -523,7 +521,6 @@ class TestCompileRule:
     @pytest.fixture
     def highlighter(self):
         from ashyterm.terminal.highlighter.output import OutputHighlighter
-        from ashyterm.terminal.highlighter.rules import CompiledRule, LiteralKeywordRule
 
         h = OutputHighlighter.__new__(OutputHighlighter)
         h.logger = MagicMock()
@@ -1147,7 +1144,7 @@ class TestTokenEnhancement:
 
     @pytest.fixture
     def handler(self):
-        from ashyterm.terminal._streaming_handler import StreamingHandler, _CommandValidator
+        from ashyterm.terminal._streaming_handler import StreamingHandler
 
         class FakeHandler(StreamingHandler):
             def __init__(self):
@@ -1540,7 +1537,11 @@ class TestBufferLimit:
 # ============================================================================
 
 class TestShellInputHighlighter:
-    """Test ShellInputHighlighter proxy management and state."""
+    """Test ShellInputHighlighter auto-theme detection.
+
+    Proxy/buffer/prompt methods were removed with the legacy API;
+    the streaming handler tracks that state itself now.
+    """
 
     @pytest.fixture
     def highlighter(self):
@@ -1552,55 +1553,10 @@ class TestShellInputHighlighter:
         h._formatter = MagicMock()
         h._theme = "monokai"
         h._lexer_config_key = None
-        h._command_buffers = {}
-        h._at_prompt = {}
         h._palette = None
         h._foreground = "#ffffff"
         h._lock = threading.Lock()
         return h
-
-    def test_register_proxy(self, highlighter):
-        highlighter.register_proxy(1)
-        assert highlighter._command_buffers[1] == ""
-        assert highlighter._at_prompt[1] is True
-
-    def test_unregister_proxy(self, highlighter):
-        highlighter.register_proxy(1)
-        highlighter.unregister_proxy(1)
-        assert 1 not in highlighter._command_buffers
-        assert 1 not in highlighter._at_prompt
-
-    def test_unregister_nonexistent_proxy(self, highlighter):
-        highlighter.unregister_proxy(99)  # No crash
-
-    def test_set_at_prompt(self, highlighter):
-        highlighter.register_proxy(1)
-        highlighter.set_at_prompt(1, False)
-        assert highlighter._at_prompt[1] is False
-        # Buffer cleared on transition
-        highlighter._command_buffers[1] = "some cmd"
-        highlighter.set_at_prompt(1, True)
-        assert highlighter._command_buffers[1] == ""
-
-    def test_is_at_prompt(self, highlighter):
-        highlighter.register_proxy(1)
-        assert highlighter.is_at_prompt(1) is True
-        highlighter.set_at_prompt(1, False)
-        assert highlighter.is_at_prompt(1) is False
-
-    def test_clear_buffer(self, highlighter):
-        highlighter.register_proxy(1)
-        highlighter._command_buffers[1] = "ls -la"
-        highlighter.clear_buffer(1)
-        assert highlighter._command_buffers[1] == ""
-
-    def test_get_current_buffer(self, highlighter):
-        highlighter.register_proxy(1)
-        highlighter._command_buffers[1] = "echo hello"
-        assert highlighter.get_current_buffer(1) == "echo hello"
-
-    def test_get_current_buffer_nonexistent(self, highlighter):
-        assert highlighter.get_current_buffer(99) == ""
 
     def test_is_light_color_white(self, highlighter):
         assert highlighter._is_light_color("#ffffff") is True

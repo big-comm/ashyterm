@@ -322,34 +322,21 @@ class FileSearchMixin:
     def _check_fd_available(
         self, operations: Optional["FileOperations"] = None
     ) -> bool:
-        """Check if fd or fdfind command is available locally or on remote session.
-
-        Args:
-            operations: Optional FileOperations instance for thread-safe access.
-                       If None, uses self.operations (not thread-safe).
-        """
+        """Detect ``fd`` (or Debian's ``fdfind``) locally or on the SSH host."""
         import shutil
 
-        # Use provided operations or fall back to instance attribute
         ops = operations if operations is not None else self.operations
 
-        # Check for fd (common name) or fdfind (Debian/Ubuntu name)
         for cmd_name in ["fd", "fdfind"]:
             if self._is_remote_session():
-                # For remote sessions, use 'command -v' which works via SSH shell
                 if ops:
                     success, _ = ops.execute_command_on_session(
-                        [
-                            "command",
-                            "-v",
-                            cmd_name,
-                        ]
+                        ["command", "-v", cmd_name]
                     )
                     if success:
                         self._fd_command_name = cmd_name
                         return True
             else:
-                # For local, use shutil.which() which is reliable
                 if shutil.which(cmd_name):
                     self._fd_command_name = cmd_name
                     return True
@@ -358,28 +345,12 @@ class FileSearchMixin:
     def _build_fd_command(
         self, base_path: str, search_term: str, show_hidden: bool
     ) -> List[str]:
-        """Build fd command for recursive search.
-
-        Uses fd for fast searching, then pipes through xargs ls to get
-        consistent output format that FileItem.from_ls_line can parse.
-
-        Args:
-            base_path: Directory to search in
-            search_term: Pattern to search for
-            show_hidden: Whether to include hidden files/directories
-        """
+        """``fd`` piped through ``xargs ls`` so output parses with FileItem.from_ls_line."""
         fd_cmd = getattr(self, "_fd_command_name", "fd")
-        # fd options:
-        # -i: case-insensitive
-        # -H: include hidden files (only if show_hidden is True)
-        # -0: null-separated output for safe xargs
-        # --color=never: no color codes
-        #
-        # We use a shell to pipe fd output through xargs ls for consistent format
+        # -i case-insensitive, -H include hidden, -0 NUL separator for xargs, --color=never.
         hidden_flag = "-H" if show_hidden else ""
 
-        # SECURITY: Use shlex.quote to prevent shell injection
-        # User input (search_term) and path (base_path) must be properly escaped
+        # shlex.quote the untrusted term/path before embedding them in the shell pipeline.
         safe_search_term = shlex.quote(search_term)
         safe_base_path = shlex.quote(base_path)
 
@@ -392,13 +363,7 @@ class FileSearchMixin:
     def _build_find_command(
         self, base_path: str, search_term: str, show_hidden: bool
     ) -> List[str]:
-        """Build find command for recursive search (fallback).
-
-        Args:
-            base_path: Directory to search in
-            search_term: Pattern to search for
-            show_hidden: Whether to include hidden files/directories
-        """
+        """``find`` fallback when fd is unavailable."""
         pattern = f"*{search_term}*"
 
         if show_hidden:

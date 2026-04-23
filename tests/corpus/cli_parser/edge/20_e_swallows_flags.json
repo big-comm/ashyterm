@@ -1,0 +1,16 @@
+{
+  "description": "Flags after -e are captured as part of the command, not parsed.",
+  "argv": [
+    "ashyterm",
+    "-e",
+    "sudo",
+    "--new-window"
+  ],
+  "expected": {
+    "working_directory": null,
+    "execute_command": "sudo --new-window",
+    "ssh_target": null,
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

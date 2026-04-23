@@ -149,6 +149,7 @@ class RuleEditDialog(BaseDialog):
 
         # Validation status
         self._validation_label = Gtk.Label()
+        self._validation_label.set_xalign(0)
         self._validation_label.add_css_class("dim-label")
         self._validation_label.set_wrap(True)
         content_box.append(self._validation_label)

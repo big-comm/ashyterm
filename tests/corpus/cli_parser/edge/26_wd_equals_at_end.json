@@ -1,0 +1,14 @@
+{
+  "description": "--working-directory= with no value — empty string.",
+  "argv": [
+    "ashyterm",
+    "--working-directory="
+  ],
+  "expected": {
+    "working_directory": "",
+    "execute_command": null,
+    "ssh_target": null,
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

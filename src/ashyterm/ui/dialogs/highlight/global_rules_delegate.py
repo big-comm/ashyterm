@@ -146,7 +146,7 @@ class GlobalRulesDelegate:
             border: 1px solid alpha(currentColor, 0.3);
         }}
         """
-        css_provider.load_from_data(css.encode("utf-8"))
+        css_provider.load_from_string(css)
 
         context = box.get_style_context()
         if hasattr(box, "_css_provider"):

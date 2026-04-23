@@ -13,6 +13,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gio, GLib, Gtk
 
+from ...helpers import clear_children
 from ...sessions.models import LayoutItem, SessionFolder, SessionItem
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
@@ -75,7 +76,7 @@ class InlineContextMenu(Gtk.Box):
         )
 
         self._item_label = Gtk.Label(
-           
+            xalign=0.0,
             hexpand=True,
             ellipsize=3,  # Pango.EllipsizeMode.END
         )
@@ -111,8 +112,7 @@ class InlineContextMenu(Gtk.Box):
 
     def _clear_actions(self) -> None:
         """Clear all action buttons from the menu."""
-        while (child := self._actions_box.get_first_child()) is not None:
-            self._actions_box.remove(child)
+        clear_children(self._actions_box)
 
     def show_for_session(
         self,
@@ -258,7 +258,7 @@ class InlineContextMenu(Gtk.Box):
         icon.set_icon_size(Gtk.IconSize.NORMAL)
         content_box.append(icon)
 
-        action_label = Gtk.Label(label=label, hexpand=True)
+        action_label = Gtk.Label(label=label, xalign=0.0, hexpand=True)
         content_box.append(action_label)
 
         button.set_child(content_box)

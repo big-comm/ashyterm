@@ -43,15 +43,10 @@ def set_pdeathsig_kill():
 
 
 def _drain_stderr_to_list(stderr_stream, output_list: list):
-    """Helper function to drain stderr in a separate thread.
+    """Drain ``stderr_stream`` in a thread to avoid pipe-buffer deadlock.
 
-    This prevents deadlocks when reading stdout and stderr from a subprocess.
-    If only stdout is read in a loop while stderr is ignored, the stderr
-    buffer can fill up and cause the process to block indefinitely.
-
-    Args:
-        stderr_stream: The stderr pipe from the subprocess
-        output_list: A list to append stderr lines to (thread-safe with append)
+    Without this, a subprocess that reads stdout in a loop while writing
+    to stderr can block once the stderr pipe buffer fills.
     """
     _drain_logger = get_logger("ashyterm.filemanager.operations")
     try:
@@ -187,17 +182,7 @@ class FileOperations:
         session_override: Optional[SessionItem] = None,
         timeout: int = 10,
     ) -> Tuple[bool, str]:
-        """
-        Executes a command either locally or remotely via the centralized spawner.
-
-        Args:
-            command: The command to execute as a list of strings.
-            session_override: Optional session to use instead of the default.
-            timeout: Maximum time to wait for command completion (default 10s for file manager ops).
-
-        Returns:
-            Tuple of (success: bool, output: str)
-        """
+        """Run ``command`` locally or over SSH. Returns ``(success, output)``."""
         session_to_use = session_override if session_override else self.session_item
         if not session_to_use:
             return False, _("No session context for file operation.")
@@ -255,19 +240,8 @@ class FileOperations:
         is_remote: bool = False,
         session_override: Optional[SessionItem] = None,
     ) -> int:
-        """
-        Get the total size of a file or directory in bytes.
-
-        Args:
-            path: Path to the file or directory
-            is_remote: Whether this is a remote path
-            session_override: Optional session for remote operations
-
-        Returns:
-            Size in bytes, or 0 if unable to determine
-        """
+        """Total bytes at ``path`` via ``du -sb``; 0 on failure."""
         try:
-            # Use 'du -sb' for total size in bytes (summary, bytes)
             command = ["du", "-sb", path]
 
             if is_remote:
@@ -300,19 +274,8 @@ class FileOperations:
         is_remote: bool = False,
         session_override: Optional[SessionItem] = None,
     ) -> int:
-        """
-        Get available free space at the given path in bytes.
-
-        Args:
-            path: Path to check for free space
-            is_remote: Whether this is a remote path
-            session_override: Optional session for remote operations
-
-        Returns:
-            Available space in bytes, or -1 if unable to determine
-        """
+        """Free bytes at ``path`` via ``df -B1 --output=avail``; -1 on failure."""
         try:
-            # Use 'df -B1' for size in bytes, get available space
             command = ["df", "-B1", "--output=avail", path]
 
             if is_remote:
@@ -342,8 +305,7 @@ class FileOperations:
         return -1
 
     def _start_process(self, transfer_id, command):
-        """Helper to start a subprocess with robust lifecycle management."""
-        # MODIFIED: Use preexec_fn for robust cleanup
+        """Spawn the rsync/ssh child with ``preexec_fn`` for SIGKILL on parent death."""
         process = subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
@@ -387,20 +349,7 @@ class FileOperations:
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
     ):
-        """
-        Generic transfer method for both download and upload operations.
-
-        Args:
-            transfer_id: Unique identifier for the transfer
-            session: SSH session information
-            source_path: Source path (remote for download, local for upload)
-            dest_path: Destination path (local for download, remote for upload)
-            is_directory: Whether transferring a directory
-            direction: "download" or "upload"
-            progress_callback: Optional callback for progress updates
-            completion_callback: Optional callback for completion
-            cancellation_event: Optional event for cancellation
-        """
+        """Unified rsync flow for up/download; ``direction`` picks source/dest roles."""
         is_download = direction == "download"
         op_label = _("Download") if is_download else _("Upload")
 

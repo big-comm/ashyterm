@@ -1,6 +1,6 @@
 """Command Editor Dialog — full editor for command definitions."""
 
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import gi
 
@@ -21,8 +21,26 @@ from ....utils.accessibility import set_label as a11y_label
 from ....utils.tooltip_helper import get_tooltip_helper
 from ....utils.translation_utils import _
 from ...widgets.action_rows import ManagedExpanderRow
-from ...widgets.bash_text_view import BashTextView
 from ..base_dialog import BaseDialog
+from .command_editor_data import (
+    FIELD_TYPE_ICONS,
+    build_form_command_template,
+    build_form_fields_list,
+    field_type_display_names,
+    field_type_to_string,
+    form_field_to_dict,
+    get_field_extra_config,
+    get_field_preview,
+    new_field_data,
+)
+from . import command_field_rows as _rows
+from .command_editor_step_simple import (
+    build_step_form_info as _build_step_form_info_impl,
+    build_step_simple as _build_step_simple_impl,
+)
+from .command_editor_step_type import (
+    build_step_type_choice as _build_step_type_choice_impl,
+)
 
 
 class CommandEditorDialog(Adw.Window):
@@ -204,83 +222,7 @@ class CommandEditorDialog(Adw.Window):
         self.set_content(toolbar_view)
 
     def _build_step_type_choice(self):
-        """Build Step 0: Choose command type."""
-        step0 = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=24,
-            margin_top=32,
-            margin_bottom=32,
-            margin_start=24,
-            margin_end=24,
-            valign=Gtk.Align.CENTER,
-        )
-
-        title = Gtk.Label(
-            label=_("What type of command do you want to create?"),
-            css_classes=["title-2"],
-        )
-        step0.append(title)
-
-        buttons_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=12,
-            margin_top=16,
-        )
-
-        # Simple command option
-        simple_btn = Gtk.Button(css_classes=["card", "flat"])
-        a11y_label(simple_btn, _("Simple Command"))
-        simple_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=8,
-            margin_top=16,
-            margin_bottom=16,
-            margin_start=16,
-            margin_end=16,
-        )
-        simple_icon = Gtk.Image.new_from_icon_name("utilities-terminal-symbolic")
-        simple_icon.set_pixel_size(48)
-        simple_box.append(simple_icon)
-        simple_title = Gtk.Label(label=_("Simple Command"), css_classes=["title-3"])
-        simple_box.append(simple_title)
-        simple_desc = Gtk.Label(
-            label=_("A button that runs a command directly"),
-            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
-            wrap=True,
-        )
-        simple_box.append(simple_desc)
-        simple_btn.set_child(simple_box)
-        simple_btn.connect("clicked", lambda _: self._select_command_type("simple"))
-        buttons_box.append(simple_btn)
-
-        # Form command option
-        form_btn = Gtk.Button(css_classes=["card", "flat"])
-        a11y_label(form_btn, _("Command with Form"))
-        form_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=8,
-            margin_top=16,
-            margin_bottom=16,
-            margin_start=16,
-            margin_end=16,
-        )
-        form_icon = Gtk.Image.new_from_icon_name("view-paged-symbolic")
-        form_icon.set_pixel_size(48)
-        form_box.append(form_icon)
-        form_title = Gtk.Label(label=_("Command with Form"), css_classes=["title-3"])
-        form_box.append(form_title)
-        form_desc = Gtk.Label(
-            label=_("A button that shows a form to configure the command"),
-            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
-            wrap=True,
-        )
-        form_box.append(form_desc)
-        form_btn.set_child(form_box)
-        form_btn.connect("clicked", lambda _: self._select_command_type("form"))
-        buttons_box.append(form_btn)
-
-        step0.append(buttons_box)
-        self.wizard_stack.add_named(step0, "type_choice")
+        _build_step_type_choice_impl(self)
 
     def _select_command_type(self, cmd_type: str):
         """Handle command type selection."""
@@ -314,164 +256,10 @@ class CommandEditorDialog(Adw.Window):
         self._update_form_preview()
 
     def _build_step_simple(self):
-        """Build Simple Command step: Basic info + Command only."""
-        simple_step = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=16,
-            margin_top=16,
-            margin_bottom=16,
-            margin_start=16,
-            margin_end=16,
-        )
-
-        # Basic Information
-        basic_group = Adw.PreferencesGroup(title=_("Basic Information"))
-
-        self.simple_name_row = Adw.EntryRow(title=_("Name"))
-        basic_group.add(self.simple_name_row)
-
-        self.simple_description_row = Adw.EntryRow(title=_("Description"))
-        basic_group.add(self.simple_description_row)
-
-        # Icon row
-        icon_row = Adw.ActionRow(title=_("Icon"))
-        self.simple_icon_preview = Gtk.Image.new_from_icon_name(
-            "utilities-terminal-symbolic"
-        )
-        self.simple_icon_preview.set_pixel_size(24)
-        icon_row.add_prefix(self.simple_icon_preview)
-
-        icon_picker_btn = Gtk.Button(
-            icon_name="view-grid-symbolic",
-            css_classes=[BaseDialog.CSS_CLASS_FLAT],
-            valign=Gtk.Align.CENTER,
-        )
-        get_tooltip_helper().add_tooltip(icon_picker_btn, _("Choose icon"))
-        icon_picker_btn.connect(
-            "clicked", lambda _: self._on_pick_icon_clicked("simple")
-        )
-        icon_row.add_suffix(icon_picker_btn)
-
-        self.simple_icon_entry = Gtk.Entry(
-            placeholder_text="utilities-terminal-symbolic",
-            width_chars=20,
-            valign=Gtk.Align.CENTER,
-        )
-        a11y_label(self.simple_icon_entry, _("Icon name"))
-        self.simple_icon_entry.set_text("utilities-terminal-symbolic")
-        self.simple_icon_entry.connect(
-            "changed", lambda e: self._on_icon_entry_changed(e, "simple")
-        )
-        icon_row.add_suffix(self.simple_icon_entry)
-        basic_group.add(icon_row)
-
-        # Display mode
-        self.simple_display_mode_row = Adw.ComboRow(title=_("Display Mode"))
-        display_modes = Gtk.StringList()
-        for mode in [_("Icon and Text"), _("Icon Only"), _("Text Only")]:
-            display_modes.append(mode)
-        self.simple_display_mode_row.set_model(display_modes)
-        basic_group.add(self.simple_display_mode_row)
-
-        # Execution mode (Insert Only or Insert and Execute)
-        self.simple_execution_mode_row = Adw.ComboRow(title=_("Execution Mode"))
-        execution_modes = Gtk.StringList()
-        for mode in [_("Insert Only"), _("Insert and Execute")]:
-            execution_modes.append(mode)
-        self.simple_execution_mode_row.set_model(execution_modes)
-        self.simple_execution_mode_row.set_selected(0)  # Default: Insert Only
-        basic_group.add(self.simple_execution_mode_row)
-
-        simple_step.append(basic_group)
-
-        # Command
-        command_group = Adw.PreferencesGroup(title=_("Command"))
-
-        help_label = Gtk.Label(
-            label=_("Enter the bash command to execute:"),
-           
-            css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL, "caption"],
-            margin_start=4,
-        )
-        command_group.add(help_label)
-
-        command_frame = Gtk.Frame(css_classes=["view"])
-        command_scroll = Gtk.ScrolledWindow(
-            hscrollbar_policy=Gtk.PolicyType.NEVER,
-            vscrollbar_policy=Gtk.PolicyType.AUTOMATIC,
-            min_content_height=80,
-            max_content_height=150,
-        )
-        self.simple_command_textview = BashTextView()
-        command_scroll.set_child(self.simple_command_textview)
-        command_frame.set_child(command_scroll)
-        command_group.add(command_frame)
-
-        simple_step.append(command_group)
-
-        self.wizard_stack.add_named(simple_step, "simple")
+        _build_step_simple_impl(self)
 
     def _build_step_form_info(self):
-        """Build Form Info step: Basic information only."""
-        form_info_step = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=16,
-            margin_top=16,
-            margin_bottom=16,
-            margin_start=16,
-            margin_end=16,
-        )
-
-        # Basic Information for form command
-        basic_group = Adw.PreferencesGroup(title=_("Basic Information"))
-
-        self.form_name_row = Adw.EntryRow(title=_("Name"))
-        basic_group.add(self.form_name_row)
-
-        self.form_description_row = Adw.EntryRow(title=_("Description"))
-        basic_group.add(self.form_description_row)
-
-        # Icon row
-        icon_row = Adw.ActionRow(title=_("Icon"))
-        self.form_icon_preview = Gtk.Image.new_from_icon_name(
-            "utilities-terminal-symbolic"
-        )
-        self.form_icon_preview.set_pixel_size(24)
-        icon_row.add_prefix(self.form_icon_preview)
-
-        icon_picker_btn = Gtk.Button(
-            icon_name="view-grid-symbolic",
-            css_classes=[BaseDialog.CSS_CLASS_FLAT],
-            valign=Gtk.Align.CENTER,
-        )
-        get_tooltip_helper().add_tooltip(icon_picker_btn, _("Choose icon"))
-        icon_picker_btn.connect("clicked", lambda _: self._on_pick_icon_clicked("form"))
-        icon_row.add_suffix(icon_picker_btn)
-
-        self.form_icon_entry = Gtk.Entry(
-            placeholder_text="utilities-terminal-symbolic",
-            width_chars=20,
-            valign=Gtk.Align.CENTER,
-        )
-        a11y_label(self.form_icon_entry, _("Icon name"))
-        self.form_icon_entry.set_text("utilities-terminal-symbolic")
-        self.form_icon_entry.connect(
-            "changed", lambda e: self._on_icon_entry_changed(e, "form")
-        )
-        icon_row.add_suffix(self.form_icon_entry)
-        basic_group.add(icon_row)
-
-        # Display mode
-        self.form_display_mode_row = Adw.ComboRow(title=_("Display Mode"))
-        display_modes = Gtk.StringList()
-        for mode in [_("Icon and Text"), _("Icon Only"), _("Text Only")]:
-            display_modes.append(mode)
-        self.form_display_mode_row.set_model(display_modes)
-        basic_group.add(self.form_display_mode_row)
-
-        form_info_step.append(basic_group)
-
-        self.wizard_stack.add_named(form_info_step, "form_info")
+        _build_step_form_info_impl(self)
 
     def _build_step_form_builder(self):
         """Build Form Builder step: Command parts and preview in split layout."""
@@ -497,7 +285,7 @@ class CommandEditorDialog(Adw.Window):
         parts_header.append(
             Gtk.Label(
                 label=_("Add command parts"),
-               
+                xalign=0.0,
                 hexpand=True,
                 css_classes=["title-4"],
             )
@@ -578,7 +366,7 @@ class CommandEditorDialog(Adw.Window):
         preview_group = Adw.PreferencesGroup(title=_("Command Preview"))
 
         self.result_preview = Gtk.Label(
-           
+            xalign=0.0,
             selectable=True,
             wrap=True,
             css_classes=["monospace", "heading"],
@@ -724,37 +512,7 @@ class CommandEditorDialog(Adw.Window):
                 self.form_icon_entry.set_text(selected_ref[0])
 
     def _get_field_preview(self, field_data: Dict) -> str:
-        """Get a string representation of a field for the command preview."""
-        field_type = field_data.get("type", "text")
-        field_id = field_data.get("id", "")
-
-        if field_type == "command_text":
-            return field_data.get("default", "")
-
-        if field_type == "switch":
-            on_val = field_data.get("command_flag", "")
-            off_val = field_data.get("off_value", "")
-            if on_val:
-                return f"[{on_val}]"
-            if off_val:
-                return f"[{off_val}]"
-            return f"{{{field_id}}}"
-
-        # Regular field types
-        default = field_data.get("default", "")
-        if default:
-            return str(default)
-
-        # Fallback to label or ID
-        placeholder = field_data.get("placeholder", "")
-        if placeholder:
-            return f"<{placeholder}>"
-
-        label = field_data.get("label", "").strip()
-        if label:
-            return f"<{label}>"
-
-        return f"{{{field_id}}}"
+        return get_field_preview(field_data)
 
     def _update_preview(self):
         """Update the resulting command preview from form fields order."""
@@ -806,54 +564,9 @@ class CommandEditorDialog(Adw.Window):
 
     def _add_form_field(self, field_type: str):
         """Add a new form field (command part)."""
-        # Generate a unique ID for the field
-        field_num = len(self.form_fields_data) + 1
-        field_id = (
-            f"part_{field_num}"
-            if field_type == "command_text"
-            else f"field_{field_num}"
+        field_data = new_field_data(
+            field_type, position=len(self.form_fields_data) + 1
         )
-
-        # Set appropriate defaults based on field type
-        default: bool | int | str
-        if field_type == "switch":
-            default = False
-        elif field_type == "slider":
-            default = 50  # Numeric default for slider
-        elif field_type == "color":
-            default = "#000000"
-        elif field_type == "date_time":
-            default = ""
-        elif field_type == "command_text":
-            default = ""
-        else:
-            default = ""
-
-        field_data: dict[str, Any] = {
-            "type": field_type,
-            "id": field_id,
-            "template_key": "",
-            "label": "" if field_type != "command_text" else _("Command"),
-            "default": default,
-            "placeholder": "",
-            "tooltip": "",
-            "command_flag": "",
-            "off_value": "",
-            "options": [],
-        }
-
-        # Add type-specific defaults
-        if field_type == "slider":
-            field_data["min_value"] = 0
-            field_data["max_value"] = 100
-            field_data["step"] = 1
-        elif field_type == "text_area":
-            field_data["rows"] = 4
-        elif field_type == "date_time":
-            field_data["format"] = "%Y-%m-%d %H:%M"
-        elif field_type == "color":
-            field_data["color_format"] = "hex"
-
         self.form_fields_data.append(field_data)
 
         row = self._create_field_row(field_data, len(self.form_fields_data) - 1)
@@ -864,38 +577,8 @@ class CommandEditorDialog(Adw.Window):
 
     def _create_field_row(self, field_data: Dict, index: int) -> Adw.ExpanderRow:
         """Create a collapsible UI row for a command part / form field."""
-        type_icons = {
-            "command_text": "💬",
-            "text": "⌨️",
-            "text_area": "📝",
-            "password": "🔑",
-            "switch": "🔘",
-            "dropdown": "📋",
-            "radio": "⚪",
-            "multi_select": "☑️",
-            "number": "🔢",
-            "slider": "📊",
-            "file_path": "📄",
-            "directory_path": "📁",
-            "date_time": "📅",
-            "color": "🎨",
-        }
-        type_names = {
-            "command_text": _("Command Text"),
-            "text": _("Text Input"),
-            "text_area": _("Text Area"),
-            "password": _("Password"),
-            "switch": _("Switch"),
-            "dropdown": _("Dropdown"),
-            "radio": _("Radio Buttons"),
-            "multi_select": _("Multi-Select"),
-            "number": _("Number"),
-            "slider": _("Slider"),
-            "file_path": _("File"),
-            "directory_path": _("Directory"),
-            "date_time": _("Date/Time"),
-            "color": _("Color"),
-        }
+        type_icons = FIELD_TYPE_ICONS
+        type_names = field_type_display_names()
         field_type = field_data.get("type", "text")
         field_id = field_data.get("id", f"field_{index + 1}")
 
@@ -1059,26 +742,7 @@ class CommandEditorDialog(Adw.Window):
         self.wizard_stack.set_visible_child_name("form_builder")
 
     def _convert_field_to_dict(self, field: CommandFormField) -> Dict:
-        """Convert a CommandFormField instance to a dictionary for UI representation."""
-        field_data = {
-            "type": self._field_type_to_string(field.field_type),
-            "id": field.id,
-            "template_key": field.template_key or field.id,
-            "label": field.label,
-            "default": field.default_value,
-            "placeholder": field.placeholder,
-            "tooltip": field.tooltip or "",
-            "command_flag": field.command_flag or "",
-            "off_value": field.off_value or "",
-            "options": list(field.options) if field.options else [],
-        }
-        # Load extra_config fields
-        extra = field.extra_config or {}
-        keys = ["rows", "min_value", "max_value", "step", "format", "color_format"]
-        for key in keys:
-            if key in extra:
-                field_data[key] = extra[key]
-        return field_data
+        return form_field_to_dict(field)
 
     def _populate_simple_command_ui(self):
         """Populate UI for simple commands."""
@@ -1106,22 +770,7 @@ class CommandEditorDialog(Adw.Window):
         self.wizard_stack.set_visible_child_name("simple")
 
     def _field_type_to_string(self, field_type: FieldType) -> str:
-        """Convert FieldType enum to string."""
-        return {
-            FieldType.TEXT: "text",
-            FieldType.PASSWORD: "password",
-            FieldType.TEXT_AREA: "text_area",
-            FieldType.SWITCH: "switch",
-            FieldType.DROPDOWN: "dropdown",
-            FieldType.RADIO: "radio",
-            FieldType.MULTI_SELECT: "multi_select",
-            FieldType.NUMBER: "number",
-            FieldType.SLIDER: "slider",
-            FieldType.FILE_PATH: "file_path",
-            FieldType.DIRECTORY_PATH: "directory_path",
-            FieldType.DATE_TIME: "date_time",
-            FieldType.COLOR: "color",
-        }.get(field_type, "text")
+        return field_type_to_string(field_type)
 
     def _get_simple_command_data(
         self,
@@ -1151,75 +800,13 @@ class CommandEditorDialog(Adw.Window):
         )
 
     def _build_form_command_template(self) -> str:
-        """Build command template from form fields data."""
-        parts = []
-        for field_data in self.form_fields_data:
-            field_type = field_data.get("type", "text")
-            if field_type == "command_text":
-                value = field_data.get("default", "")
-                if value:
-                    parts.append(value)
-            else:
-                parts.append(f"{{{field_data.get('id', '')}}}")
-        return " ".join(parts)
+        return build_form_command_template(self.form_fields_data)
 
     def _get_field_extra_config(self, field_data: dict) -> dict:
-        """Get extra configuration for special field types."""
-        extra_config = {}
-        ft = field_data.get("type", "text")
-        if ft == "text_area":
-            extra_config["rows"] = field_data.get("rows", 4)
-        elif ft == "slider":
-            extra_config["min_value"] = field_data.get("min_value", 0)
-            extra_config["max_value"] = field_data.get("max_value", 100)
-            extra_config["step"] = field_data.get("step", 1)
-        elif ft == "date_time":
-            extra_config["format"] = field_data.get("format", "%Y-%m-%d %H:%M")
-        elif ft == "color":
-            extra_config["color_format"] = field_data.get("color_format", "hex")
-        return extra_config
+        return get_field_extra_config(field_data)
 
     def _build_form_fields_list(self) -> list:
-        """Build form fields list from form_fields_data."""
-        field_type_map = {
-            "text": FieldType.TEXT,
-            "password": FieldType.PASSWORD,
-            "text_area": FieldType.TEXT_AREA,
-            "switch": FieldType.SWITCH,
-            "dropdown": FieldType.DROPDOWN,
-            "radio": FieldType.RADIO,
-            "multi_select": FieldType.MULTI_SELECT,
-            "number": FieldType.NUMBER,
-            "slider": FieldType.SLIDER,
-            "file_path": FieldType.FILE_PATH,
-            "directory_path": FieldType.DIRECTORY_PATH,
-            "date_time": FieldType.DATE_TIME,
-            "color": FieldType.COLOR,
-        }
-        form_fields = []
-        for i, field_data in enumerate(self.form_fields_data):
-            if field_data.get("type") == "command_text":
-                continue
-            field_type = field_type_map.get(
-                field_data.get("type", "text"), FieldType.TEXT
-            )
-            form_fields.append(
-                CommandFormField(
-                    id=field_data.get("id", f"field_{i}"),
-                    label=field_data.get("label", ""),
-                    field_type=field_type,
-                    default_value=str(field_data.get("default", "")),
-                    placeholder=field_data.get("placeholder", ""),
-                    tooltip=field_data.get("tooltip", ""),
-                    required=False,
-                    command_flag=field_data.get("command_flag", ""),
-                    off_value=field_data.get("off_value", ""),
-                    options=field_data.get("options", []),
-                    template_key=field_data.get("template_key", ""),
-                    extra_config=self._get_field_extra_config(field_data),
-                )
-            )
-        return form_fields
+        return build_form_fields_list(self.form_fields_data)
 
     def _get_form_command_data(
         self,
@@ -1303,335 +890,48 @@ class CommandEditorDialog(Adw.Window):
         self.emit("save-requested", new_command)
         self.close()
 
+    # ── Field-row delegators ─────────────────────────────────
+    # Each builder lives in ``command_field_rows``. Thin shims keep
+    # the method names that ``_create_field_row`` dispatches to.
+
     def _add_cmd_text_rows(self, expander, field_data, type_icons, field_type):
-        """Add rows for static command text."""
-        text_row = Adw.EntryRow(title=_("Command text"))
-        text_row.set_text(str(field_data.get("default", "")))
-
-        def on_cmd_text_changed(r):
-            val = r.get_text()
-            field_data["default"] = val
-            expander.set_title(
-                f"{type_icons.get(field_type, '💬')} {val}"
-                if val
-                else f"{type_icons.get(field_type, '💬')} {_('(empty)')}"
-            )
-            self._update_preview()
-
-        text_row.connect("changed", on_cmd_text_changed)
-        expander.add_row(text_row)
+        _rows.add_cmd_text_rows(self, expander, field_data, type_icons, field_type)
 
     def _add_field_base_rows(self, expander, field_data, type_icons, field_type):
-        """Add ID and Label rows to regular form fields."""
-        id_row = Adw.EntryRow(title=_("ID"))
-        id_row.set_text(field_data.get("id", ""))
-
-        def on_id_changed(row):
-            new_id = row.get_text()
-            field_data["id"] = new_id
-            expander.set_title(f"{type_icons.get(field_type, '📝')} {{{new_id}}}")
-            self._update_preview()
-
-        id_row.connect("changed", on_id_changed)
-        expander.add_row(id_row)
-
-        label_row = Adw.EntryRow(title=_("Label"))
-        label_row.set_text(field_data.get("label", ""))
-
-        def on_label_changed(r):
-            field_data["label"] = r.get_text()
-            self._update_preview()
-            self._update_form_preview()
-
-        label_row.connect("changed", on_label_changed)
-        expander.add_row(label_row)
+        _rows.add_field_base_rows(self, expander, field_data, type_icons, field_type)
 
     def _add_text_rows(self, expander, field_data):
-        placeholder_row = Adw.EntryRow(title=_("Placeholder"))
-        placeholder_row.set_text(str(field_data.get("placeholder", "")))
-        placeholder_row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"placeholder": r.get_text()}),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(placeholder_row)
-
-        default_row = Adw.EntryRow(title=_("Default"))
-        default_row.set_text(str(field_data.get("default", "")))
-        default_row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"default": r.get_text()}),
-                self._update_preview(),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(default_row)
+        _rows.add_text_rows(self, expander, field_data)
 
     def _add_number_rows(self, expander, field_data):
-        default_row = Adw.EntryRow(title=_("Default"))
-        default_row.set_text(str(field_data.get("default", "")))
-        default_row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"default": r.get_text()}),
-                self._update_preview(),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(default_row)
+        _rows.add_number_rows(self, expander, field_data)
 
     def _add_switch_rows(self, expander, field_data):
-        on_row = Adw.EntryRow(title=_("On value"))
-        on_row.set_text(field_data.get("command_flag", ""))
-        on_row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"command_flag": r.get_text()}),
-                self._update_preview(),
-            ),
-        )
-        expander.add_row(on_row)
-
-        off_row = Adw.EntryRow(title=_("Off value"))
-        off_row.set_text(field_data.get("off_value", ""))
-        off_row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"off_value": r.get_text()}),
-                self._update_preview(),
-            ),
-        )
-        expander.add_row(off_row)
-
-        default_row = Adw.SwitchRow(title=_("Default on"))
-        default_row.set_active(bool(field_data.get("default", False)))
-        default_row.connect(
-            "notify::active",
-            lambda r, _: (
-                field_data.update({"default": r.get_active()}),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(default_row)
+        _rows.add_switch_rows(self, expander, field_data)
 
     def _add_dropdown_rows(self, expander, field_data):
-        options_header = Adw.ActionRow(title=_("Options"))
-        add_btn = Gtk.Button(
-            icon_name="list-add-symbolic",
-            css_classes=[BaseDialog.CSS_CLASS_FLAT, BaseDialog.CSS_CLASS_CIRCULAR],
-            valign=Gtk.Align.CENTER,
-        )
-        a11y_label(add_btn, _("Add option"))
-        options_header.add_suffix(add_btn)
-        expander.add_row(options_header)
-
-        listbox = Gtk.ListBox(
-            selection_mode=Gtk.SelectionMode.NONE,
-            css_classes=[BaseDialog.CSS_CLASS_BOXED_LIST],
-        )
-        box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            margin_start=12,
-            margin_end=12,
-            margin_bottom=8,
-        )
-        box.append(listbox)
-        expander.add_row(box)
-
-        def sync_cb():
-            self._sync_dropdown_options(listbox, field_data)
-
-        def add_opt(val="", label=""):
-            listbox.append(self._create_option_row(val, label, sync_cb, listbox))
-
-        add_btn.connect("clicked", lambda _: (add_opt(), sync_cb()))
-
-        for opt in field_data.get("options", []):
-            if isinstance(opt, (tuple, list)) and len(opt) >= 2:
-                add_opt(str(opt[0]), str(opt[1]))
-            else:
-                add_opt(str(opt), str(opt))
+        _rows.add_dropdown_rows(self, expander, field_data)
 
     def _sync_dropdown_options(self, listbox, field_data):
-        """Sync dropdown options from UI to field data."""
-        opts = []
-        idx = 0
-        while row := listbox.get_row_at_index(idx):
-            if hasattr(row, "_val_entry") and hasattr(row, "_lbl_entry"):
-                val, label = (
-                    row._val_entry.get_text().strip(),
-                    row._lbl_entry.get_text().strip(),
-                )
-                if val or label:
-                    opts.append((val or label, label or val))
-            idx += 1
-        field_data["options"] = opts
-        self._update_form_preview()
+        _rows.sync_dropdown_options(self, listbox, field_data)
 
     def _create_option_row(self, value, label, sync_cb, listbox):
-        row = Adw.ActionRow()
-        ve = Gtk.Entry(
-            placeholder_text=_("Value"), width_chars=10, valign=Gtk.Align.CENTER
-        )
-        ve.set_text(value)
-        a11y_label(ve, _("Option value"))
-        le = Gtk.Entry(
-            placeholder_text=_("Label"),
-            width_chars=15,
-            valign=Gtk.Align.CENTER,
-            hexpand=True,
-        )
-        le.set_text(label)
-        a11y_label(le, _("Option label"))
-
-        def move(delta):
-            idx = row.get_index()
-            new_idx = idx + delta
-            if new_idx >= 0:
-                listbox.remove(row)
-                listbox.insert(row, new_idx)
-                sync_cb()
-
-        u = Gtk.Button(
-            icon_name="go-up-symbolic",
-            css_classes=[BaseDialog.CSS_CLASS_FLAT, BaseDialog.CSS_CLASS_CIRCULAR],
-        )
-        a11y_label(u, _("Move up"))
-        d = Gtk.Button(
-            icon_name="go-down-symbolic",
-            css_classes=[BaseDialog.CSS_CLASS_FLAT, BaseDialog.CSS_CLASS_CIRCULAR],
-        )
-        a11y_label(d, _("Move down"))
-        r = Gtk.Button(
-            icon_name="user-trash-symbolic",
-            css_classes=[
-                BaseDialog.CSS_CLASS_FLAT,
-                BaseDialog.CSS_CLASS_CIRCULAR,
-                BaseDialog.CSS_CLASS_ERROR,
-            ],
-        )
-        a11y_label(r, _("Remove option"))
-
-        u.connect("clicked", lambda _: move(-1))
-        d.connect("clicked", lambda _: move(1))
-        r.connect("clicked", lambda _: (listbox.remove(row), sync_cb()))
-        ve.connect("changed", lambda _: sync_cb())
-        le.connect("changed", lambda _: sync_cb())
-
-        row.add_prefix(ve)
-        row.add_suffix(le)
-        row.add_suffix(u)
-        row.add_suffix(d)
-        row.add_suffix(r)
-        row._val_entry, row._lbl_entry = ve, le
-        return row
+        return _rows.create_option_row(value, label, sync_cb, listbox)
 
     def _add_path_rows(self, expander, field_data):
-        row = Adw.EntryRow(title=_("Default"))
-        row.set_text(str(field_data.get("default", "")))
-        row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"default": r.get_text()}),
-                self._update_preview(),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(row)
+        _rows.add_path_rows(self, expander, field_data)
 
     def _add_password_rows(self, expander, field_data):
-        row = Adw.EntryRow(title=_("Placeholder"))
-        row.set_text(str(field_data.get("placeholder", "")))
-        row.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"placeholder": r.get_text()}),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(row)
+        _rows.add_password_rows(self, expander, field_data)
 
     def _add_textarea_rows(self, expander, field_data):
-        self._add_text_rows(expander, field_data)
-        row = Adw.SpinRow.new_with_range(2, 20, 1)
-        row.set_title(_("Rows"))
-        row.set_value(field_data.get("rows", 4))
-        row.connect(
-            BaseDialog.SIGNAL_NOTIFY_VALUE,
-            lambda r, _: field_data.update({"rows": int(r.get_value())}),
-        )
-        expander.add_row(row)
+        _rows.add_textarea_rows(self, expander, field_data)
 
     def _add_slider_rows(self, expander, field_data):
-        def add_s(t, k, d):
-            r = Adw.SpinRow.new_with_range(-9999, 9999, 1)
-            r.set_title(t)
-            r.set_value(float(field_data.get(k, d)))
-            r.connect(
-                BaseDialog.SIGNAL_NOTIFY_VALUE,
-                lambda r, _: (
-                    field_data.update({k: r.get_value()}),
-                    self._update_form_preview(),
-                ),
-            )
-            expander.add_row(r)
-
-        add_s(_("Minimum"), "min_value", 0)
-        add_s(_("Maximum"), "max_value", 100)
-        add_s(_("Step"), "step", 1)
-        dr = Adw.EntryRow(title=_("Default"))
-        dr.set_text(str(field_data.get("default", "50")))
-        dr.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"default": r.get_text()}),
-                self._update_preview(),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(dr)
+        _rows.add_slider_rows(self, expander, field_data)
 
     def _add_datetime_rows(self, expander, field_data):
-        r = Adw.EntryRow(title=_("Format"))
-        r.set_text(str(field_data.get("format", "%Y-%m-%d %H:%M")))
-        r.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"format": r.get_text()}),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(r)
+        _rows.add_datetime_rows(self, expander, field_data)
 
     def _add_color_rows(self, expander, field_data):
-        r = Adw.ComboRow(title=_("Format"))
-        r.set_model(
-            Gtk.StringList.new([_("Hex (#RRGGBB)"), _("RGB (R,G,B)"), _("None")])
-        )
-        r.set_selected(
-            {"hex": 0, "rgb": 1}.get(field_data.get("color_format", "hex"), 2)
-        )
-        r.connect(
-            "notify::selected",
-            lambda r, _: (
-                field_data.update(
-                    {"color_format": ["hex", "rgb", "none"][r.get_selected()]}
-                ),
-                self._update_preview(),
-            ),
-        )
-        expander.add_row(r)
-        dr = Adw.EntryRow(title=_("Default Hex"))
-        dr.set_text(str(field_data.get("default", "#ffffff")))
-        dr.connect(
-            "changed",
-            lambda r: (
-                field_data.update({"default": r.get_text()}),
-                self._update_preview(),
-                self._update_form_preview(),
-            ),
-        )
-        expander.add_row(dr)
+        _rows.add_color_rows(self, expander, field_data)

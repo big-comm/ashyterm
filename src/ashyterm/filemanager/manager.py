@@ -24,8 +24,26 @@ from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 from ..utils.accessibility import set_label as a11y_label
 from .models import FileItem
+from .breadcrumb import (
+    compute_navigation_path as _compute_navigation_path_impl,
+    rebuild_breadcrumb as _rebuild_breadcrumb_impl,
+)
+from .cleanup import (
+    cleanup_data_stores as _cleanup_data_stores_impl,
+    cleanup_edited_metadata as _cleanup_edited_metadata_impl,
+    cleanup_file_monitors as _cleanup_file_monitors_impl,
+    cleanup_model_references as _cleanup_model_references_impl,
+    nullify_references as _nullify_references_impl,
+)
 from .fm_column_view import ColumnViewDelegate
 from .fm_context_menu import ContextMenuDelegate
+from .ls_output import (
+    is_connection_error as _ls_is_connection_error,
+    normalize_path_for_ls as _ls_normalize_path,
+    parse_ls_output as _ls_parse,
+    resolve_link_target as _ls_resolve_link,
+    should_fallback as _ls_should_fallback,
+)
 from .operations import FileOperations
 from .search import FileSearchMixin
 from .transfer_manager import TransferManager
@@ -51,27 +69,16 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         terminal_manager: TerminalManagerType,
         settings_manager,
     ):
-        """
-        Initializes the FileManager.
-        Dependencies like TerminalManager are injected for better decoupling.
-
-        Args:
-            parent_window: The parent window, used for dialogs.
-            terminal_manager: The central manager for terminal instances.
-            settings_manager: The application's settings manager.
-        """
+        """Injected dependencies; weakrefs used to break the window↔FM cycle."""
         super().__init__()
         self.logger = get_logger("ashyterm.filemanager.manager")
-        # Task 1: Store as weakrefs to prevent circular reference memory leaks
         self._parent_window_ref = weakref.ref(parent_window)
         self._terminal_manager_ref = weakref.ref(terminal_manager)
         self.settings_manager = settings_manager
         # Use global AsyncTaskManager instead of local executor
         self.transfer_history_window = None
         self.tooltip_helper = get_tooltip_helper()
-        self._is_destroyed = False  # Flag to prevent callbacks after destroy
-
-        # CSS styles are now loaded globally from components.css by window_ui.py
+        self._is_destroyed = False
 
         self.session_item: Optional[SessionItem] = None
         self.operations: Optional[FileOperations] = None
@@ -445,53 +452,25 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self._nullify_references()
         self.logger.info("FileManager destroyed.")
 
+    # ── Cleanup delegators ──────────────────────────────────
+    # The teardown pipeline lives in filemanager.cleanup; the
+    # delegators below preserve the legacy method names that
+    # ``FileManager.destroy()`` already calls.
+
     def _cleanup_file_monitors(self) -> None:
-        """Cancel and clear all file monitors."""
-        if not hasattr(self, "file_monitors") or not self.file_monitors:
-            return
-        for monitor in self.file_monitors.values():
-            if monitor:
-                monitor.cancel()
-        self.file_monitors.clear()
+        _cleanup_file_monitors_impl(self)
 
     def _cleanup_edited_metadata(self) -> None:
-        """Clear edited file metadata."""
-        if hasattr(self, "edited_file_metadata"):
-            self.edited_file_metadata.clear()
+        _cleanup_edited_metadata_impl(self)
 
     def _cleanup_model_references(self) -> None:
-        """Detach model from view and clear model wrappers."""
-        if hasattr(self, "column_view") and self.column_view:
-            self.column_view.set_model(None)
-
-        if hasattr(self, "selection_model"):
-            self.selection_model = None
-        if hasattr(self, "sorted_store"):
-            self.sorted_store = None
-        if hasattr(self, "filtered_store"):
-            self.filtered_store = None
+        _cleanup_model_references_impl(self)
 
     def _cleanup_data_stores(self) -> None:
-        """Clear data store and scrolled window."""
-        if hasattr(self, "store") and self.store:
-            self.store.remove_all()
-            self.store = None  # type: ignore[assignment]
-
-        if hasattr(self, "scrolled_window") and self.scrolled_window:
-            self.scrolled_window = None  # type: ignore[assignment]
+        _cleanup_data_stores_impl(self)
 
     def _nullify_references(self) -> None:
-        """Nullify references to break Python-side cycles."""
-        self._parent_window_ref = None  # type: ignore[assignment]
-        self._terminal_manager_ref = None  # type: ignore[assignment]
-        self.settings_manager = None
-        self.operations = None
-        self.transfer_manager = None  # type: ignore[assignment]
-        self.column_view = None
-        self.main_box = None
-        self.revealer = None
-        self.bound_terminal = None
-        self.session_item = None
+        _nullify_references_impl(self)
 
     def get_temp_files_info(self) -> List[Dict]:
         """Returns information about currently edited temporary files."""
@@ -778,39 +757,11 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self.upload_button.set_visible(is_remote)
 
     def _update_breadcrumb(self):
-        child = self.breadcrumb_box.get_first_child()
-        while child:
-            self.breadcrumb_box.remove(child)
-            child = self.breadcrumb_box.get_first_child()
-
-        path = Path(self.current_path)
-
-        if not path.parts or path.parts == ("/",):
-            btn = Gtk.Button(label="/")
-            btn.add_css_class("flat")
-            btn.connect("clicked", self._on_breadcrumb_button_clicked, "/")
-            a11y_label(btn, _("Navigate to root"))
-            self.breadcrumb_box.append(btn)
-            return
-
-        accumulated_path = Path()
-        for i, part in enumerate(path.parts):
-            display_name = part if i > 0 else "/"
-            if i == 0 and part == "/":
-                accumulated_path = Path(part)
-            else:
-                accumulated_path = accumulated_path / part
-                separator = Gtk.Label(label="›")
-                separator.add_css_class("dim-label")
-                self.breadcrumb_box.append(separator)
-
-            btn = Gtk.Button(label=display_name)
-            btn.add_css_class("flat")
-            btn.connect(
-                "clicked", self._on_breadcrumb_button_clicked, str(accumulated_path)
-            )
-            a11y_label(btn, _("Navigate to {}").format(display_name))
-            self.breadcrumb_box.append(btn)
+        _rebuild_breadcrumb_impl(
+            self.breadcrumb_box,
+            self.current_path,
+            on_clicked=self._on_breadcrumb_button_clicked,
+        )
 
     def _on_breadcrumb_button_clicked(self, button, path_to_navigate):
         if path_to_navigate != self.current_path:
@@ -944,13 +895,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self.refresh(new_path, source="filemanager")
 
     def _compute_navigation_path(self, item: FileItem) -> str:
-        """Compute the new path for directory navigation."""
-        if item.name == "..":
-            if self.current_path == "/":
-                return ""
-            return str(Path(self.current_path).parent)
-        base_path = self.current_path.rstrip("/")
-        return f"{base_path}/{item.name}"
+        return _compute_navigation_path_impl(self.current_path, item)
 
     def _open_file(self, item: FileItem):
         """Handle opening a file."""
@@ -1026,8 +971,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
             self._schedule_update_with_error(requested_path, str(e), source)
 
     def _normalize_path_for_ls(self, path: str) -> str:
-        """Ensure path ends with slash for ls command."""
-        return path if path.endswith("/") else f"{path}/"
+        return _ls_normalize_path(path)
 
     def _schedule_update_with_error(self, path: str, error: str, source: str) -> None:
         """Schedule an error update on the main thread."""
@@ -1060,62 +1004,25 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
             self._schedule_update_with_error(requested_path, error_msg, source)
 
     def _is_connection_error(self, output: str) -> bool:
-        """Check if output indicates a connection error."""
-        lower = output.lower()
-        return any(
-            term in lower
-            for term in ["timed out", "timeout", "connection", "network", "unreachable"]
-        )
+        return _ls_is_connection_error(output)
 
     def _should_fallback(self, is_connection_error: bool, requested_path: str) -> bool:
-        """Determine if we should fallback to last successful path."""
-        return bool(
-            not is_connection_error
-            and self._last_successful_path
-            and self._last_successful_path != requested_path
+        return _ls_should_fallback(
+            is_connection_err=is_connection_error,
+            requested_path=requested_path,
+            last_successful_path=self._last_successful_path,
         )
 
     def _parse_ls_output(self, output: str, requested_path: str) -> list:
-        """Parse ls output and return sorted file items."""
-        lines = output.strip().split("\n")[1:]  # Skip total line
-        directories = []
-        files = []
-        parent_item = None
-
-        for line in lines:
-            if self._is_destroyed or requested_path != self.current_path:
-                return []
-
-            file_item = FileItem.from_ls_line(line)
-            if not file_item:
-                continue
-
-            if file_item.name == "..":
-                parent_item = file_item
-            elif file_item.name not in [".", ".."]:
-                self._resolve_link_target(file_item, requested_path)
-                if file_item.is_directory_like:
-                    directories.append(file_item)
-                else:
-                    files.append(file_item)
-
-        directories.sort(key=lambda x: x.name.lower())
-        files.sort(key=lambda x: x.name.lower())
-
-        all_items = []
-        if requested_path != "/" and parent_item:
-            all_items.append(parent_item)
-        all_items.extend(directories)
-        all_items.extend(files)
-        return all_items
+        return _ls_parse(
+            output,
+            requested_path,
+            should_abort=lambda: self._is_destroyed
+            or requested_path != self.current_path,
+        )
 
     def _resolve_link_target(self, file_item: FileItem, base_path: str) -> None:
-        """Resolve relative symlink targets to absolute paths."""
-        if file_item.is_link and file_item._link_target:
-            if not file_item._link_target.startswith("/"):
-                file_item._link_target = (
-                    f"{base_path.rstrip('/')}/{file_item._link_target}"
-                )
+        _ls_resolve_link(file_item, base_path)
 
     def _set_store_items(self, items, requested_path, source):
         """Set all store items in a single operation for optimal performance.

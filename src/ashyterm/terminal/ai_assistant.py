@@ -4,9 +4,6 @@
 
 from __future__ import annotations
 
-import json
-import os
-import re
 import threading
 import weakref
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -18,9 +15,27 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, GObject
 
 from ..data.ai_history_manager import get_ai_history_manager
-from ..utils.logger import get_logger
+from ..utils.logger import get_logger, log_swallowed_exception
 from ..utils.translation_utils import _
-from ..utils.logger import log_swallowed_exception
+from .ai_os_context import build_system_prompt, sanitize_os_value
+from .ai_provider_format import (
+    build_gemini_conversation as _build_gemini_conversation_impl,
+    build_openai_messages as _build_openai_messages_impl,
+    extract_gemini_content as _extract_gemini_content_impl,
+    extract_openai_content as _extract_openai_content_impl,
+    parse_sse_line as _parse_sse_line_impl,
+)
+from .ai_providers import (
+    build_local_headers as _build_local_headers,
+    perform_openai_compat as _perform_openai_compat,
+    resolve_local_url as _resolve_local_url,
+)
+from .ai_response_parser import (
+    clean_response as _clean_response_impl,
+    extract_json_object as _extract_json_object_impl,
+    normalize_commands as _normalize_commands_impl,
+    parse_assistant_payload as _parse_assistant_payload_impl,
+)
 
 # Lazy-loaded requests module (avoid import overhead on startup)
 _requests_module = None
@@ -75,112 +90,15 @@ class TerminalAiAssistant(GObject.Object):
         "- 'commands': A list of standalone, executable shell commands appropriate for {os_context}. Do not include placeholders like '<file>' unless necessary.\n"
     )
 
-    @staticmethod
-    def _sanitize_os_value(value: str) -> str:
-        """Sanitize OS-release values to prevent prompt injection.
-        Only allow alphanumeric, spaces, dots, hyphens, parens, slashes."""
-        import re
-
-        sanitized = re.sub(r"[^\w .\-()/:,]", "", value)
-        return sanitized[:100]
-
-    @staticmethod
-    def _parse_os_release() -> Tuple[str, str]:
-        """Parse /etc/os-release and return (os_name, base_distro)."""
-        os_name = "Linux"
-        base_distro = ""
-        try:
-            with open("/etc/os-release", "r") as f:
-                for line in f:
-                    if line.startswith("PRETTY_NAME="):
-                        raw = line.split("=", 1)[1].strip().strip('"')
-                        os_name = TerminalAiAssistant._sanitize_os_value(raw)
-                    elif line.startswith("ID_LIKE="):
-                        raw = line.split("=", 1)[1].strip().strip('"')
-                        base_distro = TerminalAiAssistant._sanitize_os_value(raw)
-        except Exception as exc:
-            log_swallowed_exception(exc)
-        return os_name, base_distro
-
-    @staticmethod
-    def _parse_lsb_release() -> str:
-        """Parse /etc/lsb-release and return os_name."""
-        os_name = "Linux"
-        try:
-            with open("/etc/lsb-release", "r") as f:
-                for line in f:
-                    if line.startswith("DISTRIB_DESCRIPTION="):
-                        raw = line.split("=", 1)[1].strip().strip('"')
-                        os_name = TerminalAiAssistant._sanitize_os_value(raw)
-                        break
-        except Exception as exc:
-            log_swallowed_exception(exc)
-        return os_name
-
-    @classmethod
-    def _detect_os_context(cls) -> str:
-        """Detects the OS name and base to give context to the AI."""
-        if os.path.exists("/etc/os-release"):
-            os_name, base_distro = cls._parse_os_release()
-            if base_distro:
-                return f"{os_name} (based on {base_distro})"
-            return os_name
-
-        if os.path.exists("/etc/lsb-release"):
-            return cls._parse_lsb_release()
-
-        return "Linux"
+    # Kept for backwards compatibility with existing tests + any
+    # external caller that reaches in. The implementation lives in
+    # ``ai_os_context.sanitize_os_value``.
+    _sanitize_os_value = staticmethod(sanitize_os_value)
 
     @classmethod
     def _get_system_prompt(cls) -> str:
-        """Get the system prompt with the system's default language and OS context."""
-        import locale
-
-        try:
-            # Get the system language
-            lang_code = locale.getdefaultlocale()[0] or "en_US"
-            # Map common locale codes to language names
-            lang_map = {
-                "pt": "Portuguese",
-                "en": "English",
-                "es": "Spanish",
-                "fr": "French",
-                "de": "German",
-                "it": "Italian",
-                "zh": "Chinese",
-                "ja": "Japanese",
-                "ko": "Korean",
-                "ru": "Russian",
-                "ar": "Arabic",
-                "nl": "Dutch",
-                "pl": "Polish",
-                "tr": "Turkish",
-                "uk": "Ukrainian",
-                "cs": "Czech",
-                "sv": "Swedish",
-                "da": "Danish",
-                "fi": "Finnish",
-                "no": "Norwegian",
-                "hu": "Hungarian",
-                "ro": "Romanian",
-                "bg": "Bulgarian",
-                "el": "Greek",
-                "he": "Hebrew",
-                "hr": "Croatian",
-                "sk": "Slovak",
-                "et": "Estonian",
-                "is": "Icelandic",
-            }
-            lang_prefix = lang_code.split("_")[0].lower()
-            language = lang_map.get(lang_prefix, "English")
-        except Exception:
-            language = "English"
-
-        os_context = cls._detect_os_context()
-
-        return cls._SYSTEM_PROMPT_TEMPLATE.format(
-            language=language, os_context=os_context
-        )
+        """Render the system prompt with locale + OS context substituted in."""
+        return build_system_prompt(cls._SYSTEM_PROMPT_TEMPLATE)
 
     def __init__(self, window, settings_manager, terminal_manager):
         super().__init__()
@@ -416,7 +334,7 @@ class TerminalAiAssistant(GObject.Object):
         except Exception as exc:  # pylint: disable=broad-except
             from ..utils.security import redact_secrets
 
-            self.logger.error("AI assistant request failed: %s", redact_secrets(str(exc)))
+            self.logger.error(f"AI assistant request failed: {redact_secrets(str(exc))}")
             error_message = "Sorry, I couldn't complete the request: {}".format(
                 redact_secrets(str(exc))
             )
@@ -554,24 +472,7 @@ class TerminalAiAssistant(GObject.Object):
     def _extract_openai_content(
         self, response_data: Dict[str, Any], provider_name: str
     ) -> str:
-        """Extract content from OpenAI-compatible response."""
-        choices = response_data.get("choices") or []
-        if not choices:
-            raise RuntimeError("The server response did not contain any suggestions.")
-
-        message = choices[0].get("message") if isinstance(choices[0], dict) else None
-        content = message.get("content") if isinstance(message, dict) else None
-
-        if isinstance(content, list):
-            content = "\n".join(
-                part.get("text", "")
-                for part in content
-                if isinstance(part, dict) and part.get("text")
-            )
-
-        if not isinstance(content, str) or not content.strip():
-            raise RuntimeError(f"{provider_name} did not return any usable content.")
-        return content.strip()
+        return _extract_openai_content_impl(response_data, provider_name)
 
     def _openai_compat_request(
         self,
@@ -589,29 +490,7 @@ class TerminalAiAssistant(GObject.Object):
         return self._extract_openai_content(response_data, provider_name)
 
     def _parse_sse_line(self, line_str: str) -> Tuple[Optional[str], bool]:
-        """Parse SSE line. Returns (content_chunk, is_eof)."""
-        if not line_str.startswith("data: "):
-            return None, False
-
-        data_str = line_str[6:]
-        if data_str == "[DONE]":
-            return "", True
-
-        try:
-            data = json.loads(data_str)
-            if "error" in data:
-                err_msg = data["error"].get("message", "API Error")
-                raise RuntimeError(err_msg)
-            choices = data.get("choices", [])
-            if choices:
-                delta = choices[0].get("delta", {})
-                content = delta.get("content", "")
-                if content is None:
-                    return "", False
-                return content, False
-        except json.JSONDecodeError:
-            pass
-        return None, False
+        return _parse_sse_line_impl(line_str)
 
     def _process_streaming_response(self, response) -> str:
         """Process streaming response and return full content."""
@@ -752,94 +631,73 @@ class TerminalAiAssistant(GObject.Object):
         # Fall back to non-streaming for providers that don't support it well
         return self._perform_request(config, messages)
 
+    # ── Local-AI transport ──────────────────────────────────
+    # Separate from the provider-table dispatch because its URL is
+    # derived from the user-configured ``local_base_url`` setting.
+
     def _perform_local_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform request to local OpenAI-compatible API (Ollama, LM Studio, etc.)."""
-        base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
-        if base_url.endswith(":11434"):
-            base_url += "/v1"
-        model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
-        url = f"{base_url}/chat/completions"
-
-        headers = {"Content-Type": "application/json"}
-        api_key = config.get("api_key", "").strip()
-        if api_key:
-            headers["Authorization"] = f"Bearer {api_key}"
-
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
         return self._openai_compat_request(
-            url, headers, payload, "Local AI", timeout=120
+            _resolve_local_url(config),
+            _build_local_headers(config),
+            {
+                "model": config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL,
+                "messages": self._build_openai_messages(messages),
+            },
+            "Local AI",
+            timeout=120,
         )
 
     def _perform_local_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform streaming request to local OpenAI-compatible API."""
-        base_url = config.get("local_base_url", "http://localhost:11434/v1").rstrip("/")
-        if base_url.endswith(":11434"):
-            base_url += "/v1"
-        model = config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL
-        url = f"{base_url}/chat/completions"
-
-        headers = {"Content-Type": "application/json"}
-        api_key = config.get("api_key", "").strip()
-        if api_key:
-            headers["Authorization"] = f"Bearer {api_key}"
-
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
         return self._openai_compat_streaming(
-            url, headers, payload, "Local AI", timeout=120
+            _resolve_local_url(config),
+            _build_local_headers(config),
+            {
+                "model": config.get("model", "").strip() or self.DEFAULT_LOCAL_MODEL,
+                "messages": self._build_openai_messages(messages),
+            },
+            "Local AI",
+            timeout=120,
+        )
+
+    # ── OpenAI-compat providers ─────────────────────────────
+    # All share the same Bearer-auth + {model, messages} shape, so
+    # they dispatch through ``ai_providers.perform_openai_compat``.
+
+    def _perform_openai_compat_provider(
+        self,
+        provider_key: str,
+        config: Dict[str, str],
+        messages: List[Dict[str, str]],
+        *,
+        streaming: bool,
+    ) -> str:
+        return _perform_openai_compat(
+            provider_key,
+            config=config,
+            messages=messages,
+            streaming=streaming,
+            message_builder=self._build_openai_messages,
+            request_fn=self._openai_compat_request,
+            streaming_fn=self._openai_compat_streaming,
         )
 
     def _perform_groq_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform streaming request to Groq API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the Groq API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_GROQ_MODEL
-        url = "https://api.groq.com/openai/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_streaming(url, headers, payload, "Groq")
+        return self._perform_openai_compat_provider(
+            "groq", config, messages, streaming=True
+        )
 
     def _perform_openrouter_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform streaming request to OpenRouter API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the OpenRouter API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_OPENROUTER_MODEL
-        url = "https://openrouter.ai/api/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_streaming(url, headers, payload, "OpenRouter")
+        return self._perform_openai_compat_provider(
+            "openrouter", config, messages, streaming=True
+        )
 
     def _make_gemini_api_call(
         self, url: str, headers: Dict[str, str], payload: Dict[str, Any]
@@ -860,25 +718,7 @@ class TerminalAiAssistant(GObject.Object):
             raise RuntimeError("Gemini returned an invalid JSON response.") from exc
 
     def _extract_gemini_content(self, response_data: Dict[str, Any]) -> str:
-        """Extract text content from Gemini response."""
-        candidates = response_data.get("candidates") or []
-        if not candidates:
-            raise RuntimeError("The server response did not contain any suggestions.")
-
-        collected: List[str] = []
-        for candidate in candidates:
-            content = candidate.get("content") if isinstance(candidate, dict) else None
-            parts = content.get("parts") if isinstance(content, dict) else None
-            if not parts:
-                continue
-            for part in parts:
-                if isinstance(part, dict) and part.get("text"):
-                    collected.append(part["text"])
-
-        if collected:
-            return "\n".join(collected)
-
-        raise RuntimeError("Gemini did not return any usable content.")
+        return _extract_gemini_content_impl(response_data)
 
     def _perform_gemini_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
@@ -906,171 +746,58 @@ class TerminalAiAssistant(GObject.Object):
     def _perform_groq_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform non-streaming request to Groq API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the Groq API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_GROQ_MODEL
-        url = "https://api.groq.com/openai/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_request(url, headers, payload, "Groq")
+        return self._perform_openai_compat_provider(
+            "groq", config, messages, streaming=False
+        )
 
     def _perform_openrouter_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform non-streaming request to OpenRouter API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the OpenRouter API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_OPENROUTER_MODEL
-        url = "https://openrouter.ai/api/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_request(url, headers, payload, "OpenRouter")
+        return self._perform_openai_compat_provider(
+            "openrouter", config, messages, streaming=False
+        )
 
     def _perform_cerebras_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform non-streaming request to Cerebras API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the Cerebras API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_CEREBRAS_MODEL
-        url = "https://api.cerebras.ai/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_request(url, headers, payload, "Cerebras")
+        return self._perform_openai_compat_provider(
+            "cerebras", config, messages, streaming=False
+        )
 
     def _perform_cerebras_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform streaming request to Cerebras API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the Cerebras API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_CEREBRAS_MODEL
-        url = "https://api.cerebras.ai/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_streaming(url, headers, payload, "Cerebras")
+        return self._perform_openai_compat_provider(
+            "cerebras", config, messages, streaming=True
+        )
 
     def _perform_github_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform non-streaming request to GitHub Models API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the GitHub Personal Access Token in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_GITHUB_MODEL
-        url = "https://models.inference.ai.azure.com/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_request(url, headers, payload, "GitHub Models")
+        return self._perform_openai_compat_provider(
+            "github", config, messages, streaming=False
+        )
 
     def _perform_github_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform streaming request to GitHub Models API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the GitHub Personal Access Token in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_GITHUB_MODEL
-        url = "https://models.inference.ai.azure.com/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_streaming(url, headers, payload, "GitHub Models")
+        return self._perform_openai_compat_provider(
+            "github", config, messages, streaming=True
+        )
 
     def _perform_mistral_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform non-streaming request to Mistral API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the Mistral API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_MISTRAL_MODEL
-        url = "https://api.mistral.ai/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_request(url, headers, payload, "Mistral")
+        return self._perform_openai_compat_provider(
+            "mistral", config, messages, streaming=False
+        )
 
     def _perform_mistral_streaming_request(
         self, config: Dict[str, str], messages: List[Dict[str, str]]
     ) -> str:
-        """Perform streaming request to Mistral API."""
-        api_key = config.get("api_key", "").strip()
-        if not api_key:
-            raise RuntimeError("Configure the Mistral API key in Preferences.")
-
-        model = config.get("model", "").strip() or self.DEFAULT_MISTRAL_MODEL
-        url = "https://api.mistral.ai/v1/chat/completions"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        }
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": self._build_openai_messages(messages),
-        }
-        return self._openai_compat_streaming(url, headers, payload, "Mistral")
+        return self._perform_openai_compat_provider(
+            "mistral", config, messages, streaming=True
+        )
 
     def _format_api_error(self, response: Any, provider_name: str) -> str:
         """Format error from HTTP response. Response type is requests.Response."""
@@ -1124,147 +851,26 @@ class TerminalAiAssistant(GObject.Object):
     def _build_gemini_conversation(
         self, messages: List[Dict[str, str]]
     ) -> Tuple[str, List[Dict[str, Any]]]:
-        system_instruction = ""
-        contents: List[Dict[str, Any]] = []
-        for message in messages:
-            role = message.get("role", "user")
-            text = message.get("content", "")
-            if not text:
-                continue
-            if role == "system" and not system_instruction:
-                system_instruction = text
-                continue
-            mapped_role = "model" if role == "assistant" else "user"
-            contents.append(
-                {
-                    "role": mapped_role,
-                    "parts": [{"text": text}],
-                }
-            )
-        if not contents:
-            contents.append({"role": "user", "parts": [{"text": ""}]})
-        return system_instruction, contents
+        return _build_gemini_conversation_impl(messages)
 
     def _build_openai_messages(
         self, messages: List[Dict[str, str]]
     ) -> List[Dict[str, str]]:
-        formatted: List[Dict[str, str]] = []
-        for message in messages:
-            role = message.get("role", "user")
-            content = message.get("content", "")
-            if not isinstance(content, str) or not content:
-                continue
-            role_mapped = role
-            if role not in {"system", "user", "assistant"}:
-                role_mapped = "user"
-            formatted.append({"role": role_mapped, "content": content})
-        return formatted
+        return _build_openai_messages_impl(messages)
 
     def _parse_assistant_payload(
         self, content: str
     ) -> Tuple[str, List[Dict[str, str]], List[Dict[str, str]]]:
-        # Tenta limpar marcadores de markdown que as IAs adoram colocar
-        clean_content = self._clean_response(content)
-
-        reply_text = ""
-        commands: List[Dict[str, str]] = []
-        code_snippets: List[Dict[str, str]] = []
-        payload = None
-
-        # Tentativa 1: Parse direto do JSON limpo
-        try:
-            payload = json.loads(clean_content)
-        except json.JSONDecodeError:
-            # Tentativa 2: Tentar encontrar o primeiro objeto JSON válido na string
-            payload = self._extract_json_object(clean_content)
-
-        if isinstance(payload, dict):
-            # Sucesso no JSON
-            reply_text = payload.get("reply", "")
-            commands_field = payload.get("commands", [])
-            commands = self._normalize_commands(commands_field)
-        else:
-            # FALHA NO JSON (Fallback):
-            # A IA respondeu texto puro. Vamos usar o texto como resposta
-            # e tentar extrair comandos via Regex dos blocos de código.
-            reply_text = content  # Usa o conteúdo original para manter formatação
-
-            # Extrai comandos de blocos de código bash/sh/zsh automaticamente
-            # Regex procura por ```bash ou ```sh seguido de conteúdo
-            code_block_pattern = r"```(?:bash|sh|zsh)?\n(.*?)```"
-            matches = re.findall(code_block_pattern, content, re.DOTALL)
-
-            for match in matches:
-                cmd_str = match.strip()
-                # Evita adicionar scripts longos como botões de comando único
-                if cmd_str and len(cmd_str.splitlines()) == 1:
-                    commands.append(
-                        {
-                            "command": cmd_str,
-                            "description": "Suggested command",
-                        }
-                    )
-
-        return reply_text, commands, code_snippets
+        return _parse_assistant_payload_impl(content)
 
     def _clean_response(self, raw_content: str) -> str:
-        """Remove markdown code fences wrapping the JSON."""
-        clean = raw_content.strip()
-
-        # Remove ```json no início e ``` no fim
-        if clean.startswith("```"):
-            # Encontra a primeira quebra de linha
-            first_newline = clean.find("\n")
-            if first_newline != -1:
-                # Remove a primeira linha (ex: ```json)
-                clean = clean[first_newline + 1 :]
-
-            # Remove o fechamento ``` se existir no final
-            if clean.endswith("```"):
-                clean = clean[:-3]
-
-        return clean.strip()
+        return _clean_response_impl(raw_content)
 
     def _extract_json_object(self, text: str) -> Optional[Dict[str, Any]]:
-        start = text.find("{")
-        while start != -1:
-            brace_level = 0
-            for end in range(start, len(text)):
-                char = text[end]
-                if char == "{":
-                    brace_level += 1
-                elif char == "}":
-                    brace_level -= 1
-                    if brace_level == 0:
-                        candidate = text[start : end + 1]
-                        try:
-                            return json.loads(candidate)
-                        except json.JSONDecodeError:
-                            break
-            start = text.find("{", start + 1)
-        return None
+        return _extract_json_object_impl(text)
 
     def _normalize_commands(self, value: Any) -> List[Dict[str, str]]:
-        commands: List[Dict[str, str]] = []
-        if isinstance(value, list):
-            for item in value:
-                if isinstance(item, str) and item.strip():
-                    commands.append({"command": item.strip(), "description": ""})
-                elif isinstance(item, dict):
-                    candidate = item.get("command") or item.get("cmd")
-                    description = item.get("description") or ""
-                    if isinstance(candidate, str) and candidate.strip():
-                        commands.append(
-                            {
-                                "command": candidate.strip(),
-                                "description": description.strip()
-                                if isinstance(description, str)
-                                else "",
-                            }
-                        )
-        elif isinstance(value, str) and value.strip():
-            commands.append({"command": value.strip(), "description": ""})
-        return commands
+        return _normalize_commands_impl(value)
 
     def _record_assistant_message(self, terminal_id: int, message: str) -> None:
         with self._lock:

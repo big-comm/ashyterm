@@ -35,20 +35,14 @@ class BaseModel(GObject.GObject):
         self._modified_at = time.time()
 
     def get_validation_errors(self) -> List[str]:
-        """
-        Returns a list of validation error messages.
-        Subclasses must override this method.
-        """
+        """Subclasses override this. Return [] when valid."""
         return []
 
     def validate(self) -> bool:
-        """
-        Performs basic validation on the item's configuration.
-        Logs a warning if validation fails.
-        """
+        """True when :meth:`get_validation_errors` is empty; logs otherwise."""
         errors = self.get_validation_errors()
         if errors:
-            # Use getattr to safely access 'name' which exists on subclasses
+            # ``name`` is only guaranteed on subclasses.
             item_name = getattr(self, "name", "Unknown Item")
             self.logger.warning(
                 f"{self.__class__.__name__} validation failed for '{item_name}': {errors}"
@@ -107,6 +101,7 @@ class SessionItem(BaseModel):
         sftp_remote_directory: str = "",
         port_forwardings: Optional[List[Dict[str, Any]]] = None,
         x11_forwarding: bool = False,
+        proxy_jump: str = "",
         source: str = "user",
         local_working_directory: str = "",
         local_startup_command: str = "",
@@ -147,6 +142,7 @@ class SessionItem(BaseModel):
         if port_forwardings:
             self.port_forwardings = port_forwardings
         self._x11_forwarding = bool(x11_forwarding)
+        self._proxy_jump = (proxy_jump or "").strip()
         self._source = source or "user"
         # Local terminal specific properties
         self._local_working_directory = (
@@ -400,6 +396,18 @@ class SessionItem(BaseModel):
             self._mark_modified()
 
     @property
+    def proxy_jump(self) -> str:
+        """ProxyJump chain for SSH, e.g. "user@bastion" or "h1,h2" (no spaces)."""
+        return self._proxy_jump
+
+    @proxy_jump.setter
+    def proxy_jump(self, value: str):
+        new_value = (value or "").strip()
+        if self._proxy_jump != new_value:
+            self._proxy_jump = new_value
+            self._mark_modified()
+
+    @property
     def source(self) -> str:
         return self._source
 
@@ -577,6 +585,7 @@ class SessionItem(BaseModel):
             "sftp_remote_directory": self.sftp_remote_directory,
             "port_forwardings": self.port_forwardings,
             "x11_forwarding": self.x11_forwarding,
+            "proxy_jump": self.proxy_jump,
             "local_working_directory": self.local_working_directory,
             "local_startup_command": self.local_startup_command,
             # Highlighting overrides (tri-state)
@@ -607,6 +616,7 @@ class SessionItem(BaseModel):
             sftp_remote_directory=data.get("sftp_remote_directory", ""),
             port_forwardings=data.get("port_forwardings", []),
             x11_forwarding=data.get("x11_forwarding", False),
+            proxy_jump=data.get("proxy_jump", ""),
             source=data.get("source", "user"),
             local_working_directory=data.get("local_working_directory", ""),
             local_startup_command=data.get("local_startup_command", ""),

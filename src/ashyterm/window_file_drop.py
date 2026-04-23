@@ -99,11 +99,10 @@ class FileDragDropManager:
         self._pending_drop_attempts = 0
         self._pending_drop_terminal = terminal
 
-        # Ensure file manager panel is visible
         if not self.file_manager_button.get_active():
             self.file_manager_button.set_active(True)
 
-        # After activation, force rebind to the correct terminal
+        # Rebind before any upload — FM may still point at the previous terminal.
         fm = self.tab_manager.file_managers.get(page)
         if fm:
             self.logger.info(

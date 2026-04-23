@@ -1,0 +1,8 @@
+{
+  "description": "# starts a fragment per URL spec — truncates the path.",
+  "uri": "file://localhost/tmp/foo#bar",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/tmp/foo"
+  }
+}

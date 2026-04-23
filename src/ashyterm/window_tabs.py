@@ -12,7 +12,6 @@ from gi.repository import Adw, Gtk
 from .sessions.models import SessionItem
 from .utils.translation_utils import _
 
-# Resolved at runtime via window.py module-level APP_TITLE
 APP_TITLE = _("Ashy Terminal")
 
 
@@ -112,10 +111,9 @@ class WindowTabsMixin:
         if not self.tab_manager.active_tab:
             return
 
-        # Hide search when switching tabs
         self.search_manager.hide_if_terminal_changed()
 
-        # Pause highlighting on inactive tabs, resume on active
+        # Pause highlighting on inactive tabs — cheap win for big dumps.
         active_page = self.tab_manager.pages.get(self.tab_manager.active_tab)
         for tab, page in self.tab_manager.pages.items():
             panes: list = []

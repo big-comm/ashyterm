@@ -33,10 +33,7 @@ def _migrate_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
 
 
 class WindowStateManager:
-    """
-    Manages saving and restoring the window's state, including tabs,
-    splits, and user-defined layouts.
-    """
+    """Save/restore window state (tabs, splits, groups, named layouts)."""
 
     SCHEMA_VERSION = 2
     MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {
@@ -51,10 +48,8 @@ class WindowStateManager:
         self.logger = get_logger("ashyterm.state")
 
     def save_session_state(self):
-        """Serializes the current tab and pane layout to a state file."""
+        """Persist the current tab/pane layout to the session state file."""
         state = stamp_version({"groups": [], "tabs": []}, self.SCHEMA_VERSION)
-
-        # Serialize groups
         state["groups"] = self.tab_manager.group_manager.to_list()
 
         for tab_widget in self.tab_manager.tabs:
@@ -65,7 +60,6 @@ class WindowStateManager:
             if tab_content:
                 tab_structure = self._serialize_widget_tree(tab_content)
                 if tab_structure:
-                    # Attach group_id
                     tab_id = self.tab_manager.get_tab_id(tab_widget)
                     group = self.tab_manager.group_manager.get_group_for_tab(tab_id)
                     tab_structure["group_id"] = group.id if group else None

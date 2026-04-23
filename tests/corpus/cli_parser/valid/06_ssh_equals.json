@@ -1,0 +1,14 @@
+{
+  "description": "--ssh=VALUE form.",
+  "argv": [
+    "ashyterm",
+    "--ssh=root@10.0.0.1"
+  ],
+  "expected": {
+    "working_directory": null,
+    "execute_command": null,
+    "ssh_target": "root@10.0.0.1",
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

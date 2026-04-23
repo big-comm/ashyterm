@@ -10,7 +10,7 @@ These tests verify that:
 
 import sys
 import os
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock
 from datetime import datetime
 
 import pytest

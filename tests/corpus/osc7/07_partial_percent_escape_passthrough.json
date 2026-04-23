@@ -1,0 +1,8 @@
+{
+  "description": "Partial %Z escape: urllib leaves literal %Z in output, no raise.",
+  "uri": "file://localhost/bad%Zpath",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/bad%Zpath"
+  }
+}

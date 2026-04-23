@@ -1,21 +1,10 @@
 # ashyterm/core/tasks.py
-"""
-Global Task Manager for centralized background processing.
+"""Singleton task manager — one IO pool + one CPU pool, graceful shutdown.
 
-This module provides a singleton AsyncTaskManager that manages two separate
-thread pools for I/O-bound and CPU-bound tasks. This prevents resource waste
-from multiple ThreadPoolExecutor instances across the application and ensures
-graceful shutdown.
+Call sites::
 
-Usage:
-    # Submit I/O-bound task (file operations, network, etc.)
-    future = AsyncTaskManager.get().submit_io(fetch_data, url)
-
-    # Submit CPU-bound task (regex, parsing, etc.)
-    future = AsyncTaskManager.get().submit_cpu(process_text, content)
-
-    # Shutdown (called by app.py on exit)
-    AsyncTaskManager.get().shutdown()
+    AsyncTaskManager.get().submit_io(fetch_data, url)
+    AsyncTaskManager.get().submit_cpu(process_text, content)
 """
 
 import multiprocessing
@@ -27,20 +16,11 @@ from ..utils.logger import get_logger
 
 
 class AsyncTaskManager:
-    """
-    Singleton Task Manager for centralized background task execution.
-
-    Manages two thread pools:
-    - IO pool: For I/O-bound tasks (file system, network, SSH connections)
-    - CPU pool: For CPU-bound tasks (regex highlighting, search, parsing)
-
-    Thread-safe for concurrent access from multiple parts of the application.
-    """
+    """Thread-safe singleton owning the IO (4 workers) and CPU (<=4) pools."""
 
     _instance: Optional["AsyncTaskManager"] = None
     _lock = threading.Lock()
 
-    # Pool sizes
     IO_POOL_SIZE = 4
     CPU_POOL_SIZE = min(4, max(1, multiprocessing.cpu_count()))
 
@@ -60,14 +40,6 @@ class AsyncTaskManager:
 
     @classmethod
     def get(cls) -> "AsyncTaskManager":
-        """
-        Get the singleton AsyncTaskManager instance.
-
-        Thread-safe lazy initialization.
-
-        Returns:
-            The global AsyncTaskManager instance.
-        """
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
@@ -76,18 +48,13 @@ class AsyncTaskManager:
 
     @classmethod
     def reset(cls) -> None:
-        """
-        Reset the singleton instance (useful for testing).
-
-        Warning: This will shutdown existing pools and disconnect all futures.
-        """
+        """Tear down the singleton. Cancels pending futures — test-only."""
         with cls._lock:
             if cls._instance is not None:
                 cls._instance.shutdown(wait=False)
                 cls._instance = None
 
     def _initialize_pools(self) -> None:
-        """Initialize the thread pool executors."""
         self._io_executor = ThreadPoolExecutor(
             max_workers=self.IO_POOL_SIZE, thread_name_prefix="ashy-io"
         )
@@ -96,31 +63,16 @@ class AsyncTaskManager:
         )
 
     def _track_future(self, future: Future) -> None:
-        """Add a future to the tracking set."""
         with self._futures_lock:
             self._active_futures.add(future)
             future.add_done_callback(self._remove_future)
 
     def _remove_future(self, future: Future) -> None:
-        """Remove a completed future from the tracking set."""
         with self._futures_lock:
             self._active_futures.discard(future)
 
     def submit_io(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
-        """
-        Submit an I/O-bound task to the IO thread pool.
-
-        Use for: File operations, network requests, SSH connections,
-                database queries, subprocess calls.
-
-        Args:
-            fn: The function to execute.
-            *args: Positional arguments for the function.
-            **kwargs: Keyword arguments for the function.
-
-        Returns:
-            A Future object, or None if the manager is shut down.
-        """
+        """Queue an IO-bound task (files, network, SSH, subprocess)."""
         if self._is_shutdown or self._io_executor is None:
             self.logger.warning("IO task submitted after shutdown, ignoring")
             return None
@@ -134,20 +86,7 @@ class AsyncTaskManager:
             return None
 
     def submit_cpu(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
-        """
-        Submit a CPU-bound task to the CPU thread pool.
-
-        Use for: Regex processing, text parsing, search operations,
-                syntax highlighting, data transformation.
-
-        Args:
-            fn: The function to execute.
-            *args: Positional arguments for the function.
-            **kwargs: Keyword arguments for the function.
-
-        Returns:
-            A Future object, or None if the manager is shut down.
-        """
+        """Queue a CPU-bound task (regex, parsing, highlighting)."""
         if self._is_shutdown or self._cpu_executor is None:
             self.logger.warning("CPU task submitted after shutdown, ignoring")
             return None
@@ -161,20 +100,13 @@ class AsyncTaskManager:
             return None
 
     def shutdown(self, wait: bool = False) -> None:
-        """
-        Shutdown the task manager and all thread pools.
-
-        Args:
-            wait: If True, wait for all pending tasks to complete.
-                  If False, cancel pending tasks and return immediately.
-        """
+        """Shut down both pools. ``wait=False`` cancels pending futures."""
         if self._is_shutdown:
             return
 
         self._is_shutdown = True
         self.logger.info(f"Shutting down AsyncTaskManager (wait={wait})")
 
-        # Cancel all pending futures if not waiting
         if not wait:
             with self._futures_lock:
                 cancelled_count = 0
@@ -184,7 +116,6 @@ class AsyncTaskManager:
                 if cancelled_count > 0:
                     self.logger.info(f"Cancelled {cancelled_count} pending tasks")
 
-        # Shutdown executors
         if self._io_executor is not None:
             self._io_executor.shutdown(wait=wait, cancel_futures=not wait)
             self._io_executor = None
@@ -197,36 +128,12 @@ class AsyncTaskManager:
 
     @property
     def is_shutdown(self) -> bool:
-        """Check if the task manager has been shut down."""
         return self._is_shutdown
 
-    @property
-    def pending_io_tasks(self) -> int:
-        """Get approximate count of pending IO tasks."""
-        with self._futures_lock:
-            return sum(
-                1
-                for f in self._active_futures
-                if not f.done() and "io" in str(getattr(f, "_thread_name_prefix", ""))
-            )
 
-    @property
-    def pending_cpu_tasks(self) -> int:
-        """Get approximate count of pending CPU tasks."""
-        with self._futures_lock:
-            return sum(
-                1
-                for f in self._active_futures
-                if not f.done() and "cpu" in str(getattr(f, "_thread_name_prefix", ""))
-            )
-
-
-# Convenience functions for quick access
 def submit_io(fn: Callable, *args, **kwargs) -> Optional[Future]:
-    """Submit an I/O-bound task to the global task manager."""
     return AsyncTaskManager.get().submit_io(fn, *args, **kwargs)
 
 
 def submit_cpu(fn: Callable, *args, **kwargs) -> Optional[Future]:
-    """Submit a CPU-bound task to the global task manager."""
     return AsyncTaskManager.get().submit_cpu(fn, *args, **kwargs)

@@ -1,0 +1,13 @@
+{
+  "description": "IdentityFile preserves the tilde verbatim (no expansion at parse).",
+  "expected": [
+    {
+      "alias": "work",
+      "hostname": "work.example.com",
+      "user": null,
+      "port": null,
+      "identity_file": "~/.ssh/id_rsa_work",
+      "forward_x11": null
+    }
+  ]
+}

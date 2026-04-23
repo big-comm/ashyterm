@@ -1,0 +1,21 @@
+{
+  "description": "Two Host blocks produce two entries.",
+  "expected": [
+    {
+      "alias": "prod",
+      "hostname": "prod.example.com",
+      "user": "deploy",
+      "port": null,
+      "identity_file": null,
+      "forward_x11": null
+    },
+    {
+      "alias": "staging",
+      "hostname": "staging.example.com",
+      "user": "deploy",
+      "port": 2200,
+      "identity_file": null,
+      "forward_x11": null
+    }
+  ]
+}

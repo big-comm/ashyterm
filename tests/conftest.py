@@ -6,9 +6,27 @@ This module configures the test environment, including path setup
 and mock configurations for GTK-dependent modules.
 """
 
+import atexit
 import os
+import shutil
 import sys
+import tempfile
 from unittest.mock import MagicMock
+
+# Sandbox HOME / XDG_CONFIG_HOME / XDG_CACHE_HOME to a throwaway directory
+# BEFORE any ashyterm module is imported. Several ashyterm modules read
+# these at import time (ConfigPaths, PlatformInfo) and cache the result
+# in module-level singletons — if the real user config dir ever leaks in,
+# tests that exercise public methods on those singletons will write to
+# ~/.config/ashyterm and pollute the real user state.
+_test_home = tempfile.mkdtemp(prefix="ashyterm-tests-")
+os.environ["HOME"] = _test_home
+os.environ["XDG_CONFIG_HOME"] = os.path.join(_test_home, "config")
+os.environ["XDG_CACHE_HOME"] = os.path.join(_test_home, "cache")
+os.environ.pop("XDG_DATA_HOME", None)
+os.makedirs(os.environ["XDG_CONFIG_HOME"], exist_ok=True)
+os.makedirs(os.environ["XDG_CACHE_HOME"], exist_ok=True)
+atexit.register(lambda: shutil.rmtree(_test_home, ignore_errors=True))
 
 # Add src directory to Python path - MUST be first to override system packages
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -45,3 +63,32 @@ def mock_gi_module():
 if "DISPLAY" not in os.environ and "WAYLAND_DISPLAY" not in os.environ:
     sys.modules["gi"] = mock_gi_module()
     sys.modules["gi.repository"] = sys.modules["gi"].repository
+
+
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _reset_ashyterm_singletons():
+    """Clear module-level singletons before each test so state cannot
+    survive across tests via cached ConfigPaths / PlatformInfo /
+    CommandButtonManager instances."""
+    try:
+        import ashyterm.settings.config as _cfg
+
+        _cfg._config_paths = None
+    except ImportError:
+        pass
+    try:
+        import ashyterm.utils.platform as _plat
+
+        _plat._platform_info = None
+    except ImportError:
+        pass
+    try:
+        from ashyterm.data.command_manager_models import CommandButtonManager
+
+        CommandButtonManager._instance = None
+    except ImportError:
+        pass
+    yield

@@ -1,14 +1,5 @@
 # tooltip_helper.py
-"""
-Tooltip helper for showing helpful explanations on UI elements.
-Provides a simple way to add custom tooltips with fade animation to any GTK widget.
-
-PORTABLE VERSION:
-- Self-contained (no external app dependencies).
-- Widget-Anchored Popover for correct positioning (even inside other popovers).
-- Custom CSS styling with Fade-Out.
-- Auto-detects and updates colors from Adwaita StyleManager.
-"""
+"""Custom tooltip widget (Popover + fade). Adwaita-themed, no extra deps."""
 
 import logging
 from typing import Optional
@@ -34,23 +25,18 @@ def get_tooltip_helper() -> "TooltipHelper":
 
 
 class TooltipHelper:
-    """
-    Manages custom tooltips using Widget-Anchored Gtk.Popover.
-    Portable version: Depends only on GTK4/Adwaita.
-    """
+    """Custom tooltips via widget-anchored Gtk.Popover with fade animations."""
 
     def __init__(self):
         self.active_popover: Optional[Gtk.Popover] = None
         self.active_widget = None
         self.show_timer_id = None
         self.hide_timer_id = None
-        self.closing_popover = (
-            None  # Keep track of popover that is currently fading out
-        )
+        self.closing_popover = None  # popover mid-fade; kept for cleanup
         self._color_css_provider = None
         self._colors_initialized = False
-        self._tracked_windows: set = set()  # Windows we're monitoring for focus
-        self._widgets_with_tooltips: set = set()  # All widgets with tooltips
+        self._tracked_windows: set = set()
+        self._widgets_with_tooltips: set = set()
 
         # Connect to Adwaita style manager for automatic theme updates
         try:

@@ -1,0 +1,15 @@
+{
+  "description": "--new-window combined with positional wd.",
+  "argv": [
+    "ashyterm",
+    "--new-window",
+    "/tmp"
+  ],
+  "expected": {
+    "working_directory": "/tmp",
+    "execute_command": null,
+    "ssh_target": null,
+    "close_after_execute": false,
+    "force_new_window": true
+  }
+}

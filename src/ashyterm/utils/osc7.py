@@ -18,20 +18,7 @@ class OSC7Info(NamedTuple):
 def parse_directory_uri(
     uri: str, parser: Optional["OSC7Parser"] = None
 ) -> Optional[OSC7Info]:
-    """
-    Parse a file:// URI and return OSC7Info.
-
-    This is a common utility function to avoid code duplication in:
-    - terminal/manager.py (_on_directory_uri_changed)
-    - utils/osc7_tracker.py (_handle_directory_uri_change)
-
-    Args:
-        uri: The file:// URI to parse
-        parser: Optional OSC7Parser instance for creating display paths
-
-    Returns:
-        OSC7Info if valid file URI, None otherwise
-    """
+    """Extract ``OSC7Info`` from a ``file://`` URI (or ``None`` on bad input)."""
     if not uri:
         return None
 
@@ -42,13 +29,7 @@ def parse_directory_uri(
 
         path = unquote(parsed.path)
         hostname = parsed.hostname or "localhost"
-
-        if parser:
-            display_path = parser._create_display_path(path)
-        else:
-            # Fallback display path creation
-            display_path = path
-
+        display_path = parser._create_display_path(path) if parser else path
         return OSC7Info(hostname=hostname, path=path, display_path=display_path)
     except Exception:
         return None
@@ -74,20 +55,11 @@ class OSC7Parser:
     """Parser for OSC7 escape sequences."""
 
     def __init__(self):
-        """Initialize OSC7 parser."""
         self.logger = get_logger("ashyterm.utils.osc7")
         self._home_path = str(Path.home())
 
     def _create_display_path(self, path: str) -> str:
-        """
-        Create a user-friendly display version of the path.
-
-        Args:
-            path: Normalized absolute path
-
-        Returns:
-            Display-friendly path string
-        """
+        """Shorten ``path`` for the UI: home→``~``, deep→``…/tail``."""
         try:
             if not path or path == "/":
                 return "/"

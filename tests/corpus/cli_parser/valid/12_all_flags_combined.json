@@ -1,0 +1,18 @@
+{
+  "description": "All structured flags at once.",
+  "argv": [
+    "ashyterm",
+    "--new-window",
+    "--close-after-execute",
+    "--ssh=u@h",
+    "-w",
+    "/tmp"
+  ],
+  "expected": {
+    "working_directory": "/tmp",
+    "execute_command": null,
+    "ssh_target": "u@h",
+    "close_after_execute": true,
+    "force_new_window": true
+  }
+}

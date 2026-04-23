@@ -8,7 +8,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, GObject, Gtk, Pango, PangoCairo
 
-from ..helpers import generate_unique_name
+from ..helpers import clear_children, generate_unique_name
 from ..settings.manager import SettingsManager
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
@@ -578,8 +578,7 @@ class ColorSchemeDialog(Adw.PreferencesWindow):
         actions_box.append(self.delete_button)
 
     def _populate_schemes_list(self):
-        while child := self.schemes_listbox.get_first_child():
-            self.schemes_listbox.remove(child)
+        clear_children(self.schemes_listbox)
 
         all_schemes = self.settings_manager.get_all_schemes()
         scheme_order = self.settings_manager.get_scheme_order()

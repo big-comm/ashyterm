@@ -130,7 +130,7 @@ class ColumnViewDelegate:
     def setup_name_cell(self, factory, list_item):
         box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.HORIZONTAL)
         box.append(Gtk.Image())
-        label = Gtk.Label()
+        label = Gtk.Label(xalign=0.0)
         box.append(label)
         link_icon = Gtk.Image()
         link_icon.set_visible(False)
@@ -174,7 +174,7 @@ class ColumnViewDelegate:
             link_icon.set_visible(False)
 
     def setup_text_cell(self, factory, list_item):
-        label = Gtk.Label()
+        label = Gtk.Label(xalign=0.0)
         list_item.set_child(label)
 
     def setup_size_cell(self, factory, list_item):

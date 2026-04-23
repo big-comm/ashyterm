@@ -14,7 +14,7 @@ from gi.repository import Adw, GLib, Gtk
 
 from ...utils.translation_utils import _
 from .base_dialog import BaseDialog
-from .session_edit_validation import validate_port_forward
+from .session_edit_validators import validate_port_forward
 from ..widgets.action_rows import ManagedListRow
 
 
@@ -49,6 +49,7 @@ def refresh_port_forward_list(
         placeholder_row.set_activatable(False)
         label = Gtk.Label(
             label=_("No port forwards configured."),
+            xalign=0,
         )
         label.add_css_class(BaseDialog.CSS_CLASS_DIM_LABEL)
         placeholder_row.set_child(label)
@@ -122,14 +123,13 @@ def show_port_forward_dialog(
         errors = validate_port_forward(data)
         if errors:
             # Show error inline — caller can override with custom dialog
-            err_dialog = Adw.MessageDialog(
-                transient_for=dialog, modal=True,
+            err_dialog = Adw.AlertDialog(
                 heading=_("Invalid Port Forward"),
                 body="\n".join(errors),
             )
             err_dialog.add_response("ok", _("OK"))
             err_dialog.set_response_appearance("ok", Adw.ResponseAppearance.DESTRUCTIVE)
-            err_dialog.present()
+            err_dialog.present(dialog)
             return
 
         result = data

@@ -4,7 +4,10 @@ import os
 from typing import TYPE_CHECKING, Any, List, Optional, Union
 from urllib.parse import unquote, urlparse
 
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk
+import gi
+
+gi.require_version("Vte", "3.91")
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
 
 from ..sessions.models import LayoutItem, SessionFolder, SessionItem
 from ..utils.logger import get_logger, log_session_event
@@ -42,6 +45,9 @@ class WindowActions:
             "split-horizontal": self.split_horizontal,
             "split-vertical": self.split_vertical,
             "close-pane": self.close_pane,
+            "zoom-pane": self.zoom_pane,
+            "balance-panes": self.balance_panes,
+            "save-output": self.save_output,
             "open-url": self.open_url,
             "copy-url": self.copy_url,
             "zoom-in": self.zoom_in,
@@ -113,7 +119,7 @@ class WindowActions:
     # --- Tab and Pane Actions ---
 
     def new_local_tab(self, *_args):
-        # MODIFIED: Get current working directory from the active local terminal
+        # Inherit CWD from the active local terminal so the new tab opens there.
         working_dir = None
         active_terminal = self.window.tab_manager.get_selected_terminal()
         if active_terminal:
@@ -152,6 +158,67 @@ class WindowActions:
     def close_pane(self, *_args):
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.close_pane(terminal)
+
+    def zoom_pane(self, *_args):
+        if terminal := self.window.tab_manager.get_selected_terminal():
+            self.window.tab_manager.pane_handler.toggle_zoom_pane(terminal)
+
+    def balance_panes(self, *_args):
+        if terminal := self.window.tab_manager.get_selected_terminal():
+            self.window.tab_manager.pane_handler.balance_panes(terminal)
+
+    def save_output(self, *_args):
+        terminal = self.window.tab_manager.get_selected_terminal()
+        if terminal is None:
+            return
+        dialog = Gtk.FileDialog(
+            title=_("Save Terminal Output"),
+            initial_name="terminal_output.txt",
+        )
+        dialog.save(self.window, None, self._on_save_output_finish, terminal)
+
+    def _on_save_output_finish(self, dialog, result, terminal):
+        try:
+            file = dialog.save_finish(result)
+        except GLib.Error:
+            return
+        if file is None:
+            return
+        try:
+            text = self._extract_terminal_text(terminal)
+            file.replace_contents(
+                (text or "").encode("utf-8"),
+                None, False, Gio.FileCreateFlags.REPLACE_DESTINATION, None,
+            )
+        except Exception as exc:
+            log_swallowed_exception(exc)
+            if hasattr(self.window, "toast_overlay"):
+                self.window.toast_overlay.add_toast(
+                    Adw.Toast(title=_("Could not save output: {}").format(exc))
+                )
+            return
+        if hasattr(self.window, "toast_overlay"):
+            self.window.toast_overlay.add_toast(
+                Adw.Toast(title=_("Output saved"))
+            )
+
+    @staticmethod
+    def _extract_terminal_text(terminal) -> str:
+        """Read full scrollback. VTE's text API varies by version."""
+        if hasattr(terminal, "get_text_format"):
+            try:
+                return terminal.get_text_format(Vte.Format.TEXT) or ""
+            except Exception:
+                pass
+        if hasattr(terminal, "get_text"):
+            try:
+                result = terminal.get_text(None, None)
+                if isinstance(result, tuple):
+                    return result[0] or ""
+                return result or ""
+            except Exception:
+                pass
+        return ""
 
     def move_tab_left(self, *_args):
         self.window.tab_manager.move_tab_left()

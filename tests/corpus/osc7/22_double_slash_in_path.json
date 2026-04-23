@@ -1,0 +1,8 @@
+{
+  "description": "Double slash in path — preserved, not normalized.",
+  "uri": "file://localhost//double//slash",
+  "expected": {
+    "hostname": "localhost",
+    "path": "//double//slash"
+  }
+}

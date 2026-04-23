@@ -1,0 +1,8 @@
+{
+  "description": "?query is stripped from path too.",
+  "uri": "file://localhost/tmp/foo?x=1",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/tmp/foo"
+  }
+}

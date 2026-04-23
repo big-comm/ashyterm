@@ -1,7 +1,5 @@
 # ashyterm/utils/theme_engine.py
-"""
-Theme Engine for generating dynamic application CSS based on color schemes.
-"""
+"""Generate dynamic Adwaita CSS from a color scheme."""
 
 from typing import Dict, Any
 import gi
@@ -49,16 +47,14 @@ class ThemeEngine:
 
     @staticmethod
     def _get_root_vars_css(params: Dict[str, Any], gtk_theme_name: str) -> str:
-        """Generate CSS root variables for Adwaita/GTK4 theming.
+        """Emit ``:root`` vars for the ``terminal`` GTK theme.
 
-        When the background color is too dark (luminance < 0.05), skip applying
-        custom colors to prevent readability issues with nearly-black backgrounds.
+        Skipped when the background is nearly black (luminance < 0.05) —
+        our contrast adjustments would fight the user's deliberate choice.
         """
         if gtk_theme_name != "terminal":
             return ""
 
-        # Skip custom theming for very dark backgrounds (nearly black)
-        # This prevents readability issues when background luminance is too low
         if params["luminance"] < 0.05:
             return ""
 

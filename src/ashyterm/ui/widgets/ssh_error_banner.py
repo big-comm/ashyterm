@@ -178,6 +178,7 @@ class SSHErrorBanner(Gtk.Box):
         detail_inscription.set_min_chars(5)  # Very small minimum for narrow screens
         detail_inscription.set_min_lines(1)
         detail_inscription.set_nat_lines(4)  # Allow up to 4 lines when narrow
+        detail_inscription.set_xalign(0)
         detail_inscription.set_hexpand(True)
         detail_inscription.add_css_class("dim-label")
         message_box.append(detail_inscription)

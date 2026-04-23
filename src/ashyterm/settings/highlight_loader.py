@@ -50,7 +50,7 @@ class HighlightLoader:
                     disabled_global_rules = set(data.get("disabled_global_rules", []))
                     disabled_contexts = set(data.get("disabled_contexts", []))
             except Exception as e:
-                self.logger.warning("Failed to load user settings: %s", e)
+                self.logger.warning(f"Failed to load user settings: {e}")
 
             # 2. Load system + user highlight contexts
             system_contexts = self._load_system_highlights()
@@ -72,8 +72,8 @@ class HighlightLoader:
                     config.contexts[ctx_name].enabled = False
 
             self.logger.info(
-                "Loaded %d contexts, %d global rules",
-                len(config.contexts), len(config.global_rules),
+                f"Loaded {len(config.contexts)} contexts, "
+                f"{len(config.global_rules)} global rules"
             )
             return config
 
@@ -84,7 +84,7 @@ class HighlightLoader:
                 self._save_user_settings(config)
                 self.logger.info("Saved highlight configuration")
             except Exception as e:
-                self.logger.error("Failed to save highlight config: %s", e)
+                self.logger.error(f"Failed to save highlight config: {e}")
                 log_error_with_context(e, "saving highlight config", _LOGGER_NAME)
 
     def _save_user_settings(self, config: HighlightConfig) -> None:
@@ -147,7 +147,7 @@ class HighlightLoader:
                     json_file.unlink()
                     deleted += 1
                 except Exception as e:
-                    self.logger.warning("Failed to delete %s: %s", json_file, e)
+                    self.logger.warning(f"Failed to delete {json_file}: {e}")
         return deleted
 
     def _get_system_highlights_path(self) -> Optional[Path]:
@@ -160,7 +160,7 @@ class HighlightLoader:
                 return Path(__file__).parent.parent / "data" / "highlights"
             return Path(__file__).parent.parent / "data" / "highlights"
         except Exception as e:
-            self.logger.warning("Could not locate system highlights: %s", e)
+            self.logger.warning(f"Could not locate system highlights: {e}")
             return Path(__file__).parent.parent / "data" / "highlights"
 
     def _load_system_highlights(self) -> Dict[str, HighlightContext]:
@@ -168,7 +168,7 @@ class HighlightLoader:
         contexts: Dict[str, HighlightContext] = {}
         system_path = self._get_system_highlights_path()
         if not system_path or not system_path.exists():
-            self.logger.warning("System highlights path not found: %s", system_path)
+            self.logger.warning(f"System highlights path not found: {system_path}")
             return contexts
         try:
             for json_file in system_path.glob(_JSON_GLOB_PATTERN):
@@ -177,9 +177,9 @@ class HighlightLoader:
                     if ctx:
                         contexts[ctx.command_name] = ctx
                 except Exception as e:
-                    self.logger.warning("Failed to load system highlight %s: %s", json_file, e)
+                    self.logger.warning(f"Failed to load system highlight {json_file}: {e}")
         except Exception as e:
-            self.logger.error("Failed to scan system highlights: %s", e)
+            self.logger.error(f"Failed to scan system highlights: {e}")
         return contexts
 
     def _load_user_highlights(self) -> Dict[str, HighlightContext]:
@@ -194,9 +194,9 @@ class HighlightLoader:
                     if ctx:
                         contexts[ctx.command_name] = ctx
                 except Exception as e:
-                    self.logger.warning("Failed to load user highlight %s: %s", json_file, e)
+                    self.logger.warning(f"Failed to load user highlight {json_file}: {e}")
         except Exception as e:
-            self.logger.error("Failed to scan user highlights: %s", e)
+            self.logger.error(f"Failed to scan user highlights: {e}")
         return contexts
 
     def _load_context_from_file(self, file_path: Path) -> Optional[HighlightContext]:
@@ -206,10 +206,10 @@ class HighlightLoader:
                 data = json.load(f)
             return HighlightContext.from_dict(data)
         except json.JSONDecodeError as e:
-            self.logger.error("Invalid JSON in %s: %s", file_path, e)
+            self.logger.error(f"Invalid JSON in {file_path}: {e}")
             return None
         except Exception as e:
-            self.logger.error("Failed to load %s: %s", file_path, e)
+            self.logger.error(f"Failed to load {file_path}: {e}")
             return None
 
     @property

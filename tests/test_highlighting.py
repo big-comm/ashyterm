@@ -8,14 +8,10 @@ from color resolution through ANSI code generation to final line output.
 """
 
 import json
-import os
 import re
-import sys
 import threading
 from pathlib import Path
-from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -1046,7 +1042,7 @@ class TestCatColorization:
 # ============================================================================
 
 class TestShellInputHighlighting:
-    """Test shell input highlighting (Pygments)."""
+    """Test the bits of ShellInputHighlighter that the streaming handler uses."""
 
     @pytest.fixture
     def shell_highlighter(self):
@@ -1062,14 +1058,11 @@ class TestShellInputHighlighting:
         h._dark_theme = "blinds-dark"
         h._light_theme = "blinds-light"
         h._lexer_config_key = None
-        h._command_buffers = {}
-        h._at_prompt = {}
         h._palette = None
         h._foreground = "#ffffff"
         h._background = "#000000"
         h._lock = threading.Lock()
 
-        # Try to initialize lexer (needs Pygments)
         try:
             h._init_lexer()
         except Exception:
@@ -1077,90 +1070,12 @@ class TestShellInputHighlighting:
 
         return h
 
-    def test_register_proxy(self, shell_highlighter):
-        """Registering a proxy initializes its state."""
-        shell_highlighter.register_proxy(42)
-        assert 42 in shell_highlighter._command_buffers
-        assert shell_highlighter._command_buffers[42] == ""
-        assert shell_highlighter._at_prompt[42] is True
-
-    def test_unregister_proxy(self, shell_highlighter):
-        """Unregistering a proxy cleans up state."""
-        shell_highlighter.register_proxy(42)
-        shell_highlighter.unregister_proxy(42)
-        assert 42 not in shell_highlighter._command_buffers
-        assert 42 not in shell_highlighter._at_prompt
-
-    def test_set_at_prompt(self, shell_highlighter):
-        """Prompt state transitions clear buffer."""
-        shell_highlighter.register_proxy(1)
-        shell_highlighter._command_buffers[1] = "git st"
-
-        # Transition to at prompt
-        shell_highlighter.set_at_prompt(1, False)
-        assert shell_highlighter._command_buffers[1] == ""
-
-    def test_key_pressed_builds_buffer(self, shell_highlighter):
-        """Key presses accumulate in the buffer."""
-        shell_highlighter.register_proxy(1)
-        shell_highlighter.set_at_prompt(1, True)
-
-        shell_highlighter.on_key_pressed(1, "l", ord("l"))
-        shell_highlighter.on_key_pressed(1, "s", ord("s"))
-
-        assert shell_highlighter.get_current_buffer(1) == "ls"
-
-    def test_key_pressed_backspace(self, shell_highlighter):
-        """Backspace removes last character from buffer."""
-        shell_highlighter.register_proxy(1)
-        shell_highlighter._command_buffers[1] = "ls"
-
-        shell_highlighter.on_key_pressed(1, "", 65288)  # BackSpace
-        assert shell_highlighter.get_current_buffer(1) == "l"
-
-    def test_key_pressed_enter_clears_buffer(self, shell_highlighter):
-        """Enter clears buffer and leaves prompt."""
-        shell_highlighter.register_proxy(1)
-        shell_highlighter._command_buffers[1] = "ls -la"
-
-        shell_highlighter.on_key_pressed(1, "\n", 65293)  # Return
-        assert shell_highlighter.get_current_buffer(1) == ""
-        assert shell_highlighter._at_prompt[1] is False
-
-    def test_highlight_input_line(self, shell_highlighter):
-        """Full input line highlighting produces ANSI codes."""
-        if not shell_highlighter._lexer:
-            pytest.skip("Pygments not available")
-
-        shell_highlighter.register_proxy(1)
-        shell_highlighter.set_at_prompt(1, True)
-
-        result = shell_highlighter.highlight_input_line(1, "echo hello")
-        # Pygments should add ANSI codes
-        assert "\033[" in result or result == "echo hello"
-
-    def test_highlight_disabled_returns_original(self, shell_highlighter):
-        """When disabled, returns original line."""
-        shell_highlighter._enabled = False
-        shell_highlighter._lexer = None
-
-        result = shell_highlighter.highlight_input_line(1, "ls -la")
-        assert result == "ls -la"
-
     def test_is_light_color(self, shell_highlighter):
-        """Light/dark color detection works correctly."""
+        """Light/dark color detection drives auto-theme selection."""
         assert shell_highlighter._is_light_color("#ffffff") is True
         assert shell_highlighter._is_light_color("#000000") is False
         assert shell_highlighter._is_light_color("#808080") is True  # Gray is above 0.5
         assert shell_highlighter._is_light_color("#282a36") is False  # Dark background
-
-    def test_highlight_not_at_prompt(self, shell_highlighter):
-        """When not at prompt, highlighting returns plain text."""
-        shell_highlighter.register_proxy(1)
-        shell_highlighter.set_at_prompt(1, False)
-
-        result = shell_highlighter.highlight_input_line(1, "ls -la")
-        assert result == "ls -la"
 
 
 # ============================================================================

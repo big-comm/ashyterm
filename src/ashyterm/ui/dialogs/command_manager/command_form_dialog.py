@@ -7,7 +7,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, GObject, Gtk, Pango
+from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Pango
 
 from ....data.command_manager_models import (
     CommandButton,
@@ -224,7 +224,7 @@ class CommandFormDialog(Adw.Window):
 
         preview_title = Gtk.Label(
             label=_("Command Preview"),
-           
+            xalign=0.0,
             css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL, "caption"],
         )
         preview_container.append(preview_title)
@@ -240,7 +240,7 @@ class CommandFormDialog(Adw.Window):
             use_markup=True,
             wrap=True,
             wrap_mode=Pango.WrapMode.CHAR,
-           
+            xalign=0.0,
             hexpand=True,
             selectable=False,  # Don't select on start
             css_classes=["monospace"],
@@ -260,7 +260,7 @@ class CommandFormDialog(Adw.Window):
                 label=self.command.description,
                 wrap=True,
                 wrap_mode=Pango.WrapMode.WORD_CHAR,
-               
+                xalign=0.0,
                 css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
             )
             content_box.append(desc_label)
@@ -320,26 +320,27 @@ class CommandFormDialog(Adw.Window):
 
     def _on_browse_clicked(self, button, entry, field_type):
         """Open file/directory chooser dialog."""
+        dialog = Gtk.FileDialog(title=_("Select Path"), accept_label=_("Select"))
         if field_type == FieldType.DIRECTORY_PATH:
-            action = Gtk.FileChooserAction.SELECT_FOLDER
+            dialog.select_folder(self, None, self._on_select_folder_finish, entry)
         else:
-            action = Gtk.FileChooserAction.OPEN
+            dialog.open(self, None, self._on_open_file_finish, entry)
 
-        dialog = Gtk.FileChooserNative.new(
-            _("Select Path"),
-            self,
-            action,
-            _("Select"),
-            _("Cancel"),
-        )
-        dialog.connect("response", self._on_file_chooser_response, entry)
-        dialog.show()
+    def _on_select_folder_finish(self, dialog, result, entry):
+        try:
+            file = dialog.select_folder_finish(result)
+        except GLib.Error:
+            return
+        if file:
+            entry.set_text(file.get_path())
 
-    def _on_file_chooser_response(self, dialog, response, entry):
-        if response == Gtk.ResponseType.ACCEPT:
-            file = dialog.get_file()
-            if file:
-                entry.set_text(file.get_path())
+    def _on_open_file_finish(self, dialog, result, entry):
+        try:
+            file = dialog.open_finish(result)
+        except GLib.Error:
+            return
+        if file:
+            entry.set_text(file.get_path())
 
     def _get_field_values(self) -> Dict[str, Any]:
         """Collect current values from all form fields."""

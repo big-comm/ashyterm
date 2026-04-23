@@ -3,7 +3,6 @@
 import os
 import sys
 
-import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -20,8 +19,13 @@ class TestGetIconDir:
     def test_icon_paths_include_bundled_location(self):
         from ashyterm.utils import icons
 
-        icons_dir = os.path.join(os.path.dirname(__file__), "..", "src", "ashyterm", "icons")
-        assert icons_dir in icons._ICON_PATHS
+        expected = os.path.realpath(
+            os.path.join(
+                os.path.dirname(__file__), "..", "src", "ashyterm", "icons"
+            )
+        )
+        resolved_paths = [os.path.realpath(p) for p in icons._ICON_PATHS]
+        assert expected in resolved_paths
 
 
 class TestGetIconPath:

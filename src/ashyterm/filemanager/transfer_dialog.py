@@ -79,7 +79,7 @@ class TransferRow(Gtk.Box):
         header_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         content_box.append(header_row)
 
-        self.filename_label = Gtk.Label(hexpand=True)
+        self.filename_label = Gtk.Label(xalign=0.0, hexpand=True)
         self.filename_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
         self.filename_label.set_max_width_chars(40)
         self.filename_label.add_css_class("title-4")
@@ -102,7 +102,7 @@ class TransferRow(Gtk.Box):
         self.status_box.append(self.status_label)
 
         # Details row: metadata (size, time, speed)
-        self.details_label = Gtk.Label()
+        self.details_label = Gtk.Label(xalign=0.0)
         self.details_label.add_css_class("dim-label")
         self.details_label.add_css_class("caption")
         content_box.append(self.details_label)
@@ -119,7 +119,7 @@ class TransferRow(Gtk.Box):
         self.progress_bar.add_css_class("osd")
         self.progress_container.append(self.progress_bar)
 
-        self.progress_label = Gtk.Label()
+        self.progress_label = Gtk.Label(xalign=0.0)
         self.progress_label.add_css_class("caption")
         self.progress_label.add_css_class("dim-label")
         self.progress_container.append(self.progress_label)

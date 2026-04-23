@@ -52,14 +52,12 @@ class CommTerminalWindow(
         self.logger = get_logger("ashyterm.window")
         self.logger.info("Initializing main window")
 
-        # Component initialization
         self.settings_manager = settings_manager
         self.is_main_window = True
 
-        # Lifecycle common state
         self._lifecycle_init_common()
 
-        # Initial state from command line or other windows
+        # Kwargs originate from CLI args or from CommTerminalApp detach flow.
         self.initial_working_directory = kwargs.get("initial_working_directory")
         self.initial_execute_command = kwargs.get("initial_execute_command")
         self.close_after_execute = kwargs.get("close_after_execute", False)
@@ -68,17 +66,15 @@ class CommTerminalWindow(
         self.detached_terminals_data = kwargs.get("detached_terminals_data")
         self.detached_file_manager = kwargs.get("detached_file_manager")
 
-        # Window setup
         self._setup_initial_window_size()
         self.set_title(APP_TITLE)
         self.set_icon_name(None)
 
-        # Build UI + connect signals
         self._create_managers_and_ui()
         self._connect_component_signals()
         self._setup_window_events()
 
-        # Re-register terminals and reconnect signals for a detached tab
+        # Detach flow: adopt pre-built terminals from the source window.
         if self._is_for_detached_tab and self.detached_terminals_data:
             self.logger.info(
                 f"Re-registering and reconnecting signals for {len(self.detached_terminals_data)} terminals."
@@ -147,10 +143,9 @@ class CommTerminalWindow(
                             f"Reconnected UI controls for terminal {terminal_id}"
                         )
 
-        # Apply visual settings immediately
         self._apply_initial_visual_settings()
 
-        # Deferred initialization for data loading
+        # Deferred: session tree load + repair-notice toast.
         def _deferred_init():
             if not self._is_for_detached_tab:
                 self._load_initial_data()

@@ -1,0 +1,15 @@
+{
+  "description": "--ssh + target in next arg.",
+  "argv": [
+    "ashyterm",
+    "--ssh",
+    "alice@host.example"
+  ],
+  "expected": {
+    "working_directory": null,
+    "execute_command": null,
+    "ssh_target": "alice@host.example",
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

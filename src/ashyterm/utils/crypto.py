@@ -37,7 +37,6 @@ def store_password(session_name: str, password: str) -> bool:
 
     try:
         attributes = {"session_name": session_name}
-        # The last argument "cancellable" is None, and the function is synchronous.
         Secret.password_store_sync(
             SECRET_SCHEMA,
             attributes,
@@ -83,7 +82,6 @@ def clear_password(session_name: str) -> bool:
 
     try:
         attributes = {"session_name": session_name}
-        # The synchronous function returns True on success.
         return Secret.password_clear_sync(SECRET_SCHEMA, attributes, None)
     except Exception as e:
         get_logger().error(
@@ -93,15 +91,8 @@ def clear_password(session_name: str) -> bool:
 
 
 def export_all_passwords(sessions_store: Gio.ListStore) -> Dict[str, str]:
-    """Export all keyring passwords → dict{name: password}.
-
-    Args:
-        sessions_store: Gio.ListStore w/ SessionItem objects
-
-    Returns:
-        dict mapping session name → password
-    """
-    # Import moved inside the function to break the circular dependency
+    """Collect keyring passwords for every password-auth session. Backup use."""
+    # Local import to avoid circular: sessions.models imports crypto.
     from ..sessions.models import SessionItem
 
     logger = get_logger("ashyterm.crypto")

@@ -1,0 +1,14 @@
+{
+  "description": "Bare positional becomes working_directory.",
+  "argv": [
+    "ashyterm",
+    "/tmp"
+  ],
+  "expected": {
+    "working_directory": "/tmp",
+    "execute_command": null,
+    "ssh_target": null,
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

@@ -44,17 +44,15 @@ class CliArgParser:
     def handle_execution_arg(
         self, arg: str, arguments: list, i: int, result: dict
     ) -> tuple:
-        """Handle execution related arguments. Returns (consumed, new_index, stop_parsing)."""
-        # 1. Stop parsing markers
+        """Returns ``(consumed, new_index, stop_parsing)``."""
+        # -e / -x / --execute: everything after becomes the command verbatim.
         if arg in ["-e", "-x", "--execute"]:
             return True, i + 1, True
 
-        # 2. Key-value style
         if arg.startswith("--execute="):
             result["execute_command"] = arg.split("=", 1)[1]
             return True, i + 1, False
 
-        # 3. Flags
         if arg == "--close-after-execute":
             result["close_after_execute"] = True
             return True, i + 1, False
@@ -66,17 +64,14 @@ class CliArgParser:
         return False, i, False
 
     def handle_generic_arg(self, arg: str, result: dict, i: int) -> int:
-        """Handle positional arguments or unknown flags."""
-        # Positional working directory (first positional only)
+        """Adopt the first positional as working_directory; warn on extras."""
         if not arg.startswith("-"):
             if result["working_directory"] is None:
                 result["working_directory"] = arg
             else:
                 self.logger.warning(
-                    "Ignoring extra positional argument '%s' "
-                    "(working directory already set to %r).",
-                    arg,
-                    result["working_directory"],
+                    f"Ignoring extra positional argument '{arg}' "
+                    f"(working directory already set to {result['working_directory']!r})."
                 )
 
         return i + 1
@@ -96,7 +91,6 @@ class CliArgParser:
         while i < len(arguments):
             arg = arguments[i]
 
-            # Try specialized handlers
             consumed, i = self.handle_working_directory_arg(arg, arguments, i, result)
             if consumed:
                 continue
@@ -105,7 +99,6 @@ class CliArgParser:
             if consumed:
                 continue
 
-            # Try execution handlers
             consumed, i, stop = self.handle_execution_arg(arg, arguments, i, result)
             if stop:
                 execute_index = i
@@ -113,10 +106,9 @@ class CliArgParser:
             if consumed:
                 continue
 
-            # Handle flags and generic arguments
             i = self.handle_generic_arg(arg, result, i)
 
-        # Capture remaining arguments as execute command
+        # Everything after ``-e/-x/--execute`` forms the command.
         if execute_index is not None and execute_index < len(arguments):
             remaining = arguments[execute_index:]
             if remaining:

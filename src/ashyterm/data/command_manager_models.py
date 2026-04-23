@@ -1,9 +1,5 @@
 # ashyterm/data/command_manager_models.py
-"""
-Data models for the Command Manager feature.
-Provides enhanced command definitions with form fields, execution options,
-and display customization.
-"""
+"""Command Manager data models and JSON-backed manager singleton."""
 
 import json
 import os
@@ -17,7 +13,6 @@ from typing import Any, Dict, List, Optional
 
 from ..settings.config import get_config_paths
 from ..utils.logger import get_logger
-from ..utils.translation_utils import _
 
 
 class ExecutionMode(Enum):
@@ -73,10 +68,7 @@ CATEGORY_ARCHIVE_COMMON_NAME = "archive.tar.xz"
 
 @dataclass(slots=True)
 class CommandFormField:
-    """
-    Represents a form field in a command's dialog.
-    Used to build dynamic command strings based on user input.
-    """
+    """One form input inside a command's dialog; feeds the template builder."""
 
     id: str  # Unique identifier for the field
     label: str  # Display label
@@ -118,10 +110,7 @@ class CommandFormField:
 
 @dataclass(slots=True)
 class CommandButton:
-    """
-    Represents a command button in the Command Manager.
-    Enhanced from the old CommandItem with execution options and form support.
-    """
+    """A user-visible command entry: template + fields + execution mode."""
 
     id: str  # Unique identifier
     name: str  # Display name
@@ -172,15 +161,7 @@ class CommandButton:
         return cls(**data)
 
     def build_command(self, field_values: Optional[Dict[str, Any]] = None) -> str:
-        """
-        Build the final command string by substituting field values.
-
-        Args:
-            field_values: Dictionary mapping field IDs to their values
-
-        Returns:
-            The constructed command string
-        """
+        """Expand ``command_template`` with values from ``field_values``."""
         if not field_values:
             field_values = {}
 
@@ -191,7 +172,6 @@ class CommandButton:
             template_key = form_field.template_key or form_field.id
             command = self._substitute_field(command, form_field, value, template_key)
 
-        # Clean up multiple spaces
         return " ".join(command.split())
 
     def _substitute_field(
@@ -249,444 +229,17 @@ def generate_id() -> str:
     return str(uuid.uuid4())[:8]
 
 
-# Built-in example commands
-def get_builtin_commands() -> List[CommandButton]:
-    """
-    Returns the built-in example commands.
-    These demonstrate the different features of the Command Manager.
-    """
-    return [
-        # Example 1: find command with form dialog
-        CommandButton(
-            id="builtin_find",
-            name=_("Find Files"),
-            description=_("Search for files and directories with various filters"),
-            command_template="find {path} {name_flag} {recursive_flag} {type_flag} {size_flag} {date_flag} {grep_flag}",
-            icon_name="system-search-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_(CATEGORY_FILE_OPERATIONS),
-            sort_order=1,
-            form_fields=[
-                CommandFormField(
-                    id="path",
-                    label=_("Search Path"),
-                    field_type=FieldType.DIRECTORY_PATH,
-                    default_value=".",
-                    placeholder=_("Directory to search in"),
-                    tooltip=_("Starting directory for the search"),
-                    required=True,
-                    template_key="path",
-                ),
-                CommandFormField(
-                    id="name_pattern",
-                    label=_("File Name Pattern"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("e.g., *.txt or report*"),
-                    tooltip=_("Pattern to match file names (supports wildcards)"),
-                    template_key="name_flag",
-                ),
-                CommandFormField(
-                    id="recursive",
-                    label=_("Recursive Search"),
-                    field_type=FieldType.SWITCH,
-                    default_value=True,
-                    tooltip=_("Search in subdirectories"),
-                    command_flag="-maxdepth 1",
-                    template_key="recursive_flag",
-                ),
-                CommandFormField(
-                    id="file_type",
-                    label=_("File Type"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="",
-                    options=[
-                        ("", _("Any")),
-                        ("-type f", _("Files only")),
-                        ("-type d", _("Directories only")),
-                        ("-type l", _("Symbolic links")),
-                    ],
-                    tooltip=_("Filter by file type"),
-                    template_key="type_flag",
-                ),
-                CommandFormField(
-                    id="size_filter",
-                    label=_("Size Filter"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("e.g., +100M or -1k"),
-                    tooltip=_(
-                        "Filter by size (+100M = larger than 100MB, -1k = smaller than 1KB)"
-                    ),
-                    template_key="size_flag",
-                ),
-                CommandFormField(
-                    id="date_value",
-                    label=_("Modified in Last N"),
-                    field_type=FieldType.NUMBER,
-                    default_value="",
-                    placeholder=_("e.g., 7"),
-                    tooltip=_(
-                        "Find files modified in the last N time units (leave empty to skip)"
-                    ),
-                    template_key="date_value",
-                    min_value=1,
-                ),
-                CommandFormField(
-                    id="date_unit",
-                    label=_("Time Unit"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="days",
-                    options=[
-                        ("minutes", _("Minutes")),
-                        ("hours", _("Hours")),
-                        ("days", _("Days")),
-                    ],
-                    tooltip=_("Time unit for the modified filter"),
-                    template_key="date_unit",
-                ),
-                CommandFormField(
-                    id="grep_pattern",
-                    label=_("Search in File Content"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("Text to search for inside files"),
-                    tooltip=_("Use grep to search within file contents"),
-                    template_key="grep_flag",
-                ),
-            ],
-        ),
-        # Example 2: Simple ls command with insert and execute
-        CommandButton(
-            id="builtin_ls",
-            name=_("List Files"),
-            description=_("List directory contents with details"),
-            command_template="ls -lah ",
-            icon_name="folder-open-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.INSERT_AND_EXECUTE,
-            cursor_position=0,  # Cursor at end so user can add path
-            is_builtin=True,
-            category=_(CATEGORY_FILE_OPERATIONS),
-            sort_order=2,
-        ),
-        # Compress - create archives
-        CommandButton(
-            id="builtin_compress",
-            name=_("Compress"),
-            description=_("Create compressed archives from files and folders"),
-            command_template="tar -cJvf {output} {input}",
-            icon_name="package-x-generic-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_(CATEGORY_FILE_OPERATIONS),
-            sort_order=3,
-            form_fields=[
-                CommandFormField(
-                    id="format",
-                    label=_("Format"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="tar.xz",
-                    options=[
-                        ("tar.xz", _("tar.xz (xz)")),
-                        ("tar.gz", _("tar.gz (gzip)")),
-                        ("tar.bz2", _("tar.bz2 (bzip2)")),
-                        ("tar.zst", _("tar.zst (zstd)")),
-                        ("tar.lzma", _("tar.lzma (lzma)")),
-                        ("tar", _("tar (no compression)")),
-                        ("zip", _("zip")),
-                    ],
-                    tooltip=_("Archive format to use"),
-                    template_key="format",
-                ),
-                CommandFormField(
-                    id="input",
-                    label=_("Files/Folders"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("file1 file2 folder/"),
-                    tooltip=_("Files and folders to compress"),
-                    required=True,
-                    template_key="input",
-                ),
-                CommandFormField(
-                    id="output",
-                    label=_("Archive Name"),
-                    field_type=FieldType.TEXT,
-                    default_value=CATEGORY_ARCHIVE_COMMON_NAME,
-                    placeholder=_(CATEGORY_ARCHIVE_COMMON_NAME),
-                    tooltip=_("Name of the archive file to create"),
-                    template_key="output",
-                ),
-            ],
-        ),
-        # Extract - extract archives
-        CommandButton(
-            id="builtin_extract",
-            name=_("Extract"),
-            description=_("Extract files from compressed archives"),
-            command_template="tar -xJvf {input}",
-            icon_name="extract-archive-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_(CATEGORY_FILE_OPERATIONS),
-            sort_order=4,
-            form_fields=[
-                CommandFormField(
-                    id="input",
-                    label=_("Archive File"),
-                    field_type=FieldType.FILE_PATH,
-                    default_value="",
-                    placeholder=_(CATEGORY_ARCHIVE_COMMON_NAME),
-                    tooltip=_("Archive file to extract"),
-                    required=True,
-                    template_key="input",
-                ),
-                CommandFormField(
-                    id="output",
-                    label=_("Destination"),
-                    field_type=FieldType.DIRECTORY_PATH,
-                    default_value="",
-                    placeholder=_("Leave empty for current directory"),
-                    tooltip=_("Destination directory (optional)"),
-                    template_key="output",
-                ),
-            ],
-        ),
-        # Systemctl - system service management
-        CommandButton(
-            id="builtin_systemctl",
-            name=_("Systemctl"),
-            description=_("Manage system services with systemctl"),
-            command_template="systemctl {action} {service}",
-            icon_name="system-run-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_("System"),
-            sort_order=1,
-            form_fields=[
-                CommandFormField(
-                    id="action",
-                    label=_("Action"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="status",
-                    options=[
-                        ("status", _("Status")),
-                        ("start", _("Start")),
-                        ("stop", _("Stop")),
-                        ("restart", _("Restart")),
-                        ("enable", _("Enable")),
-                        ("disable", _("Disable")),
-                        ("is-active", _("Is Active")),
-                        ("is-enabled", _("Is Enabled")),
-                        ("list-units --type=service", _("List Services")),
-                        (
-                            "list-units --type=service --state=running",
-                            _("List Running"),
-                        ),
-                        ("list-units --type=service --state=failed", _("List Failed")),
-                    ],
-                    tooltip=_("Action to perform on the service"),
-                    template_key="action",
-                ),
-                CommandFormField(
-                    id="service",
-                    label=_("Service Name"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("e.g., nginx, sshd, docker"),
-                    tooltip=_("Name of the service (leave empty for list actions)"),
-                    template_key="service",
-                ),
-                CommandFormField(
-                    id="user_scope",
-                    label=_("User Scope"),
-                    field_type=FieldType.SWITCH,
-                    default_value=False,
-                    tooltip=_("Operate on user services (--user flag)"),
-                    command_flag="--user",
-                    template_key="user_flag",
-                ),
-            ],
-        ),
-        # Journalctl - system journal viewer
-        CommandButton(
-            id="builtin_journalctl",
-            name=_("Journalctl"),
-            description=_("View system logs with journalctl"),
-            command_template="journalctl {unit_flag} {follow_flag} {lines_flag} {priority_flag} {since_flag}",
-            icon_name="document-open-recent-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_("System"),
-            sort_order=2,
-            form_fields=[
-                CommandFormField(
-                    id="unit",
-                    label=_("Unit/Service"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("e.g., nginx, sshd (optional)"),
-                    tooltip=_("Filter logs by service unit name"),
-                    template_key="unit_flag",
-                ),
-                CommandFormField(
-                    id="follow",
-                    label=_("Follow (live)"),
-                    field_type=FieldType.SWITCH,
-                    default_value=False,
-                    tooltip=_("Follow new log entries in real-time"),
-                    command_flag="-f",
-                    template_key="follow_flag",
-                ),
-                CommandFormField(
-                    id="lines",
-                    label=_("Number of Lines"),
-                    field_type=FieldType.NUMBER,
-                    default_value="",
-                    placeholder=_("e.g., 100 (empty for all)"),
-                    tooltip=_("Show last N lines (leave empty for all)"),
-                    template_key="lines_flag",
-                    min_value=1,
-                ),
-                CommandFormField(
-                    id="priority",
-                    label=_("Priority"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="",
-                    options=[
-                        ("", _("All")),
-                        ("-p 0", _("Emergency (0)")),
-                        ("-p 1", _("Alert (1)")),
-                        ("-p 2", _("Critical (2)")),
-                        ("-p 3", _("Error (3)")),
-                        ("-p 4", _("Warning (4)")),
-                        ("-p 5", _("Notice (5)")),
-                        ("-p 6", _("Info (6)")),
-                        ("-p 7", _("Debug (7)")),
-                    ],
-                    tooltip=_("Filter by log priority level"),
-                    template_key="priority_flag",
-                ),
-                CommandFormField(
-                    id="since",
-                    label=_("Since"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="",
-                    options=[
-                        ("", _("All time")),
-                        ("--since today", _("Today")),
-                        ("--since yesterday", _("Since Yesterday")),
-                        ("--since '1 hour ago'", _("Last Hour")),
-                        ("--since '24 hours ago'", _("Last 24 Hours")),
-                        ("--since '7 days ago'", _("Last 7 Days")),
-                        ("-b", _("Current Boot")),
-                        ("-b -1", _("Previous Boot")),
-                    ],
-                    tooltip=_("Filter logs by time period"),
-                    template_key="since_flag",
-                ),
-            ],
-        ),
-        # Pacman - Arch Linux package manager
-        CommandButton(
-            id="builtin_pacman",
-            name=_("Pacman"),
-            description=_("Arch Linux package manager operations"),
-            command_template="sudo pacman {action} {package}",
-            icon_name="system-software-install-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_("System"),
-            sort_order=3,
-            form_fields=[
-                CommandFormField(
-                    id="action",
-                    label=_("Action"),
-                    field_type=FieldType.DROPDOWN,
-                    default_value="-Sy",
-                    options=[
-                        ("-Sy", _("Install")),
-                        ("-R", _("Remove")),
-                        ("-Rs", _("Remove with Dependencies")),
-                        ("-Rns", _("Remove All (configs too)")),
-                        ("-Ss", _("Search")),
-                        ("-Si", _("Package Info")),
-                        ("-Qi", _("Local Package Info")),
-                        ("-Ql", _("List Package Files")),
-                        ("-Syu", _("System Update")),
-                        ("-Syyu", _("Force Refresh & Update")),
-                        ("-Sc", _("Clean Cache")),
-                        ("-Scc", _("Clean All Cache")),
-                        ("-Q", _("List Installed")),
-                        ("-Qe", _("List Explicitly Installed")),
-                        ("-Qdt", _("List Orphans")),
-                    ],
-                    tooltip=_("Package manager action to perform"),
-                    template_key="action",
-                ),
-                CommandFormField(
-                    id="package",
-                    label=_("Package Name"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("e.g., firefox, vim (optional for updates)"),
-                    tooltip=_("Package name for install/remove/search actions"),
-                    template_key="package",
-                ),
-            ],
-        ),
-        # ping - network connectivity test
-        CommandButton(
-            id="builtin_ping",
-            name=_("ping"),
-            description=_("Test network connectivity to a host"),
-            command_template="ping {count_flag} {target}",
-            icon_name="network-transmit-receive-symbolic",
-            display_mode=DisplayMode.ICON_AND_TEXT,
-            execution_mode=ExecutionMode.SHOW_DIALOG,
-            is_builtin=True,
-            category=_("Network"),
-            sort_order=1,
-            form_fields=[
-                CommandFormField(
-                    id="target",
-                    label=_("Host"),
-                    field_type=FieldType.TEXT,
-                    default_value="",
-                    placeholder=_("e.g., google.com, 8.8.8.8"),
-                    tooltip=_("IP address or hostname to ping"),
-                    required=True,
-                    template_key="target",
-                ),
-                CommandFormField(
-                    id="count",
-                    label=_("Count"),
-                    field_type=FieldType.NUMBER,
-                    default_value="",
-                    placeholder=_("e.g., 4 (empty for unlimited)"),
-                    tooltip=_("Number of ping packets to send (leave empty for continuous)"),
-                    template_key="count_flag",
-                    min_value=1,
-                ),
-            ],
-        ),
-    ]
+# Built-in example commands — data lives in command_manager_builtins.py.
+# Imported lazily so command_manager_builtins can itself import
+# from this module without a circular reference.
+def get_builtin_commands():
+    """Return the canned built-in commands (see command_manager_builtins)."""
+    from .command_manager_builtins import get_builtin_commands as _impl
+    return _impl()
 
 
 class CommandButtonManager:
-    """
-    Manages loading, saving, and accessing command buttons.
-    Handles both built-in and user-defined commands, with support for
-    customizing builtins and hiding commands.
-    """
+    """Load/save commands. Thread-safe singleton, merges builtins + user data."""
 
     _instance: Optional["CommandButtonManager"] = None
     _lock = threading.Lock()
@@ -739,19 +292,10 @@ class CommandButtonManager:
             self._builtin_commands = get_builtin_commands()
             self.logger.info(f"Loaded {len(self._builtin_commands)} built-in commands.")
 
-    # =========================================================================
-    # Private Helpers for JSON I/O (DRY pattern)
-    # =========================================================================
+    # ── JSON I/O helpers ─────────────────────────────────────
 
     def _save_json_file(self, filepath: Path, data: Any, label: str) -> None:
-        """
-        Generic helper to save JSON data to a file.
-
-        Args:
-            filepath: Path to the JSON file.
-            data: Data to serialize (must be JSON-serializable).
-            label: Label for logging (e.g., "custom commands").
-        """
+        """Atomic JSON write with ``os.fsync`` before rename."""
         try:
             filepath.parent.mkdir(parents=True, exist_ok=True)
             temp_file = filepath.with_suffix(".tmp")
@@ -765,17 +309,7 @@ class CommandButtonManager:
             self.logger.error(f"Failed to save {label}: {e}")
 
     def _load_json_file(self, filepath: Path, default: Any, label: str) -> Any:
-        """
-        Generic helper to load JSON data from a file.
-
-        Args:
-            filepath: Path to the JSON file.
-            default: Default value if file doesn't exist or parsing fails.
-            label: Label for logging (e.g., "custom commands").
-
-        Returns:
-            Loaded data or the default value.
-        """
+        """Load JSON or return ``default`` on missing/corrupt file."""
         if not filepath.exists():
             return default
 
@@ -788,12 +322,9 @@ class CommandButtonManager:
             self.logger.error(f"Failed to load {label}: {e}")
             return default
 
-    # =========================================================================
-    # Data Loading
-    # =========================================================================
+    # ── Data loading ─────────────────────────────────────────
 
     def _load_custom_commands(self):
-        """Load user-defined commands from file."""
         with self._data_lock:
             data = self._load_json_file(
                 self.custom_commands_file, [], "custom commands"
@@ -896,14 +427,7 @@ class CommandButtonManager:
             self._save_command_prefs()
 
     def _apply_customizations_to_builtin(self, cmd: CommandButton) -> CommandButton:
-        """Apply customizations to a builtin command if any exist.
-
-        Args:
-            cmd: The builtin CommandButton to potentially customize
-
-        Returns:
-            Either the customized command or the original command
-        """
+        """Return the user-customized copy of ``cmd`` if one exists."""
         if cmd.id in self._customized_builtins:
             customized = CommandButton.from_dict(self._customized_builtins[cmd.id])
             customized.is_builtin = True
@@ -934,18 +458,14 @@ class CommandButtonManager:
             return list(self._custom_commands)
 
     def get_command_by_id(self, command_id: str) -> Optional[CommandButton]:
-        """Get a command by its ID (with customizations applied for builtins)."""
+        """Lookup by ID (builtins first, custom second; customizations applied)."""
         with self._data_lock:
-            # Check builtins first
             for cmd in self._builtin_commands:
                 if cmd.id == command_id:
                     return self._apply_customizations_to_builtin(cmd)
-
-            # Check custom commands
             for cmd in self._custom_commands:
                 if cmd.id == command_id:
                     return cmd
-
             return None
 
     def get_categories(self) -> List[str]:

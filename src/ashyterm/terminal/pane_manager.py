@@ -116,12 +116,24 @@ class PaneManager:
         # Clear focus on now-single-child paned to avoid stale focus ref
         parent_paned.set_focus_child(None)
 
+        # Unparent survivor from parent_paned before handing it to
+        # grandparent — GTK 4.10+ asserts the new child has no parent.
+        if parent_paned.get_start_child() is survivor_pane:
+            parent_paned.set_start_child(None)
+        elif parent_paned.get_end_child() is survivor_pane:
+            parent_paned.set_end_child(None)
+
         # Move survivor from parent_paned → grandparent
         self._reparent_survivor(survivor_pane, parent_paned, grandparent)
         self.schedule_focus_restore(survivor_terminal)
 
     def close_pane(self, terminal: Vte.Terminal) -> None:
         """Close a single pane within a tab."""
+        # If a pane is currently zoomed in this tab, unzoom first so the
+        # split tree is consistent before we tear a pane out of it.
+        root = self._get_split_root(terminal)
+        if root is not None and getattr(root, "_ashy_zoom_saved", None) is not None:
+            self._restore_zoomed_pane(root)
         self.tm.terminal_manager.remove_terminal(terminal)
 
     def on_move_to_tab_callback(self, terminal: Vte.Terminal) -> None:
@@ -547,3 +559,107 @@ class PaneManager:
         self.find_terminals_recursive(widget, terminals)
         for term in terminals:
             self.tm.terminal_manager.remove_terminal(term)
+
+    # -- balance / zoom -------------------------------------------------------
+
+    def _get_split_root(self, terminal: Vte.Terminal) -> Optional[Adw.Bin]:
+        """Return the Adw.Bin that hosts this terminal's split tree.
+
+        Each tab owns a ``content_paned`` whose start child is an
+        ``Adw.Bin`` wrapping either a single pane or a ``Gtk.Paned``
+        tree. We walk up from ``terminal`` until we hit that Bin so the
+        caller can read or replace the whole split subtree.
+        """
+        widget: Optional[Gtk.Widget] = terminal
+        while widget is not None:
+            parent = widget.get_parent()
+            if isinstance(parent, Adw.Bin):
+                grandparent = parent.get_parent()
+                if isinstance(grandparent, Gtk.Paned) and getattr(
+                    grandparent, "get_start_child", lambda: None
+                )() is parent:
+                    return parent
+            widget = parent
+        return None
+
+    def balance_panes(self, terminal: Vte.Terminal) -> None:
+        """Redistribute every ``Gtk.Paned`` in this tab to 50/50."""
+        root = self._get_split_root(terminal)
+        if root is None:
+            return
+        subtree = root.get_child()
+        if not isinstance(subtree, Gtk.Paned):
+            return  # Single pane, nothing to balance.
+
+        def _walk(node: Gtk.Widget) -> None:
+            if isinstance(node, Gtk.Paned):
+                GLib.idle_add(self.set_paned_position_from_ratio, node, 0.5)
+                if start := node.get_start_child():
+                    _walk(start)
+                if end := node.get_end_child():
+                    _walk(end)
+
+        _walk(subtree)
+
+    def toggle_zoom_pane(self, terminal: Vte.Terminal) -> None:
+        """Maximize the focused pane or restore the split layout.
+
+        Zoom state lives on the hosting ``Adw.Bin``: we save the full
+        split subtree + the slot the hoisted pane came from. A second
+        call on any terminal in the zoomed tab restores the layout.
+        """
+        root = self._get_split_root(terminal)
+        if root is None:
+            return
+
+        saved_subtree = getattr(root, "_ashy_zoom_saved", None)
+        if saved_subtree is not None:
+            self._restore_zoomed_pane(root)
+            self.schedule_focus_restore(terminal)
+            return
+
+        subtree = root.get_child()
+        if not isinstance(subtree, Gtk.Paned):
+            return  # Single pane — zoom is a no-op.
+
+        pane_to_hoist, _parent_paned = self.find_pane_and_parent(terminal)
+        if not isinstance(pane_to_hoist, Adw.ToolbarView):
+            return
+        parent = pane_to_hoist.get_parent()
+        if not isinstance(parent, Gtk.Paned):
+            return
+
+        is_start = parent.get_start_child() is pane_to_hoist
+        parent.set_focus_child(None)
+        if is_start:
+            parent.set_start_child(None)
+        else:
+            parent.set_end_child(None)
+
+        root.set_child(None)
+        root._ashy_zoom_saved = subtree
+        root._ashy_zoom_slot_parent = parent
+        root._ashy_zoom_slot_is_start = is_start
+        root.set_child(pane_to_hoist)
+        self.schedule_focus_restore(terminal)
+
+    def _restore_zoomed_pane(self, root: Adw.Bin) -> None:
+        """Undo :meth:`toggle_zoom_pane`: return the pane to its slot."""
+        hoisted = root.get_child()
+        saved_subtree = root._ashy_zoom_saved
+        slot_parent = getattr(root, "_ashy_zoom_slot_parent", None)
+        slot_is_start = getattr(root, "_ashy_zoom_slot_is_start", True)
+
+        root.set_child(None)
+        if isinstance(hoisted, Adw.ToolbarView) and isinstance(
+            slot_parent, Gtk.Paned
+        ):
+            if slot_is_start:
+                slot_parent.set_start_child(hoisted)
+            else:
+                slot_parent.set_end_child(hoisted)
+
+        root.set_child(saved_subtree)
+        root._ashy_zoom_saved = None
+        root._ashy_zoom_slot_parent = None
+        root._ashy_zoom_slot_is_start = True

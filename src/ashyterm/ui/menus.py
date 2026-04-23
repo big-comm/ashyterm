@@ -212,7 +212,7 @@ class MainApplicationMenu:
                 )
                 box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, hexpand=True)
                 button.set_child(box)
-                action_label = Gtk.Label(label=item["label"], hexpand=True)
+                action_label = Gtk.Label(label=item["label"], xalign=0.0, hexpand=True)
                 box.append(action_label)
                 accels = app.get_accels_for_action(item["action"])
                 if accels:
@@ -353,4 +353,8 @@ def create_terminal_menu(
         Gio.MenuItem.new(_("Split Top/Bottom"), "win.split-vertical")
     )
     menu.append_section(None, split_section)
+
+    save_section = Gio.Menu()
+    save_section.append(_("Save Output to File…"), "win.save-output")
+    menu.append_section(None, save_section)
     return menu

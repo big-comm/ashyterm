@@ -17,7 +17,7 @@ def apply_inline_css(
     Returns the provider so callers can later remove it if needed.
     """
     provider = Gtk.CssProvider()
-    provider.load_from_data(css.encode("utf-8"))
+    provider.load_from_string(css)
     Gtk.StyleContext.add_provider_for_display(
         display or Gdk.Display.get_default(), provider, priority,
     )

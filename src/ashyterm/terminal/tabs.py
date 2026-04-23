@@ -4,7 +4,7 @@ import re
 import threading
 import weakref
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, List, Optional
+from typing import TYPE_CHECKING, Callable, List, Optional
 
 import gi
 
@@ -12,13 +12,12 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 gi.require_version("Pango", "1.0")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango, Vte
+from gi.repository import Adw, GLib, Gtk, Pango, Vte
 
-from ..helpers import create_themed_popover_menu
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager as SettingsManagerType
-from ..utils.accessibility import set_label as a11y_label, set_description as a11y_desc
-from ..utils.icons import icon_button, icon_image
+from ..utils.accessibility import set_label as a11y_label
+from ..utils.icons import icon_button
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
 from .banner_manager import BannerManager
@@ -26,7 +25,27 @@ from .fm_integration import FileManagerIntegration
 from .manager import TerminalManager
 from .pane_manager import PaneManager
 from .scroll_handler import ScrollHandler
+from .tab_close import (
+    any_terminal_has_foreground_process as _any_terminal_has_foreground_process_impl,
+    build_close_confirmation_dialog as _build_close_confirmation_dialog_impl,
+    has_stable_running_process as _has_stable_running_process_impl,
+    process_terminals_for_close as _process_terminals_for_close_impl,
+)
+from .tab_context_menu import show_tab_context_menu as _show_tab_context_menu
 from .tab_groups import TabGroupManager
+from .tab_groups_controller import TabGroupsController
+from .tab_move_controller import TabMoveController
+from .tab_restore_controller import TabRestoreController
+from .tab_titles import (
+    append_terminal_count as _append_terminal_count_impl,
+    build_display_title as _build_display_title_impl,
+)
+from .tab_widget import (
+    apply_tab_color as _apply_tab_color_impl,
+    contrasting_text_for_rgba as _contrasting_text_for_rgba_impl,
+    create_tab_widget as _create_tab_widget_impl,
+    generate_unique_sftp_name as _generate_unique_sftp_name_impl,
+)
 
 if TYPE_CHECKING:
     from ..filemanager.manager import FileManager
@@ -61,7 +80,7 @@ def _create_terminal_pane(
     # header_box has .header-bar class, which is targeted by ThemeEngine CSS for transparency
 
     # Title label
-    title_label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.END)
+    title_label = Gtk.Label(label=title, ellipsize=Pango.EllipsizeMode.END, xalign=0.0)
     title_label.set_hexpand(True)
     title_label.set_halign(Gtk.Align.START)
     header_box.append(title_label)
@@ -93,7 +112,6 @@ def _create_terminal_pane(
     toolbar_view.title_label = title_label
     toolbar_view.move_button = move_to_tab_button
     toolbar_view.close_button = close_button
-    # MODIFIED: Store a reference to the header box for live updates
     toolbar_view.header_box = header_box
 
     return toolbar_view
@@ -108,16 +126,6 @@ class TabManager:
         scrolled_tab_bar: Gtk.ScrolledWindow,
         on_tab_count_changed: Optional[Callable[[], None]] = None,
     ):
-        """
-        Initializes the TabManager.
-
-        Args:
-            terminal_manager: The central manager for terminal instances.
-            on_quit_callback: A function to call when the last tab closes.
-            on_detach_tab_callback: A function to call to detach a tab into a new window.
-            scrolled_tab_bar: The ScrolledWindow containing the tab bar.
-            on_tab_count_changed: A function to call when the number of tabs changes.
-        """
         self.logger = get_logger("ashyterm.tabs.manager")
         self.terminal_manager = terminal_manager
         self.on_quit_application = on_quit_callback
@@ -136,12 +144,10 @@ class TabManager:
             Adw.ViewStackPage, "FileManager"
         ] = weakref.WeakKeyDictionary()
         self.active_tab: Optional[Gtk.Box] = None
-        self._tab_being_moved: Optional[Gtk.Box] = None  # Track tab in move mode
-        self._drop_target_tab: Optional[Gtk.Box] = None  # Tab under cursor during move
-        self._drop_side: str = (
-            "left"  # "left" or "right" - which side of target to drop
-        )
-        self._group_being_moved = None  # TabGroup being moved (or None)
+        # Tab-move mode (drag-reorder) state lives on the controller;
+        # the backing properties below keep legacy internal references
+        # working until every call site is migrated.
+        self.move_controller = TabMoveController(self)
 
         # Set up tab bar for receiving move drop events
         self._setup_tab_bar_move_handlers()
@@ -150,31 +156,21 @@ class TabManager:
         self._cleanup_lock = threading.Lock()
         self._last_focused_terminal = None
 
-        # Tab groups
+        # Tab groups — data model + UI controller
         self.group_manager = TabGroupManager()
-        # Reuse CssProvider per color to avoid creating a new one on every
-        # tab-bar rebuild (which happens on every group mutation).
-        self._group_chip_providers: Dict[str, Gtk.CssProvider] = {}
-        self._tab_border_providers: Dict[str, Gtk.CssProvider] = {}
+        self.group_controller = TabGroupsController(self)
 
         # Delegates
         self.scroll_handler = ScrollHandler(self)
         self.fm_handler = FileManagerIntegration(self)
         self.pane_handler = PaneManager(self)
         self.banner_handler = BannerManager(self)
+        self.restore_controller = TabRestoreController(self)
 
         self.terminal_manager.set_terminal_exit_handler(
             self._on_terminal_process_exited
         )
-        # MODIFIED: Listen for settings changes to update pane headers live
-        self.terminal_manager.settings_manager.add_change_listener(
-            self._on_setting_changed
-        )
         self.logger.info("Tab manager initialized with custom tab bar")
-
-    def _on_setting_changed(self, key: str, old_value, new_value):
-        """Callback for settings changes to update UI elements live."""
-        pass
 
     def _find_panes_recursive(self, widget, panes_list: List[Adw.ToolbarView]):
         """Recursively find all Adw.ToolbarView panes within a container."""
@@ -186,77 +182,48 @@ class TabManager:
         # controllers added in _create_tab_widget. No tab bar level handlers needed
         # since we handle everything at the tab level.
 
+    # ── Tab-move delegators ─────────────────────────────────
+    # Move-mode state + logic lives on ``self.move_controller``.
+
     def _update_move_highlight(self, target_tab: Gtk.Box, side: str):
-        """Update the visual highlight for the drop target."""
-        self._clear_tab_drop_highlights()
-        if target_tab and side:
-            self._drop_target_tab = target_tab
-            self._drop_side = side
-            if side == "left":
-                target_tab.add_css_class("tab-drop-left")
-            else:
-                target_tab.add_css_class("tab-drop-right")
+        self.move_controller.update_highlight(target_tab, side)
 
     def _clear_tab_drop_highlights(self):
-        """Remove drop target highlights from all tabs."""
-        self._drop_target_tab = None
-        for tab in self.tabs:
-            tab.remove_css_class("tab-drop-target")
-            tab.remove_css_class("tab-drop-left")
-            tab.remove_css_class("tab-drop-right")
+        self.move_controller.clear_highlights()
 
     def _perform_tab_move(self):
-        """Perform the actual tab move based on current drop target and side."""
-        if not self._tab_being_moved or not self._drop_target_tab:
-            return
+        self.move_controller.perform()
 
-        moving_tab = self._tab_being_moved
-        target_tab = self._drop_target_tab
-        side = self._drop_side
+    @property
+    def _tab_being_moved(self) -> Optional[Gtk.Box]:
+        return self.move_controller.moving_tab
 
-        if moving_tab == target_tab:
-            return
+    @_tab_being_moved.setter
+    def _tab_being_moved(self, value: Optional[Gtk.Box]) -> None:
+        # Legacy writes from inside tabs.py still need to flow into the
+        # controller; overall state lifecycle is owned there.
+        self.move_controller._moving = value
 
-        # Get current indices
-        moving_idx = self.tabs.index(moving_tab)
-        target_idx = self.tabs.index(target_tab)
+    @property
+    def _drop_target_tab(self) -> Optional[Gtk.Box]:
+        return self.move_controller.drop_target
 
-        # Calculate final position
-        if side == "left":
-            new_idx = target_idx
-        else:
-            new_idx = target_idx + 1
+    @_drop_target_tab.setter
+    def _drop_target_tab(self, value: Optional[Gtk.Box]) -> None:
+        self.move_controller._drop_target = value
 
-        # Adjust if moving from before the target
-        if moving_idx < new_idx:
-            new_idx -= 1
+    @property
+    def _drop_side(self) -> str:
+        return self.move_controller.drop_side
 
-        # Remove tab from its current group
-        tab_id = self.get_tab_id(moving_tab)
-        self.group_manager.remove_tab_from_group(tab_id)
-        moving_tab.remove_css_class("in-group")
-
-        # Move in list only if position actually changes
-        if moving_idx != new_idx:
-            self.tabs.remove(moving_tab)
-            self.tabs.insert(new_idx, moving_tab)
-
-        # Auto-join group if dropped next to a grouped tab
-        target_tab_id = self.get_tab_id(target_tab)
-        target_group = self.group_manager.get_group_for_tab(target_tab_id)
-        if target_group:
-            self.group_manager.add_tab_to_group(target_group.id, tab_id)
-
-        self._rebuild_tab_bar_order()
-
-        self.logger.info(
-            f"Tab '{moving_tab.label_widget.get_text()}' moved from {moving_idx} to {new_idx}"
-        )
+    @_drop_side.setter
+    def _drop_side(self, value: str) -> None:
+        self.move_controller._drop_side = value
 
     def cancel_tab_move_if_active(self) -> bool:
         """Cancel the tab move operation if one is active. Returns True if cancelled."""
-        if self._group_being_moved is not None:
-            self._cancel_group_move()
+        if self.group_controller.is_moving_group():
+            self.group_controller.cancel_move()
             return True
         if self._tab_being_moved is not None:
             self._cancel_tab_move()
@@ -286,414 +253,24 @@ class TabManager:
                 return tab
         return None
 
-    def _ensure_group_tabs_contiguous(self, group_id: str) -> None:
-        """Move group tabs together in self.tabs so they are contiguous."""
-        group = self.group_manager.get_group(group_id)
-        if not group or len(group.tab_ids) < 2:
-            return
-        group_tab_id_set = set(group.tab_ids)
-        # Find the first group tab position in self.tabs
-        first_idx = next(
-            (i for i, t in enumerate(self.tabs)
-             if self.get_tab_id(t) in group_tab_id_set),
-            None,
-        )
-        if first_idx is None:
-            return
-        # Collect and remove non-contiguous group tabs
-        insert_pos = first_idx + 1
-        i = insert_pos
-        while i < len(self.tabs):
-            tab_id = self.get_tab_id(self.tabs[i])
-            if tab_id in group_tab_id_set:
-                # Already in place, advance insert position
-                insert_pos = i + 1
-                i += 1
-            elif insert_pos <= i:
-                i += 1
-            else:
-                i += 1
-        # Simpler approach: extract all group tabs, remove them, reinsert contiguously
-        group_tabs = [t for t in self.tabs if self.get_tab_id(t) in group_tab_id_set]
-        for t in group_tabs:
-            self.tabs.remove(t)
-        # Insert at the position of the first group tab (or end if nothing before)
-        insert_at = min(first_idx, len(self.tabs))
-        for j, t in enumerate(group_tabs):
-            self.tabs.insert(insert_at + j, t)
+    # ── Delegators to TabGroupsController ────────────────────
+    # Public API kept so external callers (window_actions, state
+    # restore, context-menu handlers) don't need to know about the
+    # split.
 
-    def _next_group_name(self) -> str:
-        """Generate a unique sequential group name: Grupo A, B, ..., Z, 1A, 1B, ..."""
-        existing_names = {g.name for g in self.group_manager.groups}
-        prefix_num = 0
-        while True:
-            for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-                prefix = f"{prefix_num}" if prefix_num > 0 else ""
-                candidate = f"{_('Group')} {prefix}{letter}"
-                if candidate not in existing_names:
-                    return candidate
-            prefix_num += 1
-
-    def create_group_from_tabs(self, tab_widgets: List[Gtk.Box], name: str = "") -> None:
-        """Create a new group for the given tabs."""
-        tab_ids = [self.get_tab_id(t) for t in tab_widgets]
-        if not name:
-            name = self._next_group_name()
-        group = self.group_manager.create_group(name, initial_tab_ids=tab_ids)
-        self._ensure_group_tabs_contiguous(group.id)
-        self._rebuild_tab_bar_order()
-        self.logger.info(f"Created group '{group.name}' with {len(tab_ids)} tab(s)")
+    def create_group_from_tabs(
+        self, tab_widgets: List[Gtk.Box], name: str = ""
+    ) -> None:
+        self.group_controller.create_group_from_tabs(tab_widgets, name)
 
     def create_group_from_active_tab(self) -> None:
-        """Create a new group containing only the active tab."""
-        if self.active_tab:
-            self.create_group_from_tabs([self.active_tab])
+        self.group_controller.create_group_from_active_tab()
 
     def ungroup_active_tab(self) -> None:
-        """Remove the active tab from its group."""
-        if not self.active_tab:
-            return
-        tab_id = self.get_tab_id(self.active_tab)
-        self.group_manager.remove_tab_from_group(tab_id)
-        self.active_tab.remove_css_class("in-group")
-        self._rebuild_tab_bar_order()
+        self.group_controller.ungroup_active_tab()
 
-    def _create_group_chip(self, group) -> Gtk.Box:
-        """Build the Chrome-style chip widget for a group header in the tab bar."""
-        chip = Gtk.Box(spacing=0)
-        chip.add_css_class("tab-group-chip")
-        if group.is_collapsed:
-            chip.add_css_class("collapsed")
-        if not group.name:
-            chip.add_css_class("unnamed")
-
-        # Reuse a provider per color; otherwise we leak one provider per
-        # chip per rebuild, and the tab bar rebuilds on every group edit.
-        chip.get_style_context().add_provider(
-            self._get_chip_provider(group.color),
-            Gtk.STYLE_PROVIDER_PRIORITY_USER,
-        )
-
-        # Group name label with tab count
-        tab_count = len(group.tab_ids)
-        display_name = f"{group.name} ({tab_count})" if group.name else f"({tab_count})"
-        label = Gtk.Label(label=display_name)
-        label.add_css_class("group-name-label")
-        chip.append(label)
-
-        # Tooltip with full name and count
-        chip.set_tooltip_text(display_name)
-
-        # Click gesture to toggle collapse
-        click = Gtk.GestureClick.new()
-        click.connect("pressed", self._on_group_chip_clicked, group)
-        chip.add_controller(click)
-
-        # Right-click for context menu
-        right_click = Gtk.GestureClick.new()
-        right_click.set_button(Gdk.BUTTON_SECONDARY)
-        right_click.connect("pressed", self._on_group_chip_right_click, chip, group)
-        chip.add_controller(right_click)
-
-        chip._group_id = group.id
-        return chip
-
-    @staticmethod
-    def _get_contrasting_text_for_hex(hex_color: str) -> str:
-        """Return black or white text based on hex background color luminance."""
-        try:
-            h = hex_color.lstrip("#")
-            r, g, b = int(h[0:2], 16) / 255.0, int(h[2:4], 16) / 255.0, int(h[4:6], 16) / 255.0
-            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-            return "#000000" if luminance > 0.5 else "#FFFFFF"
-        except (ValueError, IndexError):
-            return "#000000"
-
-    def _get_chip_provider(self, color: str) -> Gtk.CssProvider:
-        """Return a cached CssProvider for a group-chip color."""
-        cached = self._group_chip_providers.get(color)
-        if cached is not None:
-            return cached
-        text_color = self._get_contrasting_text_for_hex(color)
-        provider = Gtk.CssProvider()
-        css = (
-            ".tab-group-chip {"
-            f" background-color: {color};"
-            f" color: {text_color};"
-            " }"
-        )
-        provider.load_from_data(css.encode("utf-8"))
-        self._group_chip_providers[color] = provider
-        return provider
-
-    def _get_tab_border_provider(self, color: str) -> Gtk.CssProvider:
-        """Return a cached CssProvider for the in-group tab bottom border."""
-        cached = self._tab_border_providers.get(color)
-        if cached is not None:
-            return cached
-        provider = Gtk.CssProvider()
-        css = f".custom-tab-button.in-group {{ border-bottom-color: {color}; }}"
-        provider.load_from_data(css.encode("utf-8"))
-        self._tab_border_providers[color] = provider
-        return provider
-
-    def _on_group_chip_clicked(self, _gesture, _n, _x, _y, group):
-        """Toggle group collapsed state and rebuild tab bar."""
-        # If in group move mode, clicking a chip acts as drop target
-        if self._group_being_moved is not None:
-            if group.id != self._group_being_moved.id:
-                groups = self.group_manager.groups
-                target_idx = next(
-                    (i for i, g in enumerate(groups) if g.id == group.id), -1
-                )
-                if target_idx >= 0:
-                    self.group_manager.move_group(self._group_being_moved.id, target_idx)
-                    self._rebuild_tab_bar_order()
-            self._cancel_group_move()
-            return
-        # Cancel tab move mode if active
-        if self._tab_being_moved is not None:
-            self._cancel_tab_move()
-            return
-        will_be_collapsed = self.group_manager.toggle_collapsed(group.id)
-        # If we're collapsing the group that owns the active tab, switch
-        # focus to a visible tab so the user doesn't lose keyboard input
-        # into an invisible page.
-        if will_be_collapsed and self.active_tab is not None:
-            active_tab_id = self.get_tab_id(self.active_tab)
-            if active_tab_id in group.tab_ids:
-                self._focus_first_visible_tab_outside(group.tab_ids)
-        self._rebuild_tab_bar_order()
-
-    def _focus_first_visible_tab_outside(self, excluded_tab_ids) -> None:
-        """Activate the first tab not in the excluded id collection."""
-        excluded = set(excluded_tab_ids)
-        for candidate in self.tabs:
-            if self.get_tab_id(candidate) not in excluded:
-                self.set_active_tab(candidate)
-                return
-
-    def _on_group_chip_right_click(self, _gesture, _n, x, y, chip, group):
-        """Show context menu on group chip."""
-        menu = Gio.Menu()
-        menu.append(_("New Tab in Group"), "win.new-tab-in-group")
-
-        edit_section = Gio.Menu()
-        edit_section.append(_("Rename Group"), "win.rename-group")
-        edit_section.append(_("Group Color…"), "win.group-color")
-        edit_section.append(_("Move Group"), "win.move-group")
-        menu.append_section(None, edit_section)
-
-        action_section = Gio.Menu()
-        action_section.append(_("Ungroup"), "win.ungroup-all")
-        action_section.append(_("Close Group"), "win.close-group")
-        menu.append_section(None, action_section)
-
-        popover = create_themed_popover_menu(menu, chip)
-
-        action_group = Gio.SimpleActionGroup()
-
-        new_tab_action = Gio.SimpleAction.new("new-tab-in-group", None)
-        new_tab_action.connect("activate", lambda _a, _p, g=group: self._new_tab_in_group(g))
-        action_group.add_action(new_tab_action)
-
-        rename_action = Gio.SimpleAction.new("rename-group", None)
-        rename_action.connect("activate", lambda _a, _p, g=group: self._rename_group_dialog(g))
-        action_group.add_action(rename_action)
-
-        color_action = Gio.SimpleAction.new("group-color", None)
-        color_action.connect(
-            "activate",
-            lambda _a, _p, g=group, pop=popover: self._pick_group_color(g, pop),
-        )
-        action_group.add_action(color_action)
-
-        move_action = Gio.SimpleAction.new("move-group", None)
-        move_action.connect(
-            "activate",
-            lambda _a, _p, g=group: GLib.idle_add(self._start_group_move, g),
-        )
-        action_group.add_action(move_action)
-
-        ungroup_action = Gio.SimpleAction.new("ungroup-all", None)
-        ungroup_action.connect("activate", lambda _a, _p, g=group: self._ungroup_all(g))
-        action_group.add_action(ungroup_action)
-
-        close_action = Gio.SimpleAction.new("close-group", None)
-        close_action.connect("activate", lambda _a, _p, g=group: self._close_group(g))
-        action_group.add_action(close_action)
-
-        popover.insert_action_group("win", action_group)
-
-        rect = Gdk.Rectangle()
-        rect.x = int(x)
-        rect.y = int(y)
-        popover.set_pointing_to(rect)
-        popover.popup()
-
-    def _start_group_move(self, group) -> None:
-        """Enter group move mode — group chip + tabs shown as ghost."""
-        self._group_being_moved = group
-        self.tab_bar_box.add_css_class("tab-bar-move-mode")
-        # Apply ghost style to group chip and its tabs
-        child = self.tab_bar_box.get_first_child()
-        while child:
-            if hasattr(child, "_group_id") and child._group_id == group.id:
-                child.add_css_class("tab-moving")
-            child = child.get_next_sibling()
-        for tab_id in group.tab_ids:
-            tab = self._get_tab_by_id(tab_id)
-            if tab:
-                tab.add_css_class("tab-moving")
-        # Hide close buttons
-        for tab in self.tabs:
-            close_btn = self._get_tab_close_button(tab)
-            if close_btn:
-                close_btn.set_opacity(0)
-                close_btn.set_sensitive(False)
-        self.logger.info(f"Group move started for: {group.name}")
-
-    def _cancel_group_move(self) -> None:
-        """Cancel group move mode and restore visuals."""
-        if self._group_being_moved is None:
-            return
-        group = self._group_being_moved
-        self.tab_bar_box.remove_css_class("tab-bar-move-mode")
-        self._clear_tab_drop_highlights()
-        # Remove ghost from chip
-        child = self.tab_bar_box.get_first_child()
-        while child:
-            if hasattr(child, "_group_id") and child._group_id == group.id:
-                child.remove_css_class("tab-moving")
-            child = child.get_next_sibling()
-        # Remove ghost from tabs
-        for tab_id in group.tab_ids:
-            tab = self._get_tab_by_id(tab_id)
-            if tab:
-                tab.remove_css_class("tab-moving")
-        # Restore close buttons
-        for tab in self.tabs:
-            close_btn = self._get_tab_close_button(tab)
-            if close_btn:
-                close_btn.set_opacity(1)
-                close_btn.set_sensitive(True)
-        self._group_being_moved = None
-
-    def _perform_group_move(self, target_tab: Gtk.Box, side: str) -> None:
-        """Move all group tabs together in self.tabs to a new position."""
-        group = self._group_being_moved
-        if not group:
-            return
-
-        target_tab_id = self.get_tab_id(target_tab)
-        if target_tab_id in group.tab_ids:
-            return
-
-        # Collect group tabs in their current self.tabs order
-        group_tab_id_set = set(group.tab_ids)
-        group_tabs = [t for t in self.tabs if self.get_tab_id(t) in group_tab_id_set]
-
-        # Remove group tabs from self.tabs
-        for t in group_tabs:
-            self.tabs.remove(t)
-
-        # Find target position after removal
-        target_idx = self.tabs.index(target_tab)
-        insert_idx = target_idx if side == "left" else target_idx + 1
-
-        # Insert group tabs at the new position
-        for i, t in enumerate(group_tabs):
-            self.tabs.insert(insert_idx + i, t)
-
-        self._rebuild_tab_bar_order()
-        self.logger.info(f"Group '{group.name}' moved to position {insert_idx}")
-
-    def _new_tab_in_group(self, group) -> None:
-        """Create a new local tab and add it to the group."""
-        terminal = self.create_local_tab()
-        if terminal and self.tabs:
-            new_tab = self.tabs[-1]
-            tab_id = self.get_tab_id(new_tab)
-            self.group_manager.add_tab_to_group(group.id, tab_id)
-            self._ensure_group_tabs_contiguous(group.id)
-            self._rebuild_tab_bar_order()
-
-    def _pick_group_color(self, group, popover: Gtk.Popover) -> None:
-        """Open color chooser dialog for a group (same as tab color)."""
-        popover.popdown()
-        dialog = Gtk.ColorDialog(title=_("Group Color"))
-        dialog.choose_rgba(
-            self.view_stack.get_root(), None, None, self._on_group_color_chosen, group
-        )
-
-    def _on_group_color_chosen(self, dialog, result, group) -> None:
-        """Handle color chooser result for a group."""
-        try:
-            color = dialog.choose_rgba_finish(result)
-        except GLib.Error:
-            return
-        r, g, b = int(color.red * 255), int(color.green * 255), int(color.blue * 255)
-        hex_color = f"#{r:02x}{g:02x}{b:02x}"
-        self.group_manager.set_group_color(group.id, hex_color)
-        self._rebuild_tab_bar_order()
-
-    def _close_group(self, group) -> None:
-        """Close all tabs in a group (Chrome 'Close group' behavior)."""
-        tabs_to_close = []
-        for tab_id in list(group.tab_ids):
-            tab = self._get_tab_by_id(tab_id)
-            if tab:
-                tabs_to_close.append(tab)
-        self.group_manager.delete_group(group.id)
-        for tab in tabs_to_close:
-            self._on_tab_close_button_clicked(None, tab)
-
-    def _rename_group_dialog(self, group) -> None:
-        """Show dialog to rename a group."""
-        dialog = Adw.AlertDialog(
-            heading=_("Rename Group"),
-            body=_("Enter a new name for the group:"),
-            close_response="cancel",
-        )
-        entry = Gtk.Entry(text=group.name, activates_default=True)
-        dialog.set_extra_child(entry)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("rename", _("Rename"))
-        dialog.set_response_appearance("rename", Adw.ResponseAppearance.SUGGESTED)
-        dialog.set_default_response("rename")
-        dialog.connect(
-            "response",
-            lambda d, r, e=entry, g=group: self._on_rename_group_response(r, e, g),
-        )
-        dialog.present(self.view_stack.get_root())
-
-    def _on_rename_group_response(self, response: str, entry: Gtk.Entry, group) -> None:
-        if response != "rename":
-            return
-        new_name = entry.get_text().strip()
-        self.group_manager.rename_group(group.id, new_name)
-        self._rebuild_tab_bar_order()
-
-    def _ungroup_all(self, group) -> None:
-        """Remove all tabs from a group (tabs remain open)."""
-        for tab_id in list(group.tab_ids):
-            tab = self._get_tab_by_id(tab_id)
-            if tab:
-                tab.remove_css_class("in-group")
-        self.group_manager.delete_group(group.id)
-        self._rebuild_tab_bar_order()
-
-    def _apply_group_border_color(self, tab_widget: Gtk.Box, color: str) -> None:
-        """Apply a group color as bottom border indicator."""
-        style_context = tab_widget.get_style_context()
-        previous = getattr(tab_widget, "_group_border_provider", None)
-        provider = self._get_tab_border_provider(color)
-        if previous is provider:
-            return  # Nothing to do; already applied.
-        if previous is not None:
-            style_context.remove_provider(previous)
-        style_context.add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-        tab_widget._group_border_provider = provider
+    def _ensure_group_tabs_contiguous(self, group_id: str) -> None:
+        self.group_controller.ensure_contiguous(group_id)
 
     def get_view_stack(self) -> Adw.ViewStack:
         return self.view_stack
@@ -792,54 +369,19 @@ class TabManager:
         return terminal
 
     def _generate_unique_sftp_name(self, base_session_name: str) -> str:
-        base_title = f"SFTP-{base_session_name}"
-        existing_titles = []
-        for tab in self.tabs:
-            session_item = getattr(tab, "session_item", None)
-            if isinstance(session_item, SessionItem) and session_item.name.startswith(
-                base_title
-            ):
-                existing_titles.append(session_item.name)
+        existing_names = (
+            getattr(tab, "session_item", None) and tab.session_item.name
+            for tab in self.tabs
+        )
+        return _generate_unique_sftp_name_impl(
+            base_session_name,
+            existing_names=(name for name in existing_names if name),
+        )
 
-        if base_title not in existing_titles:
-            return base_title
-
-        suffix = 1
-        while True:
-            candidate = f"{base_title}({suffix})"
-            if candidate not in existing_titles:
-                return candidate
-            suffix += 1
-
-    def _scroll_to_widget(self, widget: Gtk.Widget) -> None:
-        self.scroll_handler.scroll_to_widget(widget)
-
+    # Kept because tab_restore_controller reaches into it when
+    # recreating saved layouts.
     def _replace_sw_scroll_controller(self, sw: Gtk.ScrolledWindow) -> None:
         self.scroll_handler.replace_sw_scroll_controller(sw)
-
-    def _on_terminal_scroll(self, controller, dx, dy):
-        return self.scroll_handler.on_terminal_scroll(controller, dx, dy)
-
-    def _handle_scroll_zoom(self, dy):
-        self.scroll_handler._handle_scroll_zoom(dy)
-
-    def _get_scroll_input_source(self, controller):
-        return self.scroll_handler._get_scroll_input_source(controller)
-
-    def _calculate_scroll_amount(self, dy, vadjustment, source):
-        return self.scroll_handler._calculate_scroll_amount(dy, vadjustment, source)
-
-    def _track_kinetic_scroll(self, sw, source, scroll_amount):
-        self.scroll_handler._track_kinetic_scroll(sw, source, scroll_amount)
-
-    def _start_kinetic_deceleration(self, sw):
-        return self.scroll_handler._start_kinetic_deceleration(sw)
-
-    def _kinetic_tick(self, sw):
-        return self.scroll_handler._kinetic_tick(sw)
-
-    def _on_terminal_contents_changed(self, terminal: Vte.Terminal):
-        self.scroll_handler.on_terminal_contents_changed(terminal)
 
     def _on_terminal_bell(self, terminal: Vte.Terminal) -> None:
         """Flash the tab label briefly when a bell/BEL is received in a background tab."""
@@ -927,113 +469,28 @@ class TabManager:
         GLib.idle_add(self.scroll_handler.scroll_to_widget, tab_widget)
 
     def _get_contrasting_text_color(self, bg_color_str: str) -> str:
-        """Calculates whether black or white text is more readable on a given background color."""
-        if not bg_color_str:
-            return "#000000"  # Default to black
-
-        try:
-            match = _RGBA_COLOR_PATTERN.match(bg_color_str)
-            if not match:
-                return "#000000"
-
-            r, g, b = [int(c) / 255.0 for c in match.groups()]
-
-            # WCAG luminance formula
-            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-
-            return "#000000" if luminance > 0.5 else "#FFFFFF"
-        except Exception as e:
-            self.logger.warning(f"Could not parse color '{bg_color_str}': {e}")
-            return "#000000"
+        return _contrasting_text_for_rgba_impl(bg_color_str)
 
     def _apply_tab_color(self, widget: Gtk.Widget, color_string: Optional[str]):
-        style_context = widget.get_style_context()
-        if hasattr(widget, "_color_provider"):
-            style_context.remove_provider(widget._color_provider)
-            del widget._color_provider
-
-        if color_string:
-            provider = Gtk.CssProvider()
-
-            # Apply color only to the top part of the tab (top border)
-            css = f"""
-                .custom-tab-button {{
-                    border: 1px solid {color_string};
-                }}
-            """
-            provider.load_from_data(css.encode("utf-8"))
-            style_context.add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-            widget._color_provider = provider
+        _apply_tab_color_impl(widget, color_string)
 
     def _create_tab_widget(
         self, _page: Adw.ViewStackPage, session: SessionItem
     ) -> Gtk.Box:
-        tab_widget = Gtk.Box(spacing=6)
-        tab_widget.add_css_class("custom-tab-button")
-        tab_widget.add_css_class("raised")
-
-        icon_name = None
-        if session.name.startswith("SFTP-"):
-            icon_name = "folder-remote-symbolic"
-        elif session.is_ssh():
-            icon_name = "network-server-symbolic"
-
-        if icon_name:
-            icon = icon_image(icon_name)
-            tab_widget.append(icon)
-
-        label = Gtk.Label(
-            label=session.name, ellipsize=Pango.EllipsizeMode.START, xalign=1.0
-        )
-        label.set_width_chars(8)
-        tab_widget.append(label)
-
-        close_button = icon_button(
-            "window-close-symbolic", css_classes=["circular", "flat"]
-        )
-        a11y_label(close_button, _("Close tab"))
-        tab_widget.append(close_button)
-        a11y_label(tab_widget, session.name)
-        a11y_desc(tab_widget, _("Terminal tab"))
-
-        left_click = Gtk.GestureClick.new()
-        left_click.connect("pressed", self._on_tab_clicked, tab_widget)
-        tab_widget.add_controller(left_click)
-
-        right_click = Gtk.GestureClick.new()
-        right_click.set_button(Gdk.BUTTON_SECONDARY)
-        right_click.connect("pressed", self._on_tab_right_click, tab_widget)
-        tab_widget.add_controller(right_click)
-
-        # Motion controller for hover highlighting during tab move
-        motion_controller = Gtk.EventControllerMotion()
-        motion_controller.connect("motion", self._on_tab_motion, tab_widget)
-        motion_controller.connect("leave", self._on_tab_leave, tab_widget)
-        tab_widget.add_controller(motion_controller)
-
-        close_button.connect("clicked", self._on_tab_close_button_clicked, tab_widget)
-
-        tab_widget.label_widget = label
-        tab_widget.close_button = close_button  # Store direct reference
-        tab_widget._base_title = session.name or f"Terminal-{self.get_tab_count() + 1}"
-        tab_widget._is_local = session.is_local()
-        tab_widget.session_item = session
-
-        self._apply_tab_color(tab_widget, session.tab_color)
-
-        return tab_widget
+        return _create_tab_widget_impl(self, _page, session)
 
     def _on_tab_motion(self, controller, x, y, tab_widget):
         """Handle mouse motion over a tab during move mode."""
-        if self._tab_being_moved is None and self._group_being_moved is None:
+        moving_group = self.group_controller.is_moving_group()
+        if self._tab_being_moved is None and not moving_group:
             return
         if tab_widget == self._tab_being_moved:
             return
         # Skip tabs belonging to the group being moved
-        if self._group_being_moved:
-            tab_id = self.get_tab_id(tab_widget)
-            if tab_id in self._group_being_moved.tab_ids:
-                return
+        if moving_group and self.group_controller.is_tab_in_moving_group(
+            self.get_tab_id(tab_widget)
+        ):
+            return
 
         # Determine which half of the tab we're over
         tab_width = tab_widget.get_width()
@@ -1044,20 +501,23 @@ class TabManager:
 
     def _on_tab_leave(self, controller, tab_widget):
         """Handle mouse leaving a tab during move mode."""
-        if self._tab_being_moved is None and self._group_being_moved is None:
+        if (
+            self._tab_being_moved is None
+            and not self.group_controller.is_moving_group()
+        ):
             return
         # Clear highlight when leaving a tab
         self._clear_tab_drop_highlights()
 
     def _on_tab_clicked(self, gesture, _n_press, x, _y, tab_widget):
         # If we're in group move mode, handle the drop
-        if self._group_being_moved is not None:
+        if self.group_controller.is_moving_group():
             tab_id = self.get_tab_id(tab_widget)
-            if tab_id not in self._group_being_moved.tab_ids:
+            if not self.group_controller.is_tab_in_moving_group(tab_id):
                 tab_width = tab_widget.get_width()
                 side = "left" if x < tab_width / 2 else "right"
-                self._perform_group_move(tab_widget, side)
-            self._cancel_group_move()
+                self.group_controller.perform_move(tab_widget, side)
+            self.group_controller.cancel_move()
             return
         # If we're in tab move mode, handle the drop
         if self._tab_being_moved is not None:
@@ -1075,134 +535,20 @@ class TabManager:
         self.set_active_tab(tab_widget)
 
     def _on_tab_right_click(self, _gesture, _n_press, x, y, tab_widget):
-        # Cancel any ongoing move operation when right-clicking
+        # Cancel any in-flight move so the menu interaction doesn't
+        # compete with the drop-target highlight state.
         if self._tab_being_moved is not None:
             self._cancel_tab_move()
-        if self._group_being_moved is not None:
-            self._cancel_group_move()
+        if self.group_controller.is_moving_group():
+            self.group_controller.cancel_move()
 
-        menu = Gio.Menu()
-        menu.append(_("Move Tab"), "win.move-tab")
-        menu.append(_("Duplicate Tab"), "win.duplicate-tab")
-        menu.append(_("Detach Tab"), "win.detach-tab")
-
-        color_section = Gio.Menu()
-        color_section.append(_("Tab Color…"), "win.tab-color")
-        session = getattr(tab_widget, "session_item", None)
-        if session and session.tab_color:
-            color_section.append(_("Clear Tab Color"), "win.clear-tab-color")
-        menu.append_section(None, color_section)
-
-        # Group section
-        group_section = Gio.Menu()
-        tab_id = self.get_tab_id(tab_widget)
-        current_group = self.group_manager.get_group_for_tab(tab_id)
-        if current_group:
-            group_section.append(_("Remove from Group"), "win.remove-from-group")
-        else:
-            group_section.append(_("New Group from Tab"), "win.new-group-from-tab")
-        # Submenu to add to existing groups
-        if self.group_manager.has_groups():
-            for group in self.group_manager.groups:
-                if group != current_group:
-                    group_section.append(
-                        _("Add to '{}'").format(group.name),
-                        f"win.add-to-group-{group.id}",
-                    )
-        menu.append_section(None, group_section)
-
-        popover = create_themed_popover_menu(menu, tab_widget)
-
-        page = self.pages.get(tab_widget)
-        if page:
-            action_group = Gio.SimpleActionGroup()
-
-            move_action = Gio.SimpleAction.new("move-tab", None)
-            move_action.connect(
-                "activate",
-                lambda _action, _param, tab=tab_widget: GLib.idle_add(self._start_tab_move, tab),
-            )
-            action_group.add_action(move_action)
-
-            duplicate_action = Gio.SimpleAction.new("duplicate-tab", None)
-            duplicate_action.connect(
-                "activate",
-                lambda _action, _param, tab=tab_widget: self._duplicate_tab(tab),
-            )
-            action_group.add_action(duplicate_action)
-
-            action = Gio.SimpleAction.new("detach-tab", None)
-
-            action.connect(
-                "activate", lambda a, _, pg=page: self._request_detach_tab(pg)
-            )
-            action_group.add_action(action)
-
-            color_action = Gio.SimpleAction.new("tab-color", None)
-            color_action.connect(
-                "activate",
-                lambda _a, _p, tab=tab_widget, pop=popover: self._pick_tab_color(
-                    tab, pop
-                ),
-            )
-            action_group.add_action(color_action)
-
-            clear_color_action = Gio.SimpleAction.new("clear-tab-color", None)
-            clear_color_action.connect(
-                "activate",
-                lambda _a, _p, tab=tab_widget: self._clear_tab_color(tab),
-            )
-            action_group.add_action(clear_color_action)
-
-            # Group-related actions
-            new_group_action = Gio.SimpleAction.new("new-group-from-tab", None)
-            new_group_action.connect(
-                "activate",
-                lambda _a, _p, tab=tab_widget: self.create_group_from_tabs([tab]),
-            )
-            action_group.add_action(new_group_action)
-
-            remove_group_action = Gio.SimpleAction.new("remove-from-group", None)
-            remove_group_action.connect(
-                "activate",
-                lambda _a, _p, tab=tab_widget: self._remove_tab_from_group_action(tab),
-            )
-            action_group.add_action(remove_group_action)
-
-            # Dynamic "add to group X" actions
-            for group in self.group_manager.groups:
-                add_action = Gio.SimpleAction.new(f"add-to-group-{group.id}", None)
-                add_action.connect(
-                    "activate",
-                    lambda _a, _p, g_id=group.id, tab=tab_widget: self._add_tab_to_group_action(tab, g_id),
-                )
-                action_group.add_action(add_action)
-
-            popover.insert_action_group("win", action_group)
-
-        rect = Gdk.Rectangle()
-        rect.x = int(x)
-        rect.y = int(y)
-        popover.set_pointing_to(rect)
-        popover.popup()
+        _show_tab_context_menu(self, tab_widget, x, y)
 
     def _remove_tab_from_group_action(self, tab_widget: Gtk.Box) -> None:
-        """Action handler: remove tab from its current group."""
-        tab_id = self.get_tab_id(tab_widget)
-        self.group_manager.remove_tab_from_group(tab_id)
-        tab_widget.remove_css_class("in-group")
-        self._rebuild_tab_bar_order()
+        self.group_controller.remove_tab_from_group_action(tab_widget)
 
     def _add_tab_to_group_action(self, tab_widget: Gtk.Box, group_id: str) -> None:
-        """Action handler: add tab to an existing group."""
-        tab_id = self.get_tab_id(tab_widget)
-        self.group_manager.add_tab_to_group(group_id, tab_id)
-        self._ensure_group_tabs_contiguous(group_id)
-        # If the group was collapsed, expand it so user sees the tab
-        group = self.group_manager.get_group(group_id)
-        if group and group.is_collapsed:
-            self.group_manager.toggle_collapsed(group_id)
-        self._rebuild_tab_bar_order()
+        self.group_controller.add_tab_to_group_action(tab_widget, group_id)
 
     def _pick_tab_color(self, tab_widget: Gtk.Box, popover: Gtk.Popover) -> None:
         """Open color chooser dialog for a tab."""
@@ -1236,41 +582,10 @@ class TabManager:
             self.on_detach_tab_requested(page)
 
     def _start_tab_move(self, tab_widget: Gtk.Box) -> None:
-        """Starts the tab move mode for the given tab widget."""
-        if len(self.tabs) < 2:
-            self.logger.debug("Cannot move tab: only one tab exists.")
-            return
-
-        self._tab_being_moved = tab_widget
-        self._current_drop_index = -1
-        tab_widget.add_css_class("tab-moving")
-        self.tab_bar_box.add_css_class("tab-bar-move-mode")
-
-        # Make close buttons invisible but keep layout space during move mode
-        for tab in self.tabs:
-            close_btn = self._get_tab_close_button(tab)
-            if close_btn:
-                close_btn.set_opacity(0)
-                close_btn.set_sensitive(False)
-
-        self.logger.info(f"Tab move started for: {tab_widget.label_widget.get_text()}")
+        self.move_controller.start(tab_widget)
 
     def _cancel_tab_move(self) -> None:
-        """Cancels the current tab move operation."""
-        if self._tab_being_moved is not None:
-            self._tab_being_moved.remove_css_class("tab-moving")
-            self.tab_bar_box.remove_css_class("tab-bar-move-mode")
-            self._clear_tab_drop_highlights()
-
-            # Restore all close buttons
-            for tab in self.tabs:
-                close_btn = self._get_tab_close_button(tab)
-                if close_btn:
-                    close_btn.set_opacity(1)
-                    close_btn.set_sensitive(True)
-
-            self.logger.debug("Tab move cancelled.")
-            self._tab_being_moved = None
+        self.move_controller.cancel()
 
     def _get_tab_close_button(self, tab_widget: Gtk.Box) -> Optional[Gtk.Button]:
         """Get the close button from a tab widget."""
@@ -1304,12 +619,12 @@ class TabManager:
             if group:
                 # Insert chip before the first tab of this group in visual order
                 if group.id not in groups_with_chip:
-                    chip = self._create_group_chip(group)
+                    chip = self.group_controller.build_chip(group)
                     self.tab_bar_box.append(chip)
                     groups_with_chip.add(group.id)
 
                 tab.add_css_class("in-group")
-                self._apply_group_border_color(tab, group.color)
+                self.group_controller.apply_border_color(tab, group.color)
                 if group.is_collapsed:
                     tab.set_visible(False)
                 else:
@@ -1529,43 +844,18 @@ class TabManager:
             self._close_tab_by_page(page)
 
     def _any_terminal_has_foreground_process(self, terminals: list) -> bool:
-        """Check if any terminal has a running foreground child process."""
-        try:
-            import psutil
-        except ImportError:
-            return False
-
-        for terminal in terminals:
-            terminal_id = getattr(terminal, "terminal_id", None)
-            if not terminal_id:
-                continue
-            info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-            if not info:
-                continue
-            pid = info.get("process_id")
-            if not pid or pid == -1:
-                continue
-            try:
-                proc = psutil.Process(pid)
-                children = proc.children()
-                if children:
-                    return True
-            except (psutil.NoSuchProcess, psutil.AccessDenied):
-                continue
-        return False
+        return _any_terminal_has_foreground_process_impl(
+            terminals, terminal_manager=self.terminal_manager
+        )
 
     def _confirm_close_tab(self, page: Adw.ViewStackPage, terminals: list) -> None:
         """Show confirmation dialog before closing tab with active process."""
-        dialog = Adw.AlertDialog(
-            heading=_("Close Tab?"),
-            body=_("A process is still running in this tab. Close anyway?"),
+        def on_response(_dialog, response: str) -> None:
+            self._on_close_confirm_response(_dialog, response, page, terminals)
+
+        dialog = _build_close_confirmation_dialog_impl(
+            parent=self.view_stack.get_root(), on_response=on_response
         )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("close", _("Close"))
-        dialog.set_response_appearance("close", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.set_default_response("cancel")
-        dialog.set_close_response("cancel")
-        dialog.connect("response", self._on_close_confirm_response, page, terminals)
         dialog.present(self.view_stack.get_root())
 
     def _on_close_confirm_response(
@@ -1580,31 +870,12 @@ class TabManager:
             self._close_tab_by_page(page)
 
     def _process_terminals_for_close(self, terminals: list) -> bool:
-        """Process terminals during tab close and return if should wait for exit."""
-        should_wait = False
-
-        for terminal in terminals:
-            terminal_id = getattr(terminal, "terminal_id", None)
-            is_auto_reconnecting = self.terminal_manager.is_auto_reconnect_active(
-                terminal
-            )
-
-            if terminal_id and not is_auto_reconnecting:
-                info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-                if self._has_stable_running_process(info):
-                    should_wait = True
-
-            self.terminal_manager.remove_terminal(terminal, force_kill_group=True)
-
-        return should_wait
+        return _process_terminals_for_close_impl(
+            terminals, terminal_manager=self.terminal_manager
+        )
 
     def _has_stable_running_process(self, info: Optional[dict]) -> bool:
-        """Check if terminal info indicates a stable running process."""
-        if not info:
-            return False
-        pid = info.get("process_id")
-        status = info.get("status")
-        return pid and pid != -1 and status == "running"
+        return _has_stable_running_process_impl(info)
 
     def _on_terminal_process_exited(
         self, terminal: Vte.Terminal, child_status: int, identifier
@@ -1631,7 +902,7 @@ class TabManager:
                 f"[PROCESS_EXITED] Found pane: {pane_to_remove}, parent: {type(parent_container)}"
             )
 
-            # MODIFIED: Only manipulate panes if the parent is a Gtk.Paned (i.e., it's a split)
+            # Only touch pane layout when we're actually in a split.
             if isinstance(parent_container, Gtk.Paned):
                 self.logger.info(
                     f"[PROCESS_EXITED] Removing pane from split for terminal {terminal_id}"
@@ -1782,26 +1053,16 @@ class TabManager:
         return None
 
     def _build_display_title(self, tab_button, new_title: str) -> str:
-        """Builds the display title based on tab type and new title."""
-        base_title = tab_button._base_title
-
-        if tab_button._is_local:
-            return new_title
-
-        if new_title.startswith(base_title + ":"):
-            return new_title
-
-        if new_title == base_title:
-            return base_title
-
-        return f"{base_title}: {new_title}"
+        return _build_display_title_impl(
+            base_title=tab_button._base_title,
+            new_title=new_title,
+            is_local=tab_button._is_local,
+        )
 
     def _append_terminal_count(self, page, display_title: str) -> str:
-        """Appends terminal count to title if multiple terminals in page."""
-        terminal_count = len(self.get_all_terminals_in_page(page))
-        if terminal_count > 1:
-            return f"{display_title} ({terminal_count})"
-        return display_title
+        return _append_terminal_count_impl(
+            display_title, len(self.get_all_terminals_in_page(page))
+        )
 
     def set_tab_title(self, page: Adw.ViewStackPage, new_title: str, tooltip: Optional[str] = None) -> None:
         if not (page and new_title):
@@ -1934,35 +1195,13 @@ class TabManager:
     def _fix_host_key_and_retry(self, session, terminal, terminal_id):
         self.banner_handler._fix_host_key_and_retry(session, terminal, terminal_id)
 
-    def _find_pane_and_parent(self, terminal: Vte.Terminal) -> tuple:
-        return self.pane_handler.find_pane_and_parent(terminal)
-
-    def _find_terminals_recursive(self, widget, terminals_list):
-        self.pane_handler.find_terminals_recursive(widget, terminals_list)
-
     def _quit_application(self) -> bool:
         if self.on_quit_application:
             self.on_quit_application()
         return False
 
-    def _remove_pane_ui(self, pane_to_remove, parent_paned):
-        self.pane_handler.remove_pane_ui(pane_to_remove, parent_paned)
-
-    def _get_survivor_pane(self, pane_to_remove, parent_paned):
-        return self.pane_handler._get_survivor_pane(pane_to_remove, parent_paned)
-
-    def _get_first_terminal_in_widget(self, widget):
-        return self.pane_handler.get_first_terminal_in_widget(widget)
-
-    def _clear_paned_children(self, paned):
-        self.pane_handler._clear_paned_children(paned)
-
-    def _reparent_survivor(self, survivor_pane, parent_paned, grandparent):
-        self.pane_handler._reparent_survivor(survivor_pane, parent_paned, grandparent)
-
-    def _schedule_focus_restore(self, terminal):
-        self.pane_handler.schedule_focus_restore(terminal)
-
+    # Public split/close API — preserved because window.py and
+    # window_actions.py call these directly on the TabManager.
     def close_pane(self, terminal: Vte.Terminal) -> None:
         self.pane_handler.close_pane(terminal)
 
@@ -1974,36 +1213,6 @@ class TabManager:
 
     def split_vertical(self, focused_terminal: Vte.Terminal) -> None:
         self.pane_handler.split_vertical(focused_terminal)
-
-    def _set_paned_position_from_ratio(self, paned, ratio):
-        return self.pane_handler.set_paned_position_from_ratio(paned, ratio)
-
-    def _get_terminal_identifier_and_title(self, terminal):
-        return self.pane_handler._get_terminal_identifier_and_title(terminal)
-
-    def _create_split_terminal(self, identifier, pane_title):
-        return self.pane_handler._create_split_terminal(identifier, pane_title)
-
-    def _create_pane_for_split(self, terminal, title):
-        return self.pane_handler._create_pane_for_split(terminal, title)
-
-    def _prepare_pane_for_split(self, pane_to_replace, focused_terminal):
-        return self.pane_handler._prepare_pane_for_split(pane_to_replace, focused_terminal)
-
-    def _insert_split_paned(self, container, pane_to_replace, pane_being_split, new_pane, orientation, new_terminal):
-        return self.pane_handler._insert_split_paned(container, pane_to_replace, pane_being_split, new_pane, orientation, new_terminal)
-
-    def _split_terminal(self, focused_terminal, orientation):
-        self.pane_handler._split_terminal(focused_terminal, orientation)
-
-    def _show_split_type_dialog(self, focused_terminal, orientation, identifier, pane_title, page):
-        self.pane_handler._show_split_type_dialog(focused_terminal, orientation, identifier, pane_title, page)
-
-    def _show_ssh_session_picker(self, focused_terminal, orientation, page):
-        self.pane_handler._show_ssh_session_picker(focused_terminal, orientation, page)
-
-    def _perform_split(self, focused_terminal, orientation, identifier, pane_title, page):
-        self.pane_handler._perform_split(focused_terminal, orientation, identifier, pane_title, page)
 
     def re_attach_detached_page(
         self,
@@ -2067,240 +1276,10 @@ class TabManager:
             if self.tabs:
                 self.set_active_tab(self.tabs[0])
 
-    def _unwrap_toolbar_view(self, root_widget: Gtk.Widget) -> Gtk.Widget:
-        """Unwrap a ToolbarView to get the inner scrolled window."""
-        if isinstance(root_widget, Adw.ToolbarView):
-            scrolled_win = root_widget.get_content()
-            if scrolled_win:
-                root_widget.set_content(None)
-                return scrolled_win
-        return root_widget
+    # ── Delegators to TabRestoreController ───────────────────
 
-    def _build_tab_content_paned(
-        self, terminal_area_content: Gtk.Widget
-    ) -> tuple[Adw.Bin, Gtk.Paned]:
-        """Build the standard tab structure with terminal area and content paned."""
-        terminal_area = Adw.Bin()
-        terminal_area.set_child(terminal_area_content)
+    def recreate_tab_from_structure(self, structure: dict) -> None:
+        self.restore_controller.recreate_tab_from_structure(structure)
 
-        content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
-        content_paned.add_css_class("terminal-content-paned")
-        content_paned.set_start_child(terminal_area)
-        content_paned.set_resize_start_child(True)
-        content_paned.set_shrink_start_child(False)
-        content_paned.set_end_child(None)
-        content_paned.set_resize_end_child(False)
-        content_paned.set_shrink_end_child(True)
-
-        return terminal_area, content_paned
-
-    def _get_session_from_terminal(self, terminal: Vte.Terminal) -> "SessionItem":
-        """Get or create a SessionItem from a terminal."""
-        terminal_id = getattr(terminal, "terminal_id", None)
-        info = self.terminal_manager.registry.get_terminal_info(terminal_id)
-        identifier = info.get("identifier") if info else "Local"
-
-        if isinstance(identifier, SessionItem):
-            return identifier
-        return SessionItem(name=str(identifier), session_type="local")
-
-    def recreate_tab_from_structure(self, structure: dict):
-        """Recreates a complete tab, including splits, from a saved structure."""
-        if not structure:
-            return
-
-        root_widget = self._recreate_widget_from_node(structure)
-        if not root_widget:
-            self.logger.error("Failed to create root widget for tab restoration.")
-            return
-
-        terminal_area_content = self._unwrap_toolbar_view(root_widget)
-        _, content_paned = self._build_tab_content_paned(terminal_area_content)
-
-        terminals = []
-        self._find_terminals_recursive(root_widget, terminals)
-
-        if not terminals:
-            self.logger.error("Restored tab contains no terminals.")
-            return
-
-        first_terminal = terminals[0]
-        session = self._get_session_from_terminal(first_terminal)
-
-        page_name = f"page_restored_{GLib.random_int()}"
-        page = self.view_stack.add_titled(content_paned, page_name, session.name)
-        page.content_paned = content_paned
-        for term in terminals:
-            term.ashy_parent_page = page
-
-        tab_widget = self._create_tab_widget(page, session)
-        self.tabs.append(tab_widget)
-        self.pages[tab_widget] = page
-        self.tab_bar_box.append(tab_widget)
-
-        self.set_active_tab(tab_widget)
-        self._schedule_terminal_focus(first_terminal)
-        self.update_all_tab_titles()
-
-        if self.on_tab_count_changed:
-            self.on_tab_count_changed()
-
-    def _recreate_widget_from_node(self, node: dict) -> Optional[Gtk.Widget]:
-        """Recursively builds a widget tree from a serialized node."""
-        if not node or "type" not in node:
-            return None
-
-        node_type = node["type"]
-
-        if node_type == "terminal":
-            return self._recreate_terminal_node(node)
-        elif node_type == "paned":
-            return self._recreate_paned_node(node)
-
-        return None
-
-    def _recreate_terminal_node(self, node: dict) -> Optional[Gtk.Widget]:
-        """Recreate a terminal widget from a serialized node.
-
-        Args:
-            node: Serialized terminal node dictionary.
-
-        Returns:
-            Terminal pane widget or None if creation failed.
-        """
-        working_dir = node.get("working_dir")
-        initial_command = (
-            f'cd "{working_dir}"'
-            if working_dir and node["session_type"] == "ssh"
-            else None
-        )
-        title = node.get("session_name", "Terminal")
-        session_type = node.get("session_type", "local")
-
-        terminal = self._create_terminal_from_session(
-            session_type,
-            node.get("session_name", ""),
-            title,
-            working_dir,
-            initial_command,
-        )
-
-        if not terminal:
-            return None
-
-        pane_widget = _create_terminal_pane(
-            terminal,
-            title,
-            self.close_pane,
-            self._on_move_to_tab_callback,
-            self.terminal_manager.settings_manager,
-        )
-        sw = pane_widget.get_content()
-        if isinstance(sw, Gtk.ScrolledWindow):
-            self._replace_sw_scroll_controller(sw)
-
-        focus_controller = Gtk.EventControllerFocus()
-        focus_controller.connect("enter", self._on_pane_focus_in, terminal)
-        terminal.add_controller(focus_controller)
-
-        return pane_widget
-
-    def _create_terminal_from_session(
-        self,
-        session_type: str,
-        session_name: str,
-        title: str,
-        working_dir: Optional[str],
-        initial_command: Optional[str],
-    ) -> Optional[Vte.Terminal]:
-        """Create a terminal based on session type.
-
-        Args:
-            session_type: "ssh" or "local".
-            session_name: Name of the session.
-            title: Terminal title.
-            working_dir: Working directory path.
-            initial_command: Initial command for SSH sessions.
-
-        Returns:
-            Terminal widget or None if creation failed.
-        """
-        if session_type == "ssh":
-            session = next(
-                (
-                    s
-                    for s in self.terminal_manager.parent_window.session_store
-                    if s.name == session_name
-                ),
-                None,
-            )
-            if session and session.is_ssh():
-                return self.terminal_manager.create_ssh_terminal(
-                    session, initial_command=initial_command
-                )
-            self.logger.warning(
-                f"Could not find SSH session '{session_name}' to restore, or type mismatch."
-            )
-            return self.terminal_manager.create_local_terminal(
-                title=f"Missing: {title}"
-            )
-
-        # Local session
-        session = next(
-            (
-                s
-                for s in self.terminal_manager.parent_window.session_store
-                if s.name == session_name and s.is_local()
-            ),
-            None,
-        )
-        return self.terminal_manager.create_local_terminal(
-            session=session, title=title, working_directory=working_dir
-        )
-
-    def _recreate_paned_node(self, node: dict) -> Optional[Gtk.Widget]:
-        """Recreate a paned widget from a serialized node.
-
-        Args:
-            node: Serialized paned node dictionary.
-
-        Returns:
-            Paned widget or None if creation failed.
-        """
-        orientation = (
-            Gtk.Orientation.HORIZONTAL
-            if node["orientation"] == "horizontal"
-            else Gtk.Orientation.VERTICAL
-        )
-        paned = Gtk.Paned(orientation=orientation)
-
-        child1 = self._recreate_widget_from_node(node["child1"])
-        child2 = self._recreate_widget_from_node(node["child2"])
-
-        if not child1 or not child2:
-            self.logger.error("Failed to recreate children for a split pane.")
-            if child1:
-                self._find_and_remove_terminals(child1)
-            if child2:
-                self._find_and_remove_terminals(child2)
-            return None
-
-        paned.set_start_child(child1)
-        paned.set_end_child(child2)
-
-        ratio = node.get("position_ratio", 0.5)
-        GLib.idle_add(self._set_paned_position_from_ratio, paned, ratio)
-
-        return paned
-
-    def _find_and_remove_terminals(self, widget: Gtk.Widget):
-        """Finds all terminals in a widget tree and removes them."""
-        terminals = []
-        self._find_terminals_recursive(widget, terminals)
-        for term in terminals:
-            self.terminal_manager.remove_terminal(term)
-
-    def close_all_tabs(self):
-        """Closes all currently open tabs by simulating a click on each close button."""
-        for tab_widget in self.tabs[:]:
-            self._on_tab_close_button_clicked(None, tab_widget)
+    def close_all_tabs(self) -> None:
+        self.restore_controller.close_all_tabs()

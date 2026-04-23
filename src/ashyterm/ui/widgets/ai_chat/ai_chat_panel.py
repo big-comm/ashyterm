@@ -19,6 +19,10 @@ from ....utils.translation_utils import _
 from ..conversation_history import ConversationHistoryPanel
 from ._helpers import _extract_reply_from_json, _normalize_commands
 from ._prompts import get_random_quick_prompts
+from .ai_chat_theme import (
+    build_panel_css as _build_panel_css,
+    resolve_theme_colors as _resolve_theme_colors_impl,
+)
 from .message_bubble import LoadingIndicator, MessageBubble
 from ....utils.logger import log_swallowed_exception
 
@@ -157,6 +161,7 @@ class AIChatPanel(Gtk.Box):
 
         prompts_title = Gtk.Label(label=_("Quick Prompts"))
         prompts_title.add_css_class("dim-label")
+        prompts_title.set_xalign(0)
         prompts_title.set_hexpand(True)
         prompts_header.append(prompts_title)
 
@@ -370,7 +375,7 @@ class AIChatPanel(Gtk.Box):
                     log_swallowed_exception(exc)
 
             provider = Gtk.CssProvider()
-            provider.load_from_data(css.encode("utf-8"))
+            provider.load_from_string(css)
             Gtk.StyleContext.add_provider_for_display(
                 Gdk.Display.get_default(),
                 provider,
@@ -385,154 +390,13 @@ class AIChatPanel(Gtk.Box):
             logger.warning(f"Failed to apply transparency to AI chat panel: {e}")
 
     def _resolve_theme_colors(self, is_dark: bool, transparency: int) -> dict:
-        """Resolve all CSS color variables based on current theme."""
-        gtk_theme = self._settings_manager.get("gtk_theme", "")
-        if gtk_theme == "terminal":
-            return self._terminal_theme_colors(is_dark, transparency)
-        return self._adwaita_theme_colors(is_dark)
-
-    def _terminal_theme_colors(self, is_dark: bool, transparency: int) -> dict:
-        """Colors derived from the terminal color scheme."""
-        scheme = self._settings_manager.get_color_scheme_data()
-        base = scheme.get("background", "#000000" if is_dark else "#ffffff")
-        fg = scheme.get("foreground", "#ffffff" if is_dark else "#000000")
-        header_bg = scheme.get("headerbar_background", base)
-        palette = scheme.get("palette", [])
-        accent = palette[4] if len(palette) > 4 else "@accent_bg_color"
-
-        r, g, b = int(base[1:3], 16), int(base[3:5], 16), int(base[5:7], 16)
-        if transparency > 0:
-            alpha = max(0.0, min(1.0, 1.0 - (transparency / 100.0) ** 1.6))
-            rgba_bg = f"rgba({r}, {g}, {b}, {alpha})"
-        else:
-            rgba_bg = f"rgb({r}, {g}, {b})"
-
-        ar, ag, ab = int(accent[1:3], 16), int(accent[3:5], 16), int(accent[5:7], 16)
-        lum = (0.299 * ar + 0.587 * ag + 0.114 * ab) / 255
-
-        return {
-            "rgba_bg": rgba_bg,
-            "content_fg": fg,
-            "bubble_user_bg": accent,
-            "bubble_user_fg": "@view_fg_color" if lum < 0.5 else "@view_fg_color",
-            "bubble_assistant_bg": header_bg,
-            "bubble_assistant_border": f"color-mix(in srgb, {fg} 10%, transparent)",
-            "input_bg": header_bg,
-            "input_border": f"color-mix(in srgb, {fg} 10%, transparent)",
-            "scroll_bg": f"rgba({r}, {g}, {b}, 0.3)"
-            if transparency > 0
-            else "transparent",
-        }
-
-    def _adwaita_theme_colors(self, is_dark: bool) -> dict:
-        """Colors for standard Adwaita light/dark themes using GTK named colors."""
-        if is_dark:
-            return {
-                "rgba_bg": "@window_bg_color",
-                "content_fg": "@window_fg_color",
-                "bubble_user_bg": "@accent_bg_color",
-                "bubble_user_fg": "@accent_fg_color",
-                "bubble_assistant_bg": "@popover_bg_color",
-                "bubble_assistant_border": "@borders",
-                "input_bg": "@popover_bg_color",
-                "input_border": "@borders",
-                "scroll_bg": "transparent",
-            }
-        return {
-            "rgba_bg": "@window_bg_color",
-            "content_fg": "@window_fg_color",
-            "bubble_user_bg": "@accent_bg_color",
-            "bubble_user_fg": "@accent_fg_color",
-            "bubble_assistant_bg": "@popover_bg_color",
-            "bubble_assistant_border": "@borders",
-            "input_bg": "@popover_bg_color",
-            "input_border": "@borders",
-            "scroll_bg": "transparent",
-        }
+        return _resolve_theme_colors_impl(
+            self._settings_manager, is_dark=is_dark, transparency=transparency
+        )
 
     @staticmethod
     def _build_transparency_css(c: dict) -> str:
-        """Build the full CSS string from resolved color dict."""
-        return f"""
-            .ai-chat-panel {{
-                background-color: {c["rgba_bg"]};
-                color: {c["content_fg"]};
-            }}
-            .ai-chat-panel scrolledwindow {{
-                background-color: {c["scroll_bg"]};
-            }}
-            .ai-message-user {{
-                background-color: {c["bubble_user_bg"]};
-                background-image: linear-gradient(135deg, {c["bubble_user_bg"]}, shade({c["bubble_user_bg"]}, 0.92));
-                color: {c["bubble_user_fg"]};
-                border-radius: 16px 16px 4px 16px;
-                padding: 10px 14px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            }}
-            .ai-message-assistant {{
-                background-color: {c["bubble_assistant_bg"]};
-                color: {c["content_fg"]};
-                border: 1px solid {c["bubble_assistant_border"]};
-                border-radius: 16px 16px 16px 4px;
-                padding: 10px 14px;
-                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            }}
-            .ai-message-assistant.ai-message-error {{
-                border-color: rgba(255, 60, 60, 0.8);
-                background-color: rgba(255, 60, 60, 0.1);
-            }}
-            .ai-command-block {{
-                background-color: @popover_bg_color;
-                color: @window_fg_color;
-                border: 1px solid @borders;
-                border-radius: 10px;
-                padding: 12px 14px;
-                transition: all 200ms ease;
-            }}
-            .ai-command-block:hover {{
-                background-color: @card_bg_color;
-                border-color: alpha(@accent_color, 0.4);
-                box-shadow: 0 2px 8px alpha(@accent_color, 0.1);
-            }}
-            .ai-command-text {{
-                color: @window_fg_color;
-            }}
-            .ai-input-box {{
-                background-color: {c["input_bg"]};
-                color: {c["content_fg"]};
-                border: 1px solid {c["input_border"]};
-                border-radius: 14px;
-                padding: 6px 10px;
-                transition: border-color 200ms ease, box-shadow 200ms ease;
-            }}
-            .ai-input-box:focus-within {{
-                border-color: @accent_color;
-                box-shadow: 0 0 0 2px alpha(@accent_color, 0.2);
-            }}
-            .ai-input-textview {{
-                background-color: transparent;
-                color: {c["content_fg"]};
-                padding: 4px;
-                min-height: 24px;
-            }}
-            .ai-input-textview text {{
-                background-color: transparent;
-                color: {c["content_fg"]};
-            }}
-            .ai-panel-header {{
-                background-color: {c["input_bg"]};
-                color: {c["content_fg"]};
-            }}
-            .ai-panel-header .title {{
-                color: {c["content_fg"]};
-            }}
-            .ai-panel-header button {{
-                color: {c["content_fg"]};
-            }}
-            .ai-panel-header button image {{
-                color: {c["content_fg"]};
-            }}
-            """
+        return _build_panel_css(c)
 
     def update_transparency(self):
         """Public method to update transparency when settings change."""
@@ -755,6 +619,7 @@ class AIChatPanel(Gtk.Box):
         error_label = Gtk.Label()
         error_label.set_wrap(True)
         error_label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
+        error_label.set_xalign(0)
         error_label.set_hexpand(True)
         error_label.set_selectable(True)
         error_label.set_markup(self._linkify_error(error_msg))

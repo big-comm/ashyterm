@@ -1,0 +1,16 @@
+{
+  "description": "Two positionals: first wins, second logs warning.",
+  "argv": [
+    "ashyterm",
+    "/a",
+    "/b"
+  ],
+  "expected": {
+    "working_directory": "/a",
+    "execute_command": null,
+    "ssh_target": null,
+    "close_after_execute": false,
+    "force_new_window": false
+  },
+  "assert_warning": true
+}

@@ -1,49 +1,42 @@
 # ashyterm/terminal/highlighter/shell_input.py
-"""
-Shell input syntax highlighter using Pygments.
+"""Pygments lexer/formatter holder for live shell-input highlighting.
 
-This module provides ShellInputHighlighter, which colorizes shell
-commands as they are typed in real-time.
+The actual colorization runs inside :mod:`terminal._streaming_handler`,
+which intercepts each byte echoed by the shell, buffers it, and lexes
+the running command with Pygments before re-feeding colored output to
+VTE. This module just owns the shared ``BashLexer`` + ``Terminal256Formatter``
+pair and the theme-selection logic that decides which Pygments style
+to use based on the terminal background.
+
+Settings that feed into the choice:
+
+* ``shell_input_highlighting_enabled`` — master on/off
+* ``shell_input_theme_mode`` — ``auto`` picks light/dark by bg luminance,
+  ``manual`` uses the legacy single theme
+* ``shell_input_pygments_theme`` / ``shell_input_{dark,light}_theme``
 """
 
 import threading
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from ...utils.logger import get_logger
 
 
-# Singleton instance
 _shell_input_highlighter_instance: Optional["ShellInputHighlighter"] = None
 _shell_input_highlighter_lock = threading.Lock()
 
-# Default fallback colors
 _DEFAULT_FG = "#ffffff"
 _DEFAULT_BG = "#000000"
 
 
 class ShellInputHighlighter:
-    """
-    Applies live syntax highlighting to shell commands as they are typed.
+    """Holds the Pygments lexer/formatter used by the streaming handler.
 
-    Uses Pygments BashLexer to tokenize and colorize shell input in real-time.
-    This works at the terminal level, so it applies to any shell (bash, zsh, etc.)
-    even when connecting to remote servers or Docker containers where shell
-    configuration cannot be changed.
-
-    The highlighter tracks the current command buffer and applies colors
-    when characters are echoed back through the PTY.
-
-    Architecture:
-    - Detects when the terminal is at a shell prompt (via OSC7)
-    - Tracks typed characters and builds a command buffer
-    - When Enter is pressed, the buffer is cleared
-    - Each character echo is intercepted and colorized based on its context
-
-    Features:
-    - Real-time tokenization using Pygments BashLexer
-    - Theme-aware colors using the configured Pygments style
-    - Handles backspace, cursor movement, and control characters
-    - Properly escapes ANSI sequences in the input
+    The streaming handler reads ``self._lexer`` and ``self._formatter``
+    directly; external callers interact via :attr:`enabled` and
+    :meth:`refresh_settings`. The formatter is rebuilt whenever the
+    settings tuple ``(theme_mode, theme, dark_theme, light_theme, bg)``
+    changes, so a color-scheme swap propagates without restart.
     """
 
     def __init__(self):
@@ -54,17 +47,9 @@ class ShellInputHighlighter:
         self._theme = "monokai"
         self._lexer_config_key: Optional[str] = None
 
-        # Per-proxy state for input tracking
-        # Key: proxy_id, Value: current command buffer string
-        self._command_buffers: Dict[int, str] = {}
-
-        # Track if we're at a shell prompt (can type commands)
-        # Key: proxy_id, Value: True if at prompt
-        self._at_prompt: Dict[int, bool] = {}
-
-        # Color palette from terminal color scheme
         self._palette: Optional[List[str]] = None
         self._foreground: str = _DEFAULT_FG
+        self._background: str = _DEFAULT_BG
 
         self._lock = threading.Lock()
         self._refresh_settings()
@@ -82,15 +67,11 @@ class ShellInputHighlighter:
             from .command_validator import CommandValidator
             CommandValidator.get_instance().enabled = self._enabled and cmd_not_found
 
-            # Get theme mode: "auto" or "manual"
             self._theme_mode = settings.get("shell_input_theme_mode", "auto")
-            # Legacy theme (used when mode is "manual")
             self._theme = settings.get("shell_input_pygments_theme", "monokai")
-            # Themes for auto mode
             self._dark_theme = settings.get("shell_input_dark_theme", "blinds-dark")
             self._light_theme = settings.get("shell_input_light_theme", "blinds-light")
 
-            # Get terminal color scheme for background detection
             gtk_theme = settings.get("gtk_theme", "")
             if gtk_theme == "terminal":
                 scheme = settings.get_color_scheme_data()
@@ -125,9 +106,7 @@ class ShellInputHighlighter:
 
             self._lexer = BashLexer()
 
-            # Determine which theme to use based on mode
             if self._theme_mode == "auto":
-                # Auto mode: select theme based on background luminance
                 is_light_bg = self._is_light_color(self._background)
                 selected_theme = self._light_theme if is_light_bg else self._dark_theme
                 self.logger.debug(
@@ -135,14 +114,11 @@ class ShellInputHighlighter:
                     f"using theme={selected_theme}"
                 )
             else:
-                # Manual mode: use the legacy single theme setting
                 selected_theme = self._theme
 
-            # Create formatter with selected theme
             try:
                 style = get_style_by_name(selected_theme)
             except ClassNotFound:
-                # Fallback to monokai if theme not found
                 style = get_style_by_name("monokai")
                 self.logger.warning(
                     f"Theme '{selected_theme}' not found, falling back to monokai"
@@ -163,17 +139,8 @@ class ShellInputHighlighter:
 
     def _is_light_color(self, hex_color: str) -> bool:
         """Determine if a color is light based on its luminance."""
-        try:
-            hex_val = hex_color.lstrip("#")
-            r = int(hex_val[0:2], 16) / 255
-            g = int(hex_val[2:4], 16) / 255
-            b = int(hex_val[4:6], 16) / 255
-
-            # Calculate relative luminance (simplified)
-            luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
-            return luminance > 0.5
-        except (ValueError, IndexError):
-            return False
+        from ...utils.color_luminance import is_light_hex
+        return is_light_hex(hex_color)
 
     def refresh_settings(self) -> None:
         """Public method to refresh settings (called when settings change)."""
@@ -191,118 +158,9 @@ class ShellInputHighlighter:
 
             settings = get_settings_manager()
             is_enabled = settings.get("shell_input_highlighting_enabled", False)
-            # Also require lexer to be initialized
             return is_enabled and self._lexer is not None
         except Exception:
             return False
-
-    def register_proxy(self, proxy_id: int) -> None:
-        """Register a proxy for input tracking."""
-        with self._lock:
-            self._command_buffers[proxy_id] = ""
-            # Start with True since terminal starts at shell prompt
-            self._at_prompt[proxy_id] = True
-
-    def unregister_proxy(self, proxy_id: int) -> None:
-        """Unregister a proxy."""
-        with self._lock:
-            self._command_buffers.pop(proxy_id, None)
-            self._at_prompt.pop(proxy_id, None)
-
-    def set_at_prompt(self, proxy_id: int, at_prompt: bool) -> None:
-        """
-        Set whether the terminal is at a shell prompt.
-
-        When at a prompt, typed characters are part of a command and will
-        be highlighted. When not at a prompt (e.g., running a command),
-        highlighting is disabled.
-        """
-        with self._lock:
-            old_state = self._at_prompt.get(proxy_id, False)
-            self._at_prompt[proxy_id] = at_prompt
-
-            # Clear buffer when transitioning to prompt or away from it
-            if old_state != at_prompt:
-                self._command_buffers[proxy_id] = ""
-                if at_prompt:
-                    self.logger.debug(
-                        f"Proxy {proxy_id}: At shell prompt, input highlighting active"
-                    )
-
-    def is_at_prompt(self, proxy_id: int) -> bool:
-        """Check if terminal is at a shell prompt."""
-        with self._lock:
-            return self._at_prompt.get(proxy_id, False)
-
-    def on_key_pressed(self, proxy_id: int, char: str, keyval: int) -> None:
-        """
-        Handle a key press event to update the command buffer.
-
-        Called by the terminal when a printable character is typed.
-        Special keys (backspace, delete, arrows) are handled separately.
-        """
-        if not self.enabled:
-            return
-
-        with self._lock:
-            if not self._at_prompt.get(proxy_id, False):
-                return
-
-            buffer = self._command_buffers.get(proxy_id, "")
-
-            # Handle control characters
-            if keyval == 65288:  # GDK_KEY_BackSpace
-                self._command_buffers[proxy_id] = buffer[:-1] if buffer else ""
-            elif keyval in (65293, 65421):  # GDK_KEY_Return, GDK_KEY_KP_Enter
-                # Clear buffer on Enter (command submitted)
-                self._command_buffers[proxy_id] = ""
-                self._at_prompt[proxy_id] = False  # No longer at prompt
-            elif keyval == 65507 or keyval == 65508:  # Ctrl keys (Ctrl+C, etc.)
-                # Clear buffer on Ctrl+C
-                if char == "\x03":  # Ctrl+C
-                    self._command_buffers[proxy_id] = ""
-            elif len(char) == 1 and char.isprintable():
-                # Regular printable character
-                self._command_buffers[proxy_id] = buffer + char
-
-    def clear_buffer(self, proxy_id: int) -> None:
-        """Clear the command buffer for a proxy."""
-        with self._lock:
-            self._command_buffers[proxy_id] = ""
-
-    def highlight_input_line(self, proxy_id: int, line: str) -> str:
-        """
-        Highlight a full input line.
-
-        This is used when redrawing the input line (e.g., after cursor
-        movement or completion).
-
-        Args:
-            proxy_id: The proxy ID
-            line: The command line text to highlight
-
-        Returns:
-            The line with ANSI color codes applied
-        """
-        if not self.enabled or not self._lexer or not self._formatter:
-            return line
-
-        with self._lock:
-            if not self._at_prompt.get(proxy_id, False):
-                return line
-
-        try:
-            from pygments import highlight
-
-            highlighted = highlight(line, self._lexer, self._formatter)
-            return highlighted.rstrip("\n")
-        except Exception:
-            return line
-
-    def get_current_buffer(self, proxy_id: int) -> str:
-        """Get the current command buffer for a proxy."""
-        with self._lock:
-            return self._command_buffers.get(proxy_id, "")
 
 
 def get_shell_input_highlighter() -> ShellInputHighlighter:

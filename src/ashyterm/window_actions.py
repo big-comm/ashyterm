@@ -24,7 +24,6 @@ class WindowActionsMixin:
     # ─── Actions Setup ─────────────────────────────────────────────────
 
     def _setup_actions(self) -> None:
-        """Set up window-level actions by delegating to the action handler."""
         try:
             self.action_handler.setup_actions()
         except Exception as e:
@@ -34,7 +33,7 @@ class WindowActionsMixin:
             raise UIError("window", f"action setup failed: {e}")
 
     def _setup_keyboard_shortcuts(self) -> None:
-        """Sets up window-level keyboard shortcuts for tab navigation."""
+        """Install the capture-phase key dispatcher."""
         controller = Gtk.EventControllerKey.new()
         controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         controller.connect("key-pressed", self._on_key_pressed)
@@ -43,7 +42,7 @@ class WindowActionsMixin:
     # ─── Key Press Dispatch ────────────────────────────────────────────
 
     def _on_key_pressed(self, _controller, keyval, _keycode, state):
-        """Handles key press events for tab navigation and search."""
+        """Key dispatcher: emergency close, escape, search, groups, shortcuts."""
         if self._handle_emergency_dialog_close(keyval, state):
             return Gdk.EVENT_STOP
         if self._handle_escape_key(keyval):
@@ -103,7 +102,7 @@ class WindowActionsMixin:
         if action := shortcut_actions.get(accel_string):
             action()
             return True
-        # Handle split shortcuts separately (require terminal check)
+        # Split shortcuts need an active terminal.
         split_h = self.settings_manager.get_shortcut("split-horizontal")
         split_v = self.settings_manager.get_shortcut("split-vertical")
         if accel_string in (split_h, split_v):

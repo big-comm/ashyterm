@@ -151,10 +151,11 @@ class CommandPalette(Adw.Dialog):
         cat_label.add_css_class("dim-label")
         cat_label.add_css_class("caption")
         cat_label.set_size_request(80, -1)
+        cat_label.set_xalign(0)
         hbox.append(cat_label)
 
         # Command name
-        name_label = Gtk.Label(label=label, hexpand=True)
+        name_label = Gtk.Label(label=label, hexpand=True, xalign=0)
         hbox.append(name_label)
 
         # Shortcut keycap (if exists)

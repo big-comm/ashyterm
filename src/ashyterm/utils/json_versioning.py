@@ -20,17 +20,7 @@ def migrate_data(
     current_version: int,
     migrations: dict[int, MigrationFn],
 ) -> dict[str, Any]:
-    """Apply incremental migrations from data's version up to current_version.
-
-    Args:
-        data: The loaded JSON data (dict).
-        current_version: The latest schema version number.
-        migrations: A dict mapping version N to a function that migrates
-                    from version N to N+1.
-
-    Returns:
-        The migrated data dict with "_version" set to current_version.
-    """
+    """Walk ``migrations`` from ``data["_version"]`` up to ``current_version``."""
     data_version = data.get("_version", 0)
 
     if data_version > current_version:

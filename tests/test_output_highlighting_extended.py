@@ -19,7 +19,7 @@ import re
 import threading
 from pathlib import Path
 from typing import List, Tuple
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -97,7 +97,6 @@ def _compile_rules_from_json(json_data: dict):
     """Compile a list of CompiledRule / LiteralKeywordRule from raw JSON data."""
     from ashyterm.settings.highlights import HighlightManager, HighlightRule
     from ashyterm.settings.highlight_colors import HighlightColorResolver
-    from ashyterm.terminal.highlighter.output import OutputHighlighter
     from ashyterm.terminal.highlighter.rules import (
         CompiledRule,
         LiteralKeywordRule,
@@ -583,229 +582,6 @@ class TestContextSwitching:
         assert 99 not in h._proxy_contexts
 
 
-# ============================================================================
-# 4. Shell Input Highlighting (Pygments) — bash & sh
-# ============================================================================
-
-class TestShellInputHighlightingExtended:
-    """Extended tests for shell input highlighting with bash/sh commands."""
-
-    @pytest.fixture
-    def shell_hl(self):
-        from ashyterm.terminal.highlighter.shell_input import ShellInputHighlighter
-
-        h = ShellInputHighlighter.__new__(ShellInputHighlighter)
-        h.logger = MagicMock()
-        h._enabled = True
-        h._lexer = None
-        h._formatter = None
-        h._theme = "monokai"
-        h._theme_mode = "manual"
-        h._dark_theme = "blinds-dark"
-        h._light_theme = "blinds-light"
-        h._lexer_config_key = None
-        h._command_buffers = {}
-        h._at_prompt = {}
-        h._palette = None
-        h._foreground = "#ffffff"
-        h._background = "#000000"
-        h._lock = threading.Lock()
-
-        try:
-            h._init_lexer()
-        except Exception:
-            pytest.skip("Pygments not available")
-        return h
-
-    # -- Basic commands common to bash and sh --
-
-    def test_echo_highlighted(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo hello")
-        # Should produce ANSI codes or at least not crash
-        assert "echo" in strip_ansi(result)
-
-    def test_cd_command(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "cd /home/user")
-        assert "cd" in strip_ansi(result)
-
-    def test_pipe_command(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "ls -la | grep foo")
-        clean = strip_ansi(result)
-        assert "ls" in clean
-        assert "grep" in clean
-
-    def test_redirect_command(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo test > output.txt")
-        assert "echo" in strip_ansi(result)
-
-    def test_variable_assignment_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, 'VAR="value"')
-        assert "VAR" in strip_ansi(result)
-
-    def test_command_substitution_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo $(date)")
-        clean = strip_ansi(result)
-        assert "date" in clean
-
-    def test_backtick_substitution_sh(self, shell_hl):
-        """Legacy backtick substitution (sh-compatible)."""
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo `date`")
-        clean = strip_ansi(result)
-        assert "date" in clean
-
-    def test_for_loop_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "for f in *.txt; do echo $f; done")
-        clean = strip_ansi(result)
-        assert "for" in clean
-        assert "done" in clean
-
-    def test_if_statement_sh(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "if [ -f file ]; then echo ok; fi")
-        clean = strip_ansi(result)
-        assert "if" in clean
-        assert "fi" in clean
-
-    def test_case_statement_sh(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, 'case $1 in start) echo go;; esac')
-        clean = strip_ansi(result)
-        assert "case" in clean
-        assert "esac" in clean
-
-    def test_heredoc_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "cat <<EOF\nhello\nEOF")
-        assert "cat" in strip_ansi(result)
-
-    def test_arithmetic_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo $((2 + 3))")
-        assert "echo" in strip_ansi(result)
-
-    def test_single_quotes_sh(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo 'hello world'")
-        assert "hello world" in strip_ansi(result)
-
-    def test_double_quotes_with_var(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, 'echo "Hello $USER"')
-        assert "Hello" in strip_ansi(result)
-
-    def test_semicolon_chain(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "cd /tmp; ls; pwd")
-        clean = strip_ansi(result)
-        assert "cd" in clean
-        assert "ls" in clean
-        assert "pwd" in clean
-
-    def test_and_chain_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "make && make install")
-        assert "make" in strip_ansi(result)
-
-    def test_or_chain_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "test -f file || echo missing")
-        assert "test" in strip_ansi(result)
-
-    def test_function_definition_bash(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "greet() { echo hello; }")
-        assert "echo" in strip_ansi(result)
-
-    def test_test_bracket_sh(self, shell_hl):
-        """POSIX test bracket [ ... ]."""
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, '[ "$a" = "b" ]')
-        clean = strip_ansi(result)
-        assert "[" in clean or "test" in clean.lower()
-
-    def test_double_bracket_bash(self, shell_hl):
-        """Bash [[ ... ]] construct."""
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, '[[ -n "$VAR" ]] && echo set')
-        assert "echo" in strip_ansi(result)
-
-    def test_while_loop_sh(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "while read line; do echo $line; done < file")
-        clean = strip_ansi(result)
-        assert "while" in clean
-        assert "done" in clean
-
-    def test_subshell_group(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "(cd /tmp && ls)")
-        assert "cd" in strip_ansi(result)
-
-    # -- Proxy state management --
-
-    def test_buffer_cleared_on_enter(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        shell_hl.on_key_pressed(1, "l", ord("l"))
-        shell_hl.on_key_pressed(1, "s", ord("s"))
-        assert shell_hl.get_current_buffer(1) == "ls"
-        shell_hl.on_key_pressed(1, "\n", 65293)
-        assert shell_hl.get_current_buffer(1) == ""
-        assert not shell_hl.is_at_prompt(1)
-
-    def test_ctrl_c_clears_buffer(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        shell_hl._command_buffers[1] = "long command being typed"
-        shell_hl.on_key_pressed(1, "\x03", 65507)  # Ctrl+C
-        assert shell_hl.get_current_buffer(1) == ""
-
-    def test_not_at_prompt_no_highlight(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, False)
-        result = shell_hl.highlight_input_line(1, "echo hello")
-        assert result == "echo hello"
-
-    def test_multiple_proxies_independent(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.register_proxy(2)
-        shell_hl.set_at_prompt(1, True)
-        shell_hl.set_at_prompt(2, True)
-        shell_hl._command_buffers[1] = "ls"
-        shell_hl._command_buffers[2] = "pwd"
-        assert shell_hl.get_current_buffer(1) == "ls"
-        assert shell_hl.get_current_buffer(2) == "pwd"
-
 
 # ============================================================================
 # 5. Command Validator
@@ -1237,36 +1013,7 @@ class TestTriggerResolution:
 # ============================================================================
 
 class TestBashShCompatibility:
-    """
-    Verify that highlighting works correctly for constructs
-    that differ between bash and sh.
-    """
-
-    @pytest.fixture
-    def shell_hl(self):
-        from ashyterm.terminal.highlighter.shell_input import ShellInputHighlighter
-
-        h = ShellInputHighlighter.__new__(ShellInputHighlighter)
-        h.logger = MagicMock()
-        h._enabled = True
-        h._lexer = None
-        h._formatter = None
-        h._theme = "monokai"
-        h._theme_mode = "manual"
-        h._dark_theme = "blinds-dark"
-        h._light_theme = "blinds-light"
-        h._lexer_config_key = None
-        h._command_buffers = {}
-        h._at_prompt = {}
-        h._palette = None
-        h._foreground = "#ffffff"
-        h._background = "#000000"
-        h._lock = threading.Lock()
-        try:
-            h._init_lexer()
-        except Exception:
-            pytest.skip("Pygments not available")
-        return h
+    """Verify that output highlighting handles bash/sh-flavored lines."""
 
     @pytest.fixture
     def global_rules(self):
@@ -1275,74 +1022,6 @@ class TestBashShCompatibility:
     @pytest.fixture
     def output_hl(self, global_rules):
         return _make_highlighter(global_rules)
-
-    # -- POSIX sh constructs --
-
-    def test_sh_test_command(self, shell_hl):
-        """POSIX 'test' command."""
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, 'test -d /tmp && echo exists')
-        assert "test" in strip_ansi(result)
-
-    def test_sh_dot_source(self, shell_hl):
-        """POSIX '.' sourcing (equivalent to bash 'source')."""
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, ". /etc/profile")
-        clean = strip_ansi(result)
-        assert "/etc/profile" in clean
-
-    def test_sh_posix_function(self, shell_hl):
-        """POSIX function definition (no 'function' keyword)."""
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "myfunc() { echo hello; }")
-        assert "echo" in strip_ansi(result)
-
-    def test_sh_until_loop(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "until false; do echo loop; done")
-        clean = strip_ansi(result)
-        assert "until" in clean
-        assert "done" in clean
-
-    # -- bash-specific constructs --
-
-    def test_bash_double_bracket(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, '[[ "$a" == "b" ]]')
-        assert strip_ansi(result)  # Should not crash
-
-    def test_bash_process_substitution(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "diff <(ls dir1) <(ls dir2)")
-        assert "diff" in strip_ansi(result)
-
-    def test_bash_array(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, 'arr=(one two three)')
-        assert "one" in strip_ansi(result)
-
-    def test_bash_brace_expansion(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, "echo {1..10}")
-        assert "echo" in strip_ansi(result)
-
-    def test_bash_select(self, shell_hl):
-        shell_hl.register_proxy(1)
-        shell_hl.set_at_prompt(1, True)
-        result = shell_hl.highlight_input_line(1, 'select opt in "a" "b"; do echo $opt; done')
-        clean = strip_ansi(result)
-        assert "select" in clean
-        assert "done" in clean
-
-    # -- Output highlighting: keywords from bash/sh scripts --
 
     def test_output_set_euo_pipefail(self, output_hl, global_rules):
         """'set -euo pipefail' is a bash-ism, no keywords should match."""

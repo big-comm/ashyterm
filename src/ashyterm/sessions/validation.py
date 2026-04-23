@@ -10,15 +10,13 @@ from .results import OperationResult
 def validate_session_for_add(
     session: SessionItem, session_store: Gio.ListStore, folder_store: Gio.ListStore
 ) -> OperationResult:
-    """Validates a new session before it is added."""
-    # Basic model validation
+    """Reject a new session on model errors, name collisions, or missing folder."""
     if not session.validate():
         errors = session.get_validation_errors()
         return OperationResult(
             False, _("Session validation failed: {}").format(", ".join(errors))
         )
 
-    # Check for duplicate names within the same folder
     for i in range(session_store.get_n_items()):
         existing_session = session_store.get_item(i)
         if (
@@ -32,7 +30,6 @@ def validate_session_for_add(
                 ).format(name=session.name),
             )
 
-    # Check if the target folder exists
     if session.folder_path:
         folder_exists = False
         for i in range(folder_store.get_n_items()):
@@ -53,15 +50,13 @@ def validate_session_for_add(
 def validate_folder_for_add(
     folder: SessionFolder, folder_store: Gio.ListStore
 ) -> OperationResult:
-    """Validates a new folder before it is added."""
-    # Basic model validation
+    """Reject a new folder on model errors, duplicate path, or missing parent."""
     if not folder.validate():
         errors = folder.get_validation_errors()
         return OperationResult(
             False, _("Folder validation failed: {}").format(", ".join(errors))
         )
 
-    # Check for duplicate paths
     for i in range(folder_store.get_n_items()):
         if folder_store.get_item(i).path == folder.path:
             return OperationResult(
@@ -71,7 +66,6 @@ def validate_folder_for_add(
                 ),
             )
 
-    # Check if parent folder exists
     if folder.parent_path:
         parent_exists = False
         for i in range(folder_store.get_n_items()):

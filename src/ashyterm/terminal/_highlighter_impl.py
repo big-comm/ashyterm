@@ -58,6 +58,12 @@ from .highlighter.shell_input import ShellInputHighlighter, get_shell_input_high
 from ._cat_handler import CatModeHandler, _PROMPT_MARKER
 from ._streaming_handler import StreamingHandler
 from ..utils.logger import log_swallowed_exception
+from .stream_escapes import (
+    AltScreenTransition,
+    apply_backspaces as _apply_backspaces_impl,
+    count_backspaces as _count_backspaces_impl,
+    detect_alt_screen_transition as _detect_alt_screen_transition_impl,
+)
 
 # Re-export _PROMPT_MARKER for any external consumers
 __all__ = [
@@ -109,7 +115,6 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         self._shell_input_highlighter = get_shell_input_highlighter()
 
         self._highlighter.register_proxy(self._proxy_id)
-        self._shell_input_highlighter.register_proxy(self._proxy_id)
 
         self._master_fd: Optional[int] = None
         self._slave_fd: Optional[int] = None
@@ -186,7 +191,6 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             # Shell is about to display prompt - command finished
             if not self._at_shell_prompt:
                 self._at_shell_prompt = True
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
             self._reset_input_buffer()
             self._need_color_reset = True
             self._suppress_shell_input_highlighting = False
@@ -200,7 +204,6 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             # Shell is about to execute command
             if self._at_shell_prompt:
                 self._at_shell_prompt = False
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, False)
             self._reset_input_buffer()
         elif prop == Vte.TERMPROP_SHELL_POSTEXEC:
             # Command finished executing - reset highlighting state
@@ -214,7 +217,6 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             # OSC7 - directory change signals shell ready (fallback for shells without precmd)
             if not self._at_shell_prompt:
                 self._at_shell_prompt = True
-                self._shell_input_highlighter.set_at_prompt(self._proxy_id, True)
             self._reset_input_buffer()
 
     def _has_incomplete_escape(self, data: bytes) -> bool:
@@ -375,45 +377,29 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         self._cat_queue.append(prompt.encode("utf-8", errors="replace"))
 
     def _handle_backspace_in_buffer(self, data: bytes) -> int:
-        """
-        Handle backspace characters in input data by updating the highlight buffer.
+        """Apply any backspaces in ``data`` to ``_input_highlight_buffer``.
 
-        Counts backspace characters (\x08 and \x7f) and removes that many characters
-        from the input highlight buffer. Also handles shell-style \x08 \x08 patterns.
-
-        Args:
-            data: The byte data that may contain backspace characters.
-
-        Returns:
-            The number of characters actually removed from the buffer.
+        Returns the number of characters actually removed from the
+        buffer (clamped to buffer length — shells can emit more
+        backspaces than we have when the user holds the key).
         """
         if not self._input_highlight_buffer:
             return 0
 
-        # Count backspaces - handle \x08 \x08 patterns (sh/dash style)
-        temp_data = data
-        backspace_count = 0
+        backspace_count = _count_backspaces_impl(data)
+        if backspace_count <= 0:
+            return 0
 
-        # Count \x08 \x08 patterns first (count as 1 each)
-        while b"\x08 \x08" in temp_data:
-            backspace_count += 1
-            temp_data = temp_data.replace(b"\x08 \x08", b"", 1)
-
-        # Count remaining individual backspaces
-        backspace_count += temp_data.count(b"\x7f") + temp_data.count(b"\x08")
-
-        if backspace_count > 0:
-            chars_to_remove = min(backspace_count, len(self._input_highlight_buffer))
-            if chars_to_remove > 0:
-                self._input_highlight_buffer = self._input_highlight_buffer[
-                    :-chars_to_remove
-                ]
-            # Reset token tracking after backspace
-            self._prev_shell_input_token_type = None
-            self._prev_shell_input_token_len = 0
-            return chars_to_remove
-
-        return 0
+        before = self._input_highlight_buffer
+        self._input_highlight_buffer = _apply_backspaces_impl(
+            before, backspace_count
+        )
+        chars_removed = len(before) - len(self._input_highlight_buffer)
+        # Reset token tracking after backspace so the next highlight
+        # pass re-classifies the trailing tokens.
+        self._prev_shell_input_token_type = None
+        self._prev_shell_input_token_len = 0
+        return chars_removed
 
     @property
     def proxy_id(self) -> int:
@@ -619,7 +605,6 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         self._prev_shell_input_token_len = 0
 
         self._highlighter.unregister_proxy(self._proxy_id)
-        self._shell_input_highlighter.unregister_proxy(self._proxy_id)
 
         # Disconnect signal handlers if not already done by destroy
         if not from_destroy and not self._widget_destroyed:
@@ -651,32 +636,24 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             self._terminal_ref = None  # type: ignore[assignment]
 
     def _update_alt_screen_state(self, data: bytes) -> bool:
+        """Flip ``self._is_alt_screen`` if ``data`` toggles the alt buffer.
+
+        Returns True when the flag actually changed (useful for the
+        caller to know it just crossed the buffer boundary).
         """
-        Check for Alternate Screen buffer switches.
-        Returns True if state changed.
-        """
-        # Common sequences for entering/exiting alt screen (vim, fzf, htop, etc)
-        # \x1b[?1049h : Enable Alt Screen
-        # \x1b[?1049l : Disable Alt Screen
-        # \x1b[?47h   : Enable Alt Screen (Legacy)
-        # \x1b[?47l   : Disable Alt Screen (Legacy)
-
-        changed = False
-
-        # Check for enable patterns
-        if b"\x1b[?1049h" in data or b"\x1b[?47h" in data or b"\x1b[?1047h" in data:
-            if not self._is_alt_screen:
-                self._is_alt_screen = True
-                changed = True
-
-        # Check for disable patterns
-        # Note: We check disable AFTER enable in case both are in the same chunk (rare but possible)
-        if b"\x1b[?1049l" in data or b"\x1b[?47l" in data or b"\x1b[?1047l" in data:
-            if self._is_alt_screen:
-                self._is_alt_screen = False
-                changed = True
-
-        return changed
+        transition = _detect_alt_screen_transition_impl(
+            data, currently_alt=self._is_alt_screen
+        )
+        if transition is AltScreenTransition.ENTERED:
+            self._is_alt_screen = True
+            return True
+        if transition in (
+            AltScreenTransition.EXITED,
+            AltScreenTransition.TOGGLED_ENDED,
+        ):
+            self._is_alt_screen = False
+            return True
+        return False
 
     def _on_pty_readable(self, fd: int, condition: GLib.IOCondition) -> bool:
         # 1. Fail fast if stopped or destroyed

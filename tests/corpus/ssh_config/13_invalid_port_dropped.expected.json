@@ -1,0 +1,13 @@
+{
+  "description": "Non-integer Port is logged and the field is left None (not crash).",
+  "expected": [
+    {
+      "alias": "badport",
+      "hostname": "bp.example",
+      "user": null,
+      "port": null,
+      "identity_file": null,
+      "forward_x11": null
+    }
+  ]
+}

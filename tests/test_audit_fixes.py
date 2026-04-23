@@ -8,10 +8,8 @@ broadcast validation, session tree a11y, and tab name defaults.
 
 import os
 import sys
-import tempfile
 from pathlib import Path
 
-import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 

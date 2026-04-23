@@ -1,0 +1,14 @@
+{
+  "description": "--ssh= with empty value — ssh_target becomes empty string.",
+  "argv": [
+    "ashyterm",
+    "--ssh="
+  ],
+  "expected": {
+    "working_directory": null,
+    "execute_command": null,
+    "ssh_target": "",
+    "close_after_execute": false,
+    "force_new_window": false
+  }
+}

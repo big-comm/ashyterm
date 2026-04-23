@@ -1,0 +1,8 @@
+{
+  "description": "FILE:// upper scheme — urlparse lowercases the scheme, so it matches.",
+  "uri": "FILE://localhost/tmp",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/tmp"
+  }
+}

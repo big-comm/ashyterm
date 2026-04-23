@@ -163,14 +163,13 @@ class ColorSchemeDelegate:
 
     def _set_color_from_hex(self, cr, hex_color: str) -> None:
         """Set cairo source color from hex string."""
-        try:
-            hex_val = hex_color.lstrip("#")
-            r = int(hex_val[0:2], 16) / 255.0
-            g = int(hex_val[2:4], 16) / 255.0
-            b = int(hex_val[4:6], 16) / 255.0
-            cr.set_source_rgb(r, g, b)
-        except (ValueError, IndexError):
+        from ....utils.color_luminance import hex_to_rgb_floats
+
+        rgb = hex_to_rgb_floats(hex_color)
+        if rgb is None:
             cr.set_source_rgb(0.5, 0.5, 0.5)
+            return
+        cr.set_source_rgb(*rgb)
 
     def _on_scheme_row_selected(self, listbox, row) -> None:
         """Handle color scheme selection."""

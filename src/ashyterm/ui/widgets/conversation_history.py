@@ -212,6 +212,7 @@ class ConversationHistoryPanel(Gtk.Box):
         if before is None:
             # First row - always add header
             header = Gtk.Label(label=current_group)
+            header.set_xalign(0)
             header.add_css_class("caption")
             header.add_css_class("dim-label")
             header.set_margin_start(12)
@@ -221,6 +222,7 @@ class ConversationHistoryPanel(Gtk.Box):
         elif hasattr(before, "time_group") and before.time_group != current_group:
             # Different group - add header
             header = Gtk.Label(label=current_group)
+            header.set_xalign(0)
             header.add_css_class("caption")
             header.add_css_class("dim-label")
             header.set_margin_start(12)

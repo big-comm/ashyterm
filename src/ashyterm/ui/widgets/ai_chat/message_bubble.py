@@ -174,6 +174,7 @@ class MessageBubble(Gtk.Box):
         self._label = Gtk.Label()
         self._label.set_wrap(True)
         self._label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
+        self._label.set_xalign(0)
         self._label.set_selectable(True)
         self._label.set_max_width_chars(60)
 
@@ -662,6 +663,7 @@ class MessageBubble(Gtk.Box):
 
             # Command label in monospace with syntax highlighting
             cmd_label = Gtk.Label()
+            cmd_label.set_xalign(0)
             cmd_label.set_hexpand(True)
             cmd_label.set_wrap(True)
             cmd_label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)

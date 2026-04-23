@@ -1,0 +1,8 @@
+{
+  "description": "Non-percent-encoded UTF-8 in URI body — preserved.",
+  "uri": "file://localhost/home/usuário",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/home/usuário"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "description": "command_type=sftp bypasses the entire mutation — even with X11+tunnels set on the session.",
+  "function": "apply_x11_and_tunnel_options",
+  "session": {
+    "name": "s",
+    "session_type": "ssh",
+    "host": "example.com",
+    "user": "alice",
+    "port": 22,
+    "auth_type": "key",
+    "auth_value": "/home/alice/.ssh/id",
+    "x11_forwarding": true,
+    "port_forwardings": [
+      {"local_port": 8080, "remote_port": 80}
+    ]
+  },
+  "kwargs": {
+    "command_type": "sftp"
+  },
+  "initial_options": {
+    "ControlMaster": "auto",
+    "ControlPath": "/tmp/cp-foo",
+    "ControlPersist": "600"
+  },
+  "expected_options": {
+    "ControlMaster": "auto",
+    "ControlPath": "/tmp/cp-foo",
+    "ControlPersist": "600"
+  },
+  "expected_needs_x11": false
+}

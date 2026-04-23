@@ -21,7 +21,7 @@ class WindowLifecycleMixin:
     # ─── Initialization ────────────────────────────────────────────────
 
     def _lifecycle_init_common(self) -> None:
-        """Initialize common lifecycle state — called from __init__."""
+        """Reset lifecycle flags and per-window state containers."""
         self._cleanup_performed = False
         self._force_closing = False
         self.layouts: List[LayoutItem] = []
@@ -30,7 +30,6 @@ class WindowLifecycleMixin:
         )
         self.command_manager_dialog = None
 
-        # Search state tracking
         self.current_search_terminal = None
         self.search_current_occurrence = 0
         self.search_active = False
@@ -58,7 +57,7 @@ class WindowLifecycleMixin:
     # ─── Component Assembly ────────────────────────────────────────────
 
     def _create_managers_and_ui(self) -> None:
-        """Centralize Component Creation and UI Building."""
+        """Instantiate managers and build the UI tree in dependency order."""
         self.logger.info("Creating and wiring core components")
 
         from .sessions.operations import SessionOperations
@@ -537,15 +536,10 @@ class WindowLifecycleMixin:
     # ─── Transparency ──────────────────────────────────────────────────
 
     def _update_file_manager_transparency(self):
-        """Update transparency for all file managers and AI panel when settings change."""
+        """Repropagate transparency to every file manager + AI panel."""
         for file_manager in self.tab_manager.file_managers.values():
             try:
                 file_manager._apply_background_transparency()
-                if (
-                    hasattr(file_manager, "transfer_history_window")
-                    and file_manager.transfer_history_window
-                ):
-                    pass
             except Exception as e:
                 self.logger.warning(f"Failed to update file manager transparency: {e}")
 

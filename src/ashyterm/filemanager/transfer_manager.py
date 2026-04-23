@@ -441,16 +441,7 @@ class TransferManager(GObject.Object):
     def _format_bytes_with_unit(
         self, value: float, suffix: str = "B", zero_check_lte: bool = False
     ) -> str:
-        """Generic helper to format byte values with appropriate units.
-
-        Args:
-            value: The byte value to format
-            suffix: Unit suffix (e.g., "B" for size, "B/s" for speed)
-            zero_check_lte: If True, check value <= 0; if False, check value < 0
-
-        Returns:
-            Formatted string with appropriate unit prefix (B, KB, MB, GB)
-        """
+        """Scale ``value`` to KB/MB/GB with the given ``suffix`` (B, B/s, …)."""
         if not isinstance(value, (int, float)):
             return f"0 {suffix}"
         if (zero_check_lte and value <= 0) or (not zero_check_lte and value < 0):

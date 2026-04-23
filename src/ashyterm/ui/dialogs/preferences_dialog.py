@@ -329,6 +329,25 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         scrolling_group.add(scroll_on_insert_row)
 
+        copy_on_select_row = self._create_switch_row(
+            _("Copy on Selection"),
+            _("Auto-copy selected text to the clipboard"),
+            "copy_on_select",
+            default_value=False,
+        )
+        scrolling_group.add(copy_on_select_row)
+
+        paste_warning_row = self._create_switch_row(
+            _("Warn Before Risky Paste"),
+            _(
+                "Confirm when the clipboard has multiple lines or "
+                "risky commands (sudo, curl | sh, rm -rf…)"
+            ),
+            "paste_warning_enabled",
+            default_value=True,
+        )
+        scrolling_group.add(paste_warning_row)
+
         kinetic_spin = Adw.SpinRow.new_with_range(0, 100, 5)
         kinetic_spin.set_title(_("Kinetic Scrolling"))
         kinetic_spin.set_subtitle(_("Touchpad momentum intensity (0 = off)"))

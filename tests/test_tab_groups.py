@@ -1,6 +1,5 @@
 """Tests for TabGroup and TabGroupManager."""
 
-import pytest
 
 from ashyterm.terminal.tab_groups import TabGroup, TabGroupManager
 

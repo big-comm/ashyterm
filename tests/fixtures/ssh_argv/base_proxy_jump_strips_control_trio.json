@@ -1,0 +1,28 @@
+{
+  "description": "ProxyJump forces a fresh connection — Control trio is removed entirely.",
+  "function": "build_base_ssh_options",
+  "session": {
+    "name": "s",
+    "session_type": "ssh",
+    "host": "target.internal",
+    "user": "alice",
+    "port": 22,
+    "auth_type": "key",
+    "auth_value": "/home/alice/.ssh/id",
+    "proxy_jump": "user@bastion.example.com"
+  },
+  "kwargs": {
+    "strict_host_key": "accept-new",
+    "connect_timeout": 30,
+    "control_persist_duration": 600,
+    "control_path": "/tmp/cp-foo"
+  },
+  "expected_options": {
+    "ConnectTimeout": "30",
+    "ServerAliveInterval": "30",
+    "ServerAliveCountMax": "3",
+    "StrictHostKeyChecking": "accept-new",
+    "UpdateHostKeys": "yes",
+    "ProxyJump": "user@bastion.example.com"
+  }
+}

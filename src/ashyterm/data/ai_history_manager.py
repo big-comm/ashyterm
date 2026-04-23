@@ -15,7 +15,7 @@ from ..utils.security import atomic_json_write
 
 
 class AIHistoryManager:
-    """Manages AI chat history persistence using JSON format with conversation support."""
+    """Persist AI chat conversations in a single JSON file."""
 
     def __init__(self):
         self.logger = get_logger("ashyterm.data.ai_history_manager")
@@ -23,25 +23,24 @@ class AIHistoryManager:
         self._history_file = self._config_paths.CONFIG_DIR / "ai_history.json"
         self._conversations: List[Dict[str, Any]] = []
         self._current_conversation_id: Optional[str] = None
-        self._max_conversations = 50  # Limit number of conversations
-        self._max_messages_per_conversation = 100  # Limit messages per conversation
+        self._max_conversations = 50
+        self._max_messages_per_conversation = 100
         self._load_history()
 
     def _load_history(self) -> None:
-        """Load chat history from JSON file."""
         try:
             if self._history_file.exists():
                 with open(self._history_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
 
-                    # Support both old and new format
+                    # Accept both the old (``history``) and new (``conversations``) shape.
                     if "conversations" in data:
                         self._conversations = data.get("conversations", [])
                         self._current_conversation_id = data.get(
                             "current_conversation_id"
                         )
                     elif "history" in data:
-                        # Migrate old format to new
+                        # Migrate pre-1.7 format: flat history → single conversation.
                         old_history = data.get("history", [])
                         if old_history:
                             conv_id = str(uuid.uuid4())
@@ -76,13 +75,10 @@ class AIHistoryManager:
             self._current_conversation_id = None
 
     def _save_history(self) -> None:
-        """Save chat history to JSON file."""
         try:
-            # Trim conversations if too many
             if len(self._conversations) > self._max_conversations:
                 self._conversations = self._conversations[-self._max_conversations :]
 
-            # Trim messages per conversation if too many
             for conv in self._conversations:
                 msgs = conv.get("messages", [])
                 if len(msgs) > self._max_messages_per_conversation:
@@ -102,7 +98,6 @@ class AIHistoryManager:
             self.logger.error(f"Failed to save AI history: {e}")
 
     def _get_current_conversation(self) -> Optional[Dict[str, Any]]:
-        """Get the current conversation or None if no current conversation."""
         if not self._current_conversation_id:
             return None
         for conv in self._conversations:
@@ -111,19 +106,16 @@ class AIHistoryManager:
         return None
 
     def _ensure_current_conversation(self) -> Dict[str, Any]:
-        """Ensure there's a current conversation, creating one if needed."""
         conv = self._get_current_conversation()
         if conv is None:
             conv = self.new_conversation()
         return conv
 
     def new_conversation(self) -> Dict[str, Any]:
-        """Start a new conversation."""
         conv_id = str(uuid.uuid4())
         conv = {"id": conv_id, "created_at": datetime.now().isoformat(), "messages": []}
         self._conversations.append(conv)
         self._current_conversation_id = conv_id
-        # Enforce in-memory limit on number of conversations
         if len(self._conversations) > self._max_conversations:
             self._conversations = self._conversations[-self._max_conversations :]
         self._save_history()
@@ -131,15 +123,14 @@ class AIHistoryManager:
         return conv
 
     def get_current_conversation(self) -> Optional[Dict[str, Any]]:
-        """Get the current conversation."""
         return self._get_current_conversation()
 
     def get_all_conversations(self) -> List[Dict[str, Any]]:
-        """Get all conversations, newest first."""
+        """Return every conversation, newest first."""
         return list(reversed(self._conversations))
 
     def load_conversation(self, conv_id: str) -> bool:
-        """Load a specific conversation by ID."""
+        """Switch the ``current`` pointer to ``conv_id``. ``False`` if unknown."""
         for conv in self._conversations:
             if conv.get("id") == conv_id:
                 self._current_conversation_id = conv_id
@@ -151,14 +142,7 @@ class AIHistoryManager:
     def add_message(
         self, role: str, content: str, commands: Optional[List[str]] = None
     ) -> None:
-        """
-        Add a message to the current conversation.
-
-        Args:
-            role: Either "user" or "assistant"
-            content: The message content
-            commands: Optional list of command strings for assistant messages
-        """
+        """Append ``role``/``content`` (+optional commands) to current conversation."""
         if not content or not content.strip():
             return
 
@@ -174,49 +158,34 @@ class AIHistoryManager:
 
         conv["messages"].append(entry)
 
-        # Enforce in-memory limits (not just on save)
+        # Trim in memory too; save also trims, but this keeps recent reads cheap.
         if len(conv["messages"]) > self._max_messages_per_conversation:
             conv["messages"] = conv["messages"][-self._max_messages_per_conversation :]
 
         self._save_history()
 
     def add_user_message(self, content: str) -> None:
-        """Add a user message to the history."""
         self.add_message("user", content)
 
     def add_assistant_message(
         self, content: str, commands: Optional[List[str]] = None
     ) -> None:
-        """Add an assistant message to the history."""
         self.add_message("assistant", content, commands)
 
     def get_history(self) -> List[Dict[str, Any]]:
-        """
-        Get the current conversation's messages.
-
-        Returns:
-            List of message dictionaries with timestamp, role, and content
-        """
+        """Messages of the current conversation (copy)."""
         conv = self._get_current_conversation()
         if conv:
             return conv.get("messages", []).copy()
         return []
 
     def get_recent_history(self, count: int = 50) -> List[Dict[str, Any]]:
-        """
-        Get the most recent messages from current conversation.
-
-        Args:
-            count: Number of messages to retrieve
-
-        Returns:
-            List of recent message dictionaries
-        """
+        """Last ``count`` messages of the current conversation."""
         history = self.get_history()
         return history[-count:] if count < len(history) else history
 
     def clear_history(self) -> None:
-        """Clear current conversation's messages."""
+        """Empty the current conversation without deleting it."""
         conv = self._get_current_conversation()
         if conv:
             conv["messages"] = []
@@ -224,19 +193,10 @@ class AIHistoryManager:
             self.logger.info("Cleared current conversation history")
 
     def delete_conversation(self, conv_id: str) -> bool:
-        """
-        Delete a specific conversation by ID.
-
-        Args:
-            conv_id: The ID of the conversation to delete
-
-        Returns:
-            True if deleted, False if not found
-        """
+        """Drop a conversation. Returns ``False`` if the id wasn't found."""
         for i, conv in enumerate(self._conversations):
             if conv.get("id") == conv_id:
                 del self._conversations[i]
-                # If we deleted the current conversation, clear the reference
                 if self._current_conversation_id == conv_id:
                     self._current_conversation_id = None
                 self._save_history()
@@ -245,19 +205,16 @@ class AIHistoryManager:
         return False
 
     def clear_all_history(self) -> None:
-        """Clear all conversations."""
         self._conversations = []
         self._current_conversation_id = None
         self._save_history()
         self.logger.info("Cleared all AI chat history")
 
 
-# Global instance for convenience
 _history_manager: Optional[AIHistoryManager] = None
 
 
 def get_ai_history_manager() -> AIHistoryManager:
-    """Get the global AI history manager instance."""
     global _history_manager
     if _history_manager is None:
         _history_manager = AIHistoryManager()

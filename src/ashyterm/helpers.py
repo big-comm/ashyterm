@@ -10,22 +10,18 @@ from .utils.security import InputSanitizer
 
 
 def is_valid_url(text: str) -> bool:
-    """
-    Checks if a string is a valid URL or an email address.
-    """
+    """True for URLs (http, ftp, mailto, …) and bare email addresses."""
     if not text:
         return False
 
     stripped_text = text.strip()
 
-    # Check for email-like strings first, which urlparse might not handle as a URL
+    # Detect bare emails (no scheme) that urlparse would miss.
+    # Reject 'user@host' (no TLD) and anything already scheme-prefixed.
     if "@" in stripped_text and "." in stripped_text.split("@")[-1]:
-        # A simple check to avoid matching things like 'user@host' without a TLD
-        # and also avoid re-matching things that are already full mailto links.
         if not any(stripped_text.startswith(s) for s in ["http", "ftp", "mailto"]):
             return True
 
-    # Use urlparse for standard URL schemes
     try:
         result = urlparse(stripped_text)
         return bool(result.scheme and result.netloc)
@@ -34,16 +30,7 @@ def is_valid_url(text: str) -> bool:
 
 
 def generate_unique_name(base_name: str, existing_names: Set[str]) -> str:
-    """
-    Generate a unique name by appending a number if the base name already exists.
-
-    Args:
-        base_name: The desired base name
-        existing_names: Set of existing names to avoid
-
-    Returns:
-        A unique name that doesn't conflict with existing names
-    """
+    """Append ``(n)`` to ``base_name`` until it doesn't collide with the set."""
     logger = get_logger("ashyterm.helpers")
     try:
         sanitized_base = InputSanitizer.sanitize_filename(base_name)
@@ -55,7 +42,7 @@ def generate_unique_name(base_name: str, existing_names: Set[str]) -> str:
         return f"{sanitized_base} ({counter})"
     except Exception as e:
         logger.error(f"Error generating unique name for '{base_name}': {e}")
-        # Fallback to a simpler logic in case of unexpected errors
+        # Fallback if sanitizer itself throws.
         if base_name not in existing_names:
             return base_name
         counter = 1
@@ -70,7 +57,6 @@ def accelerator_to_label(accelerator: str) -> str:
         return ""
 
     def _manual_conversion(accel_str: str) -> str:
-        """Manual conversion for robustness."""
         clean_accel = accel_str.replace("<", "").replace(">", "+")
         replacements = {
             "Control": "Ctrl",
@@ -127,19 +113,23 @@ def accelerator_to_label(accelerator: str) -> str:
         return _manual_conversion(accelerator)
 
 
-def create_themed_popover_menu(menu_model, parent_widget=None):
+def clear_children(widget: Gtk.Widget) -> None:
+    """Remove every direct child from ``widget``.
+
+    Several dialogs and sidebar panels rebuild their content when state
+    changes; they all need to empty the container first. Unifying on
+    one helper avoids the six copies of
+    ``while (child := box.get_first_child()) is not None: box.remove(child)``
+    that used to live in the UI layer.
     """
-    Create a PopoverMenu with the ashyterm-popover CSS class for theming.
+    while (child := widget.get_first_child()) is not None:
+        widget.remove(child)
 
-    Use this helper instead of Gtk.PopoverMenu.new_from_model() directly
-    to ensure consistent theming across the application.
 
-    Args:
-        menu_model: Gio.MenuModel for the popover
-        parent_widget: Optional widget to set as parent
+def create_themed_popover_menu(menu_model, parent_widget=None):
+    """PopoverMenu with the ashyterm-popover CSS class for consistent theming.
 
-    Returns:
-        Gtk.PopoverMenu with CSS class applied
+    Prefer this over ``Gtk.PopoverMenu.new_from_model`` directly.
     """
     popover = Gtk.PopoverMenu.new_from_model(menu_model)
     popover.add_css_class("ashyterm-popover")

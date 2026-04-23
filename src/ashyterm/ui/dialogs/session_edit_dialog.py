@@ -11,18 +11,48 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
 from ...sessions.models import SessionItem
-from ...utils.exceptions import HostnameValidationError, SSHKeyError
+from ...utils.exceptions import SSHKeyError
 from ...utils.platform import get_ssh_directory
 from ...utils.security import (
     HostnameValidator,
-    validate_ssh_hostname,
     validate_ssh_key_file,
 )
 from ...utils.tooltip_helper import get_tooltip_helper
 from ...utils.translation_utils import _
 from ...utils.accessibility import set_label as a11y_label
 from ..widgets.bash_text_view import BashTextView
-from .base_dialog import BaseDialog, validate_directory_path
+from .base_dialog import BaseDialog
+from .session_edit_form import (
+    SessionFormCollector,
+    selected_to_tri_state,
+    tri_state_to_selected,
+)
+from .session_edit_sections import (
+    add_folder_expander as _add_folder_expander_impl,
+    add_highlighting_expander as _add_highlighting_expander_impl,
+    create_local_terminal_section as _create_local_terminal_section_impl,
+    create_ssh_options_group as _create_ssh_options_group_impl,
+    create_ssh_section as _create_ssh_section_impl,
+    create_tristate_combo_row as _create_tristate_combo_row_impl,
+)
+from .session_edit_visibility import (
+    update_auth_visibility as _update_auth_visibility_impl,
+    update_local_visibility as _update_local_visibility_impl,
+    update_port_forward_state as _update_port_forward_state_impl,
+    update_post_login_command_state as _update_post_login_command_state_impl,
+    update_sftp_state as _update_sftp_state_impl,
+    update_ssh_visibility as _update_ssh_visibility_impl,
+)
+from .session_edit_validators import (
+    validate_basic,
+    validate_hostname,
+    validate_local,
+    validate_port_forward,
+    validate_post_login,
+    validate_sftp_directory,
+    validate_ssh_bundle,
+    validate_ssh_key,
+)
 
 
 class SessionEditDialog(BaseDialog):
@@ -83,6 +113,7 @@ class SessionEditDialog(BaseDialog):
         self.local_terminal_group: Optional[Adw.PreferencesGroup] = None
         self.startup_commands_group: Optional[Adw.PreferencesGroup] = None
         self._updating_highlighting_ui = False
+        self.form_collector = SessionFormCollector(self)
         self._setup_ui()
         self.connect("map", self._on_map)
         self.logger.info(
@@ -256,146 +287,20 @@ class SessionEditDialog(BaseDialog):
         parent.add(additional_group)
 
     def _add_folder_expander(self, group: Adw.PreferencesGroup) -> None:
-        """Add folder selection as a collapsible ExpanderRow to a group."""
-        folder_expander = Adw.ExpanderRow(
-            title=_("Organization"),
-            subtitle=_("Choose where to store this session"),
-        )
-        folder_row = Adw.ComboRow(
-            title=_("Folder"),
-            subtitle=_("Select a folder to organize this session"),
-        )
-
-        folder_model = Gtk.StringList()
-        folder_model.append(_("Root"))
-        self.folder_paths_map = {_("Root"): ""}
-
-        folders = sorted(
-            [
-                self.folder_store.get_item(i)
-                for i in range(self.folder_store.get_n_items())
-            ],
-            key=lambda f: f.path,
-        )
-        for folder in folders:
-            display_name = f"{'  ' * folder.path.count('/')}{folder.name}"
-            folder_model.append(display_name)
-            self.folder_paths_map[display_name] = folder.path
-
-        folder_row.set_model(folder_model)
-
-        selected_index = 0
-        for i, (display, path_val) in enumerate(self.folder_paths_map.items()):
-            if path_val == self.editing_session.folder_path:
-                selected_index = i
-                break
-        folder_row.set_selected(selected_index)
-        folder_row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_folder_changed)
-        self.folder_combo = folder_row
-
-        folder_expander.add_row(folder_row)
-        group.add(folder_expander)
+        _add_folder_expander_impl(self, group)
 
     def _add_highlighting_expander(self, group: Adw.PreferencesGroup) -> None:
-        """Add highlighting settings as a collapsible ExpanderRow to a group."""
-        self._updating_highlighting_ui = False
-
-        highlight_expander = Adw.ExpanderRow(
-            title=_("Highlighting"),
-            subtitle=_(
-                "Override global highlighting preferences per session"
-            ),
-        )
-        warning_row = Adw.ActionRow(
-            title=_("Experimental Feature"),
-            subtitle=_(
-                "Per-session highlighting overrides are experimental and may change."
-            ),
-        )
-        warning_row.add_prefix(Gtk.Image.new_from_icon_name("dialog-warning-symbolic"))
-        highlight_expander.add_row(warning_row)
-
-        has_custom_overrides = any(
-            getattr(self.editing_session, key, None) is not None
-            for key in (
-                "output_highlighting",
-                "command_specific_highlighting",
-                "cat_colorization",
-                "shell_input_highlighting",
-            )
-        )
-
-        self.highlighting_customize_switch = Adw.SwitchRow(
-            title=_("Customize highlighting for this session"),
-            subtitle=_("When off, this session uses the global highlighting settings"),
-        )
-        self.highlighting_customize_switch.set_active(has_custom_overrides)
-        self.highlighting_customize_switch.connect(
-            BaseDialog.SIGNAL_NOTIFY_ACTIVE,
-            self._on_highlighting_customize_switch_changed,
-        )
-        highlight_expander.add_row(self.highlighting_customize_switch)
-
-        self.output_highlighting_row = self._create_tristate_combo_row(
-            title=_("Output Highlighting"),
-            subtitle=_("Enable/disable output highlighting for this session"),
-            initial_value=getattr(self.editing_session, "output_highlighting", None),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        highlight_expander.add_row(self.output_highlighting_row)
-
-        self.command_specific_highlighting_row = self._create_tristate_combo_row(
-            title=_("Command-Specific Highlighting"),
-            subtitle=_("Use context-aware rules for specific commands"),
-            initial_value=getattr(
-                self.editing_session, "command_specific_highlighting", None
-            ),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        highlight_expander.add_row(self.command_specific_highlighting_row)
-
-        self.cat_colorization_row = self._create_tristate_combo_row(
-            title=_("{} Command Colorization").format("cat"),
-            subtitle=_("Colorize file content output using syntax highlighting"),
-            initial_value=getattr(self.editing_session, "cat_colorization", None),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        highlight_expander.add_row(self.cat_colorization_row)
-
-        self.shell_input_highlighting_row = self._create_tristate_combo_row(
-            title=_("Shell Input Highlighting"),
-            subtitle=_("Highlight commands as you type at the shell prompt"),
-            initial_value=getattr(
-                self.editing_session, "shell_input_highlighting", None
-            ),
-            on_changed=self._on_highlighting_override_changed,
-        )
-        highlight_expander.add_row(self.shell_input_highlighting_row)
-
-        self._set_highlighting_overrides_visible(has_custom_overrides)
-        highlight_expander.set_expanded(has_custom_overrides)
-
-        group.add(highlight_expander)
+        _add_highlighting_expander_impl(self, group)
 
     # ---------------------------------------------------------------------
     # Highlighting overrides
     # ---------------------------------------------------------------------
 
-    @staticmethod
-    def _tri_state_to_selected(value: Optional[bool]) -> int:
-        """Map tri-state (None/True/False) to ComboRow selection index."""
-        if value is None:
-            return 0
-        return 1 if value else 2
-
-    @staticmethod
-    def _selected_to_tri_state(selected: int) -> Optional[bool]:
-        """Map ComboRow selection index to tri-state (None/True/False)."""
-        if selected == 0:
-            return None
-        if selected == 1:
-            return True
-        return False
+    # Tri-state ↔ ComboRow helpers — see session_edit_form for the
+    # pure implementations. Kept as static methods for the (small)
+    # legacy call sites that reference them via self.
+    _tri_state_to_selected = staticmethod(tri_state_to_selected)
+    _selected_to_tri_state = staticmethod(selected_to_tri_state)
 
     def _create_tristate_combo_row(
         self,
@@ -405,11 +310,12 @@ class SessionEditDialog(BaseDialog):
         initial_value: Optional[bool],
         on_changed,
     ) -> Adw.ComboRow:
-        row = Adw.ComboRow(title=title, subtitle=subtitle)
-        row.set_model(Gtk.StringList.new([_("Automatic"), _("Enabled"), _("Disabled")]))
-        row.set_selected(self._tri_state_to_selected(initial_value))
-        row.connect(BaseDialog.SIGNAL_NOTIFY_SELECTED, on_changed)
-        return row
+        return _create_tristate_combo_row_impl(
+            title=title,
+            subtitle=subtitle,
+            initial_value=initial_value,
+            on_changed=on_changed,
+        )
 
     def _on_highlighting_override_changed(self, *_args) -> None:
         if self._updating_highlighting_ui:
@@ -480,329 +386,13 @@ class SessionEditDialog(BaseDialog):
         self._on_highlighting_override_changed()
 
     def _create_local_terminal_section(self, parent: Adw.PreferencesPage) -> None:
-        """Create the Local Terminal configuration section (no title)."""
-        local_group = Adw.PreferencesGroup()
-
-        # Start in Folder - using Adw.ActionRow with entry and browse button
-        working_dir_row = Adw.ActionRow(
-            title=_("Start in Folder"),
-            subtitle=_("Start the terminal in this folder"),
-        )
-
-        working_dir_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        working_dir_box.set_valign(Gtk.Align.CENTER)
-        working_dir_box.set_hexpand(True)
-
-        self.local_working_dir_entry = Gtk.Entry(
-            text=self.editing_session.local_working_directory or "",
-            placeholder_text=_("Default (Home directory)"),
-            hexpand=True,
-            width_chars=25,
-        )
-        a11y_label(self.local_working_dir_entry, _("Working directory"))
-        self.local_working_dir_entry.connect(
-            "changed", self._on_local_working_dir_changed
-        )
-
-        browse_working_dir_button = Gtk.Button(
-            icon_name="folder-open-symbolic",
-            tooltip_text=_("Browse for folder"),
-            css_classes=[BaseDialog.CSS_CLASS_FLAT],
-        )
-        browse_working_dir_button.set_valign(Gtk.Align.CENTER)
-        browse_working_dir_button.connect(
-            "clicked", self._on_browse_working_dir_clicked
-        )
-
-        working_dir_box.append(self.local_working_dir_entry)
-        working_dir_box.append(browse_working_dir_button)
-        working_dir_row.add_suffix(working_dir_box)
-        local_group.add(working_dir_row)
-
-        # Startup Commands as collapsible ExpanderRow
-        startup_expander = Adw.ExpanderRow(
-            title=_("Startup Commands"),
-            subtitle=_(
-                "Commands executed when the terminal starts"
-            ),
-        )
-        # Container for BashTextView
-        startup_container = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, spacing=0
-        )
-
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_min_content_height(130)
-        scrolled.set_max_content_height(220)
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled.add_css_class("startup-commands-container")
-
-        self.local_startup_command_view = BashTextView(
-            auto_resize=False, min_lines=3, max_lines=10
-        )
-        self.local_startup_command_view.set_top_margin(10)
-        self.local_startup_command_view.set_bottom_margin(10)
-        self.local_startup_command_view.set_left_margin(12)
-        self.local_startup_command_view.set_right_margin(12)
-        self.local_startup_command_view.add_css_class("startup-commands-text")
-
-        self.local_startup_command_view.set_text(
-            self.editing_session.local_startup_command or ""
-        )
-        self.local_startup_command_view.get_buffer().connect(
-            "changed", self._on_local_startup_command_changed
-        )
-
-        self._apply_bash_colors(self.local_startup_command_view)
-
-        scrolled.set_child(self.local_startup_command_view)
-        startup_container.append(scrolled)
-        startup_expander.add_row(startup_container)
-
-        # Expand if there are existing startup commands
-        has_commands = bool(
-            self.editing_session.local_startup_command
-            and self.editing_session.local_startup_command.strip()
-        )
-        startup_expander.set_expanded(has_commands)
-
-        local_group.add(startup_expander)
-
-        # Both controlled together for visibility
-        self.startup_commands_group = None
-        self.local_terminal_group = local_group
-        parent.add(local_group)
+        _create_local_terminal_section_impl(self, parent)
 
     def _create_ssh_section(self, parent: Adw.PreferencesPage) -> None:
-        """Create the SSH configuration section with proper Adw widgets."""
-        ssh_group = Adw.PreferencesGroup()
-
-        # Username first
-        self.user_row = self._create_entry_row(
-            title=_("Username"),
-            text=self.editing_session.user or "",
-            on_changed=self._on_user_changed,
-        )
-        ssh_group.add(self.user_row)
-        self.user_entry = self.user_row
-
-        # Server Address
-        self.host_row = self._create_entry_row(
-            title=_("Server Address"),
-            text=self.editing_session.host or "",
-            on_changed=self._on_host_changed,
-        )
-        ssh_group.add(self.host_row)
-        self.host_entry = self.host_row
-
-        # Port
-        self.port_row = self._create_spin_row(
-            title=_("Port"),
-            value=self.editing_session.port or 22,
-            min_val=1,
-            max_val=65535,
-            on_changed=lambda val: self._on_port_changed(val),
-        )
-        ssh_group.add(self.port_row)
-        self.port_entry = self.port_row
-
-        # Authentication Method - using Adw.ComboRow
-        self.auth_combo = Adw.ComboRow(
-            title=_("Authentication Method"),
-            subtitle=_("Choose how to authenticate with the server"),
-        )
-        self.auth_combo.set_model(Gtk.StringList.new([_("SSH Key"), _("Password")]))
-        if self.is_new_item:
-            self.auth_combo.set_selected(1)  # Default to Password for new sessions
-        else:
-            self.auth_combo.set_selected(0 if self.editing_session.uses_key_auth() else 1)
-        self.auth_combo.connect(
-            BaseDialog.SIGNAL_NOTIFY_SELECTED, self._on_auth_changed
-        )
-        ssh_group.add(self.auth_combo)
-
-        # SSH Key File - using Adw.ActionRow with entry and browse button
-        key_value = (
-            self.editing_session.auth_value
-            if self.editing_session.uses_key_auth()
-            else ""
-        )
-        self.key_row = Adw.ActionRow(
-            title=_("SSH Key File"),
-            subtitle=_("Path to your private key file"),
-        )
-
-        key_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-        key_box.set_valign(Gtk.Align.CENTER)
-        key_box.set_hexpand(True)
-
-        self.key_path_entry = Gtk.Entry(
-            text=key_value,
-            placeholder_text=f"{get_ssh_directory()}/id_rsa",
-            hexpand=True,
-            width_chars=30,
-        )
-        a11y_label(self.key_path_entry, _("SSH key file path"))
-        self.key_path_entry.connect("changed", self._on_key_path_changed)
-
-        self.browse_button = Gtk.Button(
-            icon_name="folder-open-symbolic",
-            tooltip_text=_("Browse for SSH key file"),
-            css_classes=[BaseDialog.CSS_CLASS_FLAT],
-        )
-        self.browse_button.set_valign(Gtk.Align.CENTER)
-        self.browse_button.connect("clicked", self._on_browse_key_clicked)
-
-        key_box.append(self.key_path_entry)
-        key_box.append(self.browse_button)
-        self.key_row.add_suffix(key_box)
-        ssh_group.add(self.key_row)
-        self.key_box = self.key_row  # Keep reference for visibility control
-
-        # Password - using Adw.PasswordEntryRow
-        password_value = (
-            self.editing_session.auth_value
-            if self.editing_session.uses_password_auth()
-            else ""
-        )
-        self.password_row = Adw.PasswordEntryRow(
-            title=_("Password"),
-        )
-        self.password_row.set_text(password_value)
-        self.password_row.connect("changed", self._on_password_changed)
-        ssh_group.add(self.password_row)
-        # Keep reference with old name for compatibility
-        self.password_entry = self.password_row
-        self.password_box = self.password_row  # Keep reference for visibility control
-
-        # Add keyring info
-        from ...utils.crypto import is_encryption_available
-
-        if not is_encryption_available():
-            keyring_row = Adw.ActionRow(
-                title=_("Password Storage"),
-                subtitle=_(
-                    "System keyring not available - password will be stored in plain text"
-                ),
-            )
-            keyring_row.add_prefix(
-                Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
-            )
-            ssh_group.add(keyring_row)
-
-        self.ssh_box = ssh_group
-        parent.add(ssh_group)
-
-        # Create SSH options as ExpanderRow inside the same group
-        self._create_ssh_options_group(ssh_group)
+        _create_ssh_section_impl(self, parent)
 
     def _create_ssh_options_group(self, ssh_group: Adw.PreferencesGroup) -> None:
-        """Create additional SSH options in a collapsible expander."""
-
-        ssh_options_expander = Adw.ExpanderRow(
-            title=_("SSH Options"),
-            subtitle=_("Post-login commands, forwarding, and SFTP"),
-        )
-        # Post-login command toggle using SwitchRow
-        self.post_login_switch = Adw.SwitchRow(
-            title=_("Run Command After Login"),
-            subtitle=_("Execute commands automatically after SSH connects"),
-        )
-        is_post_login_enabled = self.editing_session.post_login_command_enabled
-        self.post_login_switch.set_active(is_post_login_enabled)
-        self.post_login_switch.connect(
-            BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_post_login_toggle
-        )
-        ssh_options_expander.add_row(self.post_login_switch)
-
-        # Command input container - shown/hidden based on switch
-        self.post_login_command_container = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=0,
-        )
-        self.post_login_command_container.set_visible(is_post_login_enabled)
-
-        # Create a scrolled window with BashTextView for syntax-highlighted input
-        post_login_scrolled = Gtk.ScrolledWindow()
-        post_login_scrolled.set_min_content_height(100)
-        post_login_scrolled.set_max_content_height(160)
-        post_login_scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        post_login_scrolled.add_css_class("startup-commands-container")
-
-        # Use BashTextView for syntax highlighting
-        self.post_login_text_view = BashTextView(
-            auto_resize=False, min_lines=2, max_lines=6
-        )
-        self.post_login_text_view.set_top_margin(10)
-        self.post_login_text_view.set_bottom_margin(10)
-        self.post_login_text_view.set_left_margin(12)
-        self.post_login_text_view.set_right_margin(12)
-        self.post_login_text_view.add_css_class("startup-commands-text")
-        self.post_login_text_view.set_text(
-            self.editing_session.post_login_command or ""
-        )
-        self.post_login_text_view.get_buffer().connect(
-            "changed", self._on_post_login_command_changed
-        )
-
-        # Apply color scheme if available
-        self._apply_bash_colors(self.post_login_text_view)
-
-        post_login_scrolled.set_child(self.post_login_text_view)
-        self.post_login_command_container.append(post_login_scrolled)
-        ssh_options_expander.add_row(self.post_login_command_container)
-
-        # Keep legacy references
-        self.post_login_entry = self.post_login_text_view
-        self.post_login_expander = None
-        self.post_login_command_row = self.post_login_switch
-        self.post_login_command_group = ssh_group
-
-        # X11 Forwarding toggle
-        self.x11_switch = Adw.SwitchRow(
-            title=_("Enable X11 Forwarding"),
-            subtitle=_("Allow graphical applications from remote server"),
-        )
-        self.x11_switch.set_active(self.editing_session.x11_forwarding)
-        self.x11_switch.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_x11_toggled)
-        ssh_options_expander.add_row(self.x11_switch)
-
-        # SFTP toggle
-        self.sftp_switch = Adw.SwitchRow(
-            title=_("Enable SFTP Session"),
-            subtitle=_("Use default directories when opening SFTP"),
-        )
-        self.sftp_switch.set_active(self.editing_session.sftp_session_enabled)
-        self.sftp_switch.connect(BaseDialog.SIGNAL_NOTIFY_ACTIVE, self._on_sftp_toggle)
-        ssh_options_expander.add_row(self.sftp_switch)
-
-        # SFTP Local Directory - using helper
-        self.sftp_local_entry = self._create_entry_row(
-            title=_("SFTP Local Directory"),
-            text=self.editing_session.sftp_local_directory or "",
-            on_changed=self._on_validated_entry_changed,
-        )
-        ssh_options_expander.add_row(self.sftp_local_entry)
-        self.sftp_local_row = self.sftp_local_entry
-
-        # SFTP Remote Directory - using helper
-        self.sftp_remote_entry = self._create_entry_row(
-            title=_("SFTP Remote Directory"),
-            text=self.editing_session.sftp_remote_directory or "",
-            on_changed=self._on_sftp_remote_changed,
-        )
-        ssh_options_expander.add_row(self.sftp_remote_entry)
-        self.sftp_remote_row = self.sftp_remote_entry
-
-        # Port Forwarding section (inside SSH Options expander)
-        self._create_port_forward_widgets_expander(ssh_options_expander)
-
-        ssh_group.add(ssh_options_expander)
-        self.ssh_options_group = ssh_group
-
-        # Update initial visibility
-        self._update_post_login_command_state()
-        self._update_sftp_state()
+        _create_ssh_options_group_impl(self, ssh_group)
 
     def _create_port_forward_widgets(self, parent_group: Adw.PreferencesGroup) -> None:
         """Create port forwarding widgets inside the SSH Options group."""
@@ -1081,101 +671,27 @@ class SessionEditDialog(BaseDialog):
     def _on_sftp_remote_changed(self, entry: Gtk.Entry) -> None:
         self._mark_changed()
 
+    # ── Visibility delegators ───────────────────────────────
+    # State-machine for "what's visible/sensitive right now" lives
+    # in session_edit_visibility.
+
     def _update_ssh_visibility(self) -> None:
-        """Update visibility of SSH-specific fields."""
-        if not self.type_combo:
-            return
-
-        is_ssh = self.type_combo.get_selected() == 1
-
-        # Update visibility
-        visible_widgets = [
-            self.ssh_box,
-            self.test_button,
-        ]
-        for widget in visible_widgets:
-            if widget:
-                widget.set_visible(is_ssh)
-
-        # Update sensitivity and state
-        switches = [self.x11_switch, self.sftp_switch]
-        for switch in switches:
-            if switch:
-                switch.set_sensitive(is_ssh)
-                if not is_ssh:
-                    switch.set_active(False)
-        self._update_port_forward_state()
-        self._update_post_login_command_state()
-        self._update_sftp_state()
+        _update_ssh_visibility_impl(self)
 
     def _update_local_visibility(self) -> None:
-        """Update visibility of local terminal options based on session type."""
-        is_local = self.type_combo.get_selected() == 0 if self.type_combo else False
-
-        if self.local_terminal_group:
-            self.local_terminal_group.set_visible(is_local)
-
-        # Also update the startup commands group visibility
-        if self.startup_commands_group:
-            self.startup_commands_group.set_visible(is_local)
+        _update_local_visibility_impl(self)
 
     def _update_auth_visibility(self) -> None:
-        if self.key_box and self.password_box and self.auth_combo:
-            is_key = self.auth_combo.get_selected() == 0
-            self.key_box.set_visible(is_key)
-            self.password_box.set_visible(not is_key)
-        self._update_port_forward_state()
-        self._update_post_login_command_state()
-        self._update_sftp_state()
+        _update_auth_visibility_impl(self)
 
     def _update_port_forward_state(self) -> None:
-        is_ssh_session = (
-            self.type_combo.get_selected() == 1 if self.type_combo else False
-        )
-        # Port forward widgets are now inside SSH Options, control visibility
-        if hasattr(self, "port_forward_add_row") and self.port_forward_add_row:
-            self.port_forward_add_row.set_visible(is_ssh_session)
-        if hasattr(self, "port_forward_list_row") and self.port_forward_list_row:
-            self.port_forward_list_row.set_visible(is_ssh_session)
-        if self.port_forward_list:
-            self.port_forward_list.set_sensitive(is_ssh_session)
-        if self.port_forward_add_button:
-            self.port_forward_add_button.set_sensitive(is_ssh_session)
+        _update_port_forward_state_impl(self)
 
     def _update_post_login_command_state(self) -> None:
-        if not self.post_login_switch or not self.post_login_entry:
-            return
-        is_ssh_session = (
-            self.type_combo.get_selected() == 1 if self.type_combo else False
-        )
-        # Control visibility of switch and container based on session type
-        self.post_login_switch.set_sensitive(is_ssh_session)
-        if self.post_login_command_container:
-            # Show container only if SSH session AND switch is active
-            is_enabled = self.post_login_switch.get_active() and is_ssh_session
-            self.post_login_command_container.set_visible(is_enabled)
-        if not is_ssh_session:
-            self.post_login_entry.remove_css_class(self.CSS_CLASS_ERROR)
+        _update_post_login_command_state_impl(self)
 
     def _update_sftp_state(self) -> None:
-        if (
-            not self.sftp_switch
-            or not self.sftp_local_entry
-            or not self.sftp_remote_entry
-        ):
-            return
-        if not self.sftp_local_row or not self.sftp_remote_row:
-            return
-        is_ssh_session = (
-            self.type_combo.get_selected() == 1 if self.type_combo else False
-        )
-        self.sftp_switch.set_sensitive(is_ssh_session)
-        is_enabled = self.sftp_switch.get_active() and is_ssh_session
-        # Control visibility instead of just sensitivity
-        self.sftp_local_row.set_visible(is_enabled)
-        self.sftp_remote_row.set_visible(is_enabled)
-        if not is_enabled:
-            self.sftp_local_entry.remove_css_class(self.CSS_CLASS_ERROR)
+        _update_sftp_state_impl(self)
 
     def _on_local_working_dir_changed(self, entry: Gtk.Entry) -> None:
         """Handle changes to the local working directory."""
@@ -1408,15 +924,7 @@ class SessionEditDialog(BaseDialog):
         if not is_local and not self._validate_ssh_fields():
             return None
 
-        # Build session data from form fields
-        session_data = self._collect_session_data(is_local)
-
-        # Get raw password before creating session (for keyring storage)
-        raw_password = self._get_raw_password(session_data)
-
-        updated_session = SessionItem.from_dict(session_data)
-        if updated_session.uses_password_auth() and raw_password:
-            updated_session.auth_value = raw_password
+        updated_session = self.form_collector.build_session(is_local)
 
         if not updated_session.validate():
             errors = updated_session.get_validation_errors()
@@ -1428,309 +936,42 @@ class SessionEditDialog(BaseDialog):
 
         return updated_session
 
+    # The data-collection pipeline lives in ``SessionFormCollector``.
+    # These delegators keep existing references working (tests, subclass
+    # overrides) without bloating the dialog.
     def _collect_session_data(self, is_local: bool) -> dict:
-        """Collect all session data from form fields.
-
-        Args:
-            is_local: True if this is a local session, False for SSH.
-
-        Returns:
-            Dictionary with all session data.
-        """
-        session_data = self.editing_session.to_dict()
-        session_data.update(
-            {
-                "name": self.name_row.get_text().strip(),
-                "session_type": "local" if is_local else "ssh",
-            }
-        )
-
-        self._apply_highlighting_settings(session_data)
-        self._apply_tab_color(session_data)
-        self._apply_folder_settings(session_data)
-        self._apply_post_login_settings(session_data, is_local)
-        self._apply_sftp_settings(session_data, is_local)
-        self._apply_port_forwarding_settings(session_data, is_local)
-
-        if is_local:
-            self._apply_local_session_fields(session_data)
-        else:
-            self._apply_ssh_session_fields(session_data)
-
-        return session_data
-
-    def _apply_highlighting_settings(self, session_data: dict) -> None:
-        """Apply highlighting customization settings to session data."""
-        if (
-            not getattr(self, "highlighting_customize_switch", None)
-            or not self.highlighting_customize_switch.get_active()
-        ):
-            # Customization is off => equivalent to "Automatic" for all.
-            for key in [
-                "output_highlighting",
-                "command_specific_highlighting",
-                "cat_colorization",
-                "shell_input_highlighting",
-            ]:
-                session_data[key] = None
-            return
-
-        # Mapping of data keys to their corresponding UI rows
-        rows_map = {
-            "output_highlighting": "output_highlighting_row",
-            "command_specific_highlighting": "command_specific_highlighting_row",
-            "cat_colorization": "cat_colorization_row",
-            "shell_input_highlighting": "shell_input_highlighting_row",
-        }
-
-        for data_key, row_attr in rows_map.items():
-            if row := getattr(self, row_attr, None):
-                session_data[data_key] = self._selected_to_tri_state(row.get_selected())
-
-    def _apply_tab_color(self, session_data: dict) -> None:
-        """Apply tab color setting to session data."""
-        if self.editing_session.tab_color:
-            session_data["tab_color"] = self.editing_session.tab_color
-        else:
-            session_data["tab_color"] = None
-
-    def _apply_folder_settings(self, session_data: dict) -> None:
-        """Apply folder assignment to session data."""
-        if self.folder_combo and (
-            selected_item := self.folder_combo.get_selected_item()
-        ):
-            session_data["folder_path"] = self.folder_paths_map.get(
-                selected_item.get_string(), ""
-            )
-
-    def _apply_post_login_settings(self, session_data: dict, is_local: bool) -> None:
-        """Apply post-login command settings to session data."""
-        post_login_enabled = (
-            self.post_login_switch.get_active()
-            if self.post_login_switch and not is_local
-            else False
-        )
-        post_login_command = (
-            self.post_login_entry.get_text().strip() if self.post_login_entry else ""
-        )
-        session_data["post_login_command_enabled"] = post_login_enabled
-        session_data["post_login_command"] = (
-            post_login_command if post_login_enabled else ""
-        )
-
-    def _apply_sftp_settings(self, session_data: dict, is_local: bool) -> None:
-        """Apply SFTP settings to session data."""
-        sftp_enabled = (
-            self.sftp_switch.get_active()
-            if self.sftp_switch and not is_local
-            else False
-        )
-        local_dir = (
-            self.sftp_local_entry.get_text().strip() if self.sftp_local_entry else ""
-        )
-        remote_dir = (
-            self.sftp_remote_entry.get_text().strip() if self.sftp_remote_entry else ""
-        )
-        session_data["sftp_session_enabled"] = sftp_enabled
-        session_data["sftp_local_directory"] = local_dir
-        session_data["sftp_remote_directory"] = remote_dir
-
-    def _apply_port_forwarding_settings(
-        self, session_data: dict, is_local: bool
-    ) -> None:
-        """Apply port forwarding and X11 settings to session data."""
-        session_data["port_forwardings"] = (
-            copy.deepcopy(self.port_forwardings) if not is_local else []
-        )
-        session_data["x11_forwarding"] = (
-            self.x11_switch.get_active() if self.x11_switch and not is_local else False
-        )
-
-    def _apply_ssh_session_fields(self, session_data: dict) -> None:
-        """Apply SSH-specific fields to session data."""
-        session_data.update(
-            {
-                "host": self.host_entry.get_text().strip(),
-                "user": self.user_entry.get_text().strip(),
-                "port": int(self.port_entry.get_value()),
-                "auth_type": "key"
-                if self.auth_combo.get_selected() == 0
-                else "password",
-            }
-        )
-        if session_data["auth_type"] == "key":
-            session_data["auth_value"] = self.key_path_entry.get_text().strip()
-        else:
-            session_data["auth_value"] = ""  # Will be stored in keyring
-        # Clear local terminal fields for SSH sessions
-        session_data["local_working_directory"] = ""
-        session_data["local_startup_command"] = ""
-
-    def _apply_local_session_fields(self, session_data: dict) -> None:
-        """Apply local terminal-specific fields to session data."""
-        session_data.update(
-            {
-                "host": "",
-                "user": "",
-                "auth_type": "",
-                "auth_value": "",
-            }
-        )
-        session_data["sftp_session_enabled"] = False
-        session_data["port_forwardings"] = []
-        session_data["x11_forwarding"] = False
-        # Set local terminal fields
-        session_data["local_working_directory"] = (
-            self.local_working_dir_entry.get_text().strip()
-            if self.local_working_dir_entry
-            else ""
-        )
-        # Get startup commands from BashTextView
-        startup_commands = ""
-        if self.local_startup_command_view:
-            startup_commands = self.local_startup_command_view.get_text().strip()
-        session_data["local_startup_command"] = startup_commands
+        return self.form_collector.collect_data(is_local)
 
     def _get_raw_password(self, session_data: dict) -> str:
-        """Get raw password for SSH password authentication.
+        return self.form_collector.get_raw_password(session_data)
 
-        Args:
-            session_data: The session data dictionary.
-
-        Returns:
-            Raw password string, or empty string if not applicable.
-        """
-        if (
-            session_data.get("session_type") == "ssh"
-            and session_data.get("auth_type") == "password"
-        ):
-            return self.password_entry.get_text()
-        return ""
+    # ── Validator delegators ────────────────────────────────
+    # Pure predicates live in session_edit_validators. Keeping the
+    # ``self._validate_*`` naming avoids churn in call sites.
 
     def _validate_basic_fields(self) -> bool:
-        return self._validate_required_field(self.name_row, _("Session name"))
+        return validate_basic(self)
 
     def _validate_local_fields(self) -> bool:
-        """Validate local terminal specific fields."""
-        if not self.local_working_dir_entry:
-            return True
-
-        valid = validate_directory_path(
-            self.local_working_dir_entry,
-            self._validation_errors,
-            _("Working directory must exist and be a folder."),
-            allow_empty=True,
-        )
-
-        if not valid and self._validation_errors:
-            self._show_error_dialog(
-                _("Validation Error"),
-                "\n".join(self._validation_errors),
-            )
-        return valid
+        return validate_local(self)
 
     def _validate_hostname_field(self) -> bool:
-        """Validate the SSH hostname field."""
-        if not self._validate_required_field(self.host_entry, _("Server Address")):
-            return False
-        hostname = self.host_entry.get_text().strip()
-        try:
-            validate_ssh_hostname(hostname)
-            self.host_entry.remove_css_class(self.CSS_CLASS_ERROR)
-            return True
-        except HostnameValidationError as e:
-            self.host_entry.add_css_class(self.CSS_CLASS_ERROR)
-            self._validation_errors.append(e.user_message)
-            return False
+        return validate_hostname(self)
 
     def _validate_ssh_key_field(self) -> bool:
-        """Validate the SSH key file field if key auth is selected."""
-        if self.auth_combo.get_selected() != 0:
-            return True
-        key_path = self.key_path_entry.get_text().strip()
-        if not key_path:
-            return True
-        try:
-            validate_ssh_key_file(key_path)
-            self.key_path_entry.remove_css_class(self.CSS_CLASS_ERROR)
-            return True
-        except SSHKeyError as e:
-            self.key_path_entry.add_css_class(self.CSS_CLASS_ERROR)
-            self._validation_errors.append(e.user_message)
-            return False
+        return validate_ssh_key(self)
 
     def _validate_post_login_field(self) -> bool:
-        """Validate the post-login command field."""
-        if not self.post_login_switch or not self.post_login_entry:
-            return True
-        if (
-            self.post_login_switch.get_active()
-            and not self.post_login_entry.get_text().strip()
-        ):
-            self.post_login_entry.add_css_class(self.CSS_CLASS_ERROR)
-            self._validation_errors.append(
-                _("Post-login command cannot be empty when enabled.")
-            )
-            return False
-        self.post_login_entry.remove_css_class(self.CSS_CLASS_ERROR)
-        return True
+        return validate_post_login(self)
 
     def _validate_sftp_directory_field(self) -> bool:
-        """Validate the SFTP local directory field."""
-        if not self.sftp_switch or not self.sftp_switch.get_active():
-            return True
-        if not self.sftp_local_entry:
-            return True
-        return validate_directory_path(
-            self.sftp_local_entry,
-            self._validation_errors,
-            _("SFTP local directory must exist and be a directory."),
-            allow_empty=True,
-        )
+        return validate_sftp_directory(self)
 
     def _validate_ssh_fields(self) -> bool:
-        valid = True
-        if not self._validate_hostname_field():
-            valid = False
-        if not self._validate_ssh_key_field():
-            valid = False
-        if not self._validate_post_login_field():
-            valid = False
-        if not self._validate_sftp_directory_field():
-            valid = False
-
-        if not valid and self._validation_errors:
-            self._show_error_dialog(
-                _("SSH Validation Error"),
-                _("SSH configuration errors:\n{}").format(
-                    "\n".join(self._validation_errors)
-                ),
-            )
-        return valid
+        return validate_ssh_bundle(self)
 
     def _validate_port_forward_data(self, data: dict) -> list[str]:
-        """Validate port forwarding data dictionary.
-
-        Returns:
-            List of error messages, empty if valid.
-        """
-        errors = []
-        local_port = data.get("local_port", 0)
-        remote_port = data.get("remote_port", 0)
-        local_host = data.get("local_host", "")
-
-        if not (1024 < local_port <= 65535):
-            errors.append(
-                _(
-                    "Local port must be between 1025 and 65535 (ports below 1024 require administrator privileges)."
-                )
-            )
-        if not (1 <= remote_port <= 65535):
-            errors.append(_("Remote port must be between 1 and 65535."))
-        if not local_host:
-            errors.append(_("Local host cannot be empty."))
-
-        return errors
+        return validate_port_forward(data)
 
     def _get_auth_value(self) -> str:
         if self.type_combo.get_selected() == 0:

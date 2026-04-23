@@ -1,0 +1,85 @@
+{
+  "description": "Known-answer vectors for BackupManager. Each entry: plaintext files + password. Roundtrip must reproduce bytes exactly; Rust port must satisfy the same table.",
+  "vectors": [
+    {
+      "name": "empty_sessions",
+      "password": "p1",
+      "files": {
+        "sessions.json": "[]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "single_local_session",
+      "password": "p2",
+      "files": {
+        "sessions.json": "[{\"name\":\"local\",\"session_type\":\"local\"}]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "single_ssh_key_auth",
+      "password": "p3",
+      "files": {
+        "sessions.json": "[{\"name\":\"dev\",\"session_type\":\"ssh\",\"host\":\"dev.example.com\",\"user\":\"alice\",\"auth_type\":\"key\",\"auth_value\":\"/home/alice/.ssh/id\"}]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "password_with_unicode",
+      "password": "senha-com-ção-日本",
+      "files": {
+        "sessions.json": "[]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "long_password_256",
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "files": {
+        "sessions.json": "[]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "with_port_forwarding",
+      "password": "p6",
+      "files": {
+        "sessions.json": "[{\"name\":\"tun\",\"session_type\":\"ssh\",\"host\":\"h\",\"user\":\"a\",\"auth_type\":\"key\",\"port_forwardings\":[{\"name\":\"db\",\"local_port\":5432,\"remote_port\":5432,\"local_host\":\"localhost\",\"remote_host\":\"db.internal\"}]}]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "with_proxy_jump",
+      "password": "p7",
+      "files": {
+        "sessions.json": "[{\"name\":\"behind-bastion\",\"session_type\":\"ssh\",\"host\":\"target.internal\",\"user\":\"alice\",\"auth_type\":\"key\",\"proxy_jump\":\"alice@bastion.example.com\"}]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "with_x11",
+      "password": "p8",
+      "files": {
+        "sessions.json": "[{\"name\":\"gui\",\"session_type\":\"ssh\",\"host\":\"h\",\"user\":\"a\",\"auth_type\":\"key\",\"x11_forwarding\":true}]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "with_sftp",
+      "password": "p9",
+      "files": {
+        "sessions.json": "[{\"name\":\"sftp\",\"session_type\":\"ssh\",\"host\":\"h\",\"user\":\"a\",\"auth_type\":\"key\",\"sftp_session_enabled\":true,\"sftp_remote_directory\":\"/var/www\"}]",
+        "folders.json": "[]"
+      }
+    },
+    {
+      "name": "multiple_sessions_and_folders",
+      "password": "pA",
+      "files": {
+        "sessions.json": "[{\"name\":\"s1\",\"session_type\":\"local\"},{\"name\":\"s2\",\"session_type\":\"ssh\",\"host\":\"h2\",\"user\":\"u\",\"auth_type\":\"key\"},{\"name\":\"s3\",\"session_type\":\"ssh\",\"host\":\"h3\",\"user\":\"u\",\"auth_type\":\"password\"}]",
+        "folders.json": "[{\"name\":\"prod\",\"path\":\"/prod\",\"parent_path\":\"\"},{\"name\":\"staging\",\"path\":\"/staging\",\"parent_path\":\"\"}]"
+      }
+    }
+  ]
+}

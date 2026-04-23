@@ -1,16 +1,15 @@
 # ashyterm/sessions/tree.py
 
-from typing import Callable, List, Optional, Set, Union
+from typing import Callable, List, Optional, Union
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
-from gi.repository import Gdk, Gio, GLib, GObject, Graphene, Gtk
+from gi.repository import Gdk, Gio, GLib, GObject, Gtk
 
 from ..core.signals import AppSignals
-from ..helpers import create_themed_popover_menu
 from ..utils.accessibility import set_label as a11y_label
 
 # Lazy imports for menus - only loaded when context menus are actually needed
@@ -50,6 +49,13 @@ def _get_inline_context_menu():
 from ..utils.translation_utils import _
 from .models import LayoutItem, SessionFolder, SessionItem
 from .operations import SessionOperations
+from .tree_context_menu import (
+    show_inline_context_menu as _show_inline_context_menu_impl,
+    show_inline_root_context_menu as _show_inline_root_context_menu_impl,
+    show_popover_context_menu as _show_popover_context_menu_impl,
+    show_popover_root_context_menu as _show_popover_root_context_menu_impl,
+)
+from .tree_search import SessionTreeSearch
 
 
 def _get_children_model(
@@ -66,18 +72,10 @@ def iterate_tree_model(
         Callable[[GObject.GObject, GObject.GObject], bool]
     ] = None,
 ) -> None:
-    """Recursively iterate over a Gtk.TreeListModel calling callback for each item.
+    """Walk every row in a Gtk.TreeListModel.
 
-    This is a generic tree iteration utility to reduce code duplication in
-    tree operations like collecting/restoring expansion states.
-
-    Args:
-        model: The Gtk.TreeListModel or child model to iterate.
-        callback: Function(row, item, is_expanded) -> should_recurse.
-                  Called for each row. Return True to recurse into children.
-        recurse_condition: Optional function(row, item) -> bool.
-                          If provided, only recurse when this returns True.
-                          If None, recurse based on callback return value.
+    ``callback(row, item, is_expanded)`` returns whether to recurse (or
+    defer the decision to ``recurse_condition`` when provided).
     """
     for i in range(model.get_n_items()):
         row = model.get_item(i)
@@ -144,10 +142,12 @@ class SessionTreeView:
         self._clipboard_is_cut: bool = False
         self._is_restoring_state: bool = False
         self._populated_folders: set[str] = set()
-        self._filter_text = ""
-        self._saved_expansion_state: Optional[Set[str]] = (
-            None  # Save expansion state before search
-        )
+        # Search / expansion state now lives in the SessionTreeSearch
+        # collaborator. The _filter_text / _saved_expansion_state
+        # attributes below are kept as properties that read through
+        # to the collaborator so legacy internal references keep
+        # working while we migrate callers over.
+        self.search = SessionTreeSearch(self)
         self.on_session_activated: Optional[Callable[[SessionItem], None]] = None
         self.on_layout_activated: Optional[Callable[[str], None]] = None
         self.on_folder_expansion_changed: Optional[Callable[[], None]] = None
@@ -175,160 +175,32 @@ class SessionTreeView:
                 signals.disconnect(handler_id)
         self._signal_handler_ids.clear()
 
+    # ── Search delegators ────────────────────────────────────
+    # The filter + expansion state live on ``self.search``. Everything
+    # below forwards to it so callers (and the CustomFilter callback)
+    # don't need to know about the split.
+
     def _filter_func(self, item: GObject.GObject) -> bool:
-        """Filter function that determines if an item should be visible."""
-        if not self._filter_text:
-            return True
-
-        # Get the actual item from the tree list row
-        if hasattr(item, "get_item"):
-            tree_list_row = item
-            actual_item = tree_list_row.get_item()
-        else:
-            actual_item = item
-
-        # Check if the item name contains the filter text
-        item_name = getattr(actual_item, "name", "").lower()
-        if self._filter_text in item_name:
-            return True
-
-        # For folders, also check if any children match the filter
-        if isinstance(actual_item, SessionFolder):
-            return self._folder_contains_matching_items(actual_item)
-
-        return False
+        return self.search.filter_func(item)
 
     def _folder_contains_matching_items(self, folder: SessionFolder) -> bool:
-        """Recursively check if a folder contains any items matching the current filter."""
-        if not self._filter_text:
-            return False
-
-        # Ensure folder children are populated
-        if folder.path not in self._populated_folders:
-            self._populate_folder_children(folder)
-
-        # Check all children recursively
-        for child in folder.children:
-            # Check if child name matches
-            child_name = getattr(child, "name", "").lower()
-            if self._filter_text in child_name:
-                return True
-
-            # If child is a folder, check its children recursively
-            if isinstance(child, SessionFolder):
-                if self._folder_contains_matching_items(child):
-                    return True
-
-        return False
+        return self.search.folder_contains_matching(folder)
 
     def set_filter_text(self, text: str) -> None:
-        """Updates the filter text and refreshes the filter."""
-        old_filter_text = self._filter_text
-        self._filter_text = text.lower()
-
-        # If we're starting a new search (text was added to empty search), save current expansion state
-        if text and not old_filter_text:
-            self._save_current_expansion_state()
-
-        # If we're starting a new search (text was added), expand folders with matches
-        if text and (not old_filter_text or text.startswith(old_filter_text)):
-            self._expand_folders_with_matches()
-
-        self.filter.changed(Gtk.FilterChange.DIFFERENT)
-
-    def _expand_folders_with_matches(self) -> None:
-        """Automatically expand folders that contain items matching the current filter."""
-        if not self._filter_text:
-            return
-
-        self._expand_matching_folders_recursive(self.tree_model)
-
-    def _expand_matching_folders_recursive(self, model) -> None:
-        """Recursively expand folders that contain matching items."""
-        for i in range(model.get_n_items()):
-            row = model.get_item(i)
-            if not row:
-                continue
-
-            item = row.get_item()
-            if not isinstance(item, SessionFolder):
-                continue
-
-            if not self._folder_contains_matching_items(item):
-                continue
-
-            self._expand_folder_if_needed(row, item)
-
-    def _expand_folder_if_needed(self, row, item: "SessionFolder") -> None:
-        """Expands a folder row if it's not already expanded."""
-        if not row.get_expanded():
-            row.set_expanded(True)
-
-        if item.path not in self._populated_folders:
-            self._populate_folder_children(item)
+        self.search.set_filter_text(text)
 
     def clear_search(self) -> None:
-        """Clears the search filter and restores original expansion state."""
-        if self._filter_text:
-            self._filter_text = ""
-            self._restore_saved_expansion_state()
-            self.filter.changed(Gtk.FilterChange.DIFFERENT)
+        self.search.clear()
 
     def _save_current_expansion_state(self) -> None:
-        """Saves the current expansion state of all folders before search begins."""
-        self._saved_expansion_state = set()
-
-        def collect_callback(row, item, is_expanded):
-            """Collect expanded folder paths."""
-            if isinstance(item, SessionFolder) and is_expanded:
-                self._saved_expansion_state.add(item.path)
-            return is_expanded  # Only recurse into expanded folders
-
-        iterate_tree_model(self.tree_model, collect_callback)
-        self.logger.debug(f"Saved expansion state: {self._saved_expansion_state}")
+        self.search.save_expansion_state()
 
     def _restore_saved_expansion_state(self) -> None:
-        """Restores the expansion state, merging pre-search and during-search expansions."""
-        if self._saved_expansion_state is None:
-            # If no saved state, fall back to settings
-            self._apply_expansion_state()
-            return
+        self.search.restore_expansion_state()
 
-        # Collect folders the user expanded during the search
-        current_expanded: set[str] = set()
-
-        def collect_current(row, item, is_expanded):
-            if isinstance(item, SessionFolder) and is_expanded:
-                current_expanded.add(item.path)
-            return is_expanded
-
-        iterate_tree_model(self.tree_model, collect_current)
-
-        # Merge: restore anything that was expanded before OR during search
-        merged = self._saved_expansion_state | current_expanded
-
-        self.logger.debug(f"Restoring merged expansion state: {merged}")
-
-        def restore_callback(row, item, is_expanded):
-            """Restore expansion state for folders."""
-            if isinstance(item, SessionFolder):
-                should_be_expanded = item.path in merged
-                if should_be_expanded and not is_expanded:
-                    row.set_expanded(True)
-                elif not should_be_expanded and is_expanded:
-                    row.set_expanded(False)
-                return should_be_expanded  # Only recurse into folders that should be expanded
-            return False
-
-        # Set restoring state flag to prevent saving during restoration
-        self._is_restoring_state = True
-        try:
-            iterate_tree_model(self.tree_model, restore_callback)
-        finally:
-            self._is_restoring_state = False
-
-        # Clear the saved state
-        self._saved_expansion_state = None
+    @property
+    def _filter_text(self) -> str:
+        return self.search.filter_text
 
     def get_widget(self) -> Gtk.ListView:
         """Returns the list view widget."""
@@ -346,11 +218,6 @@ class SessionTreeView:
         list_view.set_focusable(True)
         list_view.connect("activate", self._on_row_activated)
 
-        # Handle focus to ensure navigation works
-        focus_controller = Gtk.EventControllerFocus.new()
-        focus_controller.connect("enter", self._on_column_view_focus_enter)
-        list_view.add_controller(focus_controller)
-
         empty_area_gesture = Gtk.GestureClick.new()
         empty_area_gesture.set_button(Gdk.BUTTON_SECONDARY)
         empty_area_gesture.connect("pressed", self._on_empty_area_right_click)
@@ -366,23 +233,18 @@ class SessionTreeView:
         list_view.add_controller(key_controller)
         return list_view
 
-    def _on_column_view_focus_enter(self, controller: Gtk.EventControllerFocus) -> None:
-        """Handle focus entering the column view to ensure proper navigation."""
-        pass
-
     def _on_factory_setup(
         self, factory: Gtk.SignalListItemFactory, list_item: Gtk.ListItem
     ) -> None:
         """Sets up the widget structure for each row in the ColumnView."""
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6, hexpand=True)
 
-        # MODIFIED: Add a dedicated spacer for indentation
         spacer = Gtk.Box()
-        spacer.set_name("indent-spacer")  # Assign a name to find it later
+        spacer.set_name("indent-spacer")  # find it again in _on_factory_bind
         box.append(spacer)
 
         icon = Gtk.Image()
-        label = Gtk.Label(hexpand=True)
+        label = Gtk.Label(xalign=0.0, hexpand=True)
         box.append(icon)
         box.append(label)
         list_item.set_child(box)
@@ -1000,60 +862,7 @@ class SessionTreeView:
     def _show_inline_context_menu(
         self, item: Union[SessionItem, SessionFolder, LayoutItem]
     ) -> None:
-        """Show the inline context menu within the sidebar popover."""
-        self.logger.debug(
-            f"_show_inline_context_menu called with item: {type(item).__name__}"
-        )
-        ui_builder = getattr(self.parent_window, "ui_builder", None)
-        if not ui_builder:
-            self.logger.debug("ui_builder is None")
-            return
-
-        content_stack = getattr(ui_builder, "sidebar_content_stack", None)
-        inline_menu_box = getattr(ui_builder, "inline_context_menu_box", None)
-
-        self.logger.debug(
-            f"content_stack: {content_stack}, inline_menu_box: {inline_menu_box}"
-        )
-
-        if not content_stack or not inline_menu_box:
-            self.logger.debug("content_stack or inline_menu_box is None")
-            return
-
-        # Clear previous inline menu content
-        while (child := inline_menu_box.get_first_child()) is not None:
-            inline_menu_box.remove(child)
-
-        # Create inline context menu widget
-        inline_context_menu_cls = _get_inline_context_menu()
-        inline_menu = inline_context_menu_cls(self.parent_window)
-
-        # Set up go back callback
-        def go_back():
-            content_stack.set_visible_child_name("normal")
-
-        inline_menu.set_go_back_callback(go_back)
-
-        # Show menu for the specific item type
-        if isinstance(item, SessionItem):
-            self.logger.debug("Showing menu for SessionItem")
-            inline_menu.show_for_session(
-                item, self.folder_store, self.has_clipboard_content()
-            )
-        elif isinstance(item, SessionFolder):
-            self.logger.debug("Showing menu for SessionFolder")
-            inline_menu.show_for_folder(item, self.has_clipboard_content())
-        elif isinstance(item, LayoutItem):
-            self.logger.debug("Showing menu for LayoutItem")
-            inline_menu.show_for_layout(item)
-        else:
-            self.logger.debug(f"Unknown item type: {type(item)}")
-
-        inline_menu_box.append(inline_menu)
-
-        # Switch to context menu view
-        self.logger.debug("Switching to context-menu view")
-        content_stack.set_visible_child_name("context-menu")
+        _show_inline_context_menu_impl(self, item)
 
     def _show_popover_context_menu(
         self,
@@ -1062,59 +871,7 @@ class SessionTreeView:
         x: float,
         y: float,
     ) -> None:
-        """Show the traditional popover context menu."""
-        menu_model = None
-        if isinstance(item, SessionItem):
-            found, position = self.session_store.find(item)
-            if found:
-                menu_model = _get_create_session_menu()(
-                    item,
-                    self.session_store,
-                    position,
-                    self.folder_store,
-                    self.has_clipboard_content(),
-                )
-        elif isinstance(item, SessionFolder):
-            found, position = self.folder_store.find(item)
-            if found:
-                menu_model = _get_create_folder_menu()(
-                    item,
-                    self.folder_store,
-                    position,
-                    self.session_store,
-                    self.has_clipboard_content(),
-                )
-        elif isinstance(item, LayoutItem):
-            menu_model = Gio.Menu()
-            menu_model.append(_("Restore Layout"), f"win.restore_layout('{item.name}')")
-            menu_model.append(
-                _("Move to Folder..."), f"win.move-layout-to-folder('{item.name}')"
-            )
-            menu_model.append_section(None, Gio.Menu())
-            menu_model.append(_("Delete Layout"), f"win.delete_layout('{item.name}')")
-
-        if menu_model:
-            anchor_widget = list_item.get_child()
-            popover = create_themed_popover_menu(menu_model, self.parent_window)
-
-            point = Graphene.Point()
-            point.x = x
-            point.y = y
-
-            rect = Gdk.Rectangle()
-            success, translated = anchor_widget.compute_point(self.parent_window, point)
-
-            if success:
-                rect.x = int(translated.x)
-                rect.y = int(translated.y)
-            else:
-                rect.x = int(x)
-                rect.y = int(y)
-
-            rect.width = 1
-            rect.height = 1
-            popover.set_pointing_to(rect)
-            popover.popup()
+        _show_popover_context_menu_impl(self, item, list_item, x, y)
 
     def _on_empty_area_right_click(
         self, _gesture: Gtk.GestureClick, _n_press: int, x: float, y: float
@@ -1141,60 +898,10 @@ class SessionTreeView:
             self._show_popover_root_context_menu(x, y)
 
     def _show_inline_root_context_menu(self) -> None:
-        """Show the inline context menu for root (empty area) within the sidebar popover."""
-        ui_builder = getattr(self.parent_window, "ui_builder", None)
-        if not ui_builder:
-            return
-
-        content_stack = getattr(ui_builder, "sidebar_content_stack", None)
-        inline_menu_box = getattr(ui_builder, "inline_context_menu_box", None)
-
-        if not content_stack or not inline_menu_box:
-            return
-
-        # Clear previous inline menu content
-        while (child := inline_menu_box.get_first_child()) is not None:
-            inline_menu_box.remove(child)
-
-        # Create inline context menu widget
-        inline_context_menu_cls = _get_inline_context_menu()
-        inline_menu = inline_context_menu_cls(self.parent_window)
-
-        # Set up go back callback
-        def go_back():
-            content_stack.set_visible_child_name("normal")
-
-        inline_menu.set_go_back_callback(go_back)
-        inline_menu.show_for_root(self.has_clipboard_content())
-
-        inline_menu_box.append(inline_menu)
-
-        # Switch to context menu view
-        content_stack.set_visible_child_name("context-menu")
+        _show_inline_root_context_menu_impl(self)
 
     def _show_popover_root_context_menu(self, x: float, y: float) -> None:
-        """Show the traditional popover context menu for root."""
-        menu_model = _get_create_root_menu()(self.has_clipboard_content())
-        popover = create_themed_popover_menu(menu_model, self.parent_window)
-
-        point = Graphene.Point()
-        point.x = x
-        point.y = y
-
-        rect = Gdk.Rectangle()
-        success, translated = self.column_view.compute_point(self.parent_window, point)
-
-        if success:
-            rect.x = int(translated.x)
-            rect.y = int(translated.y)
-        else:
-            rect.x = int(x)
-            rect.y = int(y)
-
-        rect.width = 1
-        rect.height = 1
-        popover.set_pointing_to(rect)
-        popover.popup()
+        _show_popover_root_context_menu_impl(self, x, y)
 
     def has_clipboard_content(self) -> bool:
         """Checks if there is a valid item in the clipboard."""

@@ -9,6 +9,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk
 
+from ...helpers import clear_children
 from ...sessions.models import SessionItem
 from ...utils.ssh_config_parser import SSHConfigParser, SSHConfigHost
 from ...utils.translation_utils import _
@@ -82,9 +83,7 @@ class QuickConnectDialog(Adw.Dialog):
         self._populate_list(self._hosts)
 
     def _populate_list(self, hosts: list[SSHConfigHost]) -> None:
-        # Clear existing rows
-        while (child := self._list_box.get_first_child()) is not None:
-            self._list_box.remove(child)
+        clear_children(self._list_box)
 
         if not hosts:
             self._list_box.set_visible(False)

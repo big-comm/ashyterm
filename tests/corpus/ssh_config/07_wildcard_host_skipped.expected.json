@@ -1,0 +1,13 @@
+{
+  "description": "Wildcard (*) alias is dropped; its options don't leak to next host.",
+  "expected": [
+    {
+      "alias": "real",
+      "hostname": "r.example",
+      "user": null,
+      "port": null,
+      "identity_file": null,
+      "forward_x11": null
+    }
+  ]
+}

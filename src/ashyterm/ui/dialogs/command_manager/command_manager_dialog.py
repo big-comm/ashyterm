@@ -14,6 +14,7 @@ from ....data.command_manager_models import (
     generate_id,
     get_command_button_manager,
 )
+from ....helpers import clear_children
 from ....settings.manager import SettingsManager
 from ....utils.accessibility import set_label as a11y_label
 from ....utils.syntax_utils import get_bash_pango_markup
@@ -290,9 +291,7 @@ class CommandManagerDialog(Adw.Window):
 
     def _populate_commands(self):
         """Populate the dialog with command buttons in a flat grid (no categories)."""
-        # Clear existing
-        while child := self.commands_flow_box.get_first_child():
-            self.commands_flow_box.remove(child)
+        clear_children(self.commands_flow_box)
 
         self._all_command_widgets.clear()
 
@@ -700,7 +699,7 @@ class CommandManagerDialog(Adw.Window):
 
         info_label = Gtk.Label(
             label=_("Click on a command to restore it:"),
-           
+            xalign=0.0,
             css_classes=[BaseDialog.CSS_CLASS_DIM_LABEL],
         )
         content_box.append(info_label)

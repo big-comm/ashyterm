@@ -1,0 +1,11 @@
+{
+  "description": "Committed encrypted backup. Rust port must decrypt this exact file with the password below and get the files listed.",
+  "archive": "known_v1.7z",
+  "password": "kat-test-password-v1",
+  "magic_bytes_hex": "377abcaf271c",
+  "expected_files": {
+    "sessions.json": "[]",
+    "folders.json": "[]",
+    "layouts/default.json": "{\"name\":\"default\"}"
+  }
+}

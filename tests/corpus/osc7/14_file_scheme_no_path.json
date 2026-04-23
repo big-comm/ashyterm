@@ -1,0 +1,8 @@
+{
+  "description": "file: with no slashes — urlparse still parses. Path is empty.",
+  "uri": "file:",
+  "expected": {
+    "hostname": "localhost",
+    "path": ""
+  }
+}

@@ -1,16 +1,16 @@
 # ashyterm/terminal/manager.py
 
 import os
-import pathlib
 import threading
 from functools import lru_cache
 from typing import Any, Callable, Dict, List, Optional, Union
 
 import gi
 
+gi.require_version("Adw", "1")
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import Gdk, Gio, GLib, Gtk, Vte
+from gi.repository import Adw, Gio, GLib, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
@@ -23,6 +23,24 @@ from ..utils.security import validate_session_data
 from ..utils.translation_utils import _
 from .registry import ManualSSHTracker, TerminalLifecycleManager, TerminalRegistry
 from .ssh_lifecycle import SSHLifecycleMixin
+from .terminal_config import (
+    compute_highlighting_config as _compute_highlighting_config_impl,
+    get_ssh_highlight_config as _get_ssh_highlight_config_impl,
+    resolve_working_directory as _resolve_working_directory_impl,
+)
+from .terminal_drag_drop import (
+    emit_ssh_file_drop_signal as _emit_ssh_file_drop_signal_impl,
+    handle_sftp_drop as _handle_sftp_drop_impl,
+    handle_ssh_drop as _handle_ssh_drop_impl,
+    setup_sftp_drop as _setup_sftp_drop_impl,
+    setup_ssh_drop as _setup_ssh_drop_impl,
+)
+from .terminal_title import (
+    compute_title,
+    format_duration,
+    local_title,
+    ssh_title,
+)
 from .url_handler import URLHandlerMixin
 
 # Lazy imports for heavy modules - loaded on first use
@@ -53,6 +71,35 @@ def _get_terminal_menu_creator():
     """Lazy import terminal menu creator."""
     from ..ui.menus import create_terminal_menu
     return create_terminal_menu
+
+
+# Regex signatures for paste content that deserves a confirmation prompt
+# when the user has the safety net enabled. Intentionally narrow — we
+# don't want to block mundane multi-line commits from the clipboard.
+import re as _re
+
+_RISKY_PASTE_PATTERNS: tuple = (
+    _re.compile(r"\bsudo\b", _re.IGNORECASE),
+    _re.compile(r"\brm\s+-[rRfF]", _re.IGNORECASE),
+    _re.compile(r"\bmkfs\.", _re.IGNORECASE),
+    _re.compile(r"\bdd\s+[^|]*of=/dev/", _re.IGNORECASE),
+    _re.compile(r"\bcurl\b[^|]*\|\s*(sudo\s+)?(bash|sh)\b", _re.IGNORECASE),
+    _re.compile(r"\bwget\b[^|]*\|\s*(sudo\s+)?(bash|sh)\b", _re.IGNORECASE),
+    _re.compile(r"\bchmod\s+(-R\s+)?[0-7]*777\b"),
+    _re.compile(r">\s*/dev/sd[a-z]"),
+)
+
+
+def _paste_needs_confirmation(text: str) -> bool:
+    """True when ``text`` looks multi-line or matches a risky pattern."""
+    if not text:
+        return False
+    if "\n" in text.rstrip("\n"):  # a trailing newline alone is fine
+        return True
+    for rx in _RISKY_PASTE_PATTERNS:
+        if rx.search(text):
+            return True
+    return False
 
 
 def _create_terminal_menu(*args, **kwargs):
@@ -184,13 +231,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         return terminal
 
     def get_precreated_env_data(self, timeout: float = 0.1) -> "Optional[tuple]":
-        """
-        Get the pre-prepared shell environment data if ready.
-        Args:
-            timeout: Max time to wait for env preparation (default 100ms)
-        Returns:
-            Tuple of (cmd, env, temp_dir_path) or None if not ready/failed
-        """
+        """``(cmd, env, temp_dir)`` from the precomputed env, or ``None`` if not ready."""
         ready_event = getattr(self, "_precreated_env_ready", None)
         if ready_event and ready_event.wait(timeout):
             data = getattr(self, "_precreated_env_data", None)
@@ -344,28 +385,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
     def _resolve_working_directory(
         self, working_directory: Optional[str]
     ) -> Optional[str]:
-        if not working_directory:
-            return None
-        try:
-            expanded_path = os.path.expanduser(os.path.expandvars(working_directory))
-            resolved_path = os.path.abspath(expanded_path)
-            path_obj = pathlib.Path(resolved_path)
-            if (
-                path_obj.exists()
-                and path_obj.is_dir()
-                and os.access(resolved_path, os.R_OK | os.X_OK)
-            ):
-                return resolved_path
-            else:
-                self.logger.warning(
-                    f"Working directory not accessible: {working_directory}"
-                )
-                return None
-        except Exception as e:
-            self.logger.error(
-                f"Error resolving working directory '{working_directory}': {e}"
-            )
-            return None
+        return _resolve_working_directory_impl(working_directory)
 
     def _on_directory_uri_changed(self, terminal: Vte.Terminal, _param_spec):
         try:
@@ -440,16 +460,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         # Check if this terminal is visible in the active tab's page
         return terminal.is_visible() and terminal.get_mapped()
 
-    @staticmethod
-    def _format_duration(seconds: float) -> str:
-        s = int(seconds)
-        if s < 60:
-            return f"{s}s"
-        m, s = divmod(s, 60)
-        if m < 60:
-            return f"{m}m {s}s"
-        h, m = divmod(m, 60)
-        return f"{h}h {m}m"
+    _format_duration = staticmethod(format_duration)
 
     def _compute_terminal_title(
         self,
@@ -459,48 +470,34 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         osc7_info: Optional[OSC7Info],
     ) -> str:
         """Computes the display title for a terminal based on its type."""
-        terminal_type = terminal_info.get("type")
-
-        if terminal_type == "ssh":
-            return self._get_ssh_title(terminal_info, osc7_info)
-
-        if terminal_type == "local":
-            return self._get_local_title(terminal_info, terminal_id, osc7_info)
-
-        if terminal_type == "sftp":
-            return self._get_sftp_title(terminal_info, terminal)
-
-        return "Terminal"
+        # Only the local branch needs the manual-SSH lookup; only the
+        # SFTP branch needs a tab_manager query. Pass both in so the
+        # title renderer stays pure.
+        return compute_title(
+            terminal_info,
+            ssh_target=self.manual_ssh_tracker.get_ssh_target(terminal_id),
+            sftp_title=self._get_sftp_title(terminal_info, terminal),
+            osc7_info=osc7_info,
+        )
 
     def _get_ssh_title(self, terminal_info: dict, osc7_info: Optional[OSC7Info]) -> str:
-        """Gets the title for an SSH terminal."""
-        session = terminal_info.get("identifier")
-        if isinstance(session, SessionItem):
-            if osc7_info:
-                return f"{session.name}:{osc7_info.display_path}"
-            return session.name
-        return "Terminal"
+        return ssh_title(terminal_info, osc7_info)
 
     def _get_local_title(
         self, terminal_info: dict, terminal_id: int, osc7_info: Optional[OSC7Info]
     ) -> str:
-        """Gets the title for a local terminal."""
-        ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
-        if ssh_target:
-            if osc7_info:
-                return f"{ssh_target}:{osc7_info.display_path}"
-            return ssh_target
-
-        if osc7_info:
-            return osc7_info.display_path
-
-        identifier = terminal_info.get("identifier")
-        if isinstance(identifier, SessionItem):
-            return identifier.name
-        return str(identifier)
+        return local_title(
+            terminal_info,
+            ssh_target=self.manual_ssh_tracker.get_ssh_target(terminal_id),
+            osc7_info=osc7_info,
+        )
 
     def _get_sftp_title(self, terminal_info: dict, terminal: Vte.Terminal) -> str:
-        """Gets the title for an SFTP terminal."""
+        """Gets the title for an SFTP terminal.
+
+        Kept on the manager because it needs to query the tab_manager
+        for the authoritative SFTP base title (tracked on the tab).
+        """
         session = terminal_info.get("identifier")
         if isinstance(session, SessionItem):
             return self._get_sftp_display_title(session, terminal)
@@ -630,48 +627,12 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
     def _compute_highlighting_config(
         self, session: Optional[SessionItem], is_local: bool
     ) -> tuple[bool, dict]:
-        """Compute whether highlighting should be enabled and return config.
-
-        Returns:
-            Tuple of (should_spawn_highlighted, config_dict)
-        """
-        highlight_manager = self._get_highlight_manager()
-
-        # Get base setting for local or SSH
-        if is_local:
-            output_enabled = highlight_manager.enabled_for_local
-        else:
-            output_enabled = highlight_manager.enabled_for_ssh
-
-        # Per-session override
-        if session and session.output_highlighting is not None:
-            output_enabled = session.output_highlighting
-
-        # Cat and shell input depend on output highlighting
-        cat_enabled = output_enabled and self.settings_manager.get(
-            "cat_colorization_enabled", True
+        return _compute_highlighting_config_impl(
+            session=session,
+            is_local=is_local,
+            highlight_manager=self._get_highlight_manager(),
+            settings_manager=self.settings_manager,
         )
-        shell_input_enabled = output_enabled and self.settings_manager.get(
-            "shell_input_highlighting_enabled", False
-        )
-
-        # Per-session overrides
-        if session:
-            if session.cat_colorization is not None:
-                cat_enabled = output_enabled and session.cat_colorization
-            if session.shell_input_highlighting is not None:
-                shell_input_enabled = (
-                    output_enabled and session.shell_input_highlighting
-                )
-
-        should_highlight = output_enabled or cat_enabled or shell_input_enabled
-
-        config = {
-            "output_highlighting": output_enabled,
-            "cat_colorization": cat_enabled,
-            "shell_input_highlighting": shell_input_enabled,
-        }
-        return should_highlight, config
 
     def _spawn_highlighted_local(
         self,
@@ -775,31 +736,11 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         self._setup_ssh_drag_and_drop(terminal, terminal_id)
 
     def _get_ssh_highlight_config(self, session: SessionItem) -> dict:
-        """Determines SSH highlighting configuration based on settings and session."""
-        highlight_manager = self._get_highlight_manager()
-        output_enabled = highlight_manager.enabled_for_ssh
-
-        if session.output_highlighting is not None:
-            output_enabled = session.output_highlighting
-
-        cat_enabled = output_enabled and self.settings_manager.get(
-            "cat_colorization_enabled", True
+        return _get_ssh_highlight_config_impl(
+            session=session,
+            highlight_manager=self._get_highlight_manager(),
+            settings_manager=self.settings_manager,
         )
-        shell_input_enabled = output_enabled and self.settings_manager.get(
-            "shell_input_highlighting_enabled", False
-        )
-
-        if session.cat_colorization is not None:
-            cat_enabled = output_enabled and session.cat_colorization
-        if session.shell_input_highlighting is not None:
-            shell_input_enabled = output_enabled and session.shell_input_highlighting
-
-        return {
-            "output_enabled": output_enabled,
-            "cat_enabled": cat_enabled,
-            "shell_input_enabled": shell_input_enabled,
-            "should_highlight": output_enabled or cat_enabled or shell_input_enabled,
-        }
 
     def _spawn_highlighted_ssh(
         self,
@@ -954,104 +895,34 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             self.parent_window._update_font_sizer_widget()
         return False
 
+    # ── Drag-and-drop delegators ────────────────────────────
+    # Helpers live in terminal_drag_drop; these wrappers preserve
+    # the method signatures the signal connections already use.
+
     def _setup_sftp_drag_and_drop(self, terminal: Vte.Terminal):
-        drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
-        drop_target.connect("drop", self._on_file_drop, terminal)
-        terminal.add_controller(drop_target)
+        _setup_sftp_drop_impl(terminal, on_drop=self._on_file_drop)
 
     def _setup_ssh_drag_and_drop(self, terminal: Vte.Terminal, terminal_id: int):
-        """Setup drag-and-drop for SSH terminals to upload files."""
-        drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
-        drop_target.connect("drop", self._on_ssh_file_drop, terminal, terminal_id)
-        terminal.add_controller(drop_target)
+        _setup_ssh_drop_impl(
+            terminal, terminal_id=terminal_id, on_drop=self._on_ssh_file_drop
+        )
 
-    def _on_file_drop(self, drop_target, value, x, y, terminal: Vte.Terminal) -> bool:
-        try:
-            files = value.get_files()
-            for file in files:
-                local_path = file.get_path()
-                if local_path:
-                    command_to_send = f'put -r "{local_path}"\n'
-                    self.logger.info(
-                        f"File dropped on SFTP terminal. Sending command: {command_to_send.strip()}"
-                    )
-                    terminal.feed_child(command_to_send.encode("utf-8"))
-            return True
-        except Exception as e:
-            self.logger.error(f"Error handling file drop for SFTP: {e}")
-            return False
+    def _on_file_drop(
+        self, drop_target, value, x, y, terminal: Vte.Terminal
+    ) -> bool:
+        return _handle_sftp_drop_impl(value, terminal)
 
     def _on_ssh_file_drop(
         self, drop_target, value, x, y, terminal: Vte.Terminal, terminal_id: int
     ) -> bool:
-        """Handle file drop on SSH terminal to initiate upload via file manager."""
-        try:
-            files = value.get_files()
-            if not files:
-                return False
-
-            # Get session info for this terminal
-            info = self.registry.get_terminal_info(terminal_id)
-            if not info:
-                self.logger.warning(f"No terminal info for ID {terminal_id}")
-                return False
-
-            session = info.get("identifier")
-
-            # Check if terminal is in SSH session (either session-based or manual SSH)
-            ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
-            if not ssh_target and not (
-                isinstance(session, SessionItem) and session.is_ssh()
-            ):
-                self.logger.info("Drop target is not an SSH session, ignoring")
-                return False
-
-            # Get file paths
-            local_paths = []
-            for file in files:
-                path = file.get_path()
-                if path:
-                    local_paths.append(path)
-
-            if not local_paths:
-                return False
-
-            # Signal to show upload confirmation dialog
-            # This will be handled by the window to show the file manager dialog
-            self.logger.info(
-                f"Files dropped on SSH terminal. Requesting upload dialog for {len(local_paths)} files."
-            )
-
-            # Emit signal to notify the window about the file drop
-            GLib.idle_add(
-                self._emit_ssh_file_drop_signal,
-                terminal_id,
-                local_paths,
-                session,
-                ssh_target,
-            )
-            return True
-
-        except Exception as e:
-            self.logger.error(f"Error handling file drop for SSH: {e}")
-            return False
+        return _handle_ssh_drop_impl(self, value, terminal_id)
 
     def _emit_ssh_file_drop_signal(
         self, terminal_id: int, local_paths: list, session, ssh_target: str
     ):
-        """Emit signal to notify about SSH file drop (runs on main thread)."""
-        # Store the dropped files info for the window to pick up
-        self._pending_ssh_upload = {
-            "terminal_id": terminal_id,
-            "local_paths": local_paths,
-            "session": session,
-            "ssh_target": ssh_target,
-        }
-        # Notify via the terminal-focus-changed signal mechanism
-        # The window can check for pending uploads when handling focus
-        if hasattr(self, "_ssh_file_drop_callback") and self._ssh_file_drop_callback:
-            self._ssh_file_drop_callback(terminal_id, local_paths, session, ssh_target)
-        return False
+        return _emit_ssh_file_drop_signal_impl(
+            self, terminal_id, local_paths, session, ssh_target
+        )
 
     def set_ssh_file_drop_callback(self, callback):
         """Set callback for SSH file drop events."""
@@ -1082,6 +953,11 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
 
             handler_id = terminal.connect(
                 "commit", self._on_terminal_commit, terminal_id
+            )
+            terminal.ashy_handler_ids.append(handler_id)
+
+            handler_id = terminal.connect(
+                "selection-changed", self._on_selection_changed
             )
             terminal.ashy_handler_ids.append(handler_id)
 
@@ -1133,15 +1009,6 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         )
         terminal.set_context_menu_model(menu_model)
 
-    def _update_context_menu_with_url(
-        self,
-        terminal: Vte.Terminal,
-        x: float,
-        y: float,  # noqa: ARG002 — callback signature, unused param
-    ) -> None:
-        # URL context menu updates are handled elsewhere
-        pass
-
     def _on_terminal_focus_in(self, _controller, terminal, terminal_id):
         try:
             self.registry.update_terminal_status(terminal_id, "focused")
@@ -1154,8 +1021,73 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         if terminal.get_has_selection():
             terminal.copy_clipboard_format(Vte.Format.TEXT)
 
+    def _on_selection_changed(self, terminal: Vte.Terminal) -> None:
+        """Auto-copy selection when ``copy_on_select`` is enabled."""
+        if not self.settings_manager.get("copy_on_select", False):
+            return
+        if terminal.get_has_selection():
+            terminal.copy_clipboard_format(Vte.Format.TEXT)
+
     def paste_clipboard(self, terminal: Vte.Terminal):
-        terminal.paste_clipboard()
+        if not self.settings_manager.get("paste_warning_enabled", True):
+            terminal.paste_clipboard()
+            return
+        self._paste_with_confirmation(terminal)
+
+    def _paste_with_confirmation(self, terminal: Vte.Terminal) -> None:
+        """Read clipboard, confirm if multi-line or risky, then paste."""
+        clipboard = terminal.get_clipboard()
+
+        def on_text(clip, result):
+            try:
+                text = clip.read_text_finish(result)
+            except Exception:
+                terminal.paste_clipboard()
+                return
+            if text is None or not _paste_needs_confirmation(text):
+                terminal.paste_clipboard()
+                return
+            self._show_paste_confirmation(terminal, text)
+
+        clipboard.read_text_async(None, on_text)
+
+    def _show_paste_confirmation(
+        self, terminal: Vte.Terminal, text: str
+    ) -> None:
+        preview = text if len(text) <= 600 else text[:600] + "…"
+        dialog = Adw.AlertDialog(
+            heading=_("Confirm paste"),
+            body=_(
+                "The clipboard contains multiple lines or a potentially "
+                "risky command. Paste anyway?"
+            ),
+        )
+        scrolled = Gtk.ScrolledWindow(
+            min_content_height=160, max_content_height=300, has_frame=True,
+        )
+        label = Gtk.Label(label=preview, xalign=0.0, yalign=0.0, wrap=True)
+        label.add_css_class("monospace")
+        label.set_margin_start(8)
+        label.set_margin_end(8)
+        label.set_margin_top(8)
+        label.set_margin_bottom(8)
+        scrolled.set_child(label)
+        dialog.set_extra_child(scrolled)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("paste", _("Paste"))
+        dialog.set_response_appearance(
+            "paste", Adw.ResponseAppearance.SUGGESTED
+        )
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+
+        def on_response(_dlg, response):
+            if response == "paste":
+                terminal.paste_clipboard()
+
+        dialog.connect("response", on_response)
+        parent = self.parent_window if hasattr(self, "parent_window") else None
+        dialog.present(parent if isinstance(parent, Gtk.Widget) else terminal)
 
     def select_all(self, terminal: Vte.Terminal):
         terminal.select_all()

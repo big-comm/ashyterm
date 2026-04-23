@@ -283,7 +283,7 @@ class BaseDialog(Adw.Window):
         """Show an inline error message below a form field."""
         label = self._field_error_labels.get(id(widget))
         if label is None:
-            label = Gtk.Label( wrap=True)
+            label = Gtk.Label(xalign=0, wrap=True)
             label.add_css_class("error")
             label.add_css_class("caption")
             label.set_margin_start(12)

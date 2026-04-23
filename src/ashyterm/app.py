@@ -17,11 +17,6 @@ from .settings.config import (
     APP_VERSION,
 )
 from .settings.manager import SettingsManager, get_settings_manager
-
-# Lazy imports for startup performance - these are used infrequently
-# from .utils.exceptions import handle_exception  # Only in error paths
-# from .utils.platform import get_platform_info  # Loaded on first access via property
-# from .utils.security import create_security_auditor  # Loaded on first access via property
 from .utils.logger import get_logger
 from .utils.translation_utils import _
 from .cli_parser import CliArgParser
@@ -45,7 +40,7 @@ class CommTerminalApp(Adw.Application):
         self._main_window: Optional["CommTerminalWindow"] = None
         self._backup_manager = None
         self._security_auditor = None
-        self._platform_info = None  # Lazy loaded via property
+        self._platform_info = None
         self._initialized = False
         self._shutting_down = False
         self._arg_parser = CliArgParser(self)
@@ -58,7 +53,6 @@ class CommTerminalApp(Adw.Application):
 
     @property
     def platform_info(self):
-        """Lazy-load platform info on first access."""
         if self._platform_info is None:
             from .utils.platform import get_platform_info
 
@@ -111,8 +105,7 @@ class CommTerminalApp(Adw.Application):
                 enable_debug_mode()
                 self.logger.info("Debug mode enabled")
 
-            # Defer crypto availability check to 1 second after startup
-            # The check is just for logging, not critical for app operation
+            # Crypto check is informational only; defer so startup isn't blocked.
             GLib.timeout_add(1000, self._log_crypto_status)
 
             self._initialized = True
@@ -127,7 +120,6 @@ class CommTerminalApp(Adw.Application):
             return False
 
     def _log_crypto_status(self) -> bool:
-        """Log crypto status after startup (deferred to avoid blocking startup)."""
         from .utils.crypto import is_encryption_available
 
         if is_encryption_available():
@@ -138,7 +130,7 @@ class CommTerminalApp(Adw.Application):
             self.logger.warning(
                 "Secure password storage is not available - passwords will not be saved."
             )
-        return False  # Don't repeat idle callback
+        return False
 
     def _on_startup(self, app) -> None:
         """Handle application startup."""
@@ -151,8 +143,7 @@ class CommTerminalApp(Adw.Application):
                 self.quit()
                 return
 
-            # Configure icon strategy after settings are available, but still
-            # before any UI is built.
+            # Must run after settings load, before any UI is built.
             self._configure_icon_theme()
 
             self._setup_actions()
@@ -164,21 +155,15 @@ class CommTerminalApp(Adw.Application):
             self.quit()
 
     def _configure_icon_theme(self) -> None:
-        """Configure icon theme strategy based on settings.
+        """Apply ``icon_theme_strategy`` (ashy=bundled SVGs vs system theme).
 
-        When 'ashy' strategy is selected, icons are loaded directly from
-        bundled SVG files. When 'system' is selected, icons come from the
-        GTK IconTheme (follows desktop theme).
-
-        Note: FileManager uses MIME-type icons from system theme regardless
-        of this setting (see filemanager/manager.py).
+        FileManager MIME icons always follow the system theme regardless.
         """
         try:
             icon_strategy = "ashy"
             if self.settings_manager:
                 icon_strategy = self.settings_manager.get("icon_theme_strategy", "ashy")
 
-            # Configure icons module based on strategy
             from .utils import icons
 
             icons._use_bundled_icons = icon_strategy == "ashy"
@@ -270,8 +255,7 @@ class CommTerminalApp(Adw.Application):
             self.logger.error(f"Failed to update window shortcuts: {e}")
 
     def _on_activate(self, app) -> None:
-        """Handle application activation when launched without command-line arguments."""
-        # Skip if we already presented the window during command-line processing
+        """Activation entry point. do_command_line already presented a window."""
         if getattr(self, "_window_already_presented", False):
             self._window_already_presented = False
             return
@@ -279,44 +263,21 @@ class CommTerminalApp(Adw.Application):
         if not self.get_windows():
             self.logger.info("No windows found on activation, creating a new one.")
             window = self.create_new_window()
-            self._present_window_and_request_focus(window)
+            self._arg_parser.present_window_and_request_focus(window)
         else:
-            self._present_window_and_request_focus(self.get_active_window())
+            self._arg_parser.present_window_and_request_focus(
+                self.get_active_window()
+            )
 
     def do_command_line(self, command_line):
-        """Handle command line arguments for both initial and subsequent launches."""
+        """Dispatch CLI args (both first launch and subsequent remote calls)."""
         arguments = command_line.get_arguments()
         self.logger.info(f"Processing command line: {arguments}")
         self._arg_parser.process_and_execute_args(arguments)
-        # Mark that we've already presented window to avoid duplicate present() in _on_activate
+        # Flag so _on_activate doesn't re-present the window.
         self._window_already_presented = True
         self.activate()
         return 0
-
-    def _process_and_execute_args(self, arguments: list):
-        """Parse arguments and decide what action to take. Delegated to CliArgParser."""
-        self._arg_parser.process_and_execute_args(arguments)
-
-    def _create_tab_in_window(
-        self,
-        window,
-        ssh_target,
-        execute_command,
-        working_directory,
-        close_after_execute,
-    ):
-        """Create appropriate tab type in existing window. Delegated to CliArgParser."""
-        self._arg_parser.create_tab_in_window(
-            window,
-            ssh_target,
-            execute_command,
-            working_directory,
-            close_after_execute,
-        )
-
-    def _present_window_and_request_focus(self, window: Gtk.Window):
-        """Present window and request focus. Delegated to CliArgParser."""
-        self._arg_parser.present_window_and_request_focus(window)
 
     def _on_command_line(self, app, command_line):
         return self.do_command_line(command_line)
@@ -378,7 +339,6 @@ class CommTerminalApp(Adw.Application):
 
     @property
     def backup_handler(self):
-        """Lazy-load backup handler on first access."""
         if not hasattr(self, "_backup_handler"):
             from .ui.dialogs.backup_dialog import BackupRestoreHandler
 
@@ -450,15 +410,12 @@ class CommTerminalApp(Adw.Application):
             self.quit()
 
     def _on_shutdown(self, app) -> None:
-        """Handle application shutdown."""
         self.logger.info("Application shutdown initiated")
-        # Lazy import - only needed at shutdown
         from .core.tasks import AsyncTaskManager
         from .terminal.spawner import cleanup_spawner
 
         cleanup_spawner()
 
-        # Shutdown global task manager to terminate all background threads
         try:
             AsyncTaskManager.get().shutdown(wait=False)
         except Exception as e:

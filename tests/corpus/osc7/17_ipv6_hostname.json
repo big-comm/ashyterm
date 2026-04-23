@@ -1,0 +1,8 @@
+{
+  "description": "IPv6 literal (bracketed) as hostname — urlparse extracts the inner.",
+  "uri": "file://[::1]/tmp",
+  "expected": {
+    "hostname": "::1",
+    "path": "/tmp"
+  }
+}

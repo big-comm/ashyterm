@@ -1,0 +1,27 @@
+{
+  "description": "X11 forwarding drops the Control trio and adds ForwardX11 + ForwardX11Trusted.",
+  "function": "apply_x11_and_tunnel_options",
+  "session": {
+    "name": "s",
+    "session_type": "ssh",
+    "host": "example.com",
+    "user": "alice",
+    "port": 22,
+    "auth_type": "key",
+    "auth_value": "/home/alice/.ssh/id",
+    "x11_forwarding": true
+  },
+  "kwargs": {
+    "command_type": "ssh"
+  },
+  "initial_options": {
+    "ControlMaster": "auto",
+    "ControlPath": "/tmp/cp-foo",
+    "ControlPersist": "600"
+  },
+  "expected_options": {
+    "ForwardX11": "yes",
+    "ForwardX11Trusted": "yes"
+  },
+  "expected_needs_x11": true
+}

@@ -11,7 +11,6 @@ import os
 import sys
 from unittest.mock import patch
 
-import pytest
 
 # Ensure src is in path
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -24,7 +23,6 @@ from ashyterm.terminal.highlighter.command_validator import (
 )
 from ashyterm.terminal.highlighter.shell_validator import (
     ErrorKind,
-    SyntaxIssue,
     validate_shell_input,
     get_error_indicators,
 )

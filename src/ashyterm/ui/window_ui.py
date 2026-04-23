@@ -7,16 +7,16 @@ from typing import TYPE_CHECKING, Any, Optional
 import gi
 
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
-from ..data.command_manager_models import (
-    get_command_button_manager,
-)
-from ..utils.icons import icon_button, icon_image
+from ..utils.icons import icon_button
 from ..utils.logger import get_logger
 from ..utils.tooltip_helper import get_tooltip_helper
 from ..utils.translation_utils import _
 from ..utils.accessibility import set_label as a11y_label
+from . import command_toolbar as _cmd_toolbar
+from .header_bar_builder import build_header_bar as _build_header_bar
+from .sidebar_builder import build_sidebar as _build_sidebar
 
 # Lazy import for menus - only loaded when main menu is first shown
 # from .menus import MainApplicationMenu
@@ -159,7 +159,7 @@ class WindowUIBuilder:
         # Separate provider for window borders (conditional on maximized state)
         self.border_provider = Gtk.CssProvider()
         self._update_border_css()
-        # MODIFIED: Apply provider directly to the window, not globally
+        # Scoped to this window so a second window doesn't inherit the border state.
         self.window.get_style_context().add_provider(
             self.border_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
@@ -260,156 +260,7 @@ class WindowUIBuilder:
         return main_box
 
     def _create_header_bar(self) -> Adw.HeaderBar:
-        """Create the header bar with controls."""
-        header_bar = Adw.HeaderBar(css_classes=["main-header-bar"])
-
-        # Assign to window early so menus can access it
-        self.window.header_bar = header_bar
-
-        # Create buttons (tooltips are added via tooltip_helper below)
-        self.toggle_sidebar_button = Gtk.ToggleButton()
-        self.toggle_sidebar_button.set_child(icon_image("user-bookmarks-symbolic"))
-        self.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
-        a11y_label(self.toggle_sidebar_button, _("Sessions Panel"))
-
-        self.file_manager_button = Gtk.ToggleButton()
-        self.file_manager_button.set_child(icon_image("folder-open-symbolic"))
-        a11y_label(self.file_manager_button, _("File Manager"))
-
-        # Command Manager button
-        self.command_manager_button = Gtk.Button()
-        self.command_manager_button.set_child(icon_image("utilities-terminal-symbolic"))
-        self.command_manager_button.set_action_name("win.show-command-manager")
-        a11y_label(self.command_manager_button, _("Command Manager"))
-
-        # Add the new search button
-        self.search_button = Gtk.ToggleButton()
-        self.search_button.set_child(icon_image("edit-find-symbolic"))
-        a11y_label(self.search_button, _("Search in Terminal"))
-
-        # Broadcast button is kept for internal use but not added to header bar
-        # The functionality is integrated into the Command Manager
-        self.broadcast_button = Gtk.ToggleButton()
-        self.broadcast_button.set_child(icon_image("utilities-terminal-symbolic"))
-        self.broadcast_button.set_visible(False)  # Hidden from header bar
-
-        self.ai_assistant_button = Gtk.Button()
-        self.ai_assistant_button.set_child(
-            icon_image("avatar-default-symbolic", use_bundled=False)
-        )  # System icon
-        self.ai_assistant_button.add_css_class("flat")
-        a11y_label(self.ai_assistant_button, _("Ask AI Assistant"))
-        self.ai_assistant_button.connect(
-            "clicked", lambda _btn: self.window._on_ai_assistant_requested()
-        )
-        # Set initial visibility based on settings
-        ai_enabled = self.settings_manager.get("ai_assistant_enabled", False)
-        self.ai_assistant_button.set_visible(ai_enabled)
-
-        self.cleanup_button = Gtk.MenuButton(visible=False)
-        self.cleanup_button.set_child(icon_image("user-trash-symbolic"))
-        self.cleanup_button.add_css_class("destructive-action")
-        self.cleanup_button.add_css_class("flat")
-        a11y_label(self.cleanup_button, _("Manage Temporary Files"))
-        self.cleanup_popover = Gtk.Popover()
-        self.cleanup_popover.add_css_class("ashyterm-popover")
-        self.cleanup_button.set_popover(self.cleanup_popover)
-
-        # Hide tooltip when cleanup popover is shown
-        self.cleanup_popover.connect("show", lambda p: self.tooltip_helper.hide())
-
-        self.menu_button = Gtk.MenuButton()
-        self.menu_button.set_child(icon_image("open-menu-symbolic"))
-        self.menu_button.add_css_class("flat")
-        a11y_label(self.menu_button, _("Main Menu"))
-        # Lazy initialization: popover is created on first activation
-        self._main_menu_popover = None
-        self._setup_lazy_menu_popover()
-
-        self.new_tab_button = icon_button("tab-new-symbolic")
-        self.new_tab_button.connect("clicked", self.window._on_new_tab_clicked)
-        self.new_tab_button.add_css_class("flat")
-        a11y_label(self.new_tab_button, _("New Tab"))
-
-        # Add custom tooltips to header bar buttons
-        self.tooltip_helper.add_tooltip(self.toggle_sidebar_button, _("Sessions Panel"))
-        self.tooltip_helper.add_tooltip(self.file_manager_button, _("File Manager"))
-        self.tooltip_helper.add_tooltip(
-            self.command_manager_button, _("Command Manager")
-        )
-        self.tooltip_helper.add_tooltip(self.search_button, _("Search in Terminal"))
-        self.tooltip_helper.add_tooltip(self.ai_assistant_button, _("Ask AI Assistant"))
-        self.tooltip_helper.add_tooltip(
-            self.cleanup_button, _("Manage Temporary Files")
-        )
-        self.tooltip_helper.add_tooltip(self.menu_button, _("Main Menu"))
-        self.tooltip_helper.add_tooltip(self.new_tab_button, _("New Tab"))
-
-        # Check if window controls are on the left
-        button_layout = (
-            self.wm_settings.get_string("button-layout") if self.wm_settings else ""
-        )
-        if ":" in button_layout:
-            left_part = button_layout.split(":")[0]
-            window_controls_on_left = any(
-                btn in left_part for btn in ["close", "minimize", "maximize"]
-            )
-        else:
-            window_controls_on_left = False
-
-        if window_controls_on_left:
-            # Add flipped class to icons
-            self.toggle_sidebar_button.add_css_class("flipped-icon")
-            self.file_manager_button.add_css_class("flipped-icon")
-            self.command_manager_button.add_css_class("flipped-icon")
-            self.search_button.add_css_class("flipped-icon")
-            self.ai_assistant_button.add_css_class("flipped-icon")
-            self.cleanup_button.add_css_class("flipped-icon")
-            self.menu_button.add_css_class("flipped-icon")
-            self.new_tab_button.add_css_class("flipped-icon")
-            # Swap sides: left buttons to right, right buttons to left
-            header_bar.pack_end(self.toggle_sidebar_button)
-            header_bar.pack_end(self.file_manager_button)
-            header_bar.pack_end(self.command_manager_button)
-            header_bar.pack_end(self.ai_assistant_button)
-            header_bar.pack_end(self.search_button)
-            header_bar.pack_end(self.cleanup_button)
-            header_bar.pack_start(self.menu_button)
-            header_bar.pack_start(self.new_tab_button)
-        else:
-            # Normal packing
-            header_bar.pack_start(self.toggle_sidebar_button)
-            header_bar.pack_start(self.file_manager_button)
-            header_bar.pack_start(self.command_manager_button)
-            header_bar.pack_start(self.ai_assistant_button)
-            header_bar.pack_start(self.search_button)
-            header_bar.pack_start(self.cleanup_button)
-            header_bar.pack_end(self.menu_button)
-            header_bar.pack_end(self.new_tab_button)
-
-        self.scrolled_tab_bar = Gtk.ScrolledWindow(
-            name="scrolled_tab_bar",
-            propagate_natural_height=True,
-            hexpand=True,
-        )
-        self.scrolled_tab_bar.add_css_class("scrolled-tab-bar")
-        self.scrolled_tab_bar.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER)
-        self.scrolled_tab_bar.set_child(self.tab_manager.get_tab_bar())
-
-        scroll_controller = Gtk.EventControllerScroll.new(
-            Gtk.EventControllerScrollFlags.BOTH_AXES
-        )
-        scroll_controller.connect("scroll", self.window._on_tab_bar_scroll)
-        self.scrolled_tab_bar.add_controller(scroll_controller)
-
-        self.single_tab_title_widget = Adw.WindowTitle(title=_("Ashy Terminal"))
-
-        self.title_stack = Gtk.Stack()
-        self.title_stack.add_named(self.scrolled_tab_bar, "tabs-view")
-        self.title_stack.add_named(self.single_tab_title_widget, "title-view")
-        header_bar.set_title_widget(self.title_stack)
-
-        return header_bar
+        return _build_header_bar(self)
 
     def _on_button_layout_changed(self, settings, key):
         """Handle dynamic changes to window button layout."""
@@ -499,246 +350,68 @@ class WindowUIBuilder:
 
         return window_handle
 
+    # ── Toolbar delegators ──────────────────────────────────
+    # Pinned-command button layout + right-click popover live in
+    # ``command_toolbar``. The window builder keeps ownership of the
+    # Gtk.Box and forwards the callbacks the module asks for.
+
     def _populate_command_toolbar(self, toolbar: Gtk.Box):
-        """Populate the command toolbar with pinned commands."""
-        # Clear existing children
-        while child := toolbar.get_first_child():
-            toolbar.remove(child)
-
-        # Get pinned commands from manager
-        command_manager = get_command_button_manager()
-        pinned_commands = command_manager.get_pinned_commands()
-
-        # Control visibility on the WindowHandle parent, not just the inner Box
-        parent_handle = self.command_toolbar
-        if not pinned_commands:
-            toolbar.set_visible(False)
-            parent_handle.set_visible(False)
-            return
-
-        self.logger.debug(
-            f"Command toolbar: showing {len(pinned_commands)} pinned commands: "
-            f"{[c.id for c in pinned_commands]}"
+        _cmd_toolbar.populate_command_toolbar(
+            toolbar,
+            parent_handle=self.command_toolbar,
+            logger=self.logger,
+            on_click=self._on_toolbar_command_clicked,
+            on_right_click=self._on_toolbar_command_right_click,
+            tooltip_helper=self.tooltip_helper,
         )
-        toolbar.set_visible(True)
-        parent_handle.set_visible(True)
-
-        for cmd in pinned_commands:
-            btn = self._create_toolbar_command_button(cmd)
-            toolbar.append(btn)
 
     def _create_toolbar_command_button(self, command) -> Gtk.Button:
-        """Create a button for the command toolbar."""
-        btn = Gtk.Button(css_classes=["flat", "toolbar-command-button"])
-
-        content_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-
-        # Get toolbar-specific display mode (stored in prefs), defaults to icon_and_text
-        command_manager = get_command_button_manager()
-        toolbar_mode = command_manager.get_command_pref(
-            command.id, "toolbar_display_mode", "icon_and_text"
+        return _cmd_toolbar.create_toolbar_command_button(
+            command,
+            on_click=self._on_toolbar_command_clicked,
+            on_right_click=self._on_toolbar_command_right_click,
+            tooltip_helper=self.tooltip_helper,
         )
 
-        # Show icon based on toolbar display mode
-        if toolbar_mode in ("icon_only", "icon_and_text"):
-            icon = Gtk.Image.new_from_icon_name(command.icon_name)
-            icon.set_icon_size(Gtk.IconSize.NORMAL)
-            content_box.append(icon)
-
-        # Show label based on toolbar display mode
-        if toolbar_mode in ("text_only", "icon_and_text"):
-            label = Gtk.Label(label=command.name)
-            label.set_ellipsize(Pango.EllipsizeMode.END)
-            label.set_max_width_chars(15)
-            content_box.append(label)
-
-        btn.set_child(content_box)
-
-        # Accessibility: ensure screen readers announce button purpose
-        a11y_label(btn, command.name)
-
-        # Add tooltip with command description
-        self.tooltip_helper.add_tooltip(btn, command.description)
-
-        # Store command reference
-        btn._command = command
-
-        # Click handler
-        btn.connect("clicked", self._on_toolbar_command_clicked)
-
-        # Right-click to show options
-        gesture = Gtk.GestureClick.new()
-        gesture.set_button(3)  # Right click
-        gesture.connect("pressed", self._on_toolbar_command_right_click, command)
-        btn.add_controller(gesture)
-
-        return btn
-
     def _on_toolbar_command_clicked(self, button):
-        """Handle toolbar command button click."""
+        """Delegate the click to the window, which owns command execution."""
         command = button._command
-        # Delegate to window for command execution
         if hasattr(self.window, "execute_toolbar_command"):
             self.window.execute_toolbar_command(command)
 
-    def _on_toolbar_command_right_click(self, gesture, n_press, x, y, command):
-        """Handle right-click on toolbar command to show options."""
+    def _on_toolbar_command_right_click(
+        self, gesture, n_press, x, y, command, anchor=None
+    ):
+        """Show the per-button options popover.
 
-        # Create menu with display mode options
-        menu = Gio.Menu()
-
-        # Display mode submenu
-        display_section = Gio.Menu()
-        display_section.append(_("Icon Only"), "toolbar.display_icon")
-        display_section.append(_("Text Only"), "toolbar.display_text")
-        display_section.append(_("Icon and Text"), "toolbar.display_both")
-        menu.append_section(_("Display"), display_section)
-
-        # Unpin option
-        menu.append(_("Unpin from Toolbar"), "toolbar.unpin")
-
-        popover = Gtk.PopoverMenu.new_from_model(menu)
-        popover.add_css_class("ashyterm-popover")
-        popover.set_parent(gesture.get_widget())
-
-        # Create action group
-        action_group = Gio.SimpleActionGroup()
-
-        # Display mode actions
-        icon_action = Gio.SimpleAction.new("display_icon", None)
-        icon_action.connect(
-            "activate", lambda *_: self._set_toolbar_display_mode(command, "icon_only")
+        ``anchor`` is passed when the signal originates from
+        ``command_toolbar``; legacy call sites that omit it fall back
+        to the gesture's widget.
+        """
+        anchor = anchor or gesture.get_widget()
+        popover = _cmd_toolbar.build_right_click_popover(
+            command=command,
+            anchor=anchor,
+            on_set_mode=self._set_toolbar_display_mode,
+            on_unpin=self._unpin_toolbar_command,
         )
-        action_group.add_action(icon_action)
-
-        text_action = Gio.SimpleAction.new("display_text", None)
-        text_action.connect(
-            "activate", lambda *_: self._set_toolbar_display_mode(command, "text_only")
-        )
-        action_group.add_action(text_action)
-
-        both_action = Gio.SimpleAction.new("display_both", None)
-        both_action.connect(
-            "activate",
-            lambda *_: self._set_toolbar_display_mode(command, "icon_and_text"),
-        )
-        action_group.add_action(both_action)
-
-        # Unpin action
-        unpin_action = Gio.SimpleAction.new("unpin", None)
-        unpin_action.connect(
-            "activate", lambda *_: self._unpin_toolbar_command(command)
-        )
-        action_group.add_action(unpin_action)
-
-        popover.insert_action_group("toolbar", action_group)
         popover.popup()
 
     def _set_toolbar_display_mode(self, command, mode: str):
-        """Set the display mode for a pinned toolbar button."""
-        command_manager = get_command_button_manager()
-        command_manager.set_command_pref(command.id, "toolbar_display_mode", mode)
-        self._populate_command_toolbar(self._toolbar_inner)
+        _cmd_toolbar.set_toolbar_display_mode(
+            command,
+            mode,
+            refresh=lambda: self._populate_command_toolbar(self._toolbar_inner),
+        )
 
     def _unpin_toolbar_command(self, command):
-        """Unpin a command from the toolbar."""
-        command_manager = get_command_button_manager()
-        command_manager.unpin_command(command.id)
-        self._populate_command_toolbar(self._toolbar_inner)
+        _cmd_toolbar.unpin_toolbar_command(
+            command,
+            refresh=lambda: self._populate_command_toolbar(self._toolbar_inner),
+        )
 
     def _create_sidebar(self) -> Gtk.Widget:
-        """Create the sidebar with session tree using a simple Box layout."""
-        # Main container for sidebar
-        sidebar_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, css_classes=["sidebar-container"]
-        )
-
-        # Create a main stack to switch between normal view and context menu
-        self.sidebar_main_stack = Gtk.Stack()
-        self.sidebar_main_stack.set_transition_type(
-            Gtk.StackTransitionType.SLIDE_LEFT_RIGHT
-        )
-        self.sidebar_main_stack.set_transition_duration(150)
-        self.sidebar_main_stack.set_vexpand(True)
-
-        # Normal view: toolbar + session list + search
-        normal_view = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-
-        # Toolbar with action buttons at the top
-        toolbar = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=4,
-            halign=Gtk.Align.CENTER,
-            margin_top=6,
-            margin_bottom=6,
-            css_classes=["sidebar-toolbar"],
-        )
-
-        self.add_session_button = icon_button("list-add-symbolic")
-        a11y_label(self.add_session_button, _("Add Session"))
-        self.tooltip_helper.add_tooltip(self.add_session_button, _("Add Session"))
-        toolbar.append(self.add_session_button)
-
-        self.add_folder_button = icon_button("folder-new-symbolic")
-        a11y_label(self.add_folder_button, _("Add Folder"))
-        self.tooltip_helper.add_tooltip(self.add_folder_button, _("Add Folder"))
-        toolbar.append(self.add_folder_button)
-
-        self.edit_button = icon_button("document-edit-symbolic")
-        a11y_label(self.edit_button, _("Edit Selected"))
-        self.tooltip_helper.add_tooltip(self.edit_button, _("Edit Selected"))
-        toolbar.append(self.edit_button)
-
-        self.save_layout_button = icon_button("document-save-symbolic")
-        a11y_label(self.save_layout_button, _("Save Current Layout"))
-        self.tooltip_helper.add_tooltip(
-            self.save_layout_button, _("Save Current Layout")
-        )
-        toolbar.append(self.save_layout_button)
-
-        self.remove_button = icon_button("user-trash-symbolic")
-        a11y_label(self.remove_button, _("Remove Selected"))
-        self.tooltip_helper.add_tooltip(self.remove_button, _("Remove Selected"))
-        self.remove_button.add_css_class("destructive")
-        toolbar.append(self.remove_button)
-
-        normal_view.append(toolbar)
-
-        # Session tree in scrolled window (main content)
-        scrolled_window = Gtk.ScrolledWindow(vexpand=True)
-        scrolled_window.set_child(self.session_tree.get_widget())
-        scrolled_window.add_css_class("sidebar-session-tree")
-        normal_view.append(scrolled_window)
-
-        # Search entry at the bottom
-        search_container = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, css_classes=["sidebar-search"]
-        )
-        self.sidebar_search_entry = Gtk.SearchEntry(
-            placeholder_text=_("Search sessions...")
-        )
-        a11y_label(self.sidebar_search_entry, _("Search sessions"))
-        self.sidebar_search_entry.set_margin_start(6)
-        self.sidebar_search_entry.set_margin_end(6)
-        self.sidebar_search_entry.set_margin_bottom(12)
-        search_container.append(self.sidebar_search_entry)
-        normal_view.append(search_container)
-
-        self.sidebar_main_stack.add_named(normal_view, "normal")
-
-        # Context menu view: placeholder box that will be populated dynamically
-        self.inline_context_menu_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, spacing=0, vexpand=True
-        )
-        self.inline_context_menu_box.add_css_class("inline-context-menu")
-        self.sidebar_main_stack.add_named(self.inline_context_menu_box, "context-menu")
-
-        sidebar_box.append(self.sidebar_main_stack)
-
-        # Store reference to the stack for switching (keeping old name for compatibility)
-        self.sidebar_content_stack = self.sidebar_main_stack
-
-        return sidebar_box
+        return _build_sidebar(self)
 
     def _create_content_area(self) -> Gtk.Widget:
         """Create the main content area with tabs, file manager, and AI panel."""
@@ -918,7 +591,7 @@ class WindowUIBuilder:
                 border-bottom: 1px solid rgba(60, 60, 60, 0.5);
             }
             """
-        self.border_provider.load_from_data(css.encode("utf-8"))
+        self.border_provider.load_from_string(css)
 
     def _check_kde_borderless_maximized(self) -> bool:
         """Check KDE's kwinrc for BorderlessMaximizedWindows setting.

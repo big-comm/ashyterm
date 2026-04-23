@@ -1,0 +1,23 @@
+{
+  "description": "Lightweight test-connection options for key auth: BatchMode on, PasswordAuth off.",
+  "function": "build_ssh_test_options",
+  "session": {
+    "name": "s",
+    "session_type": "ssh",
+    "host": "example.com",
+    "user": "alice",
+    "port": 22,
+    "auth_type": "key",
+    "auth_value": "/home/alice/.ssh/id"
+  },
+  "kwargs": {
+    "use_password": false,
+    "strict_host_key": "accept-new"
+  },
+  "expected_options": {
+    "BatchMode": "yes",
+    "ConnectTimeout": "10",
+    "StrictHostKeyChecking": "accept-new",
+    "PasswordAuthentication": "no"
+  }
+}

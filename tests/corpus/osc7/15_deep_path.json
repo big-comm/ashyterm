@@ -1,0 +1,9 @@
+{
+  "description": "Deep nested path — display_path shortens to '.../tail'.",
+  "uri": "file://localhost/a/b/c/d/e/f/g",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/a/b/c/d/e/f/g"
+  },
+  "expected_display_path_contains": ".../e/f/g"
+}

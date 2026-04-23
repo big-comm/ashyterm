@@ -17,6 +17,10 @@ from ..utils.translation_utils import _
 from .models import FileItem
 from .transfer_dialog import TransferManagerDialog
 from .transfer_manager import TransferType
+from .transfer_sizes import (
+    calculate_local_paths_size as _calculate_local_paths_size_impl,
+    calculate_remote_item_sizes as _calculate_remote_item_sizes_impl,
+)
 
 
 class FileTransferMixin:
@@ -97,22 +101,12 @@ class FileTransferMixin:
             )
 
     def _calculate_item_sizes(self, items: List[FileItem]) -> dict:
-        """Calculate the actual size of each item for download."""
-        item_sizes = {}
-        for item in items:
-            remote_path = f"{self.current_path.rstrip('/')}/{item.name}"
-
-            if item.is_directory_like or item.size == 0:
-                calculated_size = self.operations.get_directory_size(
-                    remote_path, is_remote=True, session_override=self.session_item
-                )
-                item_sizes[item.name] = (
-                    calculated_size if calculated_size > 0 else item.size
-                )
-            else:
-                item_sizes[item.name] = item.size
-
-        return item_sizes
+        return _calculate_remote_item_sizes_impl(
+            items,
+            current_path=self.current_path,
+            operations=self.operations,
+            session_override=self.session_item,
+        )
 
     def _execute_downloads(
         self, items: List[FileItem], item_sizes: dict, dest_path: Path
@@ -224,43 +218,12 @@ class FileTransferMixin:
     def _calculate_local_paths_size(
         self, local_paths: list[Path]
     ) -> tuple[int, dict[str, int]]:
-        """Calculate total size and individual sizes for local paths.
-
-        This helper function extracts the common logic for calculating
-        sizes of local files/directories before upload.
-
-        Args:
-            local_paths: List of Path objects to calculate sizes for.
-
-        Returns:
-            Tuple of (total_size_needed, path_sizes_dict)
-        """
-        total_size_needed = 0
-        path_sizes: dict[str, int] = {}
-
-        for local_path in local_paths:
-            if local_path.is_dir():
-                size = self.operations.get_directory_size(
-                    str(local_path), is_remote=False
-                )
-            else:
-                size = local_path.stat().st_size if local_path.exists() else 0
-
-            path_sizes[str(local_path)] = size
-            total_size_needed += size
-
-        return total_size_needed, path_sizes
+        return _calculate_local_paths_size_impl(
+            local_paths, operations=self.operations
+        )
 
     def _prepare_and_start_uploads(self, local_paths: list[Path]) -> None:
-        """Prepare uploads by checking space and start the upload process.
-
-        This helper function extracts the common logic for preparing and
-        starting uploads that was duplicated in _on_upload_dialog_response
-        and _on_upload_confirmation_response.
-
-        Args:
-            local_paths: List of Path objects to upload.
-        """
+        """Check remote free space, then kick off the per-path upload."""
 
         def prepare_uploads():
             try:
@@ -376,7 +339,7 @@ class FileTransferMixin:
         scrolled_window.set_child(list_box)
 
         for path in local_paths:
-            list_box.append(Gtk.Label(label=path.name))
+            list_box.append(Gtk.Label(label=path.name, xalign=0.0))
 
         dialog.set_extra_child(scrolled_window)
         dialog.add_response("cancel", _("Cancel"))
@@ -628,7 +591,7 @@ class FileTransferMixin:
             path=str(dest_path),
         )
         dialog.set_extra_child(
-            Gtk.Label(label=details, use_markup=True, wrap=True)
+            Gtk.Label(label=details, use_markup=True, wrap=True, xalign=0)
         )
         dialog.add_response("ok", _("OK"))
         dialog.present(self.parent_window)

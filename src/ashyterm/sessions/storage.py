@@ -187,17 +187,7 @@ class SessionStorageManager:
         item_type_name: str,
         required_fields: List[str],
     ) -> List[Dict[str, Any]]:
-        """Generic helper to validate and sanitize items data.
-
-        Args:
-            items: List of item dictionaries to validate
-            item_class: The class to instantiate (SessionItem or SessionFolder)
-            item_type_name: Name for logging ("Session" or "Folder")
-            required_fields: List of required field names
-
-        Returns:
-            List of validated item dictionaries
-        """
+        """Keep only dicts with all ``required_fields`` and that build a valid model."""
         validated_items = []
         for i, item_data in enumerate(items):
             try:

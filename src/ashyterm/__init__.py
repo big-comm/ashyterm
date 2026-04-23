@@ -14,7 +14,6 @@ _translation_module = None
 
 
 def _get_logger_funcs():
-    """Lazy load logger functions."""
     global _logger_module
     if _logger_module is None:
         from .utils import logger as _logger_module
@@ -22,7 +21,6 @@ def _get_logger_funcs():
 
 
 def _get_translation():
-    """Lazy load translation function."""
     global _translation_module
     if _translation_module is None:
         from .utils import translation_utils as _translation_module
@@ -30,12 +28,10 @@ def _get_translation():
 
 
 def setup_signal_handlers():
-    """Set up signal handlers for graceful shutdown on Linux.
+    """SIGINT/SIGTERM → graceful Gtk.Application.quit().
 
-    The handler body is kept minimal: we look up the already-imported
-    Gtk module via sys.modules instead of re-running `gi.require_version`,
-    which would fail if the import machinery is in an odd state when the
-    signal fires (for example right after the interpreter forked).
+    Handler body avoids re-importing gi because the import machinery can
+    be unstable mid-signal (e.g. right after a fork).
     """
     _ = _get_translation()
 
@@ -65,12 +61,11 @@ def setup_signal_handlers():
 
 
 def main() -> int:
-    """Main entry point for the application."""
+    """Application entry point."""
     import os
 
-    # Ensure accent/diacritics work on Wayland without IBUS/FCITX.
-    # Must run before any GTK import. Inlined here to avoid importing
-    # the heavy utils.platform module at this stage.
+    # Accents/diacritics on Wayland need GTK_IM_MODULE even without IBus/Fcitx.
+    # Must run before any GTK import.
     if (
         os.environ.get("XDG_SESSION_TYPE", "").lower() == "wayland"
         and not os.environ.get("GTK_IM_MODULE")
@@ -80,7 +75,7 @@ def main() -> int:
     logger_mod = _get_logger_funcs()
     _ = _get_translation()
 
-    # Quick check for debug/log flags before the main app starts (no argparse needed)
+    # Manual pre-parse so --debug/--log-level apply before argparse spins up.
     pre_args_debug = "--debug" in sys.argv or "-d" in sys.argv
     pre_args_log_level = None
     for i, arg in enumerate(sys.argv[:-1]):
@@ -88,7 +83,6 @@ def main() -> int:
             pre_args_log_level = sys.argv[i + 1]
             break
 
-    # Apply pre-launch log settings if provided
     if pre_args_debug:
         logger_mod.enable_debug_mode()
     elif pre_args_log_level:
@@ -99,7 +93,6 @@ def main() -> int:
 
     logger = logger_mod.get_logger("ashyterm.main")
 
-    # Tries to set the process title and logs failures
     try:
         import setproctitle
 
@@ -108,14 +101,13 @@ def main() -> int:
     except Exception as e:
         logger.error(f"Failed to set process title: {e}", exc_info=True)
 
-    # Handle --version before loading GTK (fast path)
+    # --version / --help short-circuit before loading GTK.
     if "--version" in sys.argv or "-v" in sys.argv:
         from .settings.config import APP_VERSION
 
         print(f"ashyterm {APP_VERSION}")
         return 0
 
-    # Handle --help before loading GTK (fast path)
     if "--help" in sys.argv or "-h" in sys.argv:
         print(
             "Usage: ashyterm [OPTIONS] [DIRECTORY]\n"
@@ -142,7 +134,7 @@ def main() -> int:
     try:
         logger.info("Creating application instance")
 
-        # Lazy import: only load the heavy GTK/Adw/VTE modules when actually running
+        # Lazy import: GTK/Adw/VTE stay unloaded for --help/--version paths above.
         from .app import CommTerminalApp
 
         app = CommTerminalApp()
@@ -157,7 +149,6 @@ def main() -> int:
         gi.require_version("Gtk", "4.0")
         from gi.repository import Gtk
 
-        # GTK4 uses GtkAlertDialog instead of GtkMessageDialog.run() (GTK3 pattern)
         alert = Gtk.AlertDialog()
         alert.set_message(_("Fatal Application Error"))
         alert.set_detail(_("Could not start Ashy Terminal.\n\nError: {}").format(e))

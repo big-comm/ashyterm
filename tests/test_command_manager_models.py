@@ -1,32 +1,16 @@
 # tests/test_command_manager_models.py
 """Tests for CommandButton, CommandFormField, and CommandButtonManager."""
 
-from unittest.mock import MagicMock, patch
-
 import pytest
 
-# Patch config dependencies before importing the module under test
-_mock_config_paths = MagicMock()
-_mock_logger = MagicMock()
-
-with patch.dict(
-    "sys.modules",
-    {
-        "ashyterm.settings.config": MagicMock(
-            get_config_paths=MagicMock(return_value=_mock_config_paths)
-        ),
-        "ashyterm.utils.logger": MagicMock(get_logger=MagicMock(return_value=_mock_logger)),
-        "ashyterm.utils.translation_utils": MagicMock(_=lambda x: x),
-    },
-):
-    from ashyterm.data.command_manager_models import (
-        CommandButton,
-        CommandFormField,
-        DisplayMode,
-        ExecutionMode,
-        FieldType,
-        generate_id,
-    )
+from ashyterm.data.command_manager_models import (
+    CommandButton,
+    CommandFormField,
+    DisplayMode,
+    ExecutionMode,
+    FieldType,
+    generate_id,
+)
 
 
 # ── CommandFormField ──
@@ -312,17 +296,22 @@ class TestGenerateId:
 
 class TestCommandButtonManager:
     @pytest.fixture
-    def manager(self, tmp_path):
-        """Create a fresh manager for each test (reset singleton)."""
-        # Point the mock config to tmp_path BEFORE creating the manager
-        _mock_config_paths.CONFIG_DIR = tmp_path
+    def manager(self, tmp_path, monkeypatch):
+        """Create a fresh manager for each test, pointed at a tmp config dir.
 
-        from ashyterm.data.command_manager_models import CommandButtonManager
+        Uses monkeypatch to swap the already-bound ``get_config_paths`` in
+        the module under test — this works regardless of whether other
+        test files imported the module first, unlike ``patch.dict`` on
+        ``sys.modules`` which only takes effect on first import.
+        """
+        from ashyterm.data import command_manager_models as mod
 
-        # Reset singleton
-        CommandButtonManager._instance = None
-        mgr = CommandButtonManager()
-        return mgr
+        class _StubPaths:
+            CONFIG_DIR = tmp_path
+
+        monkeypatch.setattr(mod, "get_config_paths", lambda: _StubPaths())
+        mod.CommandButtonManager._instance = None
+        return mod.CommandButtonManager()
 
     def test_has_builtin_commands(self, manager):
         builtins = manager.get_builtin_commands()
@@ -389,6 +378,8 @@ class TestCommandButtonManager:
         manager.pin_command(cmd_id)
         pinned = manager.get_pinned_commands()
         assert any(c.id == cmd_id for c in pinned)
+
+        manager.unpin_command(cmd_id)
 
     def test_get_categories(self, manager):
         cats = manager.get_categories()

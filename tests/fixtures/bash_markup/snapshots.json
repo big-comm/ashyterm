@@ -1,0 +1,98 @@
+{
+  "empty": {
+    "input": "",
+    "expected_markup": ""
+  },
+  "plain_text": {
+    "input": "hello world",
+    "expected_markup": "hello world"
+  },
+  "simple_command": {
+    "input": "ls",
+    "expected_markup": "<span foreground=\"#8ae234\">ls</span>"
+  },
+  "command_with_flag": {
+    "input": "ls -la",
+    "expected_markup": "<span foreground=\"#8ae234\">ls</span> <span foreground=\"#98d8c8\">-la</span>"
+  },
+  "command_with_long_flag": {
+    "input": "find --help",
+    "expected_markup": "<span foreground=\"#8ae234\">find</span> <span foreground=\"#98d8c8\">--help</span>"
+  },
+  "command_with_path": {
+    "input": "ls /etc/ssh",
+    "expected_markup": "<span foreground=\"#8ae234\">ls</span> <span foreground=\"#87ceeb\">/etc/ssh</span>"
+  },
+  "command_with_string": {
+    "input": "echo 'hello world'",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> &apos;hello world&apos;"
+  },
+  "command_with_double_quote": {
+    "input": "echo \"hi there\"",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> &quot;hi there&quot;"
+  },
+  "variable_dollar": {
+    "input": "echo $HOME",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> <span foreground=\"#ad7fa8\">$HOME</span>"
+  },
+  "variable_braced": {
+    "input": "echo ${PATH}",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> <span foreground=\"#ad7fa8\">${PATH}</span>"
+  },
+  "special_var": {
+    "input": "echo $?",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> <span foreground=\"#ff69b4\">$?</span>"
+  },
+  "positional_var": {
+    "input": "echo $1",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> <span foreground=\"#ff69b4\">$1</span>"
+  },
+  "pipe": {
+    "input": "ls | grep foo",
+    "expected_markup": "<span foreground=\"#8ae234\">ls</span> <span foreground=\"#fcaf3e\">|</span> grep foo"
+  },
+  "redirect_gt": {
+    "input": "ls > out.txt",
+    "expected_markup": "<span foreground=\"#8ae234\">ls</span> <span foreground=\"#fcaf3e\">&gt;</span> out.txt"
+  },
+  "and_operator": {
+    "input": "make && make test",
+    "expected_markup": "make <span foreground=\"#fcaf3e\">&amp;&amp;</span> make test"
+  },
+  "backtick_subst": {
+    "input": "echo `date`",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> <span foreground=\"#b8860b\">`date`</span>"
+  },
+  "subshell_subst": {
+    "input": "echo $(date)",
+    "expected_markup": "<span foreground=\"#8ae234\">echo</span> <span foreground=\"#b8860b\">$(date)</span>"
+  },
+  "url_in_cmd": {
+    "input": "curl https://example.com/path",
+    "expected_markup": "<span foreground=\"#8ae234\">curl</span> <span foreground=<span foreground=\"#e9b96e\">\"#87ceeb\"</span>>https://example.com/path</span>"
+  },
+  "number_arg": {
+    "input": "sleep 10",
+    "expected_markup": "sleep <span foreground=\"#f4d03f\">10</span>"
+  },
+  "numeric_suffix": {
+    "input": "dd bs=4K count=1",
+    "expected_markup": "dd bs=4K count=1"
+  },
+  "negative_number": {
+    "input": "find . -mtime -10",
+    "expected_markup": "<span foreground=\"#8ae234\">find</span> . <span foreground=\"#98d8c8\">-mtime</span> <span foreground=\"#f4d03f\">-10</span>"
+  },
+  "multi_token": {
+    "input": "grep -r --include='*.py' 'pattern' ./src",
+    "expected_markup": "<span foreground=\"#8ae234\">grep</span> <span foreground=\"#98d8c8\">-r</span> <span foreground=\"#98d8c8\">--include</span>=&apos;*.py&apos; &apos;pattern&apos; ./src"
+  },
+  "no_quote_special_chars": {
+    "input": "find / -name *.bak",
+    "expected_markup": "<span foreground=\"#8ae234\">find</span> / <span foreground=\"#98d8c8\">-name</span> *.bak"
+  },
+  "chained_pipes": {
+    "input": "ps aux | grep ssh | wc -l",
+    "expected_markup": "ps aux <span foreground=\"#fcaf3e\">|</span> grep ssh <span foreground=\"#fcaf3e\">|</span> wc <span foreground=\"#98d8c8\">-l</span>"
+  }
+}

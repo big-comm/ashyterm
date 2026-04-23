@@ -1,0 +1,8 @@
+{
+  "description": "Percent-encoded space (%20) is decoded to literal space.",
+  "uri": "file://localhost/home/alice/My%20Docs",
+  "expected": {
+    "hostname": "localhost",
+    "path": "/home/alice/My Docs"
+  }
+}
