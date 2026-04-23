@@ -149,3 +149,35 @@ class TestTabGroupManager:
 
     def test_get_group_for_ungrouped_tab(self):
         assert self.mgr.get_group_for_tab("nonexistent") is None
+
+    def test_move_group_to_front(self):
+        g1 = self.mgr.create_group("A")
+        g2 = self.mgr.create_group("B")
+        g3 = self.mgr.create_group("C")
+        self.mgr.move_group(g3.id, 0)
+        assert self.mgr.groups == [g3, g1, g2]
+
+    def test_move_group_to_end(self):
+        g1 = self.mgr.create_group("A")
+        g2 = self.mgr.create_group("B")
+        g3 = self.mgr.create_group("C")
+        self.mgr.move_group(g1.id, 99)  # clamp to end
+        assert self.mgr.groups == [g2, g3, g1]
+
+    def test_move_nonexistent_group_is_noop(self):
+        g1 = self.mgr.create_group("A")
+        self.mgr.move_group("nope", 0)
+        assert self.mgr.groups == [g1]
+
+    def test_load_from_list_preserves_ids(self):
+        """Restore path depends on ids from the state file surviving reload."""
+        g = self.mgr.create_group("Servers", color="#62a0ea")
+        g.tab_ids = ["t1", "t2"]  # membership is restored by the caller
+        data = self.mgr.to_list()
+
+        mgr2 = TabGroupManager()
+        mgr2.load_from_list(data)
+        restored = mgr2.get_group(g.id)
+        assert restored is not None
+        assert restored.name == "Servers"
+        assert restored.color == "#62a0ea"

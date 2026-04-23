@@ -23,6 +23,15 @@ class ProcessTracker:
         with self._lock:
             self._processes[pid] = {**process_info, "registered_at": time.time()}
 
+    def snapshot(self) -> Dict[int, Dict[str, Any]]:
+        """Return a consistent snapshot of tracked processes.
+
+        Callers use this instead of touching the private map/lock so we can
+        change the internal representation without breaking them.
+        """
+        with self._lock:
+            return dict(self._processes)
+
     def unregister_process(self, pid: int) -> bool:
         """Unregister a process."""
         with self._lock:

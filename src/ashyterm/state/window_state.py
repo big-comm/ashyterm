@@ -24,6 +24,14 @@ if TYPE_CHECKING:
     from ..window import CommTerminalWindow
 
 
+def _migrate_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
+    """Add empty groups list and null group_id to each tab."""
+    data.setdefault("groups", [])
+    for tab in data.get("tabs", []):
+        tab.setdefault("group_id", None)
+    return data
+
+
 class WindowStateManager:
     """
     Manages saving and restoring the window's state, including tabs,
@@ -31,17 +39,8 @@ class WindowStateManager:
     """
 
     SCHEMA_VERSION = 2
-
-    @staticmethod
-    def _migrate_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
-        """Add empty groups list and null group_id to each tab."""
-        data.setdefault("groups", [])
-        for tab in data.get("tabs", []):
-            tab.setdefault("group_id", None)
-        return data
-
     MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {
-        1: _migrate_v1_to_v2.__func__,  # type: ignore[attr-defined]
+        1: _migrate_v1_to_v2,
     }
 
     def __init__(self, window: "CommTerminalWindow"):

@@ -91,10 +91,14 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         self._highlight_manager = None
         # Track when commands start for long-running command notifications
         self._command_start_times: Dict[int, float] = {}
-        # Process check timer — runs every second to keep tab titles
-        # up-to-date via /proc/<pid>/cwd polling (readlink is near-instant).
+        # Cached hostname for OSC7 URI assembly; os.uname() is a syscall we
+        # don't want to do once per tab per tick.
+        self._cached_hostname: str = os.uname().nodename
+        # Process check timer — runs every 2 seconds. Low enough that tab
+        # titles feel live, high enough not to waste CPU scanning /proc.
+        self._PERIODIC_INTERVAL_MS = 2000
         self._process_check_timer_id = GLib.timeout_add(
-            1000, self._periodic_process_check
+            self._PERIODIC_INTERVAL_MS, self._periodic_process_check
         )
         self.logger.info("Terminal manager initialized")
 
@@ -102,7 +106,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         """Re-arm the periodic process check timer if it was stopped."""
         if self._process_check_timer_id is None:
             self._process_check_timer_id = GLib.timeout_add(
-                1000, self._periodic_process_check
+                self._PERIODIC_INTERVAL_MS, self._periodic_process_check
             )
 
     def prepare_initial_terminal(self) -> None:
@@ -244,11 +248,11 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         """
         Periodic check to detect manual SSH sessions and update CWD titles.
 
-        This runs every 3 seconds and checks for:
-        - Manual SSH sessions in local terminals
-        - Current working directory changes via /proc/<pid>/cwd
+        Runs every self._PERIODIC_INTERVAL_MS. Does two things:
+        - Probes the active tab for a manual SSH session.
+        - Kicks off an off-thread /proc/<pid>/cwd snapshot and applies the
+          results back on the main thread.
         """
-        # Stop timer if no terminals are registered
         if not self.registry.get_all_terminal_ids():
             self._process_check_timer_id = None
             return False
@@ -260,43 +264,78 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
                 if active_terminal:
                     terminal_id = getattr(active_terminal, "terminal_id", None)
                     if terminal_id is not None:
-                        # Check for manual SSH sessions
                         self.manual_ssh_tracker.check_process_tree(terminal_id)
 
-            # Poll /proc/<pid>/cwd for all local terminals to keep tab titles updated
-            self._poll_terminal_cwd()
+            self._poll_terminal_cwd_async()
         except Exception as e:
             self.logger.debug(f"Periodic check error: {e}")
         return True
 
-    def _poll_terminal_cwd(self) -> None:
-        """Read /proc/<pid>/cwd for tracked processes and update tab titles."""
-        tracker = self.spawner.process_tracker
-        with tracker._lock:
-            processes = dict(tracker._processes)
+    def _poll_terminal_cwd_async(self) -> None:
+        """Read /proc/<pid>/cwd off the main thread, apply titles back on it.
 
+        `os.readlink` itself is cheap, but doing N of them per tick in the
+        GTK main thread can still stall the UI when /proc is slow (e.g.
+        under heavy fork load or on containers with cgroup limits).
+        """
+        processes = self.spawner.process_tracker.snapshot()
+        # Keep only tabs where we both have a live terminal widget and
+        # the process is local. SSH tabs are tracked by OSC7 and don't
+        # need this polling.
+        candidates: list[tuple[int, Vte.Terminal, str]] = []
         for pid, info in processes.items():
             if info.get("type") != "local":
                 continue
             terminal = info.get("terminal")
-            if not terminal:
+            if terminal is None:
                 continue
-            try:
-                cwd = os.readlink(f"/proc/{pid}/cwd")
-            except OSError:
-                continue
-
-            # Only update if directory actually changed
             last_cwd = getattr(terminal, "_last_polled_cwd", None)
-            if cwd == last_cwd:
-                continue
-            terminal._last_polled_cwd = cwd
+            candidates.append((pid, terminal, last_cwd or ""))
 
-            osc7_info = parse_directory_uri(
-                f"file://{os.uname().nodename}{cwd}", self.osc7_tracker.parser
-            )
-            if osc7_info:
-                self._update_title(terminal, osc7_info)
+        if not candidates:
+            return
+
+        from ..core.tasks import AsyncTaskManager
+
+        def worker() -> list[tuple[Vte.Terminal, str]]:
+            updates: list[tuple[Vte.Terminal, str]] = []
+            for pid, terminal, last_cwd in candidates:
+                try:
+                    cwd = os.readlink(f"/proc/{pid}/cwd")
+                except OSError:
+                    continue
+                if cwd != last_cwd:
+                    updates.append((terminal, cwd))
+            return updates
+
+        def apply_updates(updates: list[tuple[Vte.Terminal, str]]) -> bool:
+            for terminal, cwd in updates:
+                terminal._last_polled_cwd = cwd
+                osc7_info = parse_directory_uri(
+                    f"file://{self._cached_hostname}{cwd}",
+                    self.osc7_tracker.parser,
+                )
+                if osc7_info:
+                    self._update_title(terminal, osc7_info)
+            return False
+
+        future = AsyncTaskManager.get().submit_io(worker)
+        if future is None:
+            # Pool shutting down; fall back to doing it inline so we don't
+            # drop state updates during teardown.
+            apply_updates(worker())
+            return
+
+        def _on_done(f) -> None:
+            try:
+                updates = f.result()
+            except Exception as exc:
+                self.logger.debug(f"CWD poll worker failed: {exc}")
+                return
+            if updates:
+                GLib.idle_add(apply_updates, updates)
+
+        future.add_done_callback(_on_done)
 
     def _on_manual_ssh_state_changed(self, terminal: Vte.Terminal):
         self._update_title(terminal)
@@ -482,12 +521,12 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             if uri:
                 osc7_info = parse_directory_uri(uri, self.osc7_tracker.parser)
 
-        # Fallback: use last polled CWD from /proc/<pid>/cwd
+        # Fallback: use last polled CWD from /proc/<pid>/cwd.
         if osc7_info is None:
             last_cwd = getattr(terminal, "_last_polled_cwd", None)
             if last_cwd:
                 osc7_info = parse_directory_uri(
-                    f"file://{os.uname().nodename}{last_cwd}",
+                    f"file://{self._cached_hostname}{last_cwd}",
                     self.osc7_tracker.parser,
                 )
 

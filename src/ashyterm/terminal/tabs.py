@@ -4,7 +4,7 @@ import re
 import threading
 import weakref
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, List, Optional
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional
 
 import gi
 
@@ -152,6 +152,10 @@ class TabManager:
 
         # Tab groups
         self.group_manager = TabGroupManager()
+        # Reuse CssProvider per color to avoid creating a new one on every
+        # tab-bar rebuild (which happens on every group mutation).
+        self._group_chip_providers: Dict[str, Gtk.CssProvider] = {}
+        self._tab_border_providers: Dict[str, Gtk.CssProvider] = {}
 
         # Delegates
         self.scroll_handler = ScrollHandler(self)
@@ -363,17 +367,12 @@ class TabManager:
         if not group.name:
             chip.add_css_class("unnamed")
 
-        # Apply group color as background
-        provider = Gtk.CssProvider()
-        text_color = self._get_contrasting_text_for_hex(group.color)
-        css = f"""
-            .tab-group-chip {{
-                background-color: {group.color};
-                color: {text_color};
-            }}
-        """
-        provider.load_from_data(css.encode("utf-8"))
-        chip.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        # Reuse a provider per color; otherwise we leak one provider per
+        # chip per rebuild, and the tab bar rebuilds on every group edit.
+        chip.get_style_context().add_provider(
+            self._get_chip_provider(group.color),
+            Gtk.STYLE_PROVIDER_PRIORITY_USER,
+        )
 
         # Group name label with tab count
         tab_count = len(group.tab_ids)
@@ -410,6 +409,34 @@ class TabManager:
         except (ValueError, IndexError):
             return "#000000"
 
+    def _get_chip_provider(self, color: str) -> Gtk.CssProvider:
+        """Return a cached CssProvider for a group-chip color."""
+        cached = self._group_chip_providers.get(color)
+        if cached is not None:
+            return cached
+        text_color = self._get_contrasting_text_for_hex(color)
+        provider = Gtk.CssProvider()
+        css = (
+            ".tab-group-chip {"
+            f" background-color: {color};"
+            f" color: {text_color};"
+            " }"
+        )
+        provider.load_from_data(css.encode("utf-8"))
+        self._group_chip_providers[color] = provider
+        return provider
+
+    def _get_tab_border_provider(self, color: str) -> Gtk.CssProvider:
+        """Return a cached CssProvider for the in-group tab bottom border."""
+        cached = self._tab_border_providers.get(color)
+        if cached is not None:
+            return cached
+        provider = Gtk.CssProvider()
+        css = f".custom-tab-button.in-group {{ border-bottom-color: {color}; }}"
+        provider.load_from_data(css.encode("utf-8"))
+        self._tab_border_providers[color] = provider
+        return provider
+
     def _on_group_chip_clicked(self, _gesture, _n, _x, _y, group):
         """Toggle group collapsed state and rebuild tab bar."""
         # If in group move mode, clicking a chip acts as drop target
@@ -428,8 +455,23 @@ class TabManager:
         if self._tab_being_moved is not None:
             self._cancel_tab_move()
             return
-        self.group_manager.toggle_collapsed(group.id)
+        will_be_collapsed = self.group_manager.toggle_collapsed(group.id)
+        # If we're collapsing the group that owns the active tab, switch
+        # focus to a visible tab so the user doesn't lose keyboard input
+        # into an invisible page.
+        if will_be_collapsed and self.active_tab is not None:
+            active_tab_id = self.get_tab_id(self.active_tab)
+            if active_tab_id in group.tab_ids:
+                self._focus_first_visible_tab_outside(group.tab_ids)
         self._rebuild_tab_bar_order()
+
+    def _focus_first_visible_tab_outside(self, excluded_tab_ids) -> None:
+        """Activate the first tab not in the excluded id collection."""
+        excluded = set(excluded_tab_ids)
+        for candidate in self.tabs:
+            if self.get_tab_id(candidate) not in excluded:
+                self.set_active_tab(candidate)
+                return
 
     def _on_group_chip_right_click(self, _gesture, _n, x, y, chip, group):
         """Show context menu on group chip."""
@@ -644,13 +686,12 @@ class TabManager:
     def _apply_group_border_color(self, tab_widget: Gtk.Box, color: str) -> None:
         """Apply a group color as bottom border indicator."""
         style_context = tab_widget.get_style_context()
-        # Remove previous group border provider if any
-        if hasattr(tab_widget, "_group_border_provider"):
-            style_context.remove_provider(tab_widget._group_border_provider)
-
-        provider = Gtk.CssProvider()
-        css = f".custom-tab-button.in-group {{ border-bottom-color: {color}; }}"
-        provider.load_from_data(css.encode("utf-8"))
+        previous = getattr(tab_widget, "_group_border_provider", None)
+        provider = self._get_tab_border_provider(color)
+        if previous is provider:
+            return  # Nothing to do; already applied.
+        if previous is not None:
+            style_context.remove_provider(previous)
         style_context.add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
         tab_widget._group_border_provider = provider
 
@@ -1276,6 +1317,12 @@ class TabManager:
                 self.tab_bar_box.append(tab)
             else:
                 tab.remove_css_class("in-group")
+                # Drop the cached border-color provider so an old group
+                # color doesn't bleed through after ungrouping.
+                previous = getattr(tab, "_group_border_provider", None)
+                if previous is not None:
+                    tab.get_style_context().remove_provider(previous)
+                    tab._group_border_provider = None
                 tab.set_visible(True)
                 self.tab_bar_box.append(tab)
 
