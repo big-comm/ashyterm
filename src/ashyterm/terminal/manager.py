@@ -10,7 +10,7 @@ import gi
 gi.require_version("Adw", "1")
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gio, GLib, Gtk, Vte
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
@@ -981,6 +981,15 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             terminal.add_controller(click_controller)
             terminal.ashy_controllers.append(click_controller)
 
+            # VTE 0.84 dropped built-in middle-click PRIMARY paste; reinstate it here.
+            middle_click_controller = Gtk.GestureClick()
+            middle_click_controller.set_button(Gdk.BUTTON_MIDDLE)
+            middle_click_controller.connect(
+                "pressed", self._on_terminal_middle_clicked, terminal
+            )
+            terminal.add_controller(middle_click_controller)
+            terminal.ashy_controllers.append(middle_click_controller)
+
             # Context menu is now handled natively by VTE via setup-context-menu signal
 
             # Key event controller for command detection via screen scraping
@@ -1037,6 +1046,17 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             return
         if terminal.get_has_selection():
             terminal.copy_clipboard_format(Vte.Format.TEXT)
+
+    def _on_terminal_middle_clicked(
+        self, gesture: Gtk.GestureClick, _n_press: int, _x: float, _y: float,
+        terminal: Vte.Terminal,
+    ) -> None:
+        try:
+            terminal.paste_primary()
+        except Exception as e:
+            self.logger.error(f"Middle-click paste failed: {e}")
+            return
+        gesture.set_state(Gtk.EventSequenceState.CLAIMED)
 
     def paste_clipboard(self, terminal: Vte.Terminal):
         if not self.settings_manager.get("paste_warning_enabled", True):
