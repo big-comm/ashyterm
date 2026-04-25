@@ -12,17 +12,30 @@ execute_ashy="python3 __init__.py"
 
 
 execute_with_memory_verification() {
-    # Changes the default memory allocator to reduce GTK4 memory leaks with verification
-    if [[ -e /usr/lib/libchildenv.so ]]; then
-        if [[ -e /usr/lib/libjemalloc.so ]]; then
-            LD_PRELOAD="libchildenv.so:libjemalloc.so" MALLOC_CONF="narenas:1" CHILD_ENV_RULES="LD_PRELOAD,MALLOC_CONF,CHILD_ENV_RULES" exec $execute_ashy "$@"
-        elif [[ -e /usr/lib/libmimalloc.so ]]; then
-            LD_PRELOAD="libchildenv.so:libmimalloc.so" MIMALLOC_PURGE_DELAY=0 CHILD_ENV_RULES="LD_PRELOAD,MIMALLOC_PURGE_DELAY,CHILD_ENV_RULES" exec $execute_ashy "$@"
-        elif [[ -e /usr/lib/libtcmalloc.so ]]; then
-            LD_PRELOAD="libchildenv.so:libtcmalloc.so" TCMALLOC_AGGRESSIVE_DECOMMIT=1 CHILD_ENV_RULES="LD_PRELOAD,TCMALLOC_AGGRESSIVE_DECOMMIT,CHILD_ENV_RULES" exec $execute_ashy "$@"
-        else
-            exec $execute_ashy "$@"
-        fi
+    # Changes the default memory allocator to reduce GTK4 memory leaks.
+    #
+    # Preference order (most-compatible first):
+    #   1. mimalloc  — works on Manjaro stable and testing.
+    #   2. tcmalloc  — works on Manjaro stable and testing.
+    #   3. jemalloc  — last resort. Skipped when ASHYTERM_DISABLE_JEMALLOC=1
+    #                  is set; on glibc 2.41+ / GLib 2.86+ jemalloc 5.3.x
+    #                  has been seen to abort with
+    #                  "GLib-ERROR: g_malloc: failed to allocate N bytes"
+    #                  during startup (heap-corruption symptom from the
+    #                  allocator, not from ashyterm itself).
+    #   4. system malloc fallback.
+    #
+    # Override: ASHYTERM_NO_PRELOAD=1 disables LD_PRELOAD entirely.
+    if [[ "$ASHYTERM_NO_PRELOAD" = "1" || ! -e /usr/lib/libchildenv.so ]]; then
+        exec $execute_ashy "$@"
+    fi
+
+    if [[ -e /usr/lib/libmimalloc.so ]]; then
+        LD_PRELOAD="libchildenv.so:libmimalloc.so" MIMALLOC_PURGE_DELAY=0 CHILD_ENV_RULES="LD_PRELOAD,MIMALLOC_PURGE_DELAY,CHILD_ENV_RULES" exec $execute_ashy "$@"
+    elif [[ -e /usr/lib/libtcmalloc.so ]]; then
+        LD_PRELOAD="libchildenv.so:libtcmalloc.so" TCMALLOC_AGGRESSIVE_DECOMMIT=1 CHILD_ENV_RULES="LD_PRELOAD,TCMALLOC_AGGRESSIVE_DECOMMIT,CHILD_ENV_RULES" exec $execute_ashy "$@"
+    elif [[ "$ASHYTERM_DISABLE_JEMALLOC" != "1" && -e /usr/lib/libjemalloc.so ]]; then
+        LD_PRELOAD="libchildenv.so:libjemalloc.so" MALLOC_CONF="narenas:1" CHILD_ENV_RULES="LD_PRELOAD,MALLOC_CONF,CHILD_ENV_RULES" exec $execute_ashy "$@"
     else
         exec $execute_ashy "$@"
     fi
