@@ -14,9 +14,14 @@ import subprocess
 from urllib.parse import urlparse, unquote
 
 # Import 'gi' and explicitly require GTK and Nautilus versions.
+# Nautilus 50 ships only the 4.1 typelib; older releases shipped 4.0.
 import gi
 
 gi.require_version("Gtk", "4.0")
+try:
+    gi.require_version("Nautilus", "4.1")
+except ValueError:
+    gi.require_version("Nautilus", "4.0")
 
 from gi.repository import Gio, GObject, Nautilus
 
