@@ -296,24 +296,34 @@ class WindowLifecycleMixin:
     # ─── Data Loading ──────────────────────────────────────────────────
 
     def _load_initial_data(self) -> None:
-        """Load initial sessions, folders, and layouts data."""
+        """Load initial sessions, folders, and layouts data on the main thread.
 
-        def load_data_background():
-            try:
-                from .sessions.storage import load_sessions_and_folders
+        Earlier versions ran this on a worker thread for parallelism, but the
+        load path constructs GObject subclasses (SessionItem/SessionFolder
+        during validation in storage._validate_items_data, LayoutItem in
+        state_manager.load_layouts). Constructing GObject types from a
+        non-main thread is undefined behavior on GTK4 + GLib >= 2.86 and
+        corrupts the heap, surfacing later as a cryptic
+        'GLib-ERROR: g_malloc: failed to allocate N bytes' abort during an
+        unrelated main-thread allocation.
 
-                self.state_manager.load_layouts()
-                sessions_data, folders_data = load_sessions_and_folders()
+        This entire method runs inside a _deferred_init idle callback in
+        window.py, so the window is already presented by the time we get
+        here. Loading the sessions JSON synchronously is fast enough not
+        to be noticed.
+        """
+        try:
+            from .sessions.storage import load_sessions_and_folders
 
-                GLib.idle_add(
-                    self._update_stores_with_data, sessions_data, folders_data
-                )
-            except Exception as e:
-                GLib.idle_add(self._handle_load_error, e)
+            sessions_data, folders_data = load_sessions_and_folders()
+            self._update_stores_with_data(sessions_data, folders_data)
+        except Exception as e:
+            self._handle_load_error(e)
 
-        from .core.tasks import AsyncTaskManager
-
-        AsyncTaskManager.get().submit_io(load_data_background)
+        try:
+            self.state_manager.load_layouts()
+        except Exception as e:
+            self.logger.error(f"Failed to load layouts: {e}")
 
     def _update_stores_with_data(self, sessions_data, folders_data):
         """Callback to update stores on main thread after background load."""
