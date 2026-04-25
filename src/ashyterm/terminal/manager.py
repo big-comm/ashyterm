@@ -158,17 +158,37 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
 
     def prepare_initial_terminal(self) -> None:
         """
-        Pre-create the base terminal widget and prepare shell environment in background.
-        This allows the terminal to be ready faster when the first tab is created.
-        Call this early during window initialization for best results.
+        Pre-create the base terminal widget and prepare shell environment.
+
+        All work happens on the GTK main thread. Earlier versions ran the
+        shell-env prep and highlight pre-load on worker threads from the
+        AsyncTaskManager pool; that pattern is incompatible with GTK4 +
+        GLib >= 2.86 + PyGObject 3.50+ because:
+
+        * Constructing GObject types (HighlightManager, OutputHighlighter)
+          or connecting GObject signals from a non-main thread is undefined
+          behavior and corrupts the GLib heap.
+        * Even seemingly innocuous ``gi.repository`` calls
+          (``Vte.get_user_shell()``, reading ``Vte.MAJOR_VERSION``, etc.)
+          can lazily trigger non-thread-safe GIRepository initialization.
+
+        Heap corruption from a worker thread surfaces later as a cryptic
+        ``GLib-ERROR: g_malloc: failed to allocate 1 bytes`` abort during
+        an unrelated main-thread allocation (e.g. during CSS load).
+
+        The shell-env prep takes well under a millisecond, so doing it
+        inline costs nothing observable. The highlight pre-load (which
+        parses ~50 JSON files) is deferred to a ``GLib.idle_add`` callback
+        so it runs once the main loop becomes idle, after the first frame.
         """
         self._precreated_terminal = None
+        # Kept for API compatibility with consumers that still call
+        # ``_precreated_env_ready.wait(...)``. Set immediately because env
+        # prep is now synchronous.
         self._precreated_env_ready = threading.Event()
         self._precreated_env_data = None
         self._highlights_ready = threading.Event()
 
-        # Create base terminal widget immediately (must be on main thread)
-        # Note: Don't apply settings yet since window UI may not be fully ready
         try:
             self._precreated_terminal = self._create_base_terminal(apply_settings=False)
             if self._precreated_terminal:
@@ -177,32 +197,16 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             self.logger.warning(f"Failed to pre-create terminal: {e}")
             self._precreated_terminal = None
 
-        # Background thread: only thread-safe (non-GObject) work.
-        # GObject construction and signal connection MUST happen on the main thread —
-        # see prepare_highlights_on_main_thread below.
-        def prepare_env_background():
-            try:
-                cmd, env, temp_dir_path, shell_name = self.spawner._prepare_shell_environment()
-                self._precreated_env_data = (cmd, env, temp_dir_path, shell_name)
-                self.logger.debug("Pre-prepared shell environment in background")
-            except Exception as e:
-                self.logger.warning(f"Failed to pre-prepare shell environment: {e}")
-                self._precreated_env_data = None
-            finally:
-                self._precreated_env_ready.set()
+        try:
+            cmd, env, temp_dir_path, shell_name = self.spawner._prepare_shell_environment()
+            self._precreated_env_data = (cmd, env, temp_dir_path, shell_name)
+            self.logger.debug("Pre-prepared shell environment on main thread")
+        except Exception as e:
+            self.logger.warning(f"Failed to pre-prepare shell environment: {e}")
+            self._precreated_env_data = None
+        finally:
+            self._precreated_env_ready.set()
 
-        from ..core.tasks import AsyncTaskManager
-
-        AsyncTaskManager.get().submit_cpu(prepare_env_background)
-
-        # Highlight pre-loading on the GTK main loop. HighlightManager is a
-        # GObject.GObject and OutputHighlighter connects to its 'rules-changed'
-        # signal in __init__; instantiating either off the main thread corrupts
-        # the GLib heap on GTK4 / GLib >= 2.86 and aborts the process with a
-        # cryptic 'g_malloc: failed to allocate N bytes' error on a later
-        # allocation. Scheduled at default-idle priority and queued before the
-        # first-tab idle handler in window_lifecycle, so highlights are ready
-        # by the time the first terminal spawns.
         def prepare_highlights_on_main_thread():
             try:
                 from ..settings.highlights import get_highlight_manager
