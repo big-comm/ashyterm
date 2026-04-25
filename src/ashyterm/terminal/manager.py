@@ -177,10 +177,11 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             self.logger.warning(f"Failed to pre-create terminal: {e}")
             self._precreated_terminal = None
 
-        # Prepare shell environment and highlights in background thread
-        def prepare_background():
+        # Background thread: only thread-safe (non-GObject) work.
+        # GObject construction and signal connection MUST happen on the main thread —
+        # see prepare_highlights_on_main_thread below.
+        def prepare_env_background():
             try:
-                # Prepare shell environment
                 cmd, env, temp_dir_path, shell_name = self.spawner._prepare_shell_environment()
                 self._precreated_env_data = (cmd, env, temp_dir_path, shell_name)
                 self.logger.debug("Pre-prepared shell environment in background")
@@ -190,36 +191,41 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             finally:
                 self._precreated_env_ready.set()
 
-            # Pre-load the HighlightManager (loads 50+ JSON files)
+        from ..core.tasks import AsyncTaskManager
+
+        AsyncTaskManager.get().submit_cpu(prepare_env_background)
+
+        # Highlight pre-loading on the GTK main loop. HighlightManager is a
+        # GObject.GObject and OutputHighlighter connects to its 'rules-changed'
+        # signal in __init__; instantiating either off the main thread corrupts
+        # the GLib heap on GTK4 / GLib >= 2.86 and aborts the process with a
+        # cryptic 'g_malloc: failed to allocate N bytes' error on a later
+        # allocation. Scheduled at default-idle priority and queued before the
+        # first-tab idle handler in window_lifecycle, so highlights are ready
+        # by the time the first terminal spawns.
+        def prepare_highlights_on_main_thread():
             try:
                 from ..settings.highlights import get_highlight_manager
 
                 self._highlight_manager = get_highlight_manager()
-                self.logger.debug(
-                    "Pre-loaded HighlightManager (JSON rules) in background"
-                )
+                self.logger.debug("Pre-loaded HighlightManager (JSON rules) on main thread")
             except Exception as e:
                 self.logger.warning(f"Failed to pre-load HighlightManager: {e}")
 
-            # Pre-load highlight modules (output, shell_input)
-            # NOTE: HighlightedTerminalProxy import removed - importing GTK from background
-            # threads can cause race conditions on Wayland
             try:
                 from .highlighter.output import get_output_highlighter
                 from .highlighter.shell_input import get_shell_input_highlighter
 
                 get_output_highlighter()
                 get_shell_input_highlighter()
-
-                self.logger.debug("Pre-loaded highlighting modules in background")
+                self.logger.debug("Pre-loaded highlighting modules on main thread")
             except Exception as e:
                 self.logger.warning(f"Failed to pre-load highlights: {e}")
             finally:
                 self._highlights_ready.set()
+            return GLib.SOURCE_REMOVE
 
-        from ..core.tasks import AsyncTaskManager
-
-        AsyncTaskManager.get().submit_cpu(prepare_background)
+        GLib.idle_add(prepare_highlights_on_main_thread)
 
     def get_precreated_terminal(self) -> "Optional[Vte.Terminal]":
         """
