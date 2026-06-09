@@ -26,11 +26,11 @@ def calculate_remote_item_sizes(
 ) -> Dict[str, int]:
     """Return ``{item.name: size_in_bytes}`` for each of ``items``.
 
-    Directory sizes (and listing entries reporting ``0`` — the remote
-    ``ls`` sometimes omits a size for special files) are resolved via
-    ``operations.get_directory_size`` so the caller gets the real
-    on-disk footprint instead of a misleading zero. Plain file sizes
-    come straight from the listing.
+    Directory sizes are intentionally not resolved recursively here:
+    ``du -sb`` can be very slow on remote trees and blocks transfer
+    preparation. Listing entries reporting ``0`` for non-directories are
+    still resolved via ``operations.get_directory_size`` because remote
+    ``ls`` sometimes omits a size for special files.
     """
     item_sizes: Dict[str, int] = {}
     base = current_path.rstrip("/")
@@ -38,7 +38,9 @@ def calculate_remote_item_sizes(
     for item in items:
         remote_path = f"{base}/{item.name}"
 
-        if item.is_directory_like or item.size == 0:
+        if item.is_directory_like:
+            item_sizes[item.name] = item.size
+        elif item.size == 0:
             calculated = operations.get_directory_size(
                 remote_path, is_remote=True, session_override=session_override
             )

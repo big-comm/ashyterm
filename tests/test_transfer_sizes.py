@@ -42,7 +42,7 @@ class TestRemoteItemSizes:
         assert out == {"a.txt": 100, "b.bin": 2048}
         ops.get_directory_size.assert_not_called()
 
-    def test_directories_resolve_via_operations(self):
+    def test_directories_use_listed_size_without_recursive_du(self):
         ops = MagicMock()
         ops.get_directory_size.return_value = 999_999
         items = [_ls_dir("src")]
@@ -54,10 +54,8 @@ class TestRemoteItemSizes:
             session_override="session",
         )
 
-        assert out == {"src": 999_999}
-        ops.get_directory_size.assert_called_once_with(
-            "/remote/src", is_remote=True, session_override="session"
-        )
+        assert out == {"src": 0}
+        ops.get_directory_size.assert_not_called()
 
     def test_zero_size_files_are_remeasured(self):
         """Listing sometimes reports size 0 for non-dir entries (e.g.
@@ -75,7 +73,7 @@ class TestRemoteItemSizes:
     def test_zero_size_when_operations_returns_zero_falls_back_to_listed(self):
         ops = MagicMock()
         ops.get_directory_size.return_value = 0
-        items = [_ls_dir("empty")]
+        items = [_ls_file("empty", 0)]
 
         out = calculate_remote_item_sizes(
             items, current_path="/remote", operations=ops, session_override=None
@@ -85,10 +83,10 @@ class TestRemoteItemSizes:
         # don't divide by zero later.
         assert out == {"empty": 0}
 
-    def test_current_path_trailing_slash_is_handled(self):
+    def test_zero_size_item_trailing_slash_is_handled(self):
         ops = MagicMock()
         ops.get_directory_size.return_value = 1
-        items = [_ls_dir("sub")]
+        items = [_ls_file("sub", 0)]
 
         out = calculate_remote_item_sizes(
             items,

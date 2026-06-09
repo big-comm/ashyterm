@@ -225,19 +225,25 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self._update_action_bar_for_session_type()
         terminal_dir = self._get_terminal_current_directory()
 
-        # If OSC7 directory is not available, use a sensible default
+        used_default_directory = False
+
+        # If OSC7 directory is not available, use a sensible default.
         if not terminal_dir:
             terminal_dir = self._get_default_directory_for_session()
+            used_default_directory = True
 
-        terminal_dir_path = Path(terminal_dir).resolve()
+        terminal_dir_path = os.path.normpath(terminal_dir)
         current_path_path = (
-            Path(self.current_path).resolve() if self.current_path else None
+            os.path.normpath(self.current_path) if self.current_path else None
         )
         if current_path_path is None or terminal_dir_path != current_path_path:
             self.logger.info(
                 f"Terminal directory changed from {self.current_path} to {terminal_dir}, refreshing."
             )
             self.refresh(terminal_dir, source="terminal")
+
+        if used_default_directory:
+            self._resolve_remote_home_directory_async(terminal_dir)
 
         GLib.timeout_add(100, self._finish_rebinding)
 
@@ -504,26 +510,63 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         """
         Returns a sensible default directory when OSC7 tracking is not available.
         For local sessions, returns the user's home directory.
-        For SSH sessions, queries the remote home directory.
+        For SSH sessions, returns the configured remote directory or a fast
+        fallback. Remote home probing runs asynchronously.
         """
         if not self.session_item:
             return os.path.expanduser("~")
 
         if self.session_item.is_local():
             return os.path.expanduser("~")
-        else:
-            # For SSH sessions, query the remote home directory
-            if self.operations:
-                success, output = self.operations.execute_command_on_session(
-                    [
-                        "echo",
-                        "$HOME",
-                    ]
+
+        configured_remote_dir = (self.session_item.sftp_remote_directory or "").strip()
+        if configured_remote_dir:
+            return configured_remote_dir
+
+        return "/"
+
+    def _resolve_remote_home_directory_async(self, fallback_path: str) -> None:
+        """Resolve remote $HOME without blocking the GTK thread."""
+        session = self.session_item
+        operations = self.operations
+        if not session or not operations or not session.is_ssh():
+            return
+        if (session.sftp_remote_directory or "").strip():
+            return
+
+        session_key = self._get_session_identifier(session)
+
+        def worker():
+            success, output = operations.execute_command_on_session(
+                ["sh", "-lc", 'printf "%s" "$HOME"'],
+                session_override=session,
+                timeout=5,
+            )
+            remote_home = output.strip()
+            if success and remote_home.startswith("/"):
+                GLib.idle_add(
+                    self._apply_resolved_remote_home,
+                    session_key,
+                    fallback_path,
+                    remote_home,
                 )
-                if success and output.strip():
-                    return output.strip()
-            # Fallback to root if we can't determine the home directory
-            return "/"
+
+        AsyncTaskManager.get().submit_io(worker)
+
+    def _apply_resolved_remote_home(
+        self, session_key: str, fallback_path: str, remote_home: str
+    ) -> bool:
+        if self._is_destroyed:
+            return GLib.SOURCE_REMOVE
+        current_session = self.session_item
+        if not self._is_current_session_for_key(current_session, session_key):
+            return GLib.SOURCE_REMOVE
+        if self.current_path != fallback_path or remote_home == fallback_path:
+            return GLib.SOURCE_REMOVE
+
+        self.logger.info(f"Resolved remote home directory: {remote_home}")
+        self.refresh(remote_home, source="terminal")
+        return GLib.SOURCE_REMOVE
 
     def _on_terminal_directory_changed(self, _terminal, _param_spec):
         if self._is_rebinding:
@@ -1141,4 +1184,3 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
 
     def _is_remote_session(self) -> bool:
         return bool(self.session_item and not self.session_item.is_local())
-
