@@ -191,40 +191,45 @@ class TransferManager(GObject.Object):
             self.active_transfers[transfer_id] = transfer_item
         return transfer_id
 
+    def _emit_signal(self, signal_name: str, *args) -> None:
+        GLib.idle_add(self.emit, signal_name, *args)
+
     def start_transfer(self, transfer_id: str):
         with self._transfer_lock:
-            if transfer_id in self.active_transfers:
-                transfer = self.active_transfers[transfer_id]
-                transfer.status = TransferStatus.IN_PROGRESS
-                transfer.start_time = time.time()
-        self.emit("transfer-started", transfer_id)
+            transfer = self.active_transfers.get(transfer_id)
+            if not transfer:
+                return
+            transfer.status = TransferStatus.IN_PROGRESS
+            transfer.start_time = time.time()
+        self._emit_signal("transfer-started", transfer_id)
         # Force immediate UI update when transfer starts
         self._last_progress_update = 0  # Reset throttle
         self._update_progress_display()
 
     def update_progress(self, transfer_id: str, progress: float):
         with self._transfer_lock:
-            if transfer_id in self.active_transfers:
-                transfer = self.active_transfers[transfer_id]
-                current_time = time.time()
+            transfer = self.active_transfers.get(transfer_id)
+            if not transfer:
+                return
+            current_time = time.time()
 
-                # Warmup logic: wait 3 seconds before showing real progress
-                # This avoids initial spurious values from rsync per-file progress
-                if transfer.warmup_end_time is None:
-                    transfer.warmup_end_time = current_time + 3.0
+            # Warmup logic: wait 3 seconds before showing real progress
+            # This avoids initial spurious values from rsync per-file progress
+            if transfer.warmup_end_time is None:
+                transfer.warmup_end_time = current_time + 3.0
 
-                # Track the first stable progress value after warmup
-                if transfer.is_warmed_up() and transfer.first_stable_progress < 0:
-                    transfer.first_stable_progress = progress
+            # Track the first stable progress value after warmup
+            if transfer.is_warmed_up() and transfer.first_stable_progress < 0:
+                transfer.first_stable_progress = progress
 
-                transfer.progress = progress
+            transfer.progress = progress
 
         # Throttle progress updates to prevent UI flooding
         current_time = time.time()
         # Allow more frequent updates (50ms) for responsive UI
         if current_time - self._last_progress_update >= PROGRESS_UPDATE_INTERVAL:
             self._last_progress_update = current_time
-            self.emit("transfer-progress", transfer_id, progress)
+            self._emit_signal("transfer-progress", transfer_id, progress)
             self._update_progress_display()
 
     def complete_transfer(self, transfer_id: str):
@@ -238,7 +243,7 @@ class TransferManager(GObject.Object):
                 self.history.insert(0, transfer)
 
         if transfer:
-            self.emit("transfer-completed", transfer_id)
+            self._emit_signal("transfer-completed", transfer_id)
             self._save_history()
             self._update_progress_display()
 
@@ -257,9 +262,9 @@ class TransferManager(GObject.Object):
 
         if transfer:
             if transfer.status == TransferStatus.CANCELLED:
-                self.emit("transfer-cancelled", transfer_id)
+                self._emit_signal("transfer-cancelled", transfer_id)
             else:
-                self.emit("transfer-failed", transfer_id, error_message)
+                self._emit_signal("transfer-failed", transfer_id, error_message)
             self._save_history()
             self._update_progress_display()
 

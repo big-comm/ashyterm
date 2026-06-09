@@ -54,6 +54,8 @@ from .transfers import FileTransferMixin
 # Classes: .transfer-progress-bar, .search-entry-no-icon
 
 MAX_RECURSIVE_RESULTS = 1000
+COMMAND_CONFIRM_TIMEOUT_MS = 15_000
+COMMAND_REFRESH_DELAY_MS = 250
 
 
 class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
@@ -120,6 +122,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         # State for verified command execution
         self._pending_command = None
         self._command_timeout_id = 0
+        self._command_refresh_id = 0
         self._clipboard_items: List[Dict[str, Any]] = []
         self._clipboard_operation: Optional[str] = None
         self._clipboard_session_key: Optional[str] = None
@@ -869,15 +872,44 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         """
         Confirms a pending command was successful and restores user input, as per the new rule.
         """
-        if self._command_timeout_id > 0:
-            GLib.source_remove(self._command_timeout_id)
-            self._command_timeout_id = 0
+        self._remove_pending_command_sources()
 
         # ALWAYS restore the user's input on completion, success or failure.
         if self.bound_terminal:
             self.bound_terminal.feed_child(b"\x19")  # CTRL+Y (Yank)
 
         self._pending_command = None
+
+    def _remove_pending_command_sources(self) -> None:
+        if self._command_timeout_id > 0:
+            GLib.source_remove(self._command_timeout_id)
+            self._command_timeout_id = 0
+
+        if self._command_refresh_id > 0:
+            GLib.source_remove(self._command_refresh_id)
+            self._command_refresh_id = 0
+
+    def _confirm_non_cd_pending_command(self) -> None:
+        if not self._pending_command or self._pending_command["type"] == "cd":
+            return
+        self.logger.info(
+            f"Command '{self._pending_command['str']}' confirmed by refresh."
+        )
+        self._confirm_pending_command()
+
+    def _on_pending_command_timeout(self) -> bool:
+        self._command_timeout_id = 0
+        if self._pending_command:
+            self.logger.warning(
+                f"Command '{self._pending_command['str']}' was not confirmed before timeout."
+            )
+            self._confirm_pending_command()
+        return GLib.SOURCE_REMOVE
+
+    def _refresh_after_pending_command(self) -> bool:
+        self._command_refresh_id = 0
+        self.refresh(source="filemanager")
+        return GLib.SOURCE_REMOVE
 
     def _execute_verified_command(
         self,
@@ -893,8 +925,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
             return
 
         # Clean up any previous pending operation
-        if self._command_timeout_id > 0:
-            GLib.source_remove(self._command_timeout_id)
+        self._remove_pending_command_sources()
 
         command_str = shlex.join(command_list)
 
@@ -910,9 +941,13 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         # Send command
         self.bound_terminal.feed_child(f"{command_str}\n".encode("utf-8"))
 
-        # For non-cd commands, success is confirmed by the refresh completing
+        self._command_timeout_id = GLib.timeout_add(
+            COMMAND_CONFIRM_TIMEOUT_MS, self._on_pending_command_timeout
+        )
         if command_type != "cd":
-            GLib.timeout_add(15, lambda: self.refresh(source="filemanager"))
+            self._command_refresh_id = GLib.timeout_add(
+                COMMAND_REFRESH_DELAY_MS, self._refresh_after_pending_command
+            )
 
     def _on_row_activated(self, col_view, position):
         item: FileItem = col_view.get_model().get_item(position)
@@ -1094,6 +1129,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
 
         self._showing_recursive_results = False
         self._recursive_search_in_progress = False
+        self._confirm_non_cd_pending_command()
         self._restore_search_entry(source)
         return False
 
@@ -1126,13 +1162,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self._showing_recursive_results = False
         self._recursive_search_in_progress = False
 
-        # If a non-cd command was pending, the completion of the refresh confirms it.
-        if self._pending_command and self._pending_command["type"] != "cd":
-            self.logger.info(
-                f"Command '{self._pending_command['str']}' confirmed by successful refresh."
-            )
-            self._confirm_pending_command()
-
+        self._confirm_non_cd_pending_command()
         self._restore_search_entry(source)
         return False
 

@@ -2,8 +2,8 @@
 """File transfer mixin: download, upload, drag-drop, workers, edit/monitor/conflict."""
 
 from functools import partial
-from pathlib import Path
-from typing import List, Optional
+from pathlib import Path, PurePosixPath
+from typing import Callable, List, Optional
 
 import gi
 
@@ -384,19 +384,78 @@ class FileTransferMixin:
             local_path = Path(metadata["local_file_path"])
             last_known_ts = metadata["timestamp"]
 
-            current_remote_ts = self.operations.get_remote_file_timestamp(remote_path)
-
-            if (
-                current_remote_ts
-                and last_known_ts
-                and current_remote_ts > last_known_ts
-            ):
-                self._show_conflict_on_open_dialog(local_path, remote_path, file_item)
-            else:
-                self.logger.info(f"Opening existing local copy for {remote_path}")
-                self._open_local_file(local_path)
+            self._check_remote_edit_conflict_async(
+                local_path, remote_path, file_item, last_known_ts
+            )
         else:
             self._download_and_execute(file_item, self._open_and_monitor_local_file)
+
+    def _get_remote_file_timestamp_async(
+        self, remote_path: str, callback: Callable[[Optional[int]], object]
+    ) -> None:
+        from ..core.tasks import AsyncTaskManager
+
+        def worker() -> None:
+            if getattr(self, "_is_destroyed", False):
+                return
+            try:
+                operations = getattr(self, "operations", None)
+                timestamp = (
+                    operations.get_remote_file_timestamp(remote_path)
+                    if operations
+                    else None
+                )
+            except Exception as exc:
+                self.logger.error(
+                    f"Failed to get remote timestamp for {remote_path}: {exc}"
+                )
+                timestamp = None
+            if getattr(self, "_is_destroyed", False):
+                return
+            GLib.idle_add(self._dispatch_remote_file_timestamp, callback, timestamp)
+
+        AsyncTaskManager.get().submit_io(worker)
+
+    def _dispatch_remote_file_timestamp(
+        self, callback: Callable[[Optional[int]], object], timestamp: Optional[int]
+    ) -> bool:
+        if getattr(self, "_is_destroyed", False):
+            return GLib.SOURCE_REMOVE
+        callback(timestamp)
+        return GLib.SOURCE_REMOVE
+
+    def _check_remote_edit_conflict_async(
+        self,
+        local_path: Path,
+        remote_path: str,
+        file_item: FileItem,
+        last_known_ts: Optional[int],
+    ) -> None:
+        self._get_remote_file_timestamp_async(
+            remote_path,
+            partial(
+                self._finish_remote_edit_conflict_check,
+                local_path,
+                remote_path,
+                file_item,
+                last_known_ts,
+            ),
+        )
+
+    def _finish_remote_edit_conflict_check(
+        self,
+        local_path: Path,
+        remote_path: str,
+        file_item: FileItem,
+        last_known_ts: Optional[int],
+        current_remote_ts: Optional[int],
+    ) -> bool:
+        if current_remote_ts and last_known_ts and current_remote_ts > last_known_ts:
+            self._show_conflict_on_open_dialog(local_path, remote_path, file_item)
+        else:
+            self.logger.info(f"Opening existing local copy for {remote_path}")
+            self._open_local_file(local_path)
+        return GLib.SOURCE_REMOVE
 
     def _show_conflict_on_open_dialog(self, local_path, remote_path, file_item):
         dialog = Adw.AlertDialog(
@@ -435,12 +494,28 @@ class FileTransferMixin:
 
     def _download_and_execute(self, file_item: FileItem, on_success_callback):
         remote_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
-        timestamp = self.operations.get_remote_file_timestamp(remote_path)
+        self._get_remote_file_timestamp_async(
+            remote_path,
+            partial(
+                self._start_download_after_timestamp,
+                file_item,
+                remote_path,
+                on_success_callback,
+            ),
+        )
+
+    def _start_download_after_timestamp(
+        self,
+        file_item: FileItem,
+        remote_path: str,
+        on_success_callback,
+        timestamp: Optional[int],
+    ) -> bool:
         if timestamp is None:
             self.parent_window.toast_overlay.add_toast(
                 Adw.Toast(title=_("Could not get remote file details."))
             )
-            return
+            return GLib.SOURCE_REMOVE
 
         local_path = self._get_local_path_for_remote_file(
             self.session_item, remote_path
@@ -464,6 +539,7 @@ class FileTransferMixin:
             self._background_download_worker,
             success_callback_with_ts,
         )
+        return GLib.SOURCE_REMOVE
 
     def _start_cancellable_transfer(
         self, transfer_id, _verb, worker_func, on_success_callback
@@ -821,13 +897,17 @@ class FileTransferMixin:
 
         def on_response(d, response_id):
             if response_id == "save":
-                new_name = entry.get_text().strip()
-                if new_name:
-                    new_remote_path = str(Path(remote_path).parent / new_name)
-                    self._upload_on_save_thread(local_path, new_remote_path)
+                new_remote_path = self._build_remote_sibling_path(
+                    remote_path, entry.get_text()
+                )
+                self._upload_on_save_thread(local_path, new_remote_path)
 
         dialog.connect("response", on_response)
         dialog.present(self.parent_window)
+
+    def _build_remote_sibling_path(self, remote_path: str, filename: str) -> str:
+        safe_name = InputSanitizer.sanitize_filename(filename.strip())
+        return str(PurePosixPath(remote_path).parent / safe_name)
 
     def _on_save_upload_complete(self, transfer_id, success, message):
         """Callback to finalize transfer and show system notification."""
@@ -888,6 +968,7 @@ class FileTransferMixin:
                 is_cancellable=True,
                 is_directory=local_path.is_dir(),
             )
+            self.transfer_manager.start_transfer(transfer_id)
             self.operations.start_upload_with_progress(
                 transfer_id,
                 self.session_item,
@@ -924,7 +1005,7 @@ class FileTransferMixin:
 
     def _on_rename_dialog_response(self, dialog, response, file_item, entry):
         if response == "rename":
-            new_name = entry.get_text().strip()
+            new_name = InputSanitizer.sanitize_filename(entry.get_text().strip())
             if new_name and new_name != file_item.name:
                 old_path = f"{self.current_path.rstrip('/')}/{file_item.name}"
                 new_path = f"{self.current_path.rstrip('/')}/{new_name}"

@@ -241,7 +241,7 @@ class FileSearchMixin:
         with subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
             text=True,
             bufsize=1,
         ) as proc:
@@ -357,7 +357,7 @@ class FileSearchMixin:
         return [
             "sh",
             "-c",
-            f"{fd_cmd} -i {hidden_flag} -0 --color=never {safe_search_term} {safe_base_path} | xargs -0 ls -ld --full-time --classify 2>/dev/null",
+            f"{fd_cmd} -i {hidden_flag} -0 --color=never {safe_search_term} {safe_base_path} | xargs -r -0 ls -ld --full-time --classify 2>/dev/null",
         ]
 
     def _build_find_command(

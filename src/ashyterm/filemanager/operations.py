@@ -3,6 +3,7 @@ import ctypes
 import os
 import re
 import signal
+import shlex
 import subprocess
 import tempfile
 import threading
@@ -337,6 +338,52 @@ class FileOperations:
 
         return output.strip()
 
+    def _schedule_transfer_completion(
+        self, completion_callback, transfer_id: str, success: bool, message: str
+    ) -> None:
+        if completion_callback:
+            GLib.idle_add(completion_callback, transfer_id, success, message)
+
+    def _build_rsync_ssh_command(self, spawner, session: SessionItem) -> str:
+        """Return the ssh command used by rsync's ``-e`` option."""
+        ssh_options = spawner._get_base_ssh_options(session)
+        ssh_options["BatchMode"] = "yes"
+        cmd = spawner.command_builder.build_remote_command(
+            "ssh",
+            hostname=session.host,
+            port=session.port if session.port != 22 else None,
+            key_file=session.auth_value if session.uses_key_auth() else None,
+            options=ssh_options,
+        )
+        return shlex.join(cmd[:-1])
+
+    def _get_rsync_remote_target(self, session: SessionItem) -> str:
+        """Return the rsync remote target, with user only when configured."""
+        return f"{session.user}@{session.host}" if session.user else session.host
+
+    def _build_sftp_command(self, spawner, session: SessionItem) -> list[str]:
+        """Return the base sftp command for transfer fallback."""
+        sftp_options = spawner._get_base_ssh_options(session)
+        sftp_options["BatchMode"] = "yes"
+        return spawner.command_builder.build_remote_command(
+            "sftp",
+            hostname=session.host,
+            username=session.user if session.user else None,
+            port=session.port if session.port != 22 else None,
+            key_file=session.auth_value if session.uses_key_auth() else None,
+            options=sftp_options,
+        )
+
+    def _remove_sftp_batch_file(self, batch_file_path: Optional[str]) -> None:
+        if not batch_file_path:
+            return
+        try:
+            Path(batch_file_path).unlink(missing_ok=True)
+        except OSError as exc:
+            self.logger.warning(
+                f"Failed to remove SFTP batch file {batch_file_path}: {exc}"
+            )
+
     def _transfer_with_progress(
         self,
         transfer_id: str,
@@ -357,6 +404,7 @@ class FileOperations:
             process = None
             stderr_thread = None
             stderr_lines: list = []
+            batch_file_path: Optional[str] = None
             try:
                 if self._spawner is None:
                     from ..terminal.spawner import get_spawner
@@ -365,9 +413,8 @@ class FileOperations:
                 spawner = self._spawner
 
                 if self._is_command_available(session, "rsync"):
-                    ssh_cmd = (
-                        f"ssh -o ControlPath={spawner._get_ssh_control_path(session)}"
-                    )
+                    ssh_cmd = self._build_rsync_ssh_command(spawner, session)
+                    remote_target = self._get_rsync_remote_target(session)
 
                     # Add trailing slash to source for rsync directory copy
                     source_rsync = source_path
@@ -376,11 +423,11 @@ class FileOperations:
 
                     # Build rsync command based on direction
                     if is_download:
-                        rsync_source = f"{session.user}@{session.host}:{source_rsync}"
+                        rsync_source = f"{remote_target}:{source_rsync}"
                         rsync_dest = dest_path
                     else:
                         rsync_source = source_rsync
-                        rsync_dest = f"{session.user}@{session.host}:{dest_path}"
+                        rsync_dest = f"{remote_target}:{dest_path}"
 
                     transfer_cmd = [
                         "rsync",
@@ -424,7 +471,7 @@ class FileOperations:
                     exit_code = process.returncode
 
                     if exit_code == 0:
-                        GLib.idle_add(
+                        self._schedule_transfer_completion(
                             completion_callback,
                             transfer_id,
                             True,
@@ -434,16 +481,14 @@ class FileOperations:
                         error_message = self._parse_transfer_error(
                             full_output + stderr_output
                         )
-                        GLib.idle_add(
+                        self._schedule_transfer_completion(
                             completion_callback,
                             transfer_id,
                             False,
                             error_message,
                         )
                 else:  # SFTP fallback
-                    sftp_cmd_base = spawner.command_builder.build_remote_command(
-                        "sftp", session
-                    )
+                    sftp_cmd_base = self._build_sftp_command(spawner, session)
 
                     def _sftp_quote(raw: str) -> str:
                         """Quote a path for inclusion in an sftp batch line.
@@ -483,11 +528,9 @@ class FileOperations:
 
                     stdout, stderr = process.communicate()
                     exit_code = process.returncode
-                    if "batch_file_path" in locals() and Path(batch_file_path).exists():
-                        Path(batch_file_path).unlink()
 
                     if exit_code == 0:
-                        GLib.idle_add(
+                        self._schedule_transfer_completion(
                             completion_callback,
                             transfer_id,
                             True,
@@ -495,19 +538,22 @@ class FileOperations:
                         )
                     else:
                         error_msg = self._parse_transfer_error(stdout + stderr)
-                        GLib.idle_add(
+                        self._schedule_transfer_completion(
                             completion_callback, transfer_id, False, error_msg
                         )
 
             except OperationCancelledError:
                 self.logger.warning(f"{op_label} cancelled for {source_path}")
-                if completion_callback:
-                    GLib.idle_add(completion_callback, transfer_id, False, "Cancelled")
+                self._schedule_transfer_completion(
+                    completion_callback, transfer_id, False, "Cancelled"
+                )
             except Exception as e:
                 self.logger.error(f"Exception during {direction}: {e}")
-                if completion_callback:
-                    GLib.idle_add(completion_callback, transfer_id, False, str(e))
+                self._schedule_transfer_completion(
+                    completion_callback, transfer_id, False, str(e)
+                )
             finally:
+                self._remove_sftp_batch_file(batch_file_path)
                 with self._lock:
                     if transfer_id in self._active_processes:
                         del self._active_processes[transfer_id]
