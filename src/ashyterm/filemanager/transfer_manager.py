@@ -452,7 +452,9 @@ class TransferManager(GObject.Object):
         if (zero_check_lte and value <= 0) or (not zero_check_lte and value < 0):
             return f"0 {suffix}"
         if value < 1024:
-            return f"{value:.1f if isinstance(value, float) else value} {suffix}"
+            if isinstance(value, float):
+                return f"{value:.1f} {suffix}"
+            return f"{value} {suffix}"
         if value < 1024**2:
             return f"{value / 1024:.1f} K{suffix}"
         if value < 1024**3:

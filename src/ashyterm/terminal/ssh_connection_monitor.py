@@ -6,7 +6,8 @@ from typing import Optional
 import gi
 
 gi.require_version("GLib", "2.0")
-from gi.repository import GLib
+gi.require_version("Vte", "3.91")
+from gi.repository import GLib, Vte
 
 from .ssh_error_analyzer import has_connection_error, has_shell_prompt
 from ..utils.logger import log_swallowed_exception
@@ -36,7 +37,7 @@ def check_terminal_connection_status(
         start_row = max(0, row_count - 5)
 
         result = terminal.get_text_range_format(
-            0, start_row, 0, row_count - 1, col_count - 1,
+            Vte.Format.TEXT, start_row, 0, row_count - 1, col_count - 1,
         )
         if result and result[0]:
             recent_text = result[0].lower().strip()

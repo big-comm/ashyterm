@@ -85,7 +85,7 @@ def check_ssh_auth_error(child_status: int, terminal: Vte.Terminal) -> bool:
         row_count = terminal.get_row_count()
         start_row = max(0, row_count - 20)
         result = terminal.get_text_range_format(
-            0, start_row, 0, row_count - 1, col_count - 1,
+            Vte.Format.TEXT, start_row, 0, row_count - 1, col_count - 1,
         )
         if result and len(result) > 0 and result[0]:
             text_lower = result[0].lower()
