@@ -77,6 +77,10 @@ class TestIsRemainderInteractive:
             "test %",
             ">>",
             "prefix:",
+            "Do you want to continue? [Y/n]",
+            "Are you sure you want to continue connecting (yes/no/[fingerprint])?",
+            "Deseja continuar? [S/n]",
+            "Overwrite [y/N]",
         ],
     )
     def test_trailing_prompt_chars_count_as_interactive(self, text):
@@ -100,7 +104,17 @@ class TestIsRemainderInteractive:
     def test_osc7_escape_marks_interactive(self):
         assert is_remainder_interactive("\x1b]7;file:///home") is True
 
-    @pytest.mark.parametrize("text", ["just some output", "", "123", "   "])
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "just some output",
+            "",
+            "123",
+            "   ",
+            "line ending with no",
+            "single letter n",
+        ],
+    )
     def test_plain_strings_are_not_interactive(self, text):
         assert is_remainder_interactive(text) is False
 
@@ -145,6 +159,25 @@ class TestSplitPartialLine:
             b"earlier line\nuser@host $ ", at_shell_prompt=False
         )
         assert emit == b"earlier line\nuser@host $ "
+        assert remainder == b""
+
+    @pytest.mark.parametrize(
+        "data",
+        [
+            (
+                b"After this operation, 5554 kB of additional disk space will be "
+                b"used.\nDo you want to continue? [Y/n]"
+            ),
+            (
+                b"The authenticity of host 'demo' can't be established.\n"
+                b"Are you sure you want to continue connecting "
+                b"(yes/no/[fingerprint])? "
+            ),
+        ],
+    )
+    def test_confirmation_prompt_remainder_inhibits_buffering(self, data):
+        emit, remainder = split_partial_line(data, at_shell_prompt=False)
+        assert emit == data
         assert remainder == b""
 
     def test_long_remainder_skips_interactive_check(self):

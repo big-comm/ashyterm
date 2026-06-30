@@ -10,6 +10,7 @@ where tests can hit them without a terminal.
 
 from __future__ import annotations
 
+import re
 from typing import Tuple
 
 # Over this many bytes in a single chunk, we stop trying to highlight
@@ -31,6 +32,14 @@ BURST_HARD_HIT_SEED = 100
 # almost certainly real output the shell sent without a trailing
 # newline (e.g. long ``echo -n`` streams).
 REMAINDER_DECODE_LIMIT = 200
+
+CONFIRMATION_CHOICE = r"(?:y|n|yes|no|s|sim|nao|não)"
+CONFIRMATION_PROMPT_PATTERN = re.compile(
+    rf"(?:\?\s*(?:[\[(][^\])]*{CONFIRMATION_CHOICE}[^\])]*[\])])?"
+    rf"|[\[(][^\])]*{CONFIRMATION_CHOICE}\s*/[^\])]*[\])]"
+    r"|(?:yes/no|no/yes|y/n|n/y|s/n|sim/nao|sim/não))\s*$",
+    re.IGNORECASE,
+)
 
 
 def classify_burst(
@@ -63,13 +72,16 @@ def is_remainder_interactive(rem_str: str) -> bool:
 
     Any of: a prompt terminator (``$ # % > :``) at the end, a prompt
     character followed by space (current input in progress), or an
-    embedded ANSI/OSC escape (prompt styling or CWD update) counts
-    as "interactive" and should not be buffered.
+    interactive confirmation marker (``?``, ``[Y/n]``, ``yes/no``),
+    or an embedded ANSI/OSC escape (prompt styling or CWD update)
+    counts as "interactive" and should not be buffered.
     """
     stripped = rem_str.strip()
     if stripped.endswith(("$", "#", "%", ">", ":")):
         return True
     if any(t in rem_str for t in ("$ ", "# ", "% ", "> ")):
+        return True
+    if CONFIRMATION_PROMPT_PATTERN.search(stripped):
         return True
     if "\x1b[" in rem_str or "\x1b]7;" in rem_str or "\033]7;" in rem_str:
         return True
