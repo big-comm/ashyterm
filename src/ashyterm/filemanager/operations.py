@@ -19,6 +19,36 @@ from ..utils.translation_utils import _
 
 # Pre-compiled pattern for rsync progress parsing
 _PROGRESS_PERCENT_PATTERN = re.compile(r"(\d+)%")
+_RSYNC_COMPRESSION_MODES = {"auto", "always", "never"}
+_INCOMPRESSIBLE_EXTENSIONS = frozenset(
+    {
+        ".7z",
+        ".apk",
+        ".avi",
+        ".bz2",
+        ".deb",
+        ".flac",
+        ".gif",
+        ".gz",
+        ".iso",
+        ".jpeg",
+        ".jpg",
+        ".m4a",
+        ".mkv",
+        ".mov",
+        ".mp3",
+        ".mp4",
+        ".ogg",
+        ".pdf",
+        ".png",
+        ".rar",
+        ".webm",
+        ".webp",
+        ".xz",
+        ".zip",
+        ".zst",
+    }
+)
 
 # --- NEW: Kernel-level process lifecycle management ---
 # Use ctypes to access the prctl system call for robust cleanup.
@@ -374,6 +404,42 @@ class FileOperations:
             options=sftp_options,
         )
 
+    def _get_rsync_compression_mode(self) -> str:
+        try:
+            from ..settings.manager import get_settings_manager
+
+            mode = get_settings_manager().get(
+                "file_transfer_rsync_compression", "auto"
+            )
+        except Exception as exc:
+            self.logger.debug(f"Could not read rsync compression setting: {exc}")
+            mode = "auto"
+        return mode if mode in _RSYNC_COMPRESSION_MODES else "auto"
+
+    def _path_has_incompressible_extension(self, path: str) -> bool:
+        lower_path = path.lower()
+        return any(lower_path.endswith(ext) for ext in _INCOMPRESSIBLE_EXTENSIONS)
+
+    def _get_rsync_archive_flags(
+        self,
+        source_path: str,
+        dest_path: str,
+        is_directory: bool,
+        compression_mode: Optional[str] = None,
+    ) -> str:
+        mode = compression_mode or self._get_rsync_compression_mode()
+        if mode == "always":
+            return "-avz"
+        if mode == "never":
+            return "-av"
+        if is_directory:
+            return "-avz"
+        if self._path_has_incompressible_extension(
+            source_path
+        ) or self._path_has_incompressible_extension(dest_path):
+            return "-av"
+        return "-avz"
+
     def _remove_sftp_batch_file(self, batch_file_path: Optional[str]) -> None:
         if not batch_file_path:
             return
@@ -431,7 +497,9 @@ class FileOperations:
 
                     transfer_cmd = [
                         "rsync",
-                        "-avz",
+                        self._get_rsync_archive_flags(
+                            source_path, dest_path, is_directory
+                        ),
                         "--progress",
                         "-e",
                         ssh_cmd,

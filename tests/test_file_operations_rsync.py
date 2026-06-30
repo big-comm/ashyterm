@@ -61,6 +61,41 @@ def test_rsync_remote_target_omits_empty_user():
     assert ops._get_rsync_remote_target(_session(user="")) == "example.com"
 
 
+def test_rsync_compression_auto_skips_media_files():
+    ops = FileOperations(_session())
+
+    flags = ops._get_rsync_archive_flags(
+        "/srv/movie.mkv", "/home/alice/movie.mkv", False, "auto"
+    )
+
+    assert flags == "-av"
+
+
+def test_rsync_compression_auto_keeps_directory_compression():
+    ops = FileOperations(_session())
+
+    flags = ops._get_rsync_archive_flags("/srv/project", "/tmp/project", True, "auto")
+
+    assert flags == "-avz"
+
+
+def test_rsync_compression_modes_override_auto_detection():
+    ops = FileOperations(_session())
+
+    assert (
+        ops._get_rsync_archive_flags(
+            "/srv/movie.mkv", "/tmp/movie.mkv", False, "always"
+        )
+        == "-avz"
+    )
+    assert (
+        ops._get_rsync_archive_flags(
+            "/srv/readme.txt", "/tmp/readme.txt", False, "never"
+        )
+        == "-av"
+    )
+
+
 def test_sftp_fallback_command_uses_session_ssh_options():
     session = _session()
     spawner = MagicMock()

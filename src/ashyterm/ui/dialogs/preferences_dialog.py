@@ -477,6 +477,24 @@ class PreferencesDialog(Adw.PreferencesWindow):
         persist_spin.connect("notify::value", self._on_ssh_persist_changed)
         ssh_group.add(persist_spin)
 
+        rsync_compression_row = create_mapped_combo_row(
+            title=_("Rsync Compression"),
+            value_map=["auto", "always", "never"],
+            display_strings=[
+                _("Auto (skip media/archive files)"),
+                _("Always"),
+                _("Never"),
+            ],
+            current_value=self.settings_manager.get(
+                "file_transfer_rsync_compression", "auto"
+            ),
+            on_change=lambda val: self._on_setting_changed(
+                "file_transfer_rsync_compression", val
+            ),
+            subtitle=_("Disable compression for already-compressed downloads"),
+        )
+        ssh_group.add(rsync_compression_row)
+
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
             title=_("Advanced"), icon_name="preferences-other-symbolic"

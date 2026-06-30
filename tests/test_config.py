@@ -139,6 +139,10 @@ class TestDefaultSettings:
         defaults = self.DS.get_defaults()
         assert "color_scheme" in defaults
 
+    def test_defaults_has_rsync_compression_mode(self):
+        defaults = self.DS.get_defaults()
+        assert defaults["file_transfer_rsync_compression"] == "auto"
+
 
 # ── ColorSchemes ──
 

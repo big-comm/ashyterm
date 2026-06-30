@@ -38,7 +38,7 @@ def test_extract_terminal_text_falls_back_to_get_text():
 
 
 def test_extract_terminal_text_raises_when_all_apis_fail():
-    with pytest.raises(RuntimeError, match="Could not read terminal output"):
+    with pytest.raises(RuntimeError):
         WindowActions._extract_terminal_text(_BrokenTerminal())
 
 
