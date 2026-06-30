@@ -348,9 +348,8 @@ class SessionEditDialog(BaseDialog):
             self.editing_session.shell_input_highlighting = self._selected_to_tri_state(
                 self.shell_input_highlighting_row.get_selected()
             )
-        except Exception:
-            # Keep the dialog responsive even if validation raises.
-            pass
+        except Exception as exc:
+            self.logger.warning(f"Failed to sync highlighting overrides: {exc}")
 
     def _set_highlighting_overrides_visible(self, visible: bool) -> None:
         for row in (

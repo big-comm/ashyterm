@@ -216,14 +216,14 @@ class WindowLifecycleMixin:
                     self.logger.debug(f"Error inspecting window: {e}")
 
             if modal_windows:
-                self.logger.warning(
+                self.logger.debug(
                     f"[MODAL_DEBUG] Active modal/transient windows: {modal_windows}"
                 )
 
             return True
 
         GLib.timeout_add_seconds(2, log_modal_windows)
-        self.logger.info("[MODAL_DEBUG] Modal window monitor started (debug_mode=True)")
+        self.logger.debug("[MODAL_DEBUG] Modal window monitor started (debug_mode=True)")
 
     # ─── Window State (size / maximized) ───────────────────────────────
 

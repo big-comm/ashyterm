@@ -4,6 +4,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from .config import ColorSchemeMap, ColorSchemes
 from .highlight_models import ANSI_COLOR_MAP, ANSI_MODIFIERS
+from ..utils.logger import get_logger
+
+
+LOGGER = get_logger("ashyterm.settings.highlight_colors")
 
 
 class HighlightColorResolver:
@@ -41,9 +45,8 @@ class HighlightColorResolver:
                     "cursor": scheme.get("cursor", scheme["foreground"]),
                     "palette": scheme["palette"],
                 }
-        except Exception:
-            # Fallback on any scheme read error
-            pass
+        except Exception as exc:
+            LOGGER.warning(f"Failed to resolve theme palette, using default: {exc}")
         self._current_theme_name = "default"
         return self._get_default_palette()
 

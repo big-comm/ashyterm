@@ -6,6 +6,8 @@ from urllib.parse import unquote, urlparse
 
 import gi
 
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
 
@@ -205,20 +207,24 @@ class WindowActions:
     @staticmethod
     def _extract_terminal_text(terminal) -> str:
         """Read full scrollback. VTE's text API varies by version."""
+        last_error: Optional[Exception] = None
         if hasattr(terminal, "get_text_format"):
             try:
                 return terminal.get_text_format(Vte.Format.TEXT) or ""
-            except Exception:
-                pass
+            except Exception as exc:
+                last_error = exc
         if hasattr(terminal, "get_text"):
             try:
                 result = terminal.get_text(None, None)
                 if isinstance(result, tuple):
                     return result[0] or ""
                 return result or ""
-            except Exception:
-                pass
-        return ""
+            except Exception as exc:
+                last_error = exc
+        error = RuntimeError(_("Could not read terminal output."))
+        if last_error:
+            raise error from last_error
+        raise error
 
     def move_tab_left(self, *_args):
         self.window.tab_manager.move_tab_left()
@@ -255,15 +261,22 @@ class WindowActions:
         self._hide_tooltip()
         from .dialogs.ai_config_dialog import AIConfigDialog
 
-        # DEBUG: Log all modal windows before opening dialog
-        self._log_modal_windows("Before AIConfigDialog")
+        debug_mode = self._debug_mode_enabled()
+        if debug_mode:
+            self._log_modal_windows("Before AIConfigDialog")
 
         dialog = AIConfigDialog(self.window, self.window.settings_manager)
         dialog.connect("setting-changed", self._on_ai_setting_changed)
 
-        self.logger.info("[DIALOG_DEBUG] About to present AIConfigDialog")
+        if debug_mode:
+            self.logger.debug("[DIALOG_DEBUG] About to present AIConfigDialog")
         dialog.present()
-        self.logger.info("[DIALOG_DEBUG] AIConfigDialog.present() returned")
+        if debug_mode:
+            self.logger.debug("[DIALOG_DEBUG] AIConfigDialog.present() returned")
+
+    def _debug_mode_enabled(self) -> bool:
+        settings = getattr(self.window, "settings_manager", None)
+        return bool(settings and settings.get("debug_mode", False))
 
     def _log_modal_windows(self, context: str) -> None:
         """Log all modal/transient windows for debugging."""
@@ -293,9 +306,9 @@ class WindowActions:
                 log_swallowed_exception(exc)
 
         if modal_windows:
-            self.logger.warning(f"[MODAL_DEBUG] {context}: {modal_windows}")
+            self.logger.debug(f"[MODAL_DEBUG] {context}: {modal_windows}")
         else:
-            self.logger.info(f"[MODAL_DEBUG] {context}: No modal windows found")
+            self.logger.debug(f"[MODAL_DEBUG] {context}: No modal windows found")
 
     def _on_ai_setting_changed(self, dialog, key, value):
         """Handle AI setting changes from the config dialog."""

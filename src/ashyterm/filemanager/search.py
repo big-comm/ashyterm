@@ -3,6 +3,7 @@
 
 import shlex
 import subprocess
+import threading
 from pathlib import PurePosixPath
 from typing import List, Optional
 
@@ -16,6 +17,7 @@ from .models import FileItem
 from .operations import FileOperations
 
 MAX_RECURSIVE_RESULTS = 1000
+MAX_RECURSIVE_ERROR_LINES = 20
 
 
 class FileSearchMixin:
@@ -241,16 +243,46 @@ class FileSearchMixin:
         with subprocess.Popen(
             command,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
         ) as proc:
+            stderr_lines: List[str] = []
+            stderr_thread = self._start_stderr_collector(proc, stderr_lines)
             truncated = self._process_search_output(
                 proc, generation, base_posix, use_fd, results
             )
-            error_message = self._get_process_error(proc)
+            return_code = self._finish_search_process(proc)
+            stderr_thread.join(timeout=0.5)
+            error_message = self._get_process_error(
+                return_code, stderr_lines, truncated
+            )
 
         return results, error_message, truncated
+
+    def _start_stderr_collector(self, proc, stderr_lines: List[str]):
+        thread = threading.Thread(
+            target=self._collect_search_stderr,
+            args=(proc, stderr_lines),
+            daemon=True,
+        )
+        thread.start()
+        return thread
+
+    def _collect_search_stderr(self, proc, stderr_lines: List[str]) -> None:
+        if not proc.stderr:
+            return
+        for line in proc.stderr:
+            clean_line = line.strip()
+            if clean_line and len(stderr_lines) < MAX_RECURSIVE_ERROR_LINES:
+                stderr_lines.append(clean_line)
+
+    def _finish_search_process(self, proc) -> int:
+        try:
+            return proc.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            return proc.wait(timeout=2)
 
     def _process_search_output(
         self,
@@ -278,12 +310,16 @@ class FileSearchMixin:
                     return True
         return False
 
-    def _get_process_error(self, proc) -> str:
+    def _get_process_error(
+        self, return_code: int, stderr_lines: List[str], truncated: bool
+    ) -> str:
         """Get error message from process if any."""
-        if proc.returncode and proc.returncode != 0:
-            stderr = proc.stderr.read() if proc.stderr else ""
-            if stderr:
-                return stderr.strip()
+        if truncated or return_code == 0:
+            return ""
+        if stderr_lines:
+            return "\n".join(stderr_lines)
+        if return_code != 0:
+            return _("Search failed.")
         return ""
 
     def _schedule_search_complete(
