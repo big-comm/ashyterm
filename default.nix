@@ -63,6 +63,7 @@ python3Packages.buildPythonApplication {
       setproctitle
       requests
       psutil
+      asyncssh
     ]
     ++ lib.optionals withPerformance [ regex ]
     ++ lib.optionals withSyntaxHighlighting [ pygments ]
