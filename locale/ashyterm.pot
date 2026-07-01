@@ -24,8 +24,8 @@ msgstr  "Project-Id-Version: ashyterm\n"
 # File: src/ashyterm/window.py, line: 24
 # File: src/ashyterm/ui/header_bar_builder.py, line: 237
 # File: src/ashyterm/window_tabs.py, line: 15
-# File: src/ashyterm/filemanager/transfers.py, line: 807
-# File: src/ashyterm/filemanager/transfers.py, line: 940
+# File: src/ashyterm/filemanager/transfers.py, line: 808
+# File: src/ashyterm/filemanager/transfers.py, line: 941
 msgid   "Ashy Terminal"
 msgstr  ""
 
@@ -673,7 +673,7 @@ msgstr  ""
 # File: src/ashyterm/ui/dialogs/backup_dialog.py, line: 92
 # File: src/ashyterm/ui/dialogs/backup_dialog.py, line: 178
 # File: src/ashyterm/ui/dialogs/backup_dialog.py, line: 226
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 812
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 848
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 239
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 294
 # File: src/ashyterm/ui/dialogs/base_dialog.py, line: 105
@@ -705,8 +705,8 @@ msgstr  ""
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 487
 # File: src/ashyterm/filemanager/transfers.py, line: 345
 # File: src/ashyterm/filemanager/transfers.py, line: 468
-# File: src/ashyterm/filemanager/transfers.py, line: 894
-# File: src/ashyterm/filemanager/transfers.py, line: 999
+# File: src/ashyterm/filemanager/transfers.py, line: 895
+# File: src/ashyterm/filemanager/transfers.py, line: 1000
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 141
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 581
 # File: src/ashyterm/terminal/manager.py, line: 1106
@@ -758,9 +758,9 @@ msgstr  ""
 # File: src/ashyterm/ui/dialogs/backup_dialog.py, line: 278
 # File: src/ashyterm/ui/dialogs/backup_dialog.py, line: 287
 # File: src/ashyterm/ui/dialogs/backup_dialog.py, line: 295
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 773
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 826
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 835
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 809
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 862
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 871
 # File: src/ashyterm/ui/dialogs/base_dialog.py, line: 233
 # File: src/ashyterm/ui/dialogs/session_edit_dialog.py, line: 863
 # File: src/ashyterm/ui/dialogs/session_edit_port_forward.py, line: 130
@@ -771,8 +771,8 @@ msgstr  ""
 # File: src/ashyterm/app.py, line: 457
 # File: src/ashyterm/app.py, line: 468
 # File: src/ashyterm/app.py, line: 478
-# File: src/ashyterm/filemanager/transfers.py, line: 672
-# File: src/ashyterm/filemanager/transfers.py, line: 700
+# File: src/ashyterm/filemanager/transfers.py, line: 673
+# File: src/ashyterm/filemanager/transfers.py, line: 701
 msgid   "OK"
 msgstr  ""
 
@@ -827,7 +827,7 @@ msgstr  ""
 # File: src/ashyterm/ui/dialogs/highlight/rule_edit_dialog.py, line: 95
 # File: src/ashyterm/ui/color_scheme_dialog.py, line: 218
 # File: src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py, line: 729
-# File: src/ashyterm/filemanager/transfers.py, line: 895
+# File: src/ashyterm/filemanager/transfers.py, line: 896
 msgid   "Save"
 msgstr  ""
 
@@ -1354,8 +1354,8 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/ui/dialogs/session_edit_sections.py, line: 56
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 540
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 557
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 576
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 593
 msgid   "Automatic"
 msgstr  ""
 
@@ -2211,101 +2211,131 @@ msgid   "Disable compression for already-compressed downloads"
 msgstr  ""
 
 #
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 499
+msgid   "Accelerated SFTP Downloads"
+msgstr  ""
+
+#
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 500
-msgid   "Advanced"
+msgid   "Use parallel AsyncSSH reads for large single-file downloads"
+msgstr  ""
+
+#
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 507
+msgid   "Parallel Download Requests"
 msgstr  ""
 
 #
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 508
+msgid   "Concurrent range reads per file"
+msgstr  ""
+
+#
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 521
+msgid   "Acceleration Threshold"
+msgstr  ""
+
+#
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 522
+msgid   "Minimum file size in MB"
+msgstr  ""
+
+#
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 536
+msgid   "Advanced"
+msgstr  ""
+
+#
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 544
 msgid   "Bidirectional Text Support"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 509
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 545
 msgid   "For Arabic and Hebrew (affects performance)"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 516
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 552
 msgid   "Enable Arabic Text Shaping"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 517
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 553
 msgid   "Render ligatures for Arabic script"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 524
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 560
 msgid   "SIXEL Graphics Support"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 525
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 561
 msgid   "Display SIXEL images (experimental)"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 535
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 571
 msgid   "Backspace Key"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 541
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 577
 msgid   "ASCII BACKSPACE (^H)"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 542
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 558
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 578
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 594
 msgid   "ASCII DELETE"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 543
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 559
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 579
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 595
 msgid   "Escape Sequence"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 552
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 588
 msgid   "Delete Key"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 568
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 604
 msgid   "Ambiguous-width Characters"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 571
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 607
 msgid   "Narrow (single-cell)"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 571
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 607
 msgid   "Wide (double-cell)"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 583
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 619
 msgid   "Word Characters"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 595
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 631
 msgid   "Save Logs to File"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 603
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 639
 msgid   "Console Log Level"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 619
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 807
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 813
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 655
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 843
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 849
 msgid   "Reset All Settings"
 msgstr  ""
 
@@ -2318,7 +2348,7 @@ msgstr  ""
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 621
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 657
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 295
 # File: src/ashyterm/ui/dialogs/highlight/context_delegate.py, line: 694
 # File: src/ashyterm/ui/dialogs/highlight/context_delegate.py, line: 812
@@ -2328,45 +2358,45 @@ msgid   "Reset"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 635
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 671
 msgid   "Select Font"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 754
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 790
 msgid   "Icon Theme Changed"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 756
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 792
 msgid   "The icon theme change will take effect after restarting the "
         "application."
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 809
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 845
 msgid   "Are you sure you want to reset all settings to their default values? "
         "This action cannot be undone."
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 821
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 857
 msgid   "Settings Reset"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 823
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 859
 msgid   "All settings have been reset to their default values. Please restart "
         "the application for all changes to take effect."
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 832
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 868
 msgid   "Reset Failed"
 msgstr  ""
 
 #
-# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 833
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 869
 #, python-brace-format
 msgid   "Failed to reset settings: {}"
 msgstr  ""
@@ -6306,8 +6336,8 @@ msgstr  ""
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 144
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 176
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 150
-# File: src/ashyterm/filemanager/transfers.py, line: 992
-# File: src/ashyterm/filemanager/transfers.py, line: 1000
+# File: src/ashyterm/filemanager/transfers.py, line: 993
+# File: src/ashyterm/filemanager/transfers.py, line: 1001
 # File: src/ashyterm/terminal/tab_groups_controller.py, line: 446
 msgid   "Rename"
 msgstr  ""
@@ -7249,7 +7279,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 145
-# File: src/ashyterm/filemanager/transfers.py, line: 715
+# File: src/ashyterm/filemanager/transfers.py, line: 716
 msgid   "Open With..."
 msgstr  ""
 
@@ -7264,7 +7294,7 @@ msgstr  ""
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 162
-# File: src/ashyterm/filemanager/operations.py, line: 467
+# File: src/ashyterm/filemanager/operations.py, line: 637
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 msgid   "Download"
 msgstr  ""
@@ -7470,7 +7500,7 @@ msgstr  ""
 #
 # File: src/ashyterm/filemanager/transfers.py, line: 152
 # File: src/ashyterm/filemanager/transfers.py, line: 346
-# File: src/ashyterm/filemanager/operations.py, line: 467
+# File: src/ashyterm/filemanager/operations.py, line: 637
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 197
 msgid   "Upload"
 msgstr  ""
@@ -7528,28 +7558,28 @@ msgid   "Could not get remote file details."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 627
+# File: src/ashyterm/filemanager/transfers.py, line: 628
 msgid   "Permission Denied"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 634
+# File: src/ashyterm/filemanager/transfers.py, line: 635
 msgid   "Transfer cancelled."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 653
+# File: src/ashyterm/filemanager/transfers.py, line: 654
 msgid   "Insufficient Disk Space"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 655
+# File: src/ashyterm/filemanager/transfers.py, line: 656
 msgid   "There is not enough free space at the destination to complete this "
         "transfer."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 661
+# File: src/ashyterm/filemanager/transfers.py, line: 662
 #, python-brace-format
 msgid   "Required space: <b>{required}</b>\n"
         "Available space: <b>{available}</b>\n"
@@ -7557,18 +7587,18 @@ msgid   "Required space: <b>{required}</b>\n"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 684
+# File: src/ashyterm/filemanager/transfers.py, line: 685
 msgid   "Transfer Failed: Permission Denied"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 685
+# File: src/ashyterm/filemanager/transfers.py, line: 686
 #, python-brace-format
 msgid   "Could not complete the transfer of '{filename}'."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 691
+# File: src/ashyterm/filemanager/transfers.py, line: 692
 #, python-brace-format
 msgid   "Please check if you have the necessary write permissions in the "
         "destination directory:\n"
@@ -7577,88 +7607,88 @@ msgid   "Please check if you have the necessary write permissions in the "
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 761
+# File: src/ashyterm/filemanager/transfers.py, line: 762
 #, python-brace-format
 msgid   "Failed to open file: {}"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 809
+# File: src/ashyterm/filemanager/transfers.py, line: 810
 msgid   "File is open. Saving it will upload changes back to the server."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 847
+# File: src/ashyterm/filemanager/transfers.py, line: 848
 msgid   "Upload failed: Could not verify remote file."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 864
+# File: src/ashyterm/filemanager/transfers.py, line: 865
 msgid   "File Conflict"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 866
+# File: src/ashyterm/filemanager/transfers.py, line: 867
 #, python-brace-format
 msgid   "The file '{filename}' has been modified on the server since you "
         "started editing it. How would you like to proceed?"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 870
+# File: src/ashyterm/filemanager/transfers.py, line: 871
 msgid   "Cancel Upload"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 871
+# File: src/ashyterm/filemanager/transfers.py, line: 872
 msgid   "Overwrite Server File"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 872
+# File: src/ashyterm/filemanager/transfers.py, line: 873
 msgid   "Save as New File"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 888
+# File: src/ashyterm/filemanager/transfers.py, line: 889
 msgid   "Save As"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 889
+# File: src/ashyterm/filemanager/transfers.py, line: 890
 msgid   "Enter a new name for the file on the server:"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 942
+# File: src/ashyterm/filemanager/transfers.py, line: 943
 msgid   "Upload Complete"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 944
+# File: src/ashyterm/filemanager/transfers.py, line: 945
 #, python-brace-format
 msgid   "'{filename}' has been saved to the server."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 949
+# File: src/ashyterm/filemanager/transfers.py, line: 950
 msgid   "Upload Failed"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 951
+# File: src/ashyterm/filemanager/transfers.py, line: 952
 #, python-brace-format
 msgid   "Could not save '{filename}' to the server: {error}"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 993
+# File: src/ashyterm/filemanager/transfers.py, line: 994
 #, python-brace-format
 msgid   "Enter a new name for '{name}'"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 1015
+# File: src/ashyterm/filemanager/transfers.py, line: 1016
 msgid   "Rename command sent to terminal"
 msgstr  ""
 
@@ -7716,31 +7746,36 @@ msgid   "Cancel All Transfers"
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 219
+# File: src/ashyterm/filemanager/operations.py, line: 230
 msgid   "No session context for file operation."
 msgstr  ""
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/filemanager/operations.py, line: 248
+# File: src/ashyterm/filemanager/operations.py, line: 259
 # File: src/ashyterm/terminal/ssh_spawn_mixin.py, line: 356
 msgid   "Command timed out. Connection may be lost."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 254
+# File: src/ashyterm/filemanager/operations.py, line: 265
 msgid   "Unsupported session type for command execution."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 363
+# File: src/ashyterm/filemanager/operations.py, line: 374
 msgid   "Permission Denied: Check write permissions on the destination."
 msgstr  ""
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 367
+# File: src/ashyterm/filemanager/operations.py, line: 378
 msgid   "An unknown transfer error occurred."
+msgstr  ""
+
+#
+# File: src/ashyterm/filemanager/operations.py, line: 573
+msgid   "Download completed successfully."
 msgstr  ""
 
 #
