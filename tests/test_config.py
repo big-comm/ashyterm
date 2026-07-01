@@ -143,6 +143,12 @@ class TestDefaultSettings:
         defaults = self.DS.get_defaults()
         assert defaults["file_transfer_rsync_compression"] == "auto"
 
+    def test_defaults_have_accelerated_download_settings(self):
+        defaults = self.DS.get_defaults()
+        assert defaults["file_transfer_accelerated_downloads"] is True
+        assert defaults["file_transfer_parallel_requests"] == 6
+        assert defaults["file_transfer_accelerated_min_size_mb"] == 64
+
 
 # ── ColorSchemes ──
 

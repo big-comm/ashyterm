@@ -16,10 +16,21 @@ from gi.repository import GLib
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from .accelerated_download import (
+    AcceleratedDownloadCancelled,
+    AcceleratedDownloadConfig,
+    AcceleratedDownloadUnavailable,
+    AsyncSSHSegmentedDownloader,
+)
 
 # Pre-compiled pattern for rsync progress parsing
 _PROGRESS_PERCENT_PATTERN = re.compile(r"(\d+)%")
 _RSYNC_COMPRESSION_MODES = {"auto", "always", "never"}
+_ACCELERATED_DOWNLOAD_DEFAULT_REQUESTS = 6
+_ACCELERATED_DOWNLOAD_MIN_REQUESTS = 2
+_ACCELERATED_DOWNLOAD_MAX_REQUESTS = 10
+_ACCELERATED_DOWNLOAD_DEFAULT_MIN_SIZE_MB = 64
+_ACCELERATED_DOWNLOAD_CHUNK_SIZE_BYTES = 4 * 1024 * 1024
 _INCOMPRESSIBLE_EXTENSIONS = frozenset(
     {
         ".7z",
@@ -440,6 +451,165 @@ class FileOperations:
             return "-av"
         return "-avz"
 
+    def _get_setting_value(self, key: str, default: Any) -> Any:
+        try:
+            from ..settings.manager import get_settings_manager
+
+            return get_settings_manager().get(key, default)
+        except Exception as exc:
+            self.logger.debug(f"Could not read setting {key}: {exc}")
+            return default
+
+    def _get_clamped_int_setting(
+        self, key: str, default: int, minimum: int, maximum: int
+    ) -> int:
+        value = self._get_setting_value(key, default)
+        if isinstance(value, bool):
+            return default
+        try:
+            parsed = int(value)
+        except (TypeError, ValueError):
+            return default
+        return max(minimum, min(maximum, parsed))
+
+    def _get_accelerated_download_settings(self) -> tuple[bool, int, int, int, str]:
+        enabled = bool(
+            self._get_setting_value("file_transfer_accelerated_downloads", True)
+        )
+        parallel_requests = self._get_clamped_int_setting(
+            "file_transfer_parallel_requests",
+            _ACCELERATED_DOWNLOAD_DEFAULT_REQUESTS,
+            _ACCELERATED_DOWNLOAD_MIN_REQUESTS,
+            _ACCELERATED_DOWNLOAD_MAX_REQUESTS,
+        )
+        min_size_mb = self._get_clamped_int_setting(
+            "file_transfer_accelerated_min_size_mb",
+            _ACCELERATED_DOWNLOAD_DEFAULT_MIN_SIZE_MB,
+            0,
+            4096,
+        )
+        connect_timeout = self._get_clamped_int_setting(
+            "ssh_connect_timeout",
+            30,
+            1,
+            300,
+        )
+        strict_host_key = str(
+            self._get_setting_value("ssh_strict_host_key_checking", "accept-new")
+        )
+        if strict_host_key not in {"ask", "accept-new", "yes", "no"}:
+            strict_host_key = "accept-new"
+        return (
+            enabled,
+            parallel_requests,
+            min_size_mb * 1024 * 1024,
+            connect_timeout,
+            strict_host_key,
+        )
+
+    def _should_use_accelerated_download(
+        self, session: SessionItem, is_directory: bool, file_size: int
+    ) -> bool:
+        enabled, parallel_requests, min_size_bytes, _timeout, _strict_host_key = (
+            self._get_accelerated_download_settings()
+        )
+        if not enabled or parallel_requests < _ACCELERATED_DOWNLOAD_MIN_REQUESTS:
+            return False
+        if is_directory or not session or not session.is_ssh():
+            return False
+        if file_size < min_size_bytes:
+            return False
+        if session.proxy_jump:
+            return False
+        if session.uses_password_auth() and not session.auth_value:
+            return False
+        return True
+
+    def _start_accelerated_download_with_fallback(
+        self,
+        transfer_id: str,
+        session: SessionItem,
+        remote_path: str,
+        local_path: Path,
+        is_directory: bool,
+        file_size: int,
+        progress_callback=None,
+        completion_callback=None,
+        cancellation_event: Optional[threading.Event] = None,
+    ) -> None:
+        """Start an AsyncSSH segmented download and fallback to rsync/SFTP on error."""
+
+        def accelerated_thread():
+            (
+                _enabled,
+                parallel_requests,
+                _min_size_bytes,
+                connect_timeout,
+                strict_host_key,
+            ) = self._get_accelerated_download_settings()
+            config = AcceleratedDownloadConfig(
+                parallel_requests=parallel_requests,
+                chunk_size_bytes=_ACCELERATED_DOWNLOAD_CHUNK_SIZE_BYTES,
+                connect_timeout=connect_timeout,
+                strict_host_key_checking=strict_host_key,
+            )
+
+            def emit_progress(progress: float) -> None:
+                if progress_callback:
+                    GLib.idle_add(progress_callback, transfer_id, progress)
+
+            try:
+                downloader = AsyncSSHSegmentedDownloader(
+                    session,
+                    config,
+                    progress_callback=emit_progress,
+                    cancellation_event=cancellation_event,
+                )
+                downloader.download(remote_path, local_path, expected_size=file_size)
+                self._schedule_transfer_completion(
+                    completion_callback,
+                    transfer_id,
+                    True,
+                    _("Download completed successfully."),
+                )
+            except AcceleratedDownloadCancelled:
+                self.logger.warning(f"Download cancelled for {remote_path}")
+                self._schedule_transfer_completion(
+                    completion_callback, transfer_id, False, "Cancelled"
+                )
+            except AcceleratedDownloadUnavailable as exc:
+                self.logger.info(
+                    f"Accelerated download unavailable for {remote_path}; falling back: {exc}"
+                )
+                self._transfer_with_progress(
+                    transfer_id=transfer_id,
+                    session=session,
+                    source_path=remote_path,
+                    dest_path=str(local_path),
+                    is_directory=is_directory,
+                    direction="download",
+                    progress_callback=progress_callback,
+                    completion_callback=completion_callback,
+                    cancellation_event=cancellation_event,
+                )
+            except Exception as exc:
+                self.logger.warning(
+                    f"Accelerated download failed for {remote_path}; falling back: {exc}"
+                )
+                self._transfer_with_progress(
+                    transfer_id=transfer_id,
+                    session=session,
+                    source_path=remote_path,
+                    dest_path=str(local_path),
+                    is_directory=is_directory,
+                    direction="download",
+                    progress_callback=progress_callback,
+                    completion_callback=completion_callback,
+                    cancellation_event=cancellation_event,
+                )
+
+        threading.Thread(target=accelerated_thread, daemon=True).start()
+
     def _remove_sftp_batch_file(self, batch_file_path: Optional[str]) -> None:
         if not batch_file_path:
             return
@@ -635,11 +805,25 @@ class FileOperations:
         remote_path: str,
         local_path: Path,
         is_directory: bool,
+        file_size: int = 0,
         progress_callback=None,
         completion_callback=None,
         cancellation_event: Optional[threading.Event] = None,
     ):
         """Start a download operation with progress tracking."""
+        if self._should_use_accelerated_download(session, is_directory, file_size):
+            self._start_accelerated_download_with_fallback(
+                transfer_id=transfer_id,
+                session=session,
+                remote_path=remote_path,
+                local_path=local_path,
+                is_directory=is_directory,
+                file_size=file_size,
+                progress_callback=progress_callback,
+                completion_callback=completion_callback,
+                cancellation_event=cancellation_event,
+            )
+            return
         self._transfer_with_progress(
             transfer_id=transfer_id,
             session=session,

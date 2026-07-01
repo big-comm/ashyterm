@@ -1,8 +1,10 @@
 """Tests for FileOperations rsync command helpers."""
 
+import threading
 from unittest.mock import MagicMock
 
 from ashyterm.filemanager import operations as operations_module
+from ashyterm.filemanager.accelerated_download import AcceleratedDownloadUnavailable
 from ashyterm.filemanager.operations import FileOperations
 from ashyterm.sessions.models import SessionItem
 
@@ -94,6 +96,84 @@ def test_rsync_compression_modes_override_auto_detection():
         )
         == "-av"
     )
+
+
+def test_accelerated_download_selection_requires_large_single_ssh_file():
+    ops = FileOperations(_session())
+    ops._get_accelerated_download_settings = MagicMock(
+        return_value=(True, 6, 1024, 30, "accept-new")
+    )
+
+    assert ops._should_use_accelerated_download(_session(), False, 2048) is True
+    assert ops._should_use_accelerated_download(_session(), False, 512) is False
+    assert ops._should_use_accelerated_download(_session(), True, 2048) is False
+    assert (
+        ops._should_use_accelerated_download(
+            _session(proxy_jump="alice@bastion.example.com"), False, 2048
+        )
+        is False
+    )
+    assert (
+        ops._should_use_accelerated_download(
+            _session(session_type="local"), False, 2048
+        )
+        is False
+    )
+
+
+def test_start_download_uses_accelerated_path_when_eligible(tmp_path):
+    ops = FileOperations(_session())
+    ops._should_use_accelerated_download = MagicMock(return_value=True)
+    ops._start_accelerated_download_with_fallback = MagicMock()
+    ops._transfer_with_progress = MagicMock()
+
+    ops.start_download_with_progress(
+        "transfer-1", _session(), "/srv/movie.mkv", tmp_path / "movie.mkv", False, 2048
+    )
+
+    ops._start_accelerated_download_with_fallback.assert_called_once()
+    ops._transfer_with_progress.assert_not_called()
+
+
+def test_accelerated_download_unavailable_falls_back_to_existing_transfer(
+    monkeypatch, tmp_path
+):
+    class ImmediateThread:
+        def __init__(self, target, daemon):
+            self._target = target
+            self.daemon = daemon
+
+        def start(self):
+            self._target()
+
+    class UnavailableDownloader:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def download(self, *_args, **_kwargs):
+            raise AcceleratedDownloadUnavailable("not available")
+
+    ops = FileOperations(_session())
+    ops._get_accelerated_download_settings = MagicMock(
+        return_value=(True, 6, 1024, 30, "accept-new")
+    )
+    ops._transfer_with_progress = MagicMock()
+    monkeypatch.setattr(operations_module.threading, "Thread", ImmediateThread)
+    monkeypatch.setattr(
+        operations_module, "AsyncSSHSegmentedDownloader", UnavailableDownloader
+    )
+
+    ops._start_accelerated_download_with_fallback(
+        "transfer-1",
+        _session(),
+        "/srv/movie.mkv",
+        tmp_path / "movie.mkv",
+        False,
+        2048,
+        cancellation_event=threading.Event(),
+    )
+
+    ops._transfer_with_progress.assert_called_once()
 
 
 def test_sftp_fallback_command_uses_session_ssh_options():

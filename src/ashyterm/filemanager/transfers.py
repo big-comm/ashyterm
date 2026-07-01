@@ -570,6 +570,7 @@ class FileTransferMixin:
                 transfer.remote_path,
                 Path(transfer.local_path),
                 is_directory=transfer.is_directory,
+                file_size=transfer.file_size,
                 progress_callback=self.transfer_manager.update_progress,
                 completion_callback=completion_callback,
                 cancellation_event=self.transfer_manager.get_cancellation_event(

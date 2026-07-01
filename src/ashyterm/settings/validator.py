@@ -31,6 +31,7 @@ _BOOLEAN_SETTINGS = (
     "scroll_on_keystroke",
     "mouse_autohide",
     "bell_sound",
+    "file_transfer_accelerated_downloads",
     "log_to_file",
     "ai_assistant_enabled",
 )

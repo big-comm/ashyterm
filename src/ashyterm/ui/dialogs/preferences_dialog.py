@@ -495,6 +495,42 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         ssh_group.add(rsync_compression_row)
 
+        accelerated_downloads_row = self._create_switch_row(
+            _("Accelerated SFTP Downloads"),
+            _("Use parallel AsyncSSH reads for large single-file downloads"),
+            "file_transfer_accelerated_downloads",
+            default_value=True,
+        )
+        ssh_group.add(accelerated_downloads_row)
+
+        parallel_requests_spin = Adw.SpinRow.new_with_range(2, 10, 1)
+        parallel_requests_spin.set_title(_("Parallel Download Requests"))
+        parallel_requests_spin.set_subtitle(_("Concurrent range reads per file"))
+        parallel_requests_spin.set_value(
+            self.settings_manager.get("file_transfer_parallel_requests", 6)
+        )
+        parallel_requests_spin.connect(
+            "notify::value",
+            lambda row, _pspec: self._on_setting_changed(
+                "file_transfer_parallel_requests", int(row.get_value())
+            ),
+        )
+        ssh_group.add(parallel_requests_spin)
+
+        acceleration_threshold_spin = Adw.SpinRow.new_with_range(0, 4096, 16)
+        acceleration_threshold_spin.set_title(_("Acceleration Threshold"))
+        acceleration_threshold_spin.set_subtitle(_("Minimum file size in MB"))
+        acceleration_threshold_spin.set_value(
+            self.settings_manager.get("file_transfer_accelerated_min_size_mb", 64)
+        )
+        acceleration_threshold_spin.connect(
+            "notify::value",
+            lambda row, _pspec: self._on_setting_changed(
+                "file_transfer_accelerated_min_size_mb", int(row.get_value())
+            ),
+        )
+        ssh_group.add(acceleration_threshold_spin)
+
     def _setup_advanced_page(self) -> None:
         advanced_page = Adw.PreferencesPage(
             title=_("Advanced"), icon_name="preferences-other-symbolic"

@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.9.9"
+    APP_VERSION = "1.10.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -334,6 +334,9 @@ class DefaultSettings:
             "ssh_control_persist_duration": 60,  # Duration in seconds for SSH connection multiplexing
             # Rsync transfer compression: "auto", "always", or "never"
             "file_transfer_rsync_compression": "auto",
+            "file_transfer_accelerated_downloads": True,
+            "file_transfer_parallel_requests": 6,
+            "file_transfer_accelerated_min_size_mb": 64,
             # SSH host key verification: "ask" (prompt), "accept-new" (auto-add new hosts),
             # "yes" (reject unknown hosts), "no" (disable — DISCOURAGED).
             "ssh_strict_host_key_checking": "accept-new",
