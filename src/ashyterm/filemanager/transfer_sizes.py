@@ -26,11 +26,11 @@ def calculate_remote_item_sizes(
 ) -> Dict[str, int]:
     """Return ``{item.name: size_in_bytes}`` for each of ``items``.
 
-    Directory sizes are intentionally not resolved recursively here:
-    ``du -sb`` can be very slow on remote trees and blocks transfer
-    preparation. Listing entries reporting ``0`` for non-directories are
-    still resolved via ``operations.get_directory_size`` because remote
-    ``ls`` sometimes omits a size for special files.
+    Directory sizes are resolved recursively because the free-space check
+    and transfer progress must reflect what will actually be copied.
+    Listing entries reporting ``0`` for non-directories are still resolved
+    via ``operations.get_directory_size`` because remote ``ls`` sometimes
+    omits a size for special files.
     """
     item_sizes: Dict[str, int] = {}
     base = current_path.rstrip("/")
@@ -39,7 +39,10 @@ def calculate_remote_item_sizes(
         remote_path = f"{base}/{item.name}"
 
         if item.is_directory_like:
-            item_sizes[item.name] = item.size
+            calculated = operations.get_directory_size(
+                remote_path, is_remote=True, session_override=session_override
+            )
+            item_sizes[item.name] = calculated if calculated > 0 else item.size
         elif item.size == 0:
             calculated = operations.get_directory_size(
                 remote_path, is_remote=True, session_override=session_override

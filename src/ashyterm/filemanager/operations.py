@@ -106,6 +106,12 @@ def _drain_stderr_to_list(stderr_stream, output_list: list):
 # --- End of process management setup ---
 
 
+def _format_exception_for_log(exc: Exception) -> str:
+    message = str(exc)
+    exc_type = type(exc).__name__
+    return f"{exc_type}: {message}" if message else exc_type
+
+
 class OperationCancelledError(Exception):
     """Custom exception to indicate that an operation was cancelled by the user."""
 
@@ -373,6 +379,18 @@ class FileOperations:
         if any(err in output_lower for err in permission_errors):
             return _("Permission Denied: Check write permissions on the destination.")
 
+        if "input/output error" in output_lower:
+            detail_lines = [
+                line.strip()
+                for line in output.splitlines()
+                if "input/output error" in line.lower()
+            ][:5]
+            detail = "\n".join(detail_lines)
+            message = _(
+                "Remote input/output error: the server could not read one or more source files."
+            )
+            return f"{message}\n{detail}" if detail else message
+
         # Fallback to a generic message if output is empty but an error occurred
         if not output.strip():
             return _("An unknown transfer error occurred.")
@@ -515,7 +533,7 @@ class FileOperations:
         )
         if not enabled or parallel_requests < _ACCELERATED_DOWNLOAD_MIN_REQUESTS:
             return False
-        if is_directory or not session or not session.is_ssh():
+        if not session or not session.is_ssh():
             return False
         if file_size < min_size_bytes:
             return False
@@ -565,7 +583,14 @@ class FileOperations:
                     progress_callback=emit_progress,
                     cancellation_event=cancellation_event,
                 )
-                downloader.download(remote_path, local_path, expected_size=file_size)
+                if is_directory:
+                    downloader.download_directory(
+                        remote_path,
+                        local_path,
+                        min_segment_size=_min_size_bytes,
+                    )
+                else:
+                    downloader.download(remote_path, local_path, expected_size=file_size)
                 self._schedule_transfer_completion(
                     completion_callback,
                     transfer_id,
@@ -593,8 +618,9 @@ class FileOperations:
                     cancellation_event=cancellation_event,
                 )
             except Exception as exc:
+                error_detail = _format_exception_for_log(exc)
                 self.logger.warning(
-                    f"Accelerated download failed for {remote_path}; falling back: {exc}"
+                    f"Accelerated download failed for {remote_path}; falling back: {error_detail}"
                 )
                 self._transfer_with_progress(
                     transfer_id=transfer_id,

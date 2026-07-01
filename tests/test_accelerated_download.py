@@ -112,6 +112,73 @@ class FakeConnectFactory:
         return self.connection_context
 
 
+class FakeTreeRemoteFile:
+    def __init__(self, sftp, path):
+        self._sftp = sftp
+        self._path = path
+        self.closed = False
+
+    async def read(self, size, offset=None):
+        self._sftp.reads.append((self._path, offset, size))
+        payload = self._sftp.files[self._path]
+        return payload[offset : offset + size]
+
+    async def close(self):
+        self.closed = True
+
+
+class FakeTreeSFTP:
+    def __init__(self):
+        self.files = {
+            "/srv/media/movie.mkv": b"abcdefghijklmnopqrstuvwxyz",
+            "/srv/media/poster.jpg": b"jpg",
+            "/srv/media/subtitle/en.srt": b"subtitle",
+        }
+        self.dirs = {
+            "/srv/media": ["movie.mkv", "poster.jpg", "subtitle"],
+            "/srv/media/subtitle": ["en.srt"],
+        }
+        self.reads = []
+        self.opened_files = []
+
+    async def stat(self, path):
+        return self._attrs(path)
+
+    async def scandir(self, path):
+        for name in self.dirs[path]:
+            child_path = self._join(path, name)
+            yield SimpleNamespace(filename=name, attrs=self._attrs(child_path))
+
+    async def open(self, path, _mode):
+        remote_file = FakeTreeRemoteFile(self, path)
+        self.opened_files.append(remote_file)
+        return remote_file
+
+    def _attrs(self, path):
+        if path in self.dirs:
+            return SimpleNamespace(type=2, size=0, mtime=1_700_000_000)
+        return SimpleNamespace(
+            type=1, size=len(self.files[path]), mtime=1_700_000_000
+        )
+
+    def _join(self, parent, name):
+        return f"{parent.rstrip('/')}/{name}"
+
+
+class FakeTreeConnectFactory:
+    def __init__(self):
+        self.sftp = FakeTreeSFTP()
+        self.sftp_context = FakeSFTPContext(self.sftp)
+        self.connection_context = FakeConnectionContext(
+            FakeConnection(self.sftp_context)
+        )
+        self.kwargs = None
+
+    def __call__(self, **kwargs):
+        self.kwargs = kwargs
+        return self.connection_context
+
+
 def _download(
     tmp_path: Path,
     payload: bytes,
@@ -204,6 +271,47 @@ def test_password_auth_passes_password_to_asyncssh(tmp_path):
 
     assert factory.kwargs["password"] == "secret"
     assert "client_keys" not in factory.kwargs
+
+
+def test_directory_download_preserves_tree_and_segments_large_files(tmp_path):
+    progress = []
+    factory = FakeTreeConnectFactory()
+    downloader = AsyncSSHSegmentedDownloader(
+        _session(),
+        AcceleratedDownloadConfig(
+            parallel_requests=2,
+            chunk_size_bytes=5,
+            connect_timeout=11,
+            strict_host_key_checking="no",
+        ),
+        progress_callback=progress.append,
+        connect_factory=factory,
+    )
+    local_path = tmp_path / "media"
+
+    downloader.download_directory(
+        "/srv/media",
+        local_path,
+        min_segment_size=10,
+    )
+
+    assert (local_path / "movie.mkv").read_bytes() == b"abcdefghijklmnopqrstuvwxyz"
+    assert (local_path / "poster.jpg").read_bytes() == b"jpg"
+    assert (local_path / "subtitle" / "en.srt").read_bytes() == b"subtitle"
+    movie_reads = [
+        (offset, size)
+        for path, offset, size in factory.sftp.reads
+        if path == "/srv/media/movie.mkv"
+    ]
+    assert sorted(movie_reads) == [
+        (0, 5),
+        (5, 5),
+        (10, 5),
+        (15, 5),
+        (20, 5),
+        (25, 1),
+    ]
+    assert progress[-1] == 100.0
 
 
 def test_cancelled_download_removes_partial_file(tmp_path):

@@ -634,6 +634,18 @@ class FileTransferMixin:
                 self.parent_window.toast_overlay.add_toast(
                     Adw.Toast(title=_("Transfer cancelled."))
                 )
+            else:
+                self.parent_window.toast_overlay.add_toast(
+                    Adw.Toast(title=self._get_transfer_failure_toast_title(message))
+                )
+
+    def _get_transfer_failure_toast_title(self, message: str) -> str:
+        message_lower = message.lower()
+        if "input/output error" in message_lower:
+            return _("Transfer failed: remote input/output error.")
+        if "permission denied" in message_lower or _("Permission Denied") in message:
+            return _("Transfer failed: permission denied.")
+        return _("Transfer failed. See transfer history for details.")
 
     def _show_insufficient_space_dialog(
         self, required_bytes: int, available_bytes: int, dest_path: Path

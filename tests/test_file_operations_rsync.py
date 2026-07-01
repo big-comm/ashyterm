@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 from ashyterm.filemanager import operations as operations_module
 from ashyterm.filemanager.accelerated_download import AcceleratedDownloadUnavailable
-from ashyterm.filemanager.operations import FileOperations
+from ashyterm.filemanager.operations import FileOperations, _format_exception_for_log
 from ashyterm.sessions.models import SessionItem
 
 
@@ -98,7 +98,7 @@ def test_rsync_compression_modes_override_auto_detection():
     )
 
 
-def test_accelerated_download_selection_requires_large_single_ssh_file():
+def test_accelerated_download_selection_requires_large_ssh_item():
     ops = FileOperations(_session())
     ops._get_accelerated_download_settings = MagicMock(
         return_value=(True, 6, 1024, 30, "accept-new")
@@ -106,7 +106,8 @@ def test_accelerated_download_selection_requires_large_single_ssh_file():
 
     assert ops._should_use_accelerated_download(_session(), False, 2048) is True
     assert ops._should_use_accelerated_download(_session(), False, 512) is False
-    assert ops._should_use_accelerated_download(_session(), True, 2048) is False
+    assert ops._should_use_accelerated_download(_session(), True, 2048) is True
+    assert ops._should_use_accelerated_download(_session(), True, 512) is False
     assert (
         ops._should_use_accelerated_download(
             _session(proxy_jump="alice@bastion.example.com"), False, 2048
@@ -132,6 +133,61 @@ def test_start_download_uses_accelerated_path_when_eligible(tmp_path):
     )
 
     ops._start_accelerated_download_with_fallback.assert_called_once()
+    ops._transfer_with_progress.assert_not_called()
+
+
+def test_accelerated_directory_download_calls_recursive_downloader(monkeypatch, tmp_path):
+    class ImmediateThread:
+        def __init__(self, target, daemon):
+            self._target = target
+            self.daemon = daemon
+
+        def start(self):
+            self._target()
+
+    class DirectoryDownloader:
+        called = {}
+
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def download(self, *_args, **_kwargs):
+            raise AssertionError("single-file downloader should not run")
+
+        def download_directory(self, remote_path, local_path, *, min_segment_size):
+            self.called.update(
+                {
+                    "remote_path": remote_path,
+                    "local_path": local_path,
+                    "min_segment_size": min_segment_size,
+                }
+            )
+
+    ops = FileOperations(_session())
+    ops._get_accelerated_download_settings = MagicMock(
+        return_value=(True, 6, 1024, 30, "accept-new")
+    )
+    ops._transfer_with_progress = MagicMock()
+    monkeypatch.setattr(operations_module.threading, "Thread", ImmediateThread)
+    monkeypatch.setattr(
+        operations_module, "AsyncSSHSegmentedDownloader", DirectoryDownloader
+    )
+
+    ops._start_accelerated_download_with_fallback(
+        "transfer-1",
+        _session(),
+        "/srv/media",
+        tmp_path / "media",
+        True,
+        4096,
+        cancellation_event=threading.Event(),
+    )
+
+    assert DirectoryDownloader.called == {
+        "remote_path": "/srv/media",
+        "local_path": tmp_path / "media",
+        "min_segment_size": 1024,
+    }
     ops._transfer_with_progress.assert_not_called()
 
 
@@ -226,6 +282,23 @@ def test_transfer_completion_scheduler_uses_idle_add(monkeypatch):
     ops._schedule_transfer_completion(callback, "transfer-1", False, "failed")
 
     idle_add.assert_called_once_with(callback, "transfer-1", False, "failed")
+
+
+def test_transfer_error_parser_summarizes_remote_io_errors():
+    ops = FileOperations(_session())
+
+    message = ops._parse_transfer_error(
+        'rsync: [sender] send_files failed to open "/remote/movie.mkv": Input/output error (5)\n'
+        "rsync error: some files/attrs were not transferred"
+    )
+
+    assert "input/output error" in message.lower()
+    assert "/remote/movie.mkv" in message
+
+
+def test_exception_formatter_keeps_type_for_generic_messages():
+    assert _format_exception_for_log(Exception("Failure")) == "Exception: Failure"
+    assert _format_exception_for_log(RuntimeError()) == "RuntimeError"
 
 
 def test_remove_sftp_batch_file_is_best_effort(tmp_path):

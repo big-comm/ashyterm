@@ -1,4 +1,3 @@
-# ashyterm/filemanager/accelerated_download.py
 """AsyncSSH segmented SFTP downloads."""
 
 from __future__ import annotations
@@ -6,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 import os
+import stat
 import threading
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,15 +15,11 @@ from ..sessions.models import SessionItem
 
 
 class AcceleratedDownloadUnavailable(Exception):
-    """Raised when the accelerated path cannot support this session."""
-
-
+    pass
 class AcceleratedDownloadCancelled(Exception):
-    """Raised when the user cancels the accelerated transfer."""
-
-
+    pass
 class AcceleratedDownloadError(Exception):
-    """Raised when the accelerated transfer fails after it starts."""
+    pass
 
 
 @dataclass(frozen=True)
@@ -34,6 +30,28 @@ class AcceleratedDownloadConfig:
     chunk_size_bytes: int = 4 * 1024 * 1024
     connect_timeout: int = 30
     strict_host_key_checking: str = "accept-new"
+
+
+@dataclass(frozen=True)
+class RemoteDirectoryEntry:
+    remote_path: str
+    local_path: Path
+    attrs: Any
+
+
+@dataclass(frozen=True)
+class RemoteFileEntry:
+    remote_path: str
+    local_path: Path
+    size: int
+    attrs: Any
+
+
+@dataclass(frozen=True)
+class RemoteDownloadPlan:
+    directories: list[RemoteDirectoryEntry]
+    files: list[RemoteFileEntry]
+    total_size: int
 
 
 def build_download_chunks(file_size: int, chunk_size_bytes: int) -> list[tuple[int, int]]:
@@ -64,7 +82,7 @@ async def _close_resource(resource: Any) -> None:
 
 
 class AsyncSSHSegmentedDownloader:
-    """Download one remote file with concurrent SFTP range reads."""
+    """Download remote files with concurrent SFTP range reads."""
 
     def __init__(
         self,
@@ -82,15 +100,23 @@ class AsyncSSHSegmentedDownloader:
         self._connect_factory = connect_factory
         self._async_exit_handlers: dict[int, Callable[..., Any]] = {}
 
-    def download(
-        self, remote_path: str, local_path: Path, expected_size: int = 0
-    ) -> None:
+    def download(self, remote_path: str, local_path: Path, expected_size: int = 0) -> None:
         """Run the segmented download synchronously."""
         asyncio.run(self._download_async(remote_path, local_path, expected_size))
 
-    async def _download_async(
-        self, remote_path: str, local_path: Path, expected_size: int
+    def download_directory(
+        self,
+        remote_path: str,
+        local_path: Path,
+        *,
+        min_segment_size: int,
     ) -> None:
+        """Run a recursive directory download synchronously."""
+        asyncio.run(
+            self._download_directory_async(remote_path, local_path, min_segment_size)
+        )
+
+    async def _download_async(self, remote_path: str, local_path: Path, expected_size: int) -> None:
         self._validate_session()
         if not hasattr(os, "pwrite"):
             raise AcceleratedDownloadUnavailable("os.pwrite is required")
@@ -107,6 +133,28 @@ class AsyncSSHSegmentedDownloader:
                 remote_size = self._get_remote_size(attrs, expected_size)
                 await self._download_with_sftp(sftp, remote_path, local_path, remote_size)
                 self._preserve_mtime(local_path, attrs)
+            finally:
+                await self._close_opened_resource(sftp)
+        finally:
+            await self._close_opened_resource(connection)
+
+    async def _download_directory_async(
+        self, remote_path: str, local_path: Path, min_segment_size: int
+    ) -> None:
+        self._validate_session()
+        if not hasattr(os, "pwrite"):
+            raise AcceleratedDownloadUnavailable("os.pwrite is required")
+
+        asyncssh = self._import_asyncssh()
+        connect_factory = self._connect_factory or asyncssh.connect
+        connect_kwargs = self._build_connect_kwargs(asyncssh)
+
+        connection = await self._open_resource(connect_factory(**connect_kwargs))
+        try:
+            sftp = await self._open_resource(connection.start_sftp_client())
+            try:
+                plan = await self._build_download_plan(sftp, remote_path, local_path)
+                await self._download_plan(sftp, plan, min_segment_size)
             finally:
                 await self._close_opened_resource(sftp)
         finally:
@@ -171,8 +219,128 @@ class AsyncSSHSegmentedDownloader:
             return expected_size
         raise AcceleratedDownloadUnavailable("remote file size is unavailable")
 
+    async def _build_download_plan(self, sftp: Any, remote_path: str, local_path: Path) -> RemoteDownloadPlan:
+        root_attrs = await _maybe_await(sftp.stat(remote_path))
+        if not self._is_directory(root_attrs):
+            raise AcceleratedDownloadUnavailable("remote path is not a directory")
+
+        directories = [RemoteDirectoryEntry(remote_path, local_path, root_attrs)]
+        files: list[RemoteFileEntry] = []
+
+        async def scan_directory(current_remote: str, current_local: Path) -> None:
+            async for entry in sftp.scandir(current_remote):
+                name = str(getattr(entry, "filename", ""))
+                if not name or name in {".", ".."}:
+                    continue
+                entry_attrs = getattr(entry, "attrs", None)
+                entry_remote = self._join_remote_path(current_remote, name)
+                entry_local = current_local / name
+                if self._is_directory(entry_attrs):
+                    directories.append(
+                        RemoteDirectoryEntry(entry_remote, entry_local, entry_attrs)
+                    )
+                    await scan_directory(entry_remote, entry_local)
+                elif self._is_regular_file(entry_attrs):
+                    files.append(
+                        RemoteFileEntry(
+                            entry_remote,
+                            entry_local,
+                            self._get_remote_size(entry_attrs, 0),
+                            entry_attrs,
+                        )
+                    )
+                else:
+                    raise AcceleratedDownloadUnavailable(
+                        f"unsupported remote entry type: {entry_remote}"
+                    )
+
+        await scan_directory(remote_path, local_path)
+        return RemoteDownloadPlan(
+            directories=directories,
+            files=files,
+            total_size=sum(file_entry.size for file_entry in files),
+        )
+
+    async def _download_plan(
+        self, sftp: Any, plan: RemoteDownloadPlan, min_segment_size: int
+    ) -> None:
+        for directory in plan.directories:
+            self._raise_if_cancelled()
+            directory.local_path.mkdir(parents=True, exist_ok=True)
+
+        if plan.total_size == 0:
+            self._emit_progress(100.0)
+            for directory in reversed(plan.directories):
+                self._preserve_mtime(directory.local_path, directory.attrs)
+            return
+
+        completed_bytes = 0
+        for file_entry in plan.files:
+            self._raise_if_cancelled()
+            progress_callback = self._make_directory_progress_callback(
+                completed_bytes, file_entry.size, plan.total_size
+            )
+            if file_entry.size >= min_segment_size:
+                await self._download_with_sftp(
+                    sftp,
+                    file_entry.remote_path,
+                    file_entry.local_path,
+                    file_entry.size,
+                    progress_callback,
+                )
+            else:
+                await self._download_small_file_with_sftp(
+                    sftp,
+                    file_entry.remote_path,
+                    file_entry.local_path,
+                    file_entry.size,
+                    progress_callback,
+                )
+            completed_bytes += file_entry.size
+            self._preserve_mtime(file_entry.local_path, file_entry.attrs)
+            self._emit_progress(min(100.0, completed_bytes * 100.0 / plan.total_size))
+
+        for directory in reversed(plan.directories):
+            self._preserve_mtime(directory.local_path, directory.attrs)
+
+    def _make_directory_progress_callback(
+        self, completed_bytes: int, file_size: int, total_size: int
+    ) -> Callable[[float], None]:
+        def emit_file_progress(file_progress: float) -> None:
+            clamped = max(0.0, min(100.0, file_progress))
+            current_bytes = int(file_size * clamped / 100.0)
+            self._emit_progress(
+                min(100.0, (completed_bytes + current_bytes) * 100.0 / total_size)
+            )
+
+        return emit_file_progress
+
+    def _is_directory(self, attrs: Any) -> bool:
+        attrs_type = getattr(attrs, "type", None)
+        if attrs_type == 2:
+            return True
+        permissions = getattr(attrs, "permissions", None)
+        return isinstance(permissions, int) and stat.S_ISDIR(permissions)
+
+    def _is_regular_file(self, attrs: Any) -> bool:
+        attrs_type = getattr(attrs, "type", None)
+        if attrs_type == 1:
+            return True
+        permissions = getattr(attrs, "permissions", None)
+        return isinstance(permissions, int) and stat.S_ISREG(permissions)
+
+    def _join_remote_path(self, parent: str, name: str) -> str:
+        if parent == "/":
+            return f"/{name}"
+        return f"{parent.rstrip('/')}/{name}"
+
     async def _download_with_sftp(
-        self, sftp: Any, remote_path: str, local_path: Path, remote_size: int
+        self,
+        sftp: Any,
+        remote_path: str,
+        local_path: Path,
+        remote_size: int,
+        progress_callback: Optional[Callable[[float], None]] = None,
     ) -> None:
         part_path = local_path.with_name(f"{local_path.name}.part")
         chunks = build_download_chunks(remote_size, self.config.chunk_size_bytes)
@@ -182,12 +350,54 @@ class AsyncSSHSegmentedDownloader:
         try:
             os.ftruncate(fd, remote_size)
             if remote_size == 0:
-                self._emit_progress(100.0)
+                (progress_callback or self._emit_progress)(100.0)
             else:
-                await self._run_chunk_workers(sftp, remote_path, fd, chunks, remote_size)
+                await self._run_chunk_workers(
+                    sftp,
+                    remote_path,
+                    fd,
+                    chunks,
+                    remote_size,
+                    progress_callback or self._emit_progress,
+                )
             completed = True
         finally:
             os.close(fd)
+            if not completed:
+                part_path.unlink(missing_ok=True)
+        os.replace(part_path, local_path)
+
+    async def _download_small_file_with_sftp(
+        self,
+        sftp: Any,
+        remote_path: str,
+        local_path: Path,
+        remote_size: int,
+        progress_callback: Callable[[float], None],
+    ) -> None:
+        part_path = local_path.with_name(f"{local_path.name}.part")
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+        remote_file = await self._open_remote_file(sftp, remote_path)
+        completed = False
+        try:
+            with open(part_path, "wb") as local_file:
+                offset = 0
+                while offset < remote_size:
+                    self._raise_if_cancelled()
+                    length = min(self.config.chunk_size_bytes, remote_size - offset)
+                    data = await self._read_remote_range(remote_file, offset, length)
+                    if len(data) != length:
+                        raise AcceleratedDownloadError(
+                            f"Short read at offset {offset}: expected {length}, got {len(data)}"
+                        )
+                    local_file.write(data)
+                    offset += length
+                    progress_callback(min(100.0, offset * 100.0 / remote_size))
+                if remote_size == 0:
+                    progress_callback(100.0)
+            completed = True
+        finally:
+            await self._close_opened_resource(remote_file)
             if not completed:
                 part_path.unlink(missing_ok=True)
         os.replace(part_path, local_path)
@@ -199,6 +409,7 @@ class AsyncSSHSegmentedDownloader:
         local_fd: int,
         chunks: Iterable[tuple[int, int]],
         remote_size: int,
+        progress_callback: Callable[[float], None],
     ) -> None:
         queue: asyncio.Queue[tuple[int, int]] = asyncio.Queue()
         for chunk in chunks:
@@ -211,7 +422,7 @@ class AsyncSSHSegmentedDownloader:
             nonlocal transferred
             async with progress_lock:
                 transferred += byte_count
-                self._emit_progress(min(100.0, transferred * 100.0 / remote_size))
+                progress_callback(min(100.0, transferred * 100.0 / remote_size))
 
         async def worker() -> None:
             remote_file = await self._open_remote_file(sftp, remote_path)

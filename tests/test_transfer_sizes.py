@@ -20,8 +20,8 @@ def _ls_file(name: str, size: int) -> FileItem:
     return item
 
 
-def _ls_dir(name: str) -> FileItem:
-    line = f"drwxr-xr-x 1 u u 0 2024-01-01 12:00:00.000000000 +0000 {name}"
+def _ls_dir(name: str, size: int = 0) -> FileItem:
+    line = f"drwxr-xr-x 1 u u {size} 2024-01-01 12:00:00.000000000 +0000 {name}"
     item = FileItem.from_ls_line(line)
     assert item is not None
     return item
@@ -42,7 +42,7 @@ class TestRemoteItemSizes:
         assert out == {"a.txt": 100, "b.bin": 2048}
         ops.get_directory_size.assert_not_called()
 
-    def test_directories_use_listed_size_without_recursive_du(self):
+    def test_directories_are_measured_recursively(self):
         ops = MagicMock()
         ops.get_directory_size.return_value = 999_999
         items = [_ls_dir("src")]
@@ -54,8 +54,24 @@ class TestRemoteItemSizes:
             session_override="session",
         )
 
-        assert out == {"src": 0}
-        ops.get_directory_size.assert_not_called()
+        assert out == {"src": 999_999}
+        ops.get_directory_size.assert_called_once_with(
+            "/remote/src", is_remote=True, session_override="session"
+        )
+
+    def test_directories_fall_back_to_listed_size_when_measurement_fails(self):
+        ops = MagicMock()
+        ops.get_directory_size.return_value = 0
+        item = _ls_dir("src", 4096)
+
+        out = calculate_remote_item_sizes(
+            [item],
+            current_path="/remote",
+            operations=ops,
+            session_override="session",
+        )
+
+        assert out == {"src": 4096}
 
     def test_zero_size_files_are_remeasured(self):
         """Listing sometimes reports size 0 for non-dir entries (e.g.
