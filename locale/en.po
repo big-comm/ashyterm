@@ -25,8 +25,8 @@ msgstr ""
 # File: src/ashyterm/window.py, line: 24
 # File: src/ashyterm/ui/header_bar_builder.py, line: 237
 # File: src/ashyterm/window_tabs.py, line: 15
-# File: src/ashyterm/filemanager/transfers.py, line: 808
-# File: src/ashyterm/filemanager/transfers.py, line: 941
+# File: src/ashyterm/filemanager/transfers.py, line: 820
+# File: src/ashyterm/filemanager/transfers.py, line: 953
 msgid "Ashy Terminal"
 msgstr "Ashy Terminal"
 
@@ -715,8 +715,8 @@ msgstr "Close"
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 487
 # File: src/ashyterm/filemanager/transfers.py, line: 345
 # File: src/ashyterm/filemanager/transfers.py, line: 468
-# File: src/ashyterm/filemanager/transfers.py, line: 895
-# File: src/ashyterm/filemanager/transfers.py, line: 1000
+# File: src/ashyterm/filemanager/transfers.py, line: 907
+# File: src/ashyterm/filemanager/transfers.py, line: 1012
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 141
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 581
 # File: src/ashyterm/terminal/manager.py, line: 1106
@@ -784,8 +784,8 @@ msgstr ""
 # File: src/ashyterm/app.py, line: 457
 # File: src/ashyterm/app.py, line: 468
 # File: src/ashyterm/app.py, line: 478
-# File: src/ashyterm/filemanager/transfers.py, line: 673
-# File: src/ashyterm/filemanager/transfers.py, line: 701
+# File: src/ashyterm/filemanager/transfers.py, line: 685
+# File: src/ashyterm/filemanager/transfers.py, line: 713
 msgid "OK"
 msgstr "OK"
 
@@ -840,7 +840,7 @@ msgstr "Layout name"
 # File: src/ashyterm/ui/dialogs/highlight/rule_edit_dialog.py, line: 95
 # File: src/ashyterm/ui/color_scheme_dialog.py, line: 218
 # File: src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py, line: 729
-# File: src/ashyterm/filemanager/transfers.py, line: 896
+# File: src/ashyterm/filemanager/transfers.py, line: 908
 msgid "Save"
 msgstr "Save"
 
@@ -6475,8 +6475,8 @@ msgstr "Enter new name for \"{name}\":"
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 144
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 176
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 150
-# File: src/ashyterm/filemanager/transfers.py, line: 993
-# File: src/ashyterm/filemanager/transfers.py, line: 1001
+# File: src/ashyterm/filemanager/transfers.py, line: 1005
+# File: src/ashyterm/filemanager/transfers.py, line: 1013
 # File: src/ashyterm/terminal/tab_groups_controller.py, line: 446
 msgid "Rename"
 msgstr "Rename"
@@ -7435,7 +7435,7 @@ msgstr "Open/Edit"
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 145
-# File: src/ashyterm/filemanager/transfers.py, line: 716
+# File: src/ashyterm/filemanager/transfers.py, line: 728
 msgid "Open With..."
 msgstr "Open With..."
 
@@ -7450,7 +7450,7 @@ msgstr "Cut"
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 162
-# File: src/ashyterm/filemanager/operations.py, line: 637
+# File: src/ashyterm/filemanager/operations.py, line: 663
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 195
 msgid "Download"
 msgstr "Download"
@@ -7667,7 +7667,7 @@ msgstr "Upload File(s) to This Folder"
 #
 # File: src/ashyterm/filemanager/transfers.py, line: 152
 # File: src/ashyterm/filemanager/transfers.py, line: 346
-# File: src/ashyterm/filemanager/operations.py, line: 637
+# File: src/ashyterm/filemanager/operations.py, line: 663
 # File: src/ashyterm/filemanager/transfer_dialog.py, line: 197
 msgid "Upload"
 msgstr "Upload"
@@ -7733,6 +7733,7 @@ msgstr "Could not get remote file details."
 
 #
 # File: src/ashyterm/filemanager/transfers.py, line: 628
+# File: src/ashyterm/filemanager/transfers.py, line: 646
 msgid "Permission Denied"
 msgstr "Permission Denied"
 
@@ -7742,19 +7743,34 @@ msgid "Transfer cancelled."
 msgstr "Transfer cancelled."
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 654
+# File: src/ashyterm/filemanager/transfers.py, line: 645
+msgid "Transfer failed: remote input/output error."
+msgstr "Transfer failed: remote input/output error."
+
+#
+# File: src/ashyterm/filemanager/transfers.py, line: 647
+msgid "Transfer failed: permission denied."
+msgstr "Transfer failed: permission denied."
+
+#
+# File: src/ashyterm/filemanager/transfers.py, line: 648
+msgid "Transfer failed. See transfer history for details."
+msgstr "Transfer failed. See transfer history for details."
+
+#
+# File: src/ashyterm/filemanager/transfers.py, line: 666
 msgid "Insufficient Disk Space"
 msgstr "Insufficient Disk Space"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 656
+# File: src/ashyterm/filemanager/transfers.py, line: 668
 msgid ""
 "There is not enough free space at the destination to complete this transfer."
 msgstr ""
 "There is not enough free space at the destination to complete this transfer."
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 662
+# File: src/ashyterm/filemanager/transfers.py, line: 674
 #, python-brace-format
 msgid ""
 "Required space: <b>{required}</b>\n"
@@ -7766,18 +7782,18 @@ msgstr ""
 "Destination: <b>{path}</b>"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 685
+# File: src/ashyterm/filemanager/transfers.py, line: 697
 msgid "Transfer Failed: Permission Denied"
 msgstr "Transfer Failed: Permission Denied"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 686
+# File: src/ashyterm/filemanager/transfers.py, line: 698
 #, python-brace-format
 msgid "Could not complete the transfer of '{filename}'."
 msgstr "Could not complete the transfer of '{filename}'."
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 692
+# File: src/ashyterm/filemanager/transfers.py, line: 704
 #, python-brace-format
 msgid ""
 "Please check if you have the necessary write permissions in the destination "
@@ -7791,28 +7807,28 @@ msgstr ""
 "<b>{path}</b>"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 762
+# File: src/ashyterm/filemanager/transfers.py, line: 774
 #, python-brace-format
 msgid "Failed to open file: {}"
 msgstr "Failed to open file: {}"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 810
+# File: src/ashyterm/filemanager/transfers.py, line: 822
 msgid "File is open. Saving it will upload changes back to the server."
 msgstr "File is open. Saving it will upload changes back to the server."
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 848
+# File: src/ashyterm/filemanager/transfers.py, line: 860
 msgid "Upload failed: Could not verify remote file."
 msgstr "Upload failed: Could not verify remote file."
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 865
+# File: src/ashyterm/filemanager/transfers.py, line: 877
 msgid "File Conflict"
 msgstr "File Conflict"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 867
+# File: src/ashyterm/filemanager/transfers.py, line: 879
 #, python-brace-format
 msgid ""
 "The file '{filename}' has been modified on the server since you started "
@@ -7822,60 +7838,60 @@ msgstr ""
 "editing it. How would you like to proceed?"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 871
+# File: src/ashyterm/filemanager/transfers.py, line: 883
 msgid "Cancel Upload"
 msgstr "Cancel Upload"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 872
+# File: src/ashyterm/filemanager/transfers.py, line: 884
 msgid "Overwrite Server File"
 msgstr "Overwrite Server File"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 873
+# File: src/ashyterm/filemanager/transfers.py, line: 885
 msgid "Save as New File"
 msgstr "Save as New File"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 889
+# File: src/ashyterm/filemanager/transfers.py, line: 901
 msgid "Save As"
 msgstr "Save As"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 890
+# File: src/ashyterm/filemanager/transfers.py, line: 902
 msgid "Enter a new name for the file on the server:"
 msgstr "Enter a new name for the file on the server:"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 943
+# File: src/ashyterm/filemanager/transfers.py, line: 955
 msgid "Upload Complete"
 msgstr "Upload Complete"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 945
+# File: src/ashyterm/filemanager/transfers.py, line: 957
 #, python-brace-format
 msgid "'{filename}' has been saved to the server."
 msgstr "'{filename}' has been saved to the server."
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 950
+# File: src/ashyterm/filemanager/transfers.py, line: 962
 msgid "Upload Failed"
 msgstr "Upload Failed"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 952
+# File: src/ashyterm/filemanager/transfers.py, line: 964
 #, python-brace-format
 msgid "Could not save '{filename}' to the server: {error}"
 msgstr "Could not save '{filename}' to the server: {error}"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 994
+# File: src/ashyterm/filemanager/transfers.py, line: 1006
 #, python-brace-format
 msgid "Enter a new name for '{name}'"
 msgstr "Enter a new name for '{name}'"
 
 #
-# File: src/ashyterm/filemanager/transfers.py, line: 1016
+# File: src/ashyterm/filemanager/transfers.py, line: 1028
 msgid "Rename command sent to terminal"
 msgstr "Rename command sent to terminal"
 
@@ -7933,35 +7949,44 @@ msgid "Cancel All Transfers"
 msgstr "Cancel All Transfers"
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 230
+# File: src/ashyterm/filemanager/operations.py, line: 236
 msgid "No session context for file operation."
 msgstr "No session context for file operation."
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/filemanager/operations.py, line: 259
+# File: src/ashyterm/filemanager/operations.py, line: 265
 # File: src/ashyterm/terminal/ssh_spawn_mixin.py, line: 356
 msgid "Command timed out. Connection may be lost."
 msgstr "Command timed out. Connection may be lost."
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 265
+# File: src/ashyterm/filemanager/operations.py, line: 271
 msgid "Unsupported session type for command execution."
 msgstr "Unsupported session type for command execution."
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 374
+# File: src/ashyterm/filemanager/operations.py, line: 380
 msgid "Permission Denied: Check write permissions on the destination."
 msgstr "Permission Denied: Check write permissions on the destination."
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 378
+# File: src/ashyterm/filemanager/operations.py, line: 390
+msgid ""
+"Remote input/output error: the server could not read one or more source "
+"files."
+msgstr ""
+"Remote input/output error: the server could not read one or more source "
+"files."
+
+#
+# File: src/ashyterm/filemanager/operations.py, line: 396
 msgid "An unknown transfer error occurred."
 msgstr "An unknown transfer error occurred."
 
 #
-# File: src/ashyterm/filemanager/operations.py, line: 573
+# File: src/ashyterm/filemanager/operations.py, line: 598
 msgid "Download completed successfully."
 msgstr "Download completed successfully."
 
