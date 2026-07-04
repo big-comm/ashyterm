@@ -95,6 +95,7 @@ class WindowUIBuilder:
         self.cleanup_button = None
         self.font_sizer_widget: Any = None
         self.scrolled_tab_bar = None
+        self.tab_list_button = None
         self.single_tab_title_widget = None
         self.title_stack = None
         self.toast_overlay = None
