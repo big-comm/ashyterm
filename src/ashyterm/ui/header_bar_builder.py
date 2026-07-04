@@ -21,7 +21,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gtk
+from gi.repository import Adw, Gtk, Pango
 
 from ..utils.accessibility import set_label as a11y_label
 from ..utils.icons import icon_button, icon_image
@@ -68,13 +68,19 @@ def _create_buttons(builder: "WindowUIBuilder") -> None:
     ``set_action_name`` or wired from the calling window.
     """
     # Toggle buttons come first.
+    # NOTE: ".flat" is explicit on every header button: newer libadwaita
+    # (>= 1.6) renders header-bar buttons flat by default, but older stacks
+    # (e.g. libadwaita 1.5 in AppImage builds) draw a raised background
+    # ("squares" around the icons) when the class is missing.
     builder.toggle_sidebar_button = Gtk.ToggleButton()
     builder.toggle_sidebar_button.set_child(icon_image("user-bookmarks-symbolic"))
     builder.toggle_sidebar_button.add_css_class("sidebar-toggle-button")
+    builder.toggle_sidebar_button.add_css_class("flat")
     a11y_label(builder.toggle_sidebar_button, _("Sessions Panel"))
 
     builder.file_manager_button = Gtk.ToggleButton()
     builder.file_manager_button.set_child(icon_image("folder-open-symbolic"))
+    builder.file_manager_button.add_css_class("flat")
     a11y_label(builder.file_manager_button, _("File Manager"))
 
     builder.command_manager_button = Gtk.Button()
@@ -82,10 +88,12 @@ def _create_buttons(builder: "WindowUIBuilder") -> None:
         icon_image("utilities-terminal-symbolic")
     )
     builder.command_manager_button.set_action_name("win.show-command-manager")
+    builder.command_manager_button.add_css_class("flat")
     a11y_label(builder.command_manager_button, _("Command Manager"))
 
     builder.search_button = Gtk.ToggleButton()
     builder.search_button.set_child(icon_image("edit-find-symbolic"))
+    builder.search_button.add_css_class("flat")
     a11y_label(builder.search_button, _("Search in Terminal"))
 
     # Broadcast button stays hidden — the functionality is embedded in
@@ -93,6 +101,7 @@ def _create_buttons(builder: "WindowUIBuilder") -> None:
     # handful of code paths that reference it.
     builder.broadcast_button = Gtk.ToggleButton()
     builder.broadcast_button.set_child(icon_image("utilities-terminal-symbolic"))
+    builder.broadcast_button.add_css_class("flat")
     builder.broadcast_button.set_visible(False)
 
     # AI assistant button: system icon + runtime visibility toggle.
@@ -135,6 +144,99 @@ def _create_buttons(builder: "WindowUIBuilder") -> None:
     a11y_label(builder.new_tab_button, _("New Tab"))
 
 
+def _create_tab_list_button(builder: "WindowUIBuilder") -> Gtk.MenuButton:
+    """Dropdown at the end of the tab strip listing every open tab.
+
+    With many tabs open the strip scrolls and it becomes hard to know
+    what is running where. The popover lists all tabs — session icon,
+    title, Alt+N shortcut and a marker on the active one — and jumps
+    to the activated tab. It is rebuilt on every open so it is always
+    current, with no bookkeeping when tabs change.
+    """
+    button = Gtk.MenuButton()
+    button.set_child(icon_image("pan-down-symbolic"))
+    button.add_css_class("flat")
+    button.set_valign(Gtk.Align.CENTER)
+    a11y_label(button, _("Open Tabs"))
+
+    popover = Gtk.Popover()
+    popover.add_css_class("ashyterm-popover")
+    button.set_popover(popover)
+
+    def _on_row_activated(_listbox, row):
+        popover.popdown()
+        tab = row._tab_widget
+        # The tab may have been closed while the popover was open.
+        if tab in builder.tab_manager.tabs:
+            builder.tab_manager.set_active_tab(tab)
+
+    def _rebuild(_popover):
+        manager = builder.tab_manager
+        listbox = Gtk.ListBox()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        listbox.connect("row-activated", _on_row_activated)
+
+        for index, tab in enumerate(manager.tabs):
+            row_box = Gtk.Box(
+                orientation=Gtk.Orientation.HORIZONTAL,
+                spacing=8,
+                margin_start=8,
+                margin_end=8,
+                margin_top=4,
+                margin_bottom=4,
+            )
+            icon_name = (
+                "computer-symbolic"
+                if getattr(tab, "_is_local", True)
+                else "network-server-symbolic"
+            )
+            row_box.append(icon_image(icon_name))
+
+            label_widget = getattr(tab, "label_widget", None)
+            title = (
+                label_widget.get_text()
+                if label_widget is not None
+                else getattr(tab, "_base_title", _("Terminal"))
+            )
+            title_label = Gtk.Label(
+                label=title,
+                xalign=0,
+                hexpand=True,
+                ellipsize=Pango.EllipsizeMode.END,
+                max_width_chars=40,
+            )
+            row_box.append(title_label)
+
+            if tab is manager.active_tab:
+                row_box.append(icon_image("object-select-symbolic"))
+
+            # Alt+1..9 then Alt+0 switch to the first ten tabs
+            # (see window_actions._handle_alt_number_shortcuts).
+            if index < 10:
+                accel_label = Gtk.Label(label=f"Alt+{(index + 1) % 10}")
+                accel_label.add_css_class("dim-label")
+                row_box.append(accel_label)
+
+            row = Gtk.ListBoxRow()
+            row.set_child(row_box)
+            row._tab_widget = tab
+            listbox.append(row)
+
+        scrolled = Gtk.ScrolledWindow(
+            propagate_natural_height=True,
+            propagate_natural_width=True,
+            max_content_height=420,
+        )
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scrolled.set_child(listbox)
+        popover.set_child(scrolled)
+
+    popover.connect("show", _rebuild)
+    # Exposed for tests and for callers that need a manual refresh.
+    button._rebuild_tab_list = _rebuild
+    return button
+
+
 def _attach_tooltips(builder: "WindowUIBuilder") -> None:
     """Attach custom tooltips to every header-bar button.
 
@@ -150,6 +252,7 @@ def _attach_tooltips(builder: "WindowUIBuilder") -> None:
     helper.add_tooltip(builder.cleanup_button, _("Manage Temporary Files"))
     helper.add_tooltip(builder.menu_button, _("Main Menu"))
     helper.add_tooltip(builder.new_tab_button, _("New Tab"))
+    helper.add_tooltip(builder.tab_list_button, _("Open Tabs"))
 
 
 def _pack_buttons(
@@ -204,6 +307,7 @@ def build_header_bar(builder: "WindowUIBuilder") -> Adw.HeaderBar:
     builder.window.header_bar = header_bar
 
     _create_buttons(builder)
+    builder.tab_list_button = _create_tab_list_button(builder)
     _attach_tooltips(builder)
 
     button_layout = (
@@ -236,8 +340,14 @@ def build_header_bar(builder: "WindowUIBuilder") -> Adw.HeaderBar:
 
     builder.single_tab_title_widget = Adw.WindowTitle(title=_("Ashy Terminal"))
 
+    # Tab strip + open-tabs dropdown. Lives inside the "tabs-view" stack
+    # page, so the dropdown only appears when there is more than one tab.
+    tabs_view_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
+    tabs_view_box.append(builder.scrolled_tab_bar)
+    tabs_view_box.append(builder.tab_list_button)
+
     builder.title_stack = Gtk.Stack()
-    builder.title_stack.add_named(builder.scrolled_tab_bar, "tabs-view")
+    builder.title_stack.add_named(tabs_view_box, "tabs-view")
     builder.title_stack.add_named(builder.single_tab_title_widget, "title-view")
     header_bar.set_title_widget(builder.title_stack)
 
