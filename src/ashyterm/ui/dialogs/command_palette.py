@@ -1,5 +1,7 @@
 # ashyterm/ui/dialogs/command_palette.py
 
+from __future__ import annotations
+
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -7,6 +9,13 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, Gtk
 
 from ...utils.translation_utils import _
+
+# Adw.ShortcutLabel is only available in libadwaita >= 1.8 (GNOME 49).
+# Fall back to the visually equivalent Gtk.ShortcutLabel on older stacks
+# (e.g. Ubuntu 24.04 / Fedora <= 42, or AppImages built against them).
+ShortcutLabel = (
+    Adw.ShortcutLabel if hasattr(Adw, "ShortcutLabel") else Gtk.ShortcutLabel
+)
 
 # Commands exposed in the palette: (action_name, label, category, prefix)
 # prefix: "win" or "app"
@@ -162,7 +171,7 @@ class CommandPalette(Adw.Dialog):
         full_action = f"{prefix}.{action_name}"
         accels = self.app.get_accels_for_action(full_action)
         if accels:
-            shortcut_label = Adw.ShortcutLabel(accelerator=accels[0])
+            shortcut_label = ShortcutLabel(accelerator=accels[0])
             shortcut_label.set_valign(Gtk.Align.CENTER)
             hbox.append(shortcut_label)
 

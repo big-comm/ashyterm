@@ -35,6 +35,17 @@ gi.require_version("Vte", "3.91")
 gi.require_version("GLib", "2.0")
 from gi.repository import GLib, Vte
 
+# VTE termprops (native shell integration) require VTE >= 0.78. Older stacks
+# (e.g. Ubuntu 24.04 / VTE 0.76, or AppImages built against them) lack both
+# the TERMPROP_* constants and the "termprop-changed" signal. Without them,
+# prompt detection falls back to direct detection in the streaming handler.
+HAS_TERMPROPS = (
+    hasattr(Vte, "TERMPROP_SHELL_PRECMD")
+    and hasattr(Vte, "TERMPROP_SHELL_PREEXEC")
+    and hasattr(Vte, "TERMPROP_SHELL_POSTEXEC")
+    and hasattr(Vte, "TERMPROP_CURRENT_DIRECTORY_URI")
+)
+
 from ..utils.logger import get_logger
 
 # Import constants and rules from highlighter package
@@ -181,9 +192,12 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
                 "destroy", self._on_widget_destroy
             )
             # Use VTE's native shell integration for prompt detection
-            self._termprop_handler_id = terminal.connect(
-                "termprop-changed", self._on_termprop_changed
-            )
+            # (signal only exists in VTE >= 0.78)
+            self._termprop_handler_id = None
+            if HAS_TERMPROPS:
+                self._termprop_handler_id = terminal.connect(
+                    "termprop-changed", self._on_termprop_changed
+                )
 
     def _on_termprop_changed(self, terminal: Vte.Terminal, prop: str) -> None:
         """Handle VTE termprop changes for shell integration."""

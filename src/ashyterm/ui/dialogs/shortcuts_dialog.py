@@ -1,5 +1,7 @@
 # ashyterm/ui/dialogs/shortcuts_dialog.py
 
+from __future__ import annotations
+
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -7,6 +9,13 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, Gtk
 
 from ...utils.translation_utils import _
+
+# Adw.ShortcutLabel is only available in libadwaita >= 1.8 (GNOME 49).
+# Fall back to the visually equivalent Gtk.ShortcutLabel on older stacks
+# (e.g. Ubuntu 24.04 / Fedora <= 42, or AppImages built against them).
+ShortcutLabel = (
+    Adw.ShortcutLabel if hasattr(Adw, "ShortcutLabel") else Gtk.ShortcutLabel
+)
 
 # Centralized data structure for shortcuts.
 SHORTCUT_DATA = [
@@ -115,7 +124,7 @@ class ShortcutsDialog(Adw.PreferencesDialog):
         accels = self.app.get_accels_for_action(full_action_name)
         current_accel = accels[0] if accels else ""
 
-        shortcut_label = Adw.ShortcutLabel(accelerator=current_accel)
+        shortcut_label = ShortcutLabel(accelerator=current_accel)
         shortcut_label.set_valign(Gtk.Align.CENTER)
         if not current_accel:
             shortcut_label.set_visible(False)
@@ -166,7 +175,7 @@ class ShortcutsDialog(Adw.PreferencesDialog):
         if current_shortcut:
             current_box = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
             current_box.append(Gtk.Label(label=_("Current:")))
-            current_box.append(Adw.ShortcutLabel(accelerator=current_shortcut))
+            current_box.append(ShortcutLabel(accelerator=current_shortcut))
             content_box.append(current_box)
 
         new_label = Gtk.Label(label=_("Press new shortcut…"))
@@ -216,7 +225,7 @@ class ShortcutsDialog(Adw.PreferencesDialog):
             preview_box = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
             preview_box._is_preview = True
             preview_box.append(Gtk.Label(label=_("New:")))
-            preview_box.append(Adw.ShortcutLabel(accelerator=shortcut_string))
+            preview_box.append(ShortcutLabel(accelerator=shortcut_string))
             content_box.append(preview_box)
 
             # Check for conflicts
