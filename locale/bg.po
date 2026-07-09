@@ -8,7 +8,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 00:00-0300\n"
 "Last-Translator: AshyTerm contributors\n"
 "Language-Team: Bulgarian\n"
 "Language: bg\n"
@@ -1702,6 +1701,18 @@ msgstr "Автоматично копиране на избрания текст
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
+msgid "Allow OSC 52 Clipboard Copy"
+msgstr "Разреши OSC 52 Копиране на клипборда"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 343
+#: NEEDS WORK
+msgid "Let local and remote terminal apps write to the clipboard; reopen tabs after enabling"
+msgstr ""
+"Позволете на локалните и отдалечените терминални приложения да записват в клипборда; отворете "
+"отново разделите след активиране"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
 msgid "Warn Before Risky Paste"
 msgstr "Предупреди преди рисково поставяне"
 # 
@@ -2229,6 +2240,15 @@ msgstr "Текущ:"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:170
 msgid "Press new shortcut…"
 msgstr "Натиснете нова комбинация…"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
+msgid "Clear"
+msgstr "Изчисти"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
+msgid "Set Shortcut"
+msgstr "Настройте клавишна комбинация"
 # 
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 216
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:216
@@ -2240,15 +2260,6 @@ msgstr "Ново:"
 #, python-brace-format
 msgid "Conflicts with: {}"
 msgstr "Конфликти с: {}"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
-msgid "Clear"
-msgstr "Изчисти"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
-msgid "Set Shortcut"
-msgstr "Настройте клавишна комбинация"
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:286
 msgid "Reset All Shortcuts"
@@ -4592,6 +4603,12 @@ msgstr "Управление на временни файлове"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/window_ui.py:367
 msgid "Main Menu"
 msgstr "Главно меню"
+# 
+# File: src/ashyterm/ui/header_bar_builder.py, line: 160
+# File: src/ashyterm/ui/header_bar_builder.py, line: 255
+#: NEEDS WORK
+msgid "Open Tabs"
+msgstr "Отворени раздели"
 # File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/ssh_dialogs.py:14
 msgid "General SSH Error"
@@ -5543,18 +5560,6 @@ msgstr "Извинете, но не мога да изпълня това иск
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:829
 msgid "Customize Quick Prompts"
 msgstr "Персонализирайте бързите подсказки"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
-msgid "Emoji icon (optional)"
-msgstr "Икона на емоджи (по избор)"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
-msgid "Enter prompt text..."
-msgstr "Въведете текст на подканата..."
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
-msgid "Remove this prompt"
-msgstr "Изтрийте този подканващ текст."
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:934
 msgid "Add Prompt"
@@ -5567,6 +5572,18 @@ msgstr "Използвай по подразбиране"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:950
 msgid "Clear custom prompts and use random defaults"
 msgstr "Изчистете персонализираните подсказки и използвайте случайни по подразбиране."
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
+msgid "Emoji icon (optional)"
+msgstr "Икона на емоджи (по избор)"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
+msgid "Enter prompt text..."
+msgstr "Въведете текст на подканата..."
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
+msgid "Remove this prompt"
+msgstr "Изтрийте този подканващ текст."
 # 
 # File: src/ashyterm/ui/widgets/ai_chat/_prompts.py, line: 11
 #: NEEDS WORK

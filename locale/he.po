@@ -8,7 +8,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 00:00-0300\n"
 "Last-Translator: AshyTerm contributors\n"
 "Language-Team: Hebrew\n"
 "Language: he\n"
@@ -1696,6 +1695,16 @@ msgstr "העתקה אוטומטית של טקסט שנבחר ללוח הגזיר
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
+msgid "Allow OSC 52 Clipboard Copy"
+msgstr "אפשר העתקת לוח שנה OSC 52"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 343
+#: NEEDS WORK
+msgid "Let local and remote terminal apps write to the clipboard; reopen tabs after enabling"
+msgstr "אפשר ליישומי טרמינל מקומיים ורחוקים לכתוב ללוח; פתח מחדש טאבים לאחר הפעלת האפשרות"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
 msgid "Warn Before Risky Paste"
 msgstr "הזהר לפני הדבקה מסוכנת"
 # 
@@ -2217,6 +2226,15 @@ msgstr "נוכחי:"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:170
 msgid "Press new shortcut…"
 msgstr "הקש קיצור דרך חדש…"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
+msgid "Clear"
+msgstr "נקה"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
+msgid "Set Shortcut"
+msgstr "הגדר קיצור דרך"
 # 
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 216
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:216
@@ -2228,15 +2246,6 @@ msgstr "חדש:"
 #, python-brace-format
 msgid "Conflicts with: {}"
 msgstr "מתנגש עם: {}"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
-msgid "Clear"
-msgstr "נקה"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
-msgid "Set Shortcut"
-msgstr "הגדר קיצור דרך"
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:286
 msgid "Reset All Shortcuts"
@@ -4561,6 +4570,12 @@ msgstr "נהל קבצים זמניים"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/window_ui.py:367
 msgid "Main Menu"
 msgstr "תפריט ראשי"
+# 
+# File: src/ashyterm/ui/header_bar_builder.py, line: 160
+# File: src/ashyterm/ui/header_bar_builder.py, line: 255
+#: NEEDS WORK
+msgid "Open Tabs"
+msgstr "כרטיסיות פתוחות"
 # File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/ssh_dialogs.py:14
 msgid "General SSH Error"
@@ -5505,18 +5520,6 @@ msgstr "נסה שוב את הבקשה האחרונה"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:829
 msgid "Customize Quick Prompts"
 msgstr "התאם אישית הנחיות מהירות"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
-msgid "Emoji icon (optional)"
-msgstr "סמל אימוג'י (אופציונלי)"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
-msgid "Enter prompt text..."
-msgstr "הזן טקסט הנחיה..."
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
-msgid "Remove this prompt"
-msgstr "הסר הנחיה זו"
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:934
 msgid "Add Prompt"
@@ -5529,6 +5532,18 @@ msgstr "השתמש בברירות מחדל"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:950
 msgid "Clear custom prompts and use random defaults"
 msgstr "נקה הנחיות מותאמות אישית והשתמש בברירות מחדל אקראיות"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
+msgid "Emoji icon (optional)"
+msgstr "סמל אימוג'י (אופציונלי)"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
+msgid "Enter prompt text..."
+msgstr "הזן טקסט הנחיה..."
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
+msgid "Remove this prompt"
+msgstr "הסר הנחיה זו"
 # 
 # File: src/ashyterm/ui/widgets/ai_chat/_prompts.py, line: 11
 #: NEEDS WORK

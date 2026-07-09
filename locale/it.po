@@ -8,7 +8,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 00:00-0300\n"
 "Last-Translator: AshyTerm contributors\n"
 "Language-Team: Italian\n"
 "Language: it\n"
@@ -1700,6 +1699,18 @@ msgstr "Copia automatica del testo selezionato negli appunti"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
+msgid "Allow OSC 52 Clipboard Copy"
+msgstr "Consenti copia degli appunti OSC 52"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 343
+#: NEEDS WORK
+msgid "Let local and remote terminal apps write to the clipboard; reopen tabs after enabling"
+msgstr ""
+"Consenti alle app terminali locali e remote di scrivere negli appunti; riapri le schede dopo aver "
+"abilitato"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
 msgid "Warn Before Risky Paste"
 msgstr "Avvisa prima di incollare a rischio"
 # 
@@ -2225,6 +2236,15 @@ msgstr "Attuale:"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:170
 msgid "Press new shortcut…"
 msgstr "Premi nuova scorciatoia…"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
+msgid "Clear"
+msgstr "Cancella"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
+msgid "Set Shortcut"
+msgstr "Imposta scorciatoia"
 # 
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 216
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:216
@@ -2236,15 +2256,6 @@ msgstr "Novità:"
 #, python-brace-format
 msgid "Conflicts with: {}"
 msgstr "Conflitti con: {}"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
-msgid "Clear"
-msgstr "Cancella"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
-msgid "Set Shortcut"
-msgstr "Imposta scorciatoia"
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:286
 msgid "Reset All Shortcuts"
@@ -4586,6 +4597,12 @@ msgstr "Gestisci file temporanei"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/window_ui.py:367
 msgid "Main Menu"
 msgstr "Menu Principale"
+# 
+# File: src/ashyterm/ui/header_bar_builder.py, line: 160
+# File: src/ashyterm/ui/header_bar_builder.py, line: 255
+#: NEEDS WORK
+msgid "Open Tabs"
+msgstr "Schede Aperte"
 # File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/ssh_dialogs.py:14
 msgid "General SSH Error"
@@ -5542,18 +5559,6 @@ msgstr "Riprova l'ultima richiesta"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:829
 msgid "Customize Quick Prompts"
 msgstr "Personalizza i prompt rapidi"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
-msgid "Emoji icon (optional)"
-msgstr "Icona emoji (opzionale)"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
-msgid "Enter prompt text..."
-msgstr "Inserisci il testo del prompt..."
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
-msgid "Remove this prompt"
-msgstr "Rimuovi questo prompt"
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:934
 msgid "Add Prompt"
@@ -5566,6 +5571,18 @@ msgstr "Usa predefiniti"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:950
 msgid "Clear custom prompts and use random defaults"
 msgstr "Cancella i prompt personalizzati e usa i predefiniti casuali"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
+msgid "Emoji icon (optional)"
+msgstr "Icona emoji (opzionale)"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
+msgid "Enter prompt text..."
+msgstr "Inserisci il testo del prompt..."
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
+msgid "Remove this prompt"
+msgstr "Rimuovi questo prompt"
 # 
 # File: src/ashyterm/ui/widgets/ai_chat/_prompts.py, line: 11
 #: NEEDS WORK

@@ -8,7 +8,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 00:00-0300\n"
 "Last-Translator: AshyTerm contributors\n"
 "Language-Team: Swedish\n"
 "Language: sv\n"
@@ -1703,6 +1702,16 @@ msgstr "Automatisk kopiera markerad text till urklipp"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
+msgid "Allow OSC 52 Clipboard Copy"
+msgstr "Tillåt OSC 52 Urklipp Kopiera"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 343
+#: NEEDS WORK
+msgid "Let local and remote terminal apps write to the clipboard; reopen tabs after enabling"
+msgstr "Låt lokala och fjärrterminalappar skriva till urklipp; öppna flikar igen efter aktivering"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
 msgid "Warn Before Risky Paste"
 msgstr "Varning innan riskabel klippning"
 # 
@@ -2228,6 +2237,15 @@ msgstr "Aktuell:"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:170
 msgid "Press new shortcut…"
 msgstr "Ange ny genväg…"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
+msgid "Clear"
+msgstr "Rensa"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
+msgid "Set Shortcut"
+msgstr "Ange genväg"
 # 
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 216
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:216
@@ -2239,15 +2257,6 @@ msgstr "Nytt:"
 #, python-brace-format
 msgid "Conflicts with: {}"
 msgstr "Konflikter med: {}"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
-msgid "Clear"
-msgstr "Rensa"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
-msgid "Set Shortcut"
-msgstr "Ange genväg"
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:286
 msgid "Reset All Shortcuts"
@@ -4580,6 +4589,12 @@ msgstr "Hantera temporära filer"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/window_ui.py:367
 msgid "Main Menu"
 msgstr "Huvudmeny"
+# 
+# File: src/ashyterm/ui/header_bar_builder.py, line: 160
+# File: src/ashyterm/ui/header_bar_builder.py, line: 255
+#: NEEDS WORK
+msgid "Open Tabs"
+msgstr "Öppna flikar"
 # File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/ssh_dialogs.py:14
 msgid "General SSH Error"
@@ -5526,18 +5541,6 @@ msgstr "Försök igen med den senaste begäran"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:829
 msgid "Customize Quick Prompts"
 msgstr "Anpassa snabba uppmaningar"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
-msgid "Emoji icon (optional)"
-msgstr "Emoji-ikon (valfritt)"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
-msgid "Enter prompt text..."
-msgstr "Ange uppmaningstext..."
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
-msgid "Remove this prompt"
-msgstr "Ta bort denna uppmaning"
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:934
 msgid "Add Prompt"
@@ -5550,6 +5553,18 @@ msgstr "Använd standardinställningar"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:950
 msgid "Clear custom prompts and use random defaults"
 msgstr "Rensa anpassade uppmaningar och använd slumpmässiga standardvärden"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
+msgid "Emoji icon (optional)"
+msgstr "Emoji-ikon (valfritt)"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
+msgid "Enter prompt text..."
+msgstr "Ange uppmaningstext..."
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
+msgid "Remove this prompt"
+msgstr "Ta bort denna uppmaning"
 # 
 # File: src/ashyterm/ui/widgets/ai_chat/_prompts.py, line: 11
 #: NEEDS WORK

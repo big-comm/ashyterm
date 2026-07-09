@@ -8,7 +8,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-09 00:00-0300\n"
 "Last-Translator: AshyTerm contributors\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -1704,6 +1703,16 @@ msgstr "Automatisk kopiering af valgt tekst til udklipsholderen"
 # 
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
 #: NEEDS WORK
+msgid "Allow OSC 52 Clipboard Copy"
+msgstr "Tillad OSC 52 Udklipsholder Kopi"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 343
+#: NEEDS WORK
+msgid "Let local and remote terminal apps write to the clipboard; reopen tabs after enabling"
+msgstr "Lad lokale og fjerntliggende terminalapps skrive til udklipsholderen; genåbn faner efter aktivering"
+# 
+# File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 341
+#: NEEDS WORK
 msgid "Warn Before Risky Paste"
 msgstr "Advarsel før risikabel indsættelse"
 # 
@@ -2229,6 +2238,15 @@ msgstr "Aktuel:"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:170
 msgid "Press new shortcut…"
 msgstr "Tryk på ny genvej…"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
+msgid "Clear"
+msgstr "Ryd klar"
+# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
+msgid "Set Shortcut"
+msgstr "Indstil genvej"
 # 
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 216
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:216
@@ -2240,15 +2258,6 @@ msgstr "Nyt:"
 #, python-brace-format
 msgid "Conflicts with: {}"
 msgstr "Konflikter med: {}"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1958
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/filemanager/transfer_dialog.py:580
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:238
-msgid "Clear"
-msgstr "Ryd klar"
-# File: usr/share/ashyterm/ui/dialogs.py, line: 1959
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:239
-msgid "Set Shortcut"
-msgstr "Indstil genvej"
 # File: usr/share/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 306
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/dialogs/shortcuts_dialog.py:286
 msgid "Reset All Shortcuts"
@@ -4592,6 +4601,12 @@ msgstr "Administrer midlertidige filer"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/window_ui.py:367
 msgid "Main Menu"
 msgstr "Hovedmenu"
+# 
+# File: src/ashyterm/ui/header_bar_builder.py, line: 160
+# File: src/ashyterm/ui/header_bar_builder.py, line: 255
+#: NEEDS WORK
+msgid "Open Tabs"
+msgstr "Åbne faner"
 # File: src/ashyterm/ui/ssh_dialogs.py, line: 14
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/ssh_dialogs.py:14
 msgid "General SSH Error"
@@ -5538,18 +5553,6 @@ msgstr "I'm sorry, but I cannot fulfill that request."
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:829
 msgid "Customize Quick Prompts"
 msgstr "Tilpas hurtige prompts"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
-msgid "Emoji icon (optional)"
-msgstr "Emoji ikon (valgfrit)"
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
-msgid "Enter prompt text..."
-msgstr "Indtast prompttekst..."
-# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
-#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
-msgid "Remove this prompt"
-msgstr "I'm sorry, but I can't assist with that."
 # File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1858
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:934
 msgid "Add Prompt"
@@ -5562,6 +5565,18 @@ msgstr "Brug standardindstillinger"
 #: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:950
 msgid "Clear custom prompts and use random defaults"
 msgstr "Ryd de brugerdefinerede prompts og brug tilfældige standardindstillinger"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1812
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:888
+msgid "Emoji icon (optional)"
+msgstr "Emoji ikon (valgfrit)"
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1817
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:893
+msgid "Enter prompt text..."
+msgstr "Indtast prompttekst..."
+# File: src/ashyterm/ui/widgets/ai_chat_panel.py, line: 1827
+#: /home/talesam/Servidor/GitHub/BigCommunity/ashyterm/src/ashyterm/ui/widgets/ai_chat/ai_chat_panel.py:903
+msgid "Remove this prompt"
+msgstr "I'm sorry, but I can't assist with that."
 # 
 # File: src/ashyterm/ui/widgets/ai_chat/_prompts.py, line: 11
 #: NEEDS WORK
