@@ -105,7 +105,7 @@ def _terminal_colors(
 
 
 def resolve_theme_colors(
-    settings_manager, *, is_dark: bool, transparency: int
+    settings_manager: Any, *, is_dark: bool, transparency: int
 ) -> Dict[str, str]:
     """Dispatch to the matching variant based on ``settings_manager`` state."""
     gtk_theme = settings_manager.get("gtk_theme", "")

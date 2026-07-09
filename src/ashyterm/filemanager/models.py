@@ -1,5 +1,6 @@
 # ashyterm/filemanager/models.py
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 import re
@@ -155,7 +156,7 @@ class FileItem(GObject.GObject):
         return self._cached_icon_name
 
     @classmethod
-    def from_ls_line(cls, line: str):
+    def from_ls_line(cls, line: str) -> Any:
         """Optimized parsing using str.split instead of regex.
 
         Performance optimizations:

@@ -337,6 +337,17 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         scrolling_group.add(copy_on_select_row)
 
+        osc52_row = self._create_switch_row(
+            _("Allow OSC 52 Clipboard Copy"),
+            _(
+                "Let local and remote terminal apps write to the clipboard; "
+                "reopen tabs after enabling"
+            ),
+            "osc52_clipboard_enabled",
+            default_value=True,
+        )
+        scrolling_group.add(osc52_row)
+
         paste_warning_row = self._create_switch_row(
             _("Warn Before Risky Paste"),
             _(

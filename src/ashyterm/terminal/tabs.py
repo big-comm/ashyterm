@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable, List, Optional
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -733,7 +734,7 @@ class TabManager:
     def _is_widget_in_filemanager(self, widget: Gtk.Widget) -> bool:
         return self.fm_handler.is_widget_in_filemanager(widget)
 
-    def set_active_tab(self, tab_to_activate: Gtk.Box):
+    def set_active_tab(self, tab_to_activate: Gtk.Box) -> None:
         if self.active_tab == tab_to_activate:
             return
 
@@ -809,7 +810,7 @@ class TabManager:
     def _deactivate_file_manager(self, page, paned, fm):
         self.fm_handler.deactivate_file_manager(page, paned, fm)
 
-    def toggle_file_manager_for_active_tab(self, is_active: bool):
+    def toggle_file_manager_for_active_tab(self, is_active: bool) -> None:
         self.fm_handler.toggle_file_manager_for_active_tab(is_active)
 
     def _on_file_manager_paned_position_changed(self, paned, _param_spec, page):
@@ -1028,7 +1029,7 @@ class TabManager:
     ) -> Optional[Adw.ViewStackPage]:
         return getattr(terminal, "ashy_parent_page", None)
 
-    def update_titles_for_terminal(self, terminal, new_title: str, _osc7_info=None):
+    def update_titles_for_terminal(self, terminal: Any, new_title: str, _osc7_info: Any=None) -> None:
         """Updates the tab title and the specific pane title for a terminal."""
         page = self.get_page_for_terminal(terminal)
         if not page:
@@ -1177,13 +1178,13 @@ class TabManager:
     def _find_pane_for_terminal(self, page, terminal_to_find):
         return self.banner_handler.find_pane_for_terminal(page, terminal_to_find)
 
-    def show_error_banner_for_terminal(self, terminal, session_name="", error_message="", session=None, is_auth_error=False, is_host_key_error=False):
+    def show_error_banner_for_terminal(self, terminal: Any, session_name: str="", error_message: str="", session: Any=None, is_auth_error: bool=False, is_host_key_error: bool=False) -> Any:
         return self.banner_handler.show_error_banner_for_terminal(terminal, session_name, error_message, session, is_auth_error, is_host_key_error)
 
-    def hide_error_banner_for_terminal(self, terminal):
+    def hide_error_banner_for_terminal(self, terminal: Any) -> Any:
         return self.banner_handler.hide_error_banner_for_terminal(terminal)
 
-    def has_error_banner(self, terminal):
+    def has_error_banner(self, terminal: Any) -> Any:
         return self.banner_handler.has_error_banner(terminal)
 
     def _handle_banner_action(self, action, terminal, session, terminal_id, config):
@@ -1252,7 +1253,7 @@ class TabManager:
             self.on_tab_count_changed()
         return page
 
-    def select_next_tab(self):
+    def select_next_tab(self) -> None:
         """Selects the next tab in the list."""
         if not self.tabs or len(self.tabs) <= 1:
             return
@@ -1264,7 +1265,7 @@ class TabManager:
             if self.tabs:
                 self.set_active_tab(self.tabs[0])
 
-    def select_previous_tab(self):
+    def select_previous_tab(self) -> None:
         """Selects the previous tab in the list."""
         if not self.tabs or len(self.tabs) <= 1:
             return

@@ -343,39 +343,17 @@ class FormWidgetBuilder:
         radio_group = None
         selected_value = None
 
-        def on_radio_toggled(btn, value, grp):
-            """Update selected value and call on_change when radio toggled."""
-            if btn.get_active():
-                grp._selected_value = value
-                if on_change:
-                    on_change()
-
         if config.options:
             for i, opt in enumerate(config.options):
-                if isinstance(opt, (tuple, list)) and len(opt) >= 2:
-                    value, label = opt[0], opt[1]
-                else:
-                    value = label = str(opt)
-
-                opt_row = Adw.ActionRow(title=label)
-                check = Gtk.CheckButton()
-                check.set_sensitive(interactive)
-
-                if radio_group is None:
-                    radio_group = check
-                else:
-                    check.set_group(radio_group)
-
-                if value == config.default_value or (
-                    i == 0 and not config.default_value
-                ):
+                value, label = self._radio_option_values(opt)
+                check = self._create_radio_check(
+                    group, radio_group, value, interactive, on_change
+                )
+                radio_group = radio_group or check
+                if self._is_default_radio_option(config, value, i):
                     check.set_active(True)
                     selected_value = value
-
-                check._value = value
-                if interactive:
-                    check.connect("toggled", on_radio_toggled, value, group)
-
+                opt_row = Adw.ActionRow(title=label)
                 opt_row.add_prefix(check)
                 opt_row.set_activatable_widget(check)
                 group.add(opt_row)
@@ -385,6 +363,54 @@ class FormWidgetBuilder:
 
         group._selected_value = selected_value
         return group, group
+
+    @staticmethod
+    def _radio_option_values(option: Any) -> Tuple[Any, str]:
+        if isinstance(option, (tuple, list)) and len(option) >= 2:
+            return option[0], option[1]
+        text = str(option)
+        return text, text
+
+    @staticmethod
+    def _is_default_radio_option(config: FieldConfig, value: Any, index: int) -> bool:
+        return value == config.default_value or (
+            index == 0 and not config.default_value
+        )
+
+    @staticmethod
+    def _create_radio_check(
+        group: Adw.PreferencesGroup,
+        radio_group: Optional[Gtk.CheckButton],
+        value: Any,
+        interactive: bool,
+        on_change: Optional[Callable],
+    ) -> Gtk.CheckButton:
+        check = Gtk.CheckButton(sensitive=interactive)
+        if radio_group is not None:
+            check.set_group(radio_group)
+        check._value = value
+        if interactive:
+            check.connect(
+                "toggled",
+                FormWidgetBuilder._on_radio_toggled,
+                value,
+                group,
+                on_change,
+            )
+        return check
+
+    @staticmethod
+    def _on_radio_toggled(
+        button: Gtk.CheckButton,
+        value: Any,
+        group: Adw.PreferencesGroup,
+        on_change: Optional[Callable],
+    ) -> None:
+        if not button.get_active():
+            return
+        group._selected_value = value
+        if on_change:
+            on_change()
 
     def _create_multi_select_field(
         self, config: FieldConfig, on_change: Optional[Callable], interactive: bool
@@ -608,7 +634,7 @@ FIELD_TYPE_MAPPING = {
 
 
 def create_field_from_form_field(
-    form_field, on_change: Optional[Callable] = None
+    form_field: Any, on_change: Optional[Callable] = None
 ) -> Tuple[Gtk.Widget, Gtk.Widget]:
     """
     Create a field widget from a CommandFormField object.

@@ -3,6 +3,7 @@
 from typing import Callable, List, Optional, Union
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -66,7 +67,7 @@ def _get_children_model(
 
 
 def iterate_tree_model(
-    model,
+    model: Any,
     callback: Callable[[GObject.GObject, GObject.GObject, bool], bool],
     recurse_condition: Optional[
         Callable[[GObject.GObject, GObject.GObject], bool]
@@ -643,49 +644,47 @@ class SessionTreeView:
         if not (tree_list_row := self.filter_model.get_item(position)):
             return
         item = tree_list_row.get_item()
-        should_transfer_focus = False
+        if isinstance(item, SessionFolder):
+            tree_list_row.set_expanded(not tree_list_row.get_expanded())
+            return
+
+        should_transfer_focus = self._activate_tree_item(item)
+        self._schedule_post_activation(should_transfer_focus)
+
+    def _activate_tree_item(self, item) -> bool:
         if isinstance(item, SessionItem):
             if self.on_session_activated:
                 self.on_session_activated(item)
-                should_transfer_focus = True
+                return True
         elif isinstance(item, LayoutItem):
             if self.on_layout_activated:
                 self.on_layout_activated(item.name)
-                should_transfer_focus = True
-        elif isinstance(item, SessionFolder):
-            # For folders, just toggle expansion without triggering auto-hide
-            tree_list_row.set_expanded(not tree_list_row.get_expanded())
-            return  # Don't trigger auto-hide for folder operations
+                return True
+        return False
 
-        # Auto-hide sidebar if enabled (only for non-folder items)
+    def _schedule_post_activation(self, should_transfer_focus: bool) -> None:
         if self.settings_manager.get("auto_hide_sidebar", False):
-            # Use a longer delay to ensure the activation is fully processed
-            def delayed_auto_hide():
-                # Double-check we're still in auto-hide mode and popover is visible
-                if (
-                    self.settings_manager.get("auto_hide_sidebar", False)
-                    and hasattr(self.parent_window, "sidebar_popover")
-                    and self.parent_window.sidebar_popover.get_visible()
-                ):
-                    # We're in popup mode, close the popover
-                    # The popover's closed signal will handle focus transfer
-                    self.parent_window.sidebar_popover.popdown()
-                    self.parent_window.toggle_sidebar_button.set_active(False)
-                else:
-                    # We're in normal flap mode
-                    self.parent_window.flap.set_show_sidebar(False)
-                    self.parent_window.settings_manager.set_sidebar_visible(False)
-                    self.parent_window.toggle_sidebar_button.set_active(False)
-                    # Transfer focus to terminal in flap mode
-                    self._transfer_focus_to_active_terminal()
-                return GLib.SOURCE_REMOVE
-
-            # Use a longer timeout to ensure activation is fully processed
-            GLib.timeout_add(100, delayed_auto_hide)
+            GLib.timeout_add(100, self._delayed_auto_hide)
         elif should_transfer_focus:
-            # Even without auto-hide, transfer focus to terminal after activation
-            # Use a small delay to ensure the terminal is ready
             GLib.timeout_add(50, self._transfer_focus_to_active_terminal)
+
+    def _delayed_auto_hide(self) -> bool:
+        parent = self.parent_window
+        is_popup = (
+            self.settings_manager.get("auto_hide_sidebar", False)
+            and hasattr(parent, "sidebar_popover")
+            and parent.sidebar_popover.get_visible()
+        )
+        if is_popup:
+            parent.sidebar_popover.popdown()
+            parent.toggle_sidebar_button.set_active(False)
+            return GLib.SOURCE_REMOVE
+
+        parent.flap.set_show_sidebar(False)
+        parent.settings_manager.set_sidebar_visible(False)
+        parent.toggle_sidebar_button.set_active(False)
+        self._transfer_focus_to_active_terminal()
+        return GLib.SOURCE_REMOVE
 
     def _transfer_focus_to_active_terminal(self) -> bool:
         """Transfer focus to the active terminal."""

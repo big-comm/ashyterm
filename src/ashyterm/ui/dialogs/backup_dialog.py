@@ -21,7 +21,7 @@ class BackupRestoreHandler:
         self.app = application
         self.logger = application.logger if hasattr(application, "logger") else None
 
-    def start_backup_flow(self, parent_window: Gtk.Window):
+    def start_backup_flow(self, parent_window: Gtk.Window) -> None:
         """Starts the manual backup creation flow."""
         file_dialog = Gtk.FileDialog(title=_("Save Backup As..."), modal=True)
         timestamp = datetime.now().strftime("%Y-%m-%d")
@@ -165,7 +165,7 @@ class BackupRestoreHandler:
 
         AsyncTaskManager.get().submit_io(backup_thread)
 
-    def start_restore_flow(self, parent_window: Gtk.Window):
+    def start_restore_flow(self, parent_window: Gtk.Window) -> None:
         """Starts the restore backup flow."""
         dialog = Adw.AlertDialog(
             heading=_("Restore from Backup?"),

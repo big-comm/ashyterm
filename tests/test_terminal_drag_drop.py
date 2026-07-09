@@ -1,12 +1,10 @@
 """Tests for terminal_drag_drop (file drop helpers)."""
 
-from types import SimpleNamespace
 from unittest.mock import MagicMock
-
-import pytest
 
 from ashyterm.sessions.models import SessionItem
 from ashyterm.terminal.terminal_drag_drop import (
+    build_sftp_put_command,
     emit_ssh_file_drop_signal,
     extract_dropped_paths,
     handle_sftp_drop,
@@ -48,6 +46,13 @@ class TestExtractDroppedPaths:
         value = MagicMock()
         value.get_files = MagicMock(return_value=None)
         assert extract_dropped_paths(value) == []
+
+    def test_skips_file_whose_path_lookup_fails(self):
+        good = MagicMock(get_path=MagicMock(return_value="/tmp/good"))
+        broken = MagicMock(get_path=MagicMock(side_effect=RuntimeError("gone")))
+        value = MagicMock(get_files=MagicMock(return_value=[broken, good]))
+
+        assert extract_dropped_paths(value) == ["/tmp/good"]
 
 
 # ── is_terminal_ssh_like ────────────────────────────────────
@@ -95,6 +100,18 @@ class TestHandleSftpDrop:
         # the feed loop doesn't, but a terminal mock doesn't raise.
         # We assert the contract stays True when no feed errors occur.
         assert handle_sftp_drop(value, terminal) is True
+
+    def test_quotes_double_quotes_and_backslashes(self):
+        command = build_sftp_put_command('/tmp/a"b\\c')
+        assert command == 'put -r "/tmp/a\\"b\\\\c"\n'
+
+    def test_rejects_newline_command_injection(self):
+        terminal = MagicMock()
+        path = '/tmp/file\n!rm /tmp/important'
+
+        assert build_sftp_put_command(path) is None
+        assert handle_sftp_drop(_file_value([path]), terminal) is True
+        terminal.feed_child.assert_not_called()
 
 
 # ── handle_ssh_drop ─────────────────────────────────────────
@@ -159,6 +176,25 @@ class TestHandleSshDrop:
         assert out is True
         assert scheduled
 
+    def test_refreshes_manual_ssh_state_before_rejecting_local(self, monkeypatch):
+        session = SessionItem(name="s", session_type="local")
+        mgr = _manager(info={"type": "local", "identifier": session})
+        targets = iter([None, "root@tailscale-node"])
+        mgr.manual_ssh_tracker.get_ssh_target.side_effect = lambda _tid: next(
+            targets
+        )
+        scheduled = []
+        monkeypatch.setattr(
+            "ashyterm.terminal.terminal_drag_drop.GLib.idle_add",
+            lambda fn, *args: scheduled.append((fn, args)) or 0,
+        )
+
+        out = handle_ssh_drop(mgr, _file_value(["/tmp/a"]), 7)
+
+        assert out is True
+        mgr.manual_ssh_tracker.check_process_tree.assert_called_once_with(7)
+        assert scheduled[0][1][-1] == "root@tailscale-node"
+
 
 # ── emit_ssh_file_drop_signal ──────────────────────────────
 
@@ -209,8 +245,45 @@ class TestManagerDelegation:
         for name in (
             "_setup_sftp_drag_and_drop",
             "_setup_ssh_drag_and_drop",
+            "_remove_ssh_drag_and_drop",
             "_on_file_drop",
             "_on_ssh_file_drop",
             "_emit_ssh_file_drop_signal",
         ):
             assert callable(getattr(TerminalManager, name))
+
+    def test_manual_ssh_state_installs_drop_controller(self):
+        from ashyterm.terminal.manager import TerminalManager
+
+        manager = TerminalManager.__new__(TerminalManager)
+        terminal = MagicMock()
+        terminal.terminal_id = 7
+        manager.manual_ssh_tracker = MagicMock()
+        manager.manual_ssh_tracker.get_ssh_target.return_value = (
+            "root@tailscale-node"
+        )
+        manager._setup_ssh_drag_and_drop = MagicMock()
+        manager._remove_ssh_drag_and_drop = MagicMock()
+        manager._update_title = MagicMock()
+
+        manager._on_manual_ssh_state_changed(terminal)
+
+        manager._setup_ssh_drag_and_drop.assert_called_once_with(terminal, 7)
+        manager._remove_ssh_drag_and_drop.assert_not_called()
+
+    def test_manual_ssh_exit_removes_drop_controller(self):
+        from ashyterm.terminal.manager import TerminalManager
+
+        manager = TerminalManager.__new__(TerminalManager)
+        terminal = MagicMock()
+        terminal.terminal_id = 7
+        manager.manual_ssh_tracker = MagicMock()
+        manager.manual_ssh_tracker.get_ssh_target.return_value = None
+        manager._setup_ssh_drag_and_drop = MagicMock()
+        manager._remove_ssh_drag_and_drop = MagicMock()
+        manager._update_title = MagicMock()
+
+        manager._on_manual_ssh_state_changed(terminal)
+
+        manager._remove_ssh_drag_and_drop.assert_called_once_with(terminal)
+        manager._setup_ssh_drag_and_drop.assert_not_called()

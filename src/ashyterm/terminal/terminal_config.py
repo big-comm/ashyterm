@@ -131,7 +131,8 @@ def compute_highlighting_config(
         session=session,
     )
 
-    should_highlight = output_enabled or cat_enabled or shell_enabled
+    osc52_enabled = settings_manager.get("osc52_clipboard_enabled", True)
+    should_highlight = output_enabled or cat_enabled or shell_enabled or osc52_enabled
     config = {
         "output_highlighting": output_enabled,
         "cat_colorization": cat_enabled,
@@ -170,5 +171,10 @@ def get_ssh_highlight_config(
         "output_enabled": output_enabled,
         "cat_enabled": cat_enabled,
         "shell_input_enabled": shell_enabled,
-        "should_highlight": output_enabled or cat_enabled or shell_enabled,
+        "should_highlight": (
+            output_enabled
+            or cat_enabled
+            or shell_enabled
+            or settings_manager.get("osc52_clipboard_enabled", True)
+        ),
     }

@@ -15,6 +15,7 @@ from gi.repository import GLib, Vte
 
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
+from .ssh_process_detection import find_ssh_process
 
 # Lazy import psutil - only when actually needed for process info
 PSUTIL_AVAILABLE: Optional[bool] = None
@@ -81,7 +82,7 @@ class ManualSSHTracker:
         self._lock = threading.Lock()
         self._last_child_count = {}
 
-    def track(self, terminal_id: int, terminal: Vte.Terminal):
+    def track(self, terminal_id: int, terminal: Vte.Terminal) -> None:
         with self._lock:
             if terminal_id not in self._tracked_terminals:
                 self._tracked_terminals[terminal_id] = {
@@ -90,7 +91,7 @@ class ManualSSHTracker:
                     "ssh_target": None,
                 }
 
-    def untrack(self, terminal_id: int):
+    def untrack(self, terminal_id: int) -> None:
         with self._lock:
             self._tracked_terminals.pop(terminal_id, None)
             self._last_child_count.pop(terminal_id, None)
@@ -102,7 +103,7 @@ class ManualSSHTracker:
                 return state.get("ssh_target")
             return None
 
-    def check_process_tree(self, terminal_id: int):
+    def check_process_tree(self, terminal_id: int) -> None:
         psutil_mod = _get_psutil()
         if not psutil_mod:
             return
@@ -138,30 +139,36 @@ class ManualSSHTracker:
         """Check if SSH state has changed for a terminal."""
         parent_proc = psutil_mod.Process(pid)
         current_children_count = len(parent_proc.children())
-
-        if self._last_child_count.get(terminal_id) == current_children_count:
-            if not state["in_ssh"]:
-                return
-
+        previous_children_count = self._last_child_count.get(terminal_id)
         self._last_child_count[terminal_id] = current_children_count
+        if (
+            current_children_count == 0
+            and previous_children_count == 0
+            and not state["in_ssh"]
+        ):
+            return
 
         children = parent_proc.children(recursive=True)
-        ssh_proc = next((p for p in children if p.name().lower() == "ssh"), None)
+        ssh_proc, ssh_target = find_ssh_process(children)
         currently_in_ssh = ssh_proc is not None
 
-        if currently_in_ssh != state["in_ssh"]:
-            self._update_ssh_state(terminal_id, state, ssh_proc, currently_in_ssh)
+        target_changed = currently_in_ssh and ssh_target != state["ssh_target"]
+        if currently_in_ssh != state["in_ssh"] or target_changed:
+            self._update_ssh_state(
+                terminal_id, state, ssh_target, currently_in_ssh
+            )
 
     def _update_ssh_state(
-        self, terminal_id: int, state: dict, ssh_proc, currently_in_ssh: bool
+        self,
+        terminal_id: int,
+        state: dict,
+        ssh_target: Optional[str],
+        currently_in_ssh: bool,
     ) -> None:
         """Update SSH state and notify callback."""
         if currently_in_ssh:
             state["in_ssh"] = True
-            cmdline = ssh_proc.cmdline()
-            state["ssh_target"] = next(
-                (arg for arg in cmdline if "@" in arg), ssh_proc.name()
-            )
+            state["ssh_target"] = ssh_target
             self.logger.info(
                 f"Detected manual SSH session in terminal {terminal_id}: {state['ssh_target']}"
             )
@@ -219,7 +226,7 @@ class TerminalRegistry:
 
     def reregister_terminal(
         self, terminal: Vte.Terminal, terminal_id: int, terminal_info: Dict[str, Any]
-    ):
+    ) -> None:
         """Re-registers a terminal that was moved from another window."""
         with self._lock:
             self._terminals[terminal_id] = terminal_info

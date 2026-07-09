@@ -3,6 +3,7 @@
 
 
 import gi
+from typing import Any
 
 gi.require_version("GObject", "2.0")
 gi.require_version("GLib", "2.0")
@@ -12,9 +13,9 @@ from ..utils.logger import log_terminal_event
 
 
 def cleanup_terminal_ui(
-    terminal, terminal_id: int, child_status: int, identifier,
-    is_auto_reconnect_fn, terminal_exit_handler, tab_manager,
-    cleanup_fn, unmark_closing_fn, logger,
+    terminal: Any, terminal_id: int, child_status: int, identifier: Any,
+    is_auto_reconnect_fn: Any, terminal_exit_handler: Any, tab_manager: Any,
+    cleanup_fn: Any, unmark_closing_fn: Any, logger: Any,
 ) -> bool:
     """Cleanup terminal UI after process exit. Runs on GLib.idle_add.
 
@@ -42,20 +43,20 @@ def cleanup_terminal_ui(
     return False
 
 
-def cleanup_process_tracking(terminal_info: dict, spawner) -> None:
+def cleanup_process_tracking(terminal_info: dict, spawner: Any) -> None:
     """Remove process from spawner tracker."""
     pid = terminal_info.get("process_id")
     if pid:
         spawner.process_tracker.unregister_process(pid)
 
 
-def cleanup_terminal_tracking(terminal, terminal_id: int, osc7_tracker, manual_ssh_tracker) -> None:
+def cleanup_terminal_tracking(terminal: Any, terminal_id: int, osc7_tracker: Any, manual_ssh_tracker: Any) -> None:
     """Remove OSC7 and SSH tracking for terminal."""
     osc7_tracker.untrack_terminal(terminal)
     manual_ssh_tracker.untrack(terminal_id)
 
 
-def cleanup_terminal_handlers(terminal) -> None:
+def cleanup_terminal_handlers(terminal: Any) -> None:
     """Disconnect signal handlers and remove event controllers."""
     if hasattr(terminal, "ashy_handler_ids"):
         for handler_id in terminal.ashy_handler_ids:
@@ -69,7 +70,7 @@ def cleanup_terminal_handlers(terminal) -> None:
         terminal.ashy_controllers.clear()
 
 
-def cleanup_terminal_attributes(terminal, logger) -> None:
+def cleanup_terminal_attributes(terminal: Any, logger: Any) -> None:
     """Delete custom terminal attributes."""
     for attr in ["_osc8_hovered_uri", "_closed_by_user"]:
         if hasattr(terminal, attr):
@@ -81,7 +82,7 @@ def cleanup_terminal_attributes(terminal, logger) -> None:
 
 def finalize_terminal_cleanup(
     terminal_id: int, terminal_name: str,
-    registry, pending_kill_timers, command_start_times,
+    registry: Any, pending_kill_timers: Any, command_start_times: Any,
     stats: dict,
 ) -> None:
     """Final step: unregister terminal, update stats, clear timers."""
@@ -96,12 +97,12 @@ def finalize_terminal_cleanup(
 
 
 def cleanup_terminal(
-    terminal, terminal_id: int,
-    is_auto_reconnect_fn, registry, spawner,
-    osc7_tracker, manual_ssh_tracker,
-    pending_kill_timers, command_start_times,
-    stats: dict, cleanup_lock, logger,
-    cleanup_highlight_proxy_fn=None,
+    terminal: Any, terminal_id: int,
+    is_auto_reconnect_fn: Any, registry: Any, spawner: Any,
+    osc7_tracker: Any, manual_ssh_tracker: Any,
+    pending_kill_timers: Any, command_start_times: Any,
+    stats: dict, cleanup_lock: Any, logger: Any,
+    cleanup_highlight_proxy_fn: Any=None,
 ) -> None:
     """Full cleanup pipeline for a terminal.
 

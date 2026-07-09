@@ -26,9 +26,7 @@ def manager(history_dir):
             "ashyterm.utils.logger": MagicMock(
                 get_logger=MagicMock(return_value=MagicMock())
             ),
-            "ashyterm.utils.security": MagicMock(
-                atomic_json_write=_fake_atomic_write
-            ),
+            "ashyterm.utils.security": MagicMock(atomic_json_write=_fake_atomic_write),
         },
     ):
         # Clear any previously cached module
@@ -126,7 +124,7 @@ class TestAIHistoryManager:
     def test_load_conversation(self, manager):
         conv1 = manager.new_conversation()
         manager.add_user_message("first")
-        conv2 = manager.new_conversation()
+        manager.new_conversation()
         manager.add_user_message("second")
 
         # Currently on conv2

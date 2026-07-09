@@ -10,7 +10,7 @@ gi.require_version("GLib", "2.0")
 from ..sessions.models import SessionItem
 
 
-def has_active_ssh_sessions(registry) -> bool:
+def has_active_ssh_sessions(registry: Any) -> bool:
     """Check if any SSH terminals are currently running."""
     for info in registry._terminals.values():
         if info.get("type") == "ssh" and info.get("status") == "running":
@@ -19,7 +19,7 @@ def has_active_ssh_sessions(registry) -> bool:
 
 
 def reconnect_all_for_session(
-    session_name: str, registry, respawn_fn, logger,
+    session_name: str, registry: Any, respawn_fn: Any, logger: Any,
 ) -> int:
     """Reconnect all disconnected terminals for a session.
 
@@ -55,7 +55,7 @@ def reconnect_all_for_session(
 
 
 def disconnect_all_for_session(
-    session_name: str, registry, cancel_auto_reconnect_fn, logger,
+    session_name: str, registry: Any, cancel_auto_reconnect_fn: Any, logger: Any,
 ) -> int:
     """Gracefully disconnect all terminals for a session.
 
@@ -85,7 +85,7 @@ def disconnect_all_for_session(
     return disconnected
 
 
-def get_session_connection_status(session_name: str, registry) -> Dict[str, Any]:
+def get_session_connection_status(session_name: str, registry: Any) -> Dict[str, Any]:
     """Get aggregated connection status for all terminals of a session.
 
     Returns dict with:

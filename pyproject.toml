@@ -43,8 +43,11 @@ all = ["regex", "Pygments", "py7zr"]
 test = ["pytest", "hypothesis", "py7zr"]
 
 [build-system]
-requires = ["uv_build"]
+requires = ["uv_build<0.12"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+data = { data = "usr" }
 
 [tool.setuptools.packages.find]
 include = ["ashyterm"]

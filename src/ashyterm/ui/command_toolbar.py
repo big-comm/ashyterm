@@ -14,6 +14,7 @@ from __future__ import annotations
 from typing import Callable
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gio, Gtk, Pango
@@ -36,12 +37,12 @@ def populate_command_toolbar(
     toolbar: Gtk.Box,
     *,
     parent_handle: Gtk.Widget | None,
-    logger,
+    logger: Any,
     on_click: Callable[[Gtk.Button], None],
     on_right_click: Callable[
         [Gtk.GestureClick, int, float, float, CommandButton, Gtk.Button], None
     ],
-    tooltip_helper,
+    tooltip_helper: Any,
 ) -> None:
     """Replace ``toolbar`` contents with one button per pinned command.
 
@@ -84,7 +85,7 @@ def create_toolbar_command_button(
     on_right_click: Callable[
         [Gtk.GestureClick, int, float, float, CommandButton, Gtk.Button], None
     ],
-    tooltip_helper,
+    tooltip_helper: Any,
 ) -> Gtk.Button:
     """Build a single toolbar button for ``command``.
 

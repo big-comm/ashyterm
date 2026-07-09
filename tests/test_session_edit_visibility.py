@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-import pytest
 
 from ashyterm.ui.dialogs.session_edit_visibility import (
     update_auth_visibility,

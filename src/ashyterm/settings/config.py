@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.11.0"
+    APP_VERSION = "1.12.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -220,6 +220,7 @@ class DefaultSettings:
         ],
         "terminal": [
             "copy_on_select",
+            "osc52_clipboard_enabled",
             "paste_warning_enabled",
             "scrollback_lines",
             "mouse_scroll_sensitivity",
@@ -310,6 +311,7 @@ class DefaultSettings:
             "scroll_on_keystroke": True,
             "scroll_on_insert": True,  # Scroll to bottom on paste
             "copy_on_select": False,  # Auto-copy selection to clipboard
+            "osc52_clipboard_enabled": True,  # Write-only remote clipboard copy
             "paste_warning_enabled": True,  # Confirm multi-line / risky paste
             "mouse_autohide": True,
             "cursor_blink": 0,
@@ -467,7 +469,7 @@ def get_config_paths() -> ConfigPaths:
     return _config_paths
 
 
-def initialize_configuration():
+def initialize_configuration() -> None:
     """Initialize configuration system with validation."""
     logger = get_logger("ashyterm.config") if UTILS_AVAILABLE else None
     try:

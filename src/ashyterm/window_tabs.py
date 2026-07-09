@@ -3,6 +3,7 @@
 from typing import Optional
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -25,7 +26,7 @@ class WindowTabsMixin:
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
-    ):
+    ) -> Any:
         """Public method to create a local tab."""
         return self.tab_manager.create_local_tab(
             working_directory=working_directory,
@@ -33,7 +34,7 @@ class WindowTabsMixin:
             close_after_execute=close_after_execute,
         )
 
-    def create_ssh_tab(self, ssh_target: str):
+    def create_ssh_tab(self, ssh_target: str) -> Any:
         """Public method to parse an SSH target string and create a tab."""
         try:
             remote_path = None
@@ -74,7 +75,7 @@ class WindowTabsMixin:
 
     def create_execute_tab(
         self, command: str, working_directory: str, close_after: bool
-    ):
+    ) -> Any:
         """Public method to create a tab that executes a command."""
         return self.tab_manager.create_local_tab(
             working_directory=working_directory,

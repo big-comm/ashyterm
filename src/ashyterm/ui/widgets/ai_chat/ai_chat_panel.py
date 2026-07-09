@@ -398,7 +398,7 @@ class AIChatPanel(Gtk.Box):
     def _build_transparency_css(c: dict) -> str:
         return _build_panel_css(c)
 
-    def update_transparency(self):
+    def update_transparency(self) -> None:
         """Public method to update transparency when settings change."""
         self._apply_transparency()
 
@@ -665,18 +665,21 @@ class AIChatPanel(Gtk.Box):
     def _linkify_error(text: str) -> str:
         """Escape markup and convert URLs into clickable Pango links."""
         import re
+
         _URL_RE = re.compile(r'https?://[^\s<>"]+')
         parts: list[str] = []
         last = 0
         for m in _URL_RE.finditer(text):
             url = m.group()
             # Strip trailing punctuation not part of the URL
-            while url and url[-1] in ')],;:.!?':
-                if url[-1] == ')' and url.count('(') >= url.count(')'):
+            while url and url[-1] in ")],;:.!?":
+                if url[-1] == ")" and url.count("(") >= url.count(")"):
                     break
                 url = url[:-1]
-            parts.append(GLib.markup_escape_text(text[last:m.start()]))
-            parts.append(f'<a href="{GLib.markup_escape_text(url)}">{GLib.markup_escape_text(url)}</a>')
+            parts.append(GLib.markup_escape_text(text[last : m.start()]))
+            parts.append(
+                f'<a href="{GLib.markup_escape_text(url)}">{GLib.markup_escape_text(url)}</a>'
+            )
             last = m.start() + len(url)
         parts.append(GLib.markup_escape_text(text[last:]))
         return "".join(parts)
@@ -751,55 +754,16 @@ class AIChatPanel(Gtk.Box):
         if self._settings_manager:
             custom_prompts = self._settings_manager.get("ai_custom_quick_prompts", [])
 
-        # Store row references for saving
-        prompt_rows: list[Gtk.ListBoxRow] = []
-
-        def create_prompt_row(emoji: str = "", text: str = "") -> Gtk.ListBoxRow:
-            """Create a row for editing a prompt."""
-            row = Gtk.ListBoxRow()
-            row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-            row_box.set_margin_start(8)
-            row_box.set_margin_end(8)
-            row_box.set_margin_top(8)
-            row_box.set_margin_bottom(8)
-
-            # Emoji entry (small)
-            emoji_entry = Gtk.Entry()
-            emoji_entry.set_placeholder_text("🔧")
-            emoji_entry.set_text(emoji)
-            emoji_entry.set_max_length(4)
-            emoji_entry.set_width_chars(4)
-            self._add_tooltip(emoji_entry, _("Emoji icon (optional)"))
-            row_box.append(emoji_entry)
-
-            # Text entry (expands)
-            text_entry = Gtk.Entry()
-            text_entry.set_placeholder_text(_("Enter prompt text..."))
-            text_entry.set_text(text)
-            text_entry.set_hexpand(True)
-            row_box.append(text_entry)
-
-            # Delete button (uses bundled icon)
-            delete_btn = Gtk.Button()
-            delete_btn.set_child(icon_image("user-trash-symbolic"))
-            delete_btn.add_css_class("flat")
-            delete_btn.add_css_class("destructive-action")
-            self._add_tooltip(delete_btn, _("Remove this prompt"))
-
-            def on_delete(btn):
-                prompt_rows.remove((row, emoji_entry, text_entry))
-                list_box.remove(row)
-
-            delete_btn.connect("clicked", on_delete)
-            row_box.append(delete_btn)
-
-            row.set_child(row_box)
-            prompt_rows.append((row, emoji_entry, text_entry))
-            return row
+        prompt_rows: list[tuple[Gtk.ListBoxRow, Gtk.Entry, Gtk.Entry]] = []
 
         # Add existing prompts
         for prompt in custom_prompts:
-            row = create_prompt_row(prompt.get("emoji", ""), prompt.get("text", ""))
+            row = self._create_prompt_row(
+                list_box,
+                prompt_rows,
+                prompt.get("emoji", ""),
+                prompt.get("text", ""),
+            )
             list_box.append(row)
 
         scrolled.set_child(list_box)
@@ -819,7 +783,12 @@ class AIChatPanel(Gtk.Box):
         add_btn_content.append(add_label)
         add_btn.set_child(add_btn_content)
         add_btn.add_css_class("suggested-action")
-        add_btn.connect("clicked", lambda b: list_box.append(create_prompt_row()))
+        add_btn.connect(
+            "clicked",
+            lambda _button: list_box.append(
+                self._create_prompt_row(list_box, prompt_rows)
+            ),
+        )
         add_box.append(add_btn)
 
         # Clear all button
@@ -833,44 +802,103 @@ class AIChatPanel(Gtk.Box):
         clear_btn.set_margin_start(12)
         self._add_tooltip(clear_btn, _("Clear custom prompts and use random defaults"))
 
-        def on_clear(btn):
-            # Remove all rows
-            for row, _entry, _label in list(prompt_rows):
-                list_box.remove(row)
-            prompt_rows.clear()
-
-        clear_btn.connect("clicked", on_clear)
+        clear_btn.connect(
+            "clicked", lambda _button: self._clear_prompt_rows(list_box, prompt_rows)
+        )
         add_box.append(clear_btn)
 
         main_box.append(add_box)
 
-        # Save handler
-        def on_save(btn):
-            # Collect all prompts
-            new_prompts = []
-            for row, emoji_entry, text_entry in prompt_rows:
-                text = text_entry.get_text().strip()
-                if text:  # Only save non-empty prompts
-                    new_prompts.append(
-                        {
-                            "emoji": emoji_entry.get_text().strip() or "💬",
-                            "text": text,
-                        }
-                    )
-
-            # Save to settings
-            if self._settings_manager:
-                self._settings_manager.set("ai_custom_quick_prompts", new_prompts)
-
-            # Refresh the quick prompts display
-            self._populate_quick_prompts()
-
-            dialog.close()
-
-        save_btn.connect("clicked", on_save)
+        save_btn.connect(
+            "clicked", lambda _button: self._save_prompt_rows(dialog, prompt_rows)
+        )
 
         dialog.set_child(main_box)
         dialog.present(self.get_root())
+
+    def _create_prompt_row(
+        self,
+        list_box: Gtk.ListBox,
+        prompt_rows: list[tuple[Gtk.ListBoxRow, Gtk.Entry, Gtk.Entry]],
+        emoji: str = "",
+        text: str = "",
+    ) -> Gtk.ListBoxRow:
+        row = Gtk.ListBoxRow()
+        row_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        for setter in (
+            row_box.set_margin_start,
+            row_box.set_margin_end,
+            row_box.set_margin_top,
+            row_box.set_margin_bottom,
+        ):
+            setter(8)
+
+        emoji_entry = Gtk.Entry(text=emoji, max_length=4, width_chars=4)
+        emoji_entry.set_placeholder_text("🔧")
+        self._add_tooltip(emoji_entry, _("Emoji icon (optional)"))
+        row_box.append(emoji_entry)
+
+        text_entry = Gtk.Entry(text=text, hexpand=True)
+        text_entry.set_placeholder_text(_("Enter prompt text..."))
+        row_box.append(text_entry)
+
+        delete_button = Gtk.Button()
+        delete_button.set_child(icon_image("user-trash-symbolic"))
+        delete_button.add_css_class("flat")
+        delete_button.add_css_class("destructive-action")
+        self._add_tooltip(delete_button, _("Remove this prompt"))
+        delete_button.connect(
+            "clicked",
+            self._delete_prompt_row,
+            list_box,
+            prompt_rows,
+            row,
+            emoji_entry,
+            text_entry,
+        )
+        row_box.append(delete_button)
+        row.set_child(row_box)
+        prompt_rows.append((row, emoji_entry, text_entry))
+        return row
+
+    @staticmethod
+    def _delete_prompt_row(
+        _button: Gtk.Button,
+        list_box: Gtk.ListBox,
+        prompt_rows: list[tuple[Gtk.ListBoxRow, Gtk.Entry, Gtk.Entry]],
+        row: Gtk.ListBoxRow,
+        emoji_entry: Gtk.Entry,
+        text_entry: Gtk.Entry,
+    ) -> None:
+        prompt_rows.remove((row, emoji_entry, text_entry))
+        list_box.remove(row)
+
+    @staticmethod
+    def _clear_prompt_rows(
+        list_box: Gtk.ListBox,
+        prompt_rows: list[tuple[Gtk.ListBoxRow, Gtk.Entry, Gtk.Entry]],
+    ) -> None:
+        for row, _emoji_entry, _text_entry in list(prompt_rows):
+            list_box.remove(row)
+        prompt_rows.clear()
+
+    def _save_prompt_rows(
+        self,
+        dialog: Adw.Dialog,
+        prompt_rows: list[tuple[Gtk.ListBoxRow, Gtk.Entry, Gtk.Entry]],
+    ) -> None:
+        prompts = [
+            {
+                "emoji": emoji_entry.get_text().strip() or "💬",
+                "text": text,
+            }
+            for _row, emoji_entry, text_entry in prompt_rows
+            if (text := text_entry.get_text().strip())
+        ]
+        if self._settings_manager:
+            self._settings_manager.set("ai_custom_quick_prompts", prompts)
+        self._populate_quick_prompts()
+        dialog.close()
 
     def _on_new_chat(self, button: Gtk.Button):
         """Start a new conversation."""
@@ -949,7 +977,7 @@ class AIChatPanel(Gtk.Box):
         self._quick_prompts_container.set_visible(False)
         self._load_conversation()
 
-    def set_initial_text(self, text: str):
+    def set_initial_text(self, text: str) -> None:
         """Set initial text in the input field."""
         self._set_input_text(text)
         self._text_view.grab_focus()

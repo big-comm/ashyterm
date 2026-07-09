@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-import pytest
 
 from ashyterm.filemanager.cleanup import (
     cleanup_all,

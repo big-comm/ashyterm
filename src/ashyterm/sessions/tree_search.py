@@ -14,6 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, Optional, Set
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
@@ -26,7 +27,7 @@ if TYPE_CHECKING:
 
 
 def item_matches_filter(
-    item,
+    item: Any,
     filter_text: str,
     folder_matcher: Callable[["SessionFolder"], bool],
 ) -> bool:
@@ -75,7 +76,7 @@ class SessionTreeSearch:
 
     # ── filter predicates ────────────────────────────────────
 
-    def filter_func(self, item) -> bool:
+    def filter_func(self, item: Any) -> bool:
         """Filter callback compatible with ``Gtk.CustomFilter.new``."""
         return item_matches_filter(
             item, self._filter_text, self.folder_contains_matching

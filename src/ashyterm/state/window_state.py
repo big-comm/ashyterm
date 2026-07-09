@@ -47,7 +47,7 @@ class WindowStateManager:
         self.terminal_manager = window.terminal_manager
         self.logger = get_logger("ashyterm.state")
 
-    def save_session_state(self):
+    def save_session_state(self) -> None:
         """Persist the current tab/pane layout to the session state file."""
         state = stamp_version({"groups": [], "tabs": []}, self.SCHEMA_VERSION)
         state["groups"] = self.tab_manager.group_manager.to_list()
@@ -111,7 +111,7 @@ class WindowStateManager:
         self.clear_session_state()
         return True
 
-    def clear_session_state(self):
+    def clear_session_state(self) -> None:
         """Removes the state file to prevent restoration on next startup."""
         if os.path.exists(STATE_FILE):
             try:
@@ -120,7 +120,7 @@ class WindowStateManager:
             except OSError as e:
                 self.logger.error(f"Failed to remove state file: {e}")
 
-    def save_current_layout(self):
+    def save_current_layout(self) -> None:
         """Prompts for a name and saves the current window layout."""
         dialog = Adw.AlertDialog(
             heading=_("Save Layout"),
@@ -176,7 +176,7 @@ class WindowStateManager:
             self.logger.error(f"Failed to save layout '{layout_name}': {e}")
             self.window._show_error_dialog(_("Error Saving Layout"), str(e))
 
-    def restore_saved_layout(self, layout_name: str):
+    def restore_saved_layout(self, layout_name: str) -> None:
         """Restores a previously saved layout, replacing the current one."""
         sanitized_name = InputSanitizer.sanitize_filename(layout_name).replace(" ", "_")
         layout_file = os.path.join(LAYOUT_DIR, f"{sanitized_name}.json")
@@ -228,7 +228,7 @@ class WindowStateManager:
         for tab_structure in state["tabs"]:
             self.tab_manager.recreate_tab_from_structure(tab_structure)
 
-    def delete_saved_layout(self, layout_name: str, confirm: bool = True):
+    def delete_saved_layout(self, layout_name: str, confirm: bool = True) -> None:
         """Deletes a saved layout file."""
         if confirm:
             dialog = Adw.AlertDialog(
@@ -267,7 +267,7 @@ class WindowStateManager:
             self.logger.error(f"Failed to delete layout '{layout_name}': {e}")
             self.window._show_error_dialog(_("Error Deleting Layout"), str(e))
 
-    def load_layouts(self):
+    def load_layouts(self) -> None:
         """Loads all saved layouts from the layout directory into the window's list."""
         self.window.layouts.clear()
         if not os.path.exists(LAYOUT_DIR):
@@ -288,7 +288,7 @@ class WindowStateManager:
                     LayoutItem(name=layout_name, folder_path=folder_path)
                 )
 
-    def move_layout(self, layout_name: str, old_folder: str, new_folder: str):
+    def move_layout(self, layout_name: str, old_folder: str, new_folder: str) -> None:
         """Moves a layout to a new virtual folder by updating its JSON file."""
         if old_folder == new_folder:
             return

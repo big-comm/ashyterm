@@ -175,6 +175,17 @@ class TestValidateSettingsStructure:
         errors = v.validate_settings_structure(settings, num_schemes=5)
         assert any("sidebar_visible" in e and "boolean" in e for e in errors)
 
+    def test_osc52_boolean_type_enforced(self, v):
+        settings = _minimal_valid_settings()
+        settings["osc52_clipboard_enabled"] = "false"
+
+        errors = v.validate_settings_structure(settings, num_schemes=5)
+
+        assert any(
+            "osc52_clipboard_enabled" in error and "boolean" in error
+            for error in errors
+        )
+
     def test_boolean_missing_key_is_fine(self, v):
         # A missing optional bool shouldn't be flagged — only present
         # keys with wrong types are rejected.

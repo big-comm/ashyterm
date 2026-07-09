@@ -192,57 +192,16 @@ class ShortcutsDialog(Adw.PreferencesDialog):
         key_controller = Gtk.EventControllerKey.new()
         new_shortcut_ref = [None]
 
-        def on_key_pressed(_controller, keyval, _keycode, state):
-            modifier_keys = {
-                Gdk.KEY_Control_L,
-                Gdk.KEY_Control_R,
-                Gdk.KEY_Shift_L,
-                Gdk.KEY_Shift_R,
-                Gdk.KEY_Alt_L,
-                Gdk.KEY_Alt_R,
-                Gdk.KEY_Super_L,
-                Gdk.KEY_Super_R,
-            }
-            if keyval in modifier_keys:
-                return Gdk.EVENT_PROPAGATE
-
-            if keyval == Gdk.KEY_Escape:
-                new_shortcut_ref[0] = "cancel"
-                dialog.response("cancel")
-                return Gdk.EVENT_STOP
-
-            shortcut_string = Gtk.accelerator_name(
-                keyval, state & Gtk.accelerator_get_default_mod_mask()
-            )
-            new_shortcut_ref[0] = shortcut_string
-
-            # Replace the "press new shortcut" label with visual ShortcutLabel
-            new_label.set_visible(False)
-            # Remove old preview if exists
-            for child in list(content_box):
-                if getattr(child, "_is_preview", False):
-                    content_box.remove(child)
-            preview_box = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
-            preview_box._is_preview = True
-            preview_box.append(Gtk.Label(label=_("New:")))
-            preview_box.append(ShortcutLabel(accelerator=shortcut_string))
-            content_box.append(preview_box)
-
-            # Check for conflicts
-            conflict_action = self._find_conflict(shortcut_string, shortcut_key)
-            if conflict_action:
-                conflict_label.set_label(
-                    _("Conflicts with: {}").format(
-                        conflict_action.replace("-", " ").title()
-                    )
-                )
-                conflict_label.set_visible(True)
-            else:
-                conflict_label.set_visible(False)
-
-            return Gdk.EVENT_STOP
-
-        key_controller.connect("key-pressed", on_key_pressed)
+        key_controller.connect(
+            "key-pressed",
+            self._on_capture_key_pressed,
+            dialog,
+            shortcut_key,
+            new_shortcut_ref,
+            new_label,
+            content_box,
+            conflict_label,
+        )
         dialog.add_controller(key_controller)
 
         dialog.add_response("cancel", _("Cancel"))
@@ -252,27 +211,93 @@ class ShortcutsDialog(Adw.PreferencesDialog):
         dialog.set_response_appearance("save", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_response_appearance("clear", Adw.ResponseAppearance.DESTRUCTIVE)
 
-        def on_response(dlg, response_id):
-            action_prefix = "app" if shortcut_key in ["quit"] else "win"
-            full_action_name = f"{action_prefix}.{shortcut_key}"
-            new_shortcut = ""
-
-            if (
-                response_id == "save"
-                and new_shortcut_ref[0]
-                and new_shortcut_ref[0] != "cancel"
-            ):
-                new_shortcut = new_shortcut_ref[0]
-
-            if response_id in ["save", "clear"]:
-                self.settings_manager.set_shortcut(shortcut_key, new_shortcut)
-                self.app.set_accels_for_action(
-                    full_action_name, [new_shortcut] if new_shortcut else []
-                )
-                self._update_row_display(shortcut_key, new_shortcut)
-
-        dialog.connect("response", on_response)
+        dialog.connect(
+            "response", self._on_capture_response, shortcut_key, new_shortcut_ref
+        )
         dialog.present(self)
+
+    def _on_capture_key_pressed(
+        self,
+        _controller,
+        keyval,
+        _keycode,
+        state,
+        dialog: Adw.AlertDialog,
+        shortcut_key: str,
+        new_shortcut_ref: list,
+        new_label: Gtk.Label,
+        content_box: Gtk.Box,
+        conflict_label: Gtk.Label,
+    ):
+        modifier_keys = {
+            Gdk.KEY_Control_L,
+            Gdk.KEY_Control_R,
+            Gdk.KEY_Shift_L,
+            Gdk.KEY_Shift_R,
+            Gdk.KEY_Alt_L,
+            Gdk.KEY_Alt_R,
+            Gdk.KEY_Super_L,
+            Gdk.KEY_Super_R,
+        }
+        if keyval in modifier_keys:
+            return Gdk.EVENT_PROPAGATE
+        if keyval == Gdk.KEY_Escape:
+            new_shortcut_ref[0] = "cancel"
+            dialog.response("cancel")
+            return Gdk.EVENT_STOP
+
+        shortcut = Gtk.accelerator_name(
+            keyval, state & Gtk.accelerator_get_default_mod_mask()
+        )
+        new_shortcut_ref[0] = shortcut
+        self._show_shortcut_preview(content_box, new_label, shortcut)
+        self._show_shortcut_conflict(conflict_label, shortcut, shortcut_key)
+        return Gdk.EVENT_STOP
+
+    @staticmethod
+    def _show_shortcut_preview(
+        content_box: Gtk.Box, new_label: Gtk.Label, shortcut: str
+    ) -> None:
+        new_label.set_visible(False)
+        for child in list(content_box):
+            if getattr(child, "_is_preview", False):
+                content_box.remove(child)
+        preview_box = Gtk.Box(spacing=8, halign=Gtk.Align.CENTER)
+        preview_box._is_preview = True
+        preview_box.append(Gtk.Label(label=_("New:")))
+        preview_box.append(ShortcutLabel(accelerator=shortcut))
+        content_box.append(preview_box)
+
+    def _show_shortcut_conflict(
+        self, label: Gtk.Label, shortcut: str, shortcut_key: str
+    ) -> None:
+        conflict_action = self._find_conflict(shortcut, shortcut_key)
+        if conflict_action:
+            label.set_label(
+                _("Conflicts with: {}").format(
+                    conflict_action.replace("-", " ").title()
+                )
+            )
+        label.set_visible(bool(conflict_action))
+
+    def _on_capture_response(
+        self,
+        _dialog: Adw.AlertDialog,
+        response_id: str,
+        shortcut_key: str,
+        new_shortcut_ref: list,
+    ) -> None:
+        if response_id not in {"save", "clear"}:
+            return
+        new_shortcut = ""
+        if response_id == "save" and new_shortcut_ref[0] not in {None, "cancel"}:
+            new_shortcut = new_shortcut_ref[0]
+        action_prefix = "app" if shortcut_key == "quit" else "win"
+        self.settings_manager.set_shortcut(shortcut_key, new_shortcut)
+        self.app.set_accels_for_action(
+            f"{action_prefix}.{shortcut_key}", [new_shortcut] if new_shortcut else []
+        )
+        self._update_row_display(shortcut_key, new_shortcut)
 
     def _find_conflict(self, shortcut_string: str, current_key: str) -> str | None:
         """Find if a shortcut conflicts with another action."""

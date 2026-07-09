@@ -13,6 +13,7 @@ from gi.repository import Adw, GLib, Gtk, Vte
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.logger import log_swallowed_exception
+from typing import Any
 
 if TYPE_CHECKING:
     from .tabs import TabManager
@@ -28,7 +29,7 @@ class BannerManager:
     # -- pane lookup ----------------------------------------------------------
 
     def find_terminal_pane_recursive(
-        self, widget, terminal_to_find: Vte.Terminal
+        self, widget: Any, terminal_to_find: Vte.Terminal
     ) -> Optional[Adw.ToolbarView]:
         """Recursively searches for the ToolbarView containing the terminal."""
         if widget is None:

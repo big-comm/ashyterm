@@ -29,6 +29,7 @@ _BOOLEAN_SETTINGS = (
     "auto_hide_sidebar",
     "scroll_on_output",
     "scroll_on_keystroke",
+    "osc52_clipboard_enabled",
     "mouse_autohide",
     "bell_sound",
     "file_transfer_accelerated_downloads",

@@ -101,7 +101,7 @@ _global_tracker: Optional[OSC7TerminalTracker] = None
 _tracker_lock = threading.Lock()
 
 
-def get_osc7_tracker(settings_manager=None) -> OSC7TerminalTracker:
+def get_osc7_tracker(settings_manager: Any=None) -> OSC7TerminalTracker:
     """Get global OSC7 tracker instance."""
     global _global_tracker
     with _tracker_lock:

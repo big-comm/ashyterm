@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import re
 from typing import Optional, Tuple
+from typing import Any
 
 # WCAG 2.x relative-luminance weights. Values are roughly CCIR 601 /
 # Rec. 709 and apply to linearized sRGB. We use them on raw 0–1 sRGB
@@ -110,7 +111,7 @@ def contrasting_text_for_rgba(
     return on_light if luminance_from_rgb_floats(*rgb) > LIGHT_THRESHOLD else on_dark
 
 
-def is_light_gdk_rgba(rgba) -> bool:
+def is_light_gdk_rgba(rgba: Any) -> bool:
     """True when a ``Gdk.RGBA`` represents a perceptually light color.
 
     ``Gdk.RGBA`` exposes ``.red``, ``.green``, ``.blue`` already in the

@@ -7,6 +7,7 @@ from gi.repository import Adw, Gtk
 from ....settings.manager import get_settings_manager
 from ....utils.translation_utils import _
 from ..base_dialog import BaseDialog
+from typing import Any
 
 if TYPE_CHECKING:
     from .highlight_dialog import HighlightDialog
@@ -37,7 +38,7 @@ class CatColorizationDelegate:
         else:
             self._add_pygments_install_hint()
 
-    def load_settings(self, settings, cat_enabled: bool) -> None:
+    def load_settings(self, settings: Any, cat_enabled: bool) -> None:
         """Load cat theme-related settings."""
         if self.dlg._cat_theme_mode_row is None:
             return
@@ -330,7 +331,7 @@ class CatColorizationDelegate:
 
     # -- event handlers -------------------------------------------------------
 
-    def on_cat_theme_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+    def on_cat_theme_changed(self, combo: Adw.ComboRow, _pspec: Any) -> None:
         """Handle Pygments theme selection change."""
         selected_index = combo.get_selected()
         if selected_index >= 0 and selected_index < len(self.dlg._cat_theme_names):
@@ -342,7 +343,7 @@ class CatColorizationDelegate:
                 Adw.Toast(title=_("Theme changed to: {}").format(theme))
             )
 
-    def on_cat_colorization_toggled(self, switch: Adw.SwitchRow, _pspec) -> None:
+    def on_cat_colorization_toggled(self, switch: Adw.SwitchRow, _pspec: Any) -> None:
         """Handle cat colorization toggle."""
         is_active = switch.get_active()
         settings = get_settings_manager()
@@ -367,7 +368,7 @@ class CatColorizationDelegate:
             Adw.Toast(title=_("'{}' colorization {}").format("cat", status))
         )
 
-    def on_cat_theme_mode_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+    def on_cat_theme_mode_changed(self, combo: Adw.ComboRow, _pspec: Any) -> None:
         """Handle cat theme mode change (auto/manual)."""
         selected_index = combo.get_selected()
         is_auto_mode = selected_index == 0
@@ -389,7 +390,7 @@ class CatColorizationDelegate:
             Adw.Toast(title=_("Cat theme mode: {}").format(mode_name))
         )
 
-    def on_cat_dark_theme_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+    def on_cat_dark_theme_changed(self, combo: Adw.ComboRow, _pspec: Any) -> None:
         """Handle cat dark theme selection change."""
         selected_index = combo.get_selected()
         if selected_index >= 0 and selected_index < len(
@@ -403,7 +404,7 @@ class CatColorizationDelegate:
                 Adw.Toast(title=_("Dark theme: {}").format(theme))
             )
 
-    def on_cat_light_theme_changed(self, combo: Adw.ComboRow, _pspec) -> None:
+    def on_cat_light_theme_changed(self, combo: Adw.ComboRow, _pspec: Any) -> None:
         """Handle cat light theme selection change."""
         selected_index = combo.get_selected()
         if selected_index >= 0 and selected_index < len(

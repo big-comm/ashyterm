@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from gi.repository import Adw, Gtk
 
 from ..utils.logger import get_logger
+from typing import Any
 
 if TYPE_CHECKING:
     from ..filemanager.manager import FileManager
@@ -49,7 +50,7 @@ class FileManagerIntegration:
         if hasattr(self.tm.terminal_manager.parent_window, "file_manager_button"):
             self.tm.terminal_manager.parent_window.file_manager_button.set_active(False)
 
-    def activate_file_manager(self, page, paned, fm) -> None:
+    def activate_file_manager(self, page: Any, paned: Any, fm: Any) -> None:
         """Activates and shows the file manager for the given page."""
         active_terminal = self.tm.get_selected_terminal()
         if not active_terminal:
@@ -68,7 +69,7 @@ class FileManagerIntegration:
 
         self._connect_paned_position_handler(paned, page)
 
-    def create_file_manager(self, page) -> "FileManager":
+    def create_file_manager(self, page: Any) -> "FileManager":
         """Creates a new FileManager instance for the page."""
         from ..filemanager.manager import FileManager
 
@@ -85,7 +86,7 @@ class FileManagerIntegration:
         self.tm.file_managers[page] = fm
         return fm
 
-    def deactivate_file_manager(self, page, paned, fm) -> None:
+    def deactivate_file_manager(self, page: Any, paned: Any, fm: Any) -> None:
         """Deactivates and hides the file manager for the given page."""
         page._fm_paned_pos = paned.get_position()
 
@@ -130,7 +131,7 @@ class FileManagerIntegration:
         elif fm:
             self.deactivate_file_manager(page, paned, fm)
 
-    def on_file_manager_paned_position_changed(self, paned, _param_spec, page) -> None:
+    def on_file_manager_paned_position_changed(self, paned: Any, _param_spec: Any, page: Any) -> None:
         """Save file manager height when the pane is resized by the user."""
         fm = self.tm.file_managers.get(page)
         if not fm or not fm.revealer.get_reveal_child():

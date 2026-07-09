@@ -32,8 +32,10 @@ from .terminal_drag_drop import (
     emit_ssh_file_drop_signal as _emit_ssh_file_drop_signal_impl,
     handle_sftp_drop as _handle_sftp_drop_impl,
     handle_ssh_drop as _handle_ssh_drop_impl,
+    remove_ssh_drop as _remove_ssh_drop_impl,
     setup_sftp_drop as _setup_sftp_drop_impl,
     setup_ssh_drop as _setup_ssh_drop_impl,
+    sync_manual_ssh_drop as _sync_manual_ssh_drop_impl,
 )
 from .terminal_title import (
     compute_title,
@@ -45,10 +47,12 @@ from .url_handler import URLHandlerMixin
 
 # Lazy imports for heavy modules - loaded on first use
 
+
 @lru_cache(maxsize=1)
 def _get_spawner():
     """Lazy import spawner module."""
     from .spawner import get_spawner
+
     return get_spawner()
 
 
@@ -56,6 +60,7 @@ def _get_spawner():
 def _get_highlight_manager():
     """Lazy import highlight manager."""
     from ..settings.highlights import get_highlight_manager
+
     return get_highlight_manager()
 
 
@@ -63,6 +68,7 @@ def _get_highlight_manager():
 def _get_output_highlighter():
     """Lazy import output highlighter."""
     from .highlighter import get_output_highlighter
+
     return get_output_highlighter()
 
 
@@ -70,6 +76,7 @@ def _get_output_highlighter():
 def _get_terminal_menu_creator():
     """Lazy import terminal menu creator."""
     from ..ui.menus import create_terminal_menu
+
     return create_terminal_menu
 
 
@@ -198,7 +205,9 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             self._precreated_terminal = None
 
         try:
-            cmd, env, temp_dir_path, shell_name = self.spawner._prepare_shell_environment()
+            cmd, env, temp_dir_path, shell_name = (
+                self.spawner._prepare_shell_environment()
+            )
             self._precreated_env_data = (cmd, env, temp_dir_path, shell_name)
             self.logger.debug("Pre-prepared shell environment on main thread")
         except Exception as e:
@@ -212,7 +221,9 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
                 from ..settings.highlights import get_highlight_manager
 
                 self._highlight_manager = get_highlight_manager()
-                self.logger.debug("Pre-loaded HighlightManager (JSON rules) on main thread")
+                self.logger.debug(
+                    "Pre-loaded HighlightManager (JSON rules) on main thread"
+                )
             except Exception as e:
                 self.logger.warning(f"Failed to pre-load HighlightManager: {e}")
 
@@ -275,7 +286,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         if proxy:
             proxy.resume_highlighting()
 
-    def apply_settings_to_all_terminals(self):
+    def apply_settings_to_all_terminals(self) -> None:
         self.logger.info("Applying settings to all active terminals.")
         for terminal_id in self.registry.get_all_terminal_ids():
             terminal = self.registry.get_terminal(terminal_id)
@@ -289,10 +300,10 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
                         f"Failed to apply settings to terminal {terminal_id}: {e}"
                     )
 
-    def set_tab_manager(self, tab_manager):
+    def set_tab_manager(self, tab_manager: Any) -> None:
         self.tab_manager = tab_manager
 
-    def set_terminal_exit_handler(self, handler: Callable):
+    def set_terminal_exit_handler(self, handler: Callable) -> None:
         self.terminal_exit_handler = handler
 
     def _periodic_process_check(self) -> bool:
@@ -329,66 +340,68 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         GTK main thread can still stall the UI when /proc is slow (e.g.
         under heavy fork load or on containers with cgroup limits).
         """
-        processes = self.spawner.process_tracker.snapshot()
-        # Keep only tabs where we both have a live terminal widget and
-        # the process is local. SSH tabs are tracked by OSC7 and don't
-        # need this polling.
-        candidates: list[tuple[int, Vte.Terminal, str]] = []
-        for pid, info in processes.items():
-            if info.get("type") != "local":
-                continue
-            terminal = info.get("terminal")
-            if terminal is None:
-                continue
-            last_cwd = getattr(terminal, "_last_polled_cwd", None)
-            candidates.append((pid, terminal, last_cwd or ""))
-
+        candidates = self._local_cwd_candidates(self.spawner.process_tracker.snapshot())
         if not candidates:
             return
 
         from ..core.tasks import AsyncTaskManager
 
-        def worker() -> list[tuple[Vte.Terminal, str]]:
-            updates: list[tuple[Vte.Terminal, str]] = []
-            for pid, terminal, last_cwd in candidates:
-                try:
-                    cwd = os.readlink(f"/proc/{pid}/cwd")
-                except OSError:
-                    continue
-                if cwd != last_cwd:
-                    updates.append((terminal, cwd))
-            return updates
-
-        def apply_updates(updates: list[tuple[Vte.Terminal, str]]) -> bool:
-            for terminal, cwd in updates:
-                terminal._last_polled_cwd = cwd
-                osc7_info = parse_directory_uri(
-                    f"file://{self._cached_hostname}{cwd}",
-                    self.osc7_tracker.parser,
-                )
-                if osc7_info:
-                    self._update_title(terminal, osc7_info)
-            return False
-
-        future = AsyncTaskManager.get().submit_io(worker)
+        future = AsyncTaskManager.get().submit_io(self._read_changed_cwds, candidates)
         if future is None:
-            # Pool shutting down; fall back to doing it inline so we don't
-            # drop state updates during teardown.
-            apply_updates(worker())
+            self._apply_cwd_updates(self._read_changed_cwds(candidates))
             return
+        future.add_done_callback(self._on_cwd_poll_done)
 
-        def _on_done(f) -> None:
+    @staticmethod
+    def _local_cwd_candidates(
+        processes: dict,
+    ) -> list[tuple[int, Vte.Terminal, str]]:
+        candidates = []
+        for pid, process_info in processes.items():
+            if process_info.get("type") != "local":
+                continue
+            terminal = process_info.get("terminal")
+            if terminal is not None:
+                last_cwd = getattr(terminal, "_last_polled_cwd", "") or ""
+                candidates.append((pid, terminal, last_cwd))
+        return candidates
+
+    @staticmethod
+    def _read_changed_cwds(
+        candidates: list[tuple[int, Vte.Terminal, str]],
+    ) -> list[tuple[Vte.Terminal, str]]:
+        updates = []
+        for pid, terminal, last_cwd in candidates:
             try:
-                updates = f.result()
-            except Exception as exc:
-                self.logger.debug(f"CWD poll worker failed: {exc}")
-                return
-            if updates:
-                GLib.idle_add(apply_updates, updates)
+                cwd = os.readlink(f"/proc/{pid}/cwd")
+            except OSError:
+                continue
+            if cwd != last_cwd:
+                updates.append((terminal, cwd))
+        return updates
 
-        future.add_done_callback(_on_done)
+    def _apply_cwd_updates(self, updates: list[tuple[Vte.Terminal, str]]) -> bool:
+        for terminal, cwd in updates:
+            terminal._last_polled_cwd = cwd
+            osc7_info = parse_directory_uri(
+                f"file://{self._cached_hostname}{cwd}",
+                self.osc7_tracker.parser,
+            )
+            if osc7_info:
+                self._update_title(terminal, osc7_info)
+        return False
+
+    def _on_cwd_poll_done(self, future) -> None:
+        try:
+            updates = future.result()
+        except Exception as exc:
+            self.logger.debug(f"CWD poll worker failed: {exc}")
+            return
+        if updates:
+            GLib.idle_add(self._apply_cwd_updates, updates)
 
     def _on_manual_ssh_state_changed(self, terminal: Vte.Terminal):
+        _sync_manual_ssh_drop_impl(self, terminal)
         self._update_title(terminal)
         return False
 
@@ -562,7 +575,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
-    ):
+    ) -> Any:
         terminal = self._get_or_create_terminal()
         if not terminal:
             raise TerminalCreationError("base terminal creation failed", "local")
@@ -917,9 +930,10 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             terminal, terminal_id=terminal_id, on_drop=self._on_ssh_file_drop
         )
 
-    def _on_file_drop(
-        self, drop_target, value, x, y, terminal: Vte.Terminal
-    ) -> bool:
+    def _remove_ssh_drag_and_drop(self, terminal: Vte.Terminal) -> None:
+        _remove_ssh_drop_impl(terminal)
+
+    def _on_file_drop(self, drop_target, value, x, y, terminal: Vte.Terminal) -> bool:
         return _handle_sftp_drop_impl(value, terminal)
 
     def _on_ssh_file_drop(
@@ -934,7 +948,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             self, terminal_id, local_paths, session, ssh_target
         )
 
-    def set_ssh_file_drop_callback(self, callback):
+    def set_ssh_file_drop_callback(self, callback: Any) -> None:
         """Set callback for SSH file drop events."""
         self._ssh_file_drop_callback = callback
 
@@ -1036,7 +1050,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         except Exception as e:
             self.logger.error(f"Terminal focus in handling failed: {e}")
 
-    def copy_selection(self, terminal: Vte.Terminal):
+    def copy_selection(self, terminal: Vte.Terminal) -> None:
         if terminal.get_has_selection():
             terminal.copy_clipboard_format(Vte.Format.TEXT)
 
@@ -1048,7 +1062,11 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             terminal.copy_clipboard_format(Vte.Format.TEXT)
 
     def _on_terminal_middle_clicked(
-        self, gesture: Gtk.GestureClick, _n_press: int, _x: float, _y: float,
+        self,
+        gesture: Gtk.GestureClick,
+        _n_press: int,
+        _x: float,
+        _y: float,
         terminal: Vte.Terminal,
     ) -> None:
         try:
@@ -1058,7 +1076,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             return
         gesture.set_state(Gtk.EventSequenceState.CLAIMED)
 
-    def paste_clipboard(self, terminal: Vte.Terminal):
+    def paste_clipboard(self, terminal: Vte.Terminal) -> None:
         if not self.settings_manager.get("paste_warning_enabled", True):
             terminal.paste_clipboard()
             return
@@ -1081,9 +1099,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
 
         clipboard.read_text_async(None, on_text)
 
-    def _show_paste_confirmation(
-        self, terminal: Vte.Terminal, text: str
-    ) -> None:
+    def _show_paste_confirmation(self, terminal: Vte.Terminal, text: str) -> None:
         preview = text if len(text) <= 600 else text[:600] + "…"
         dialog = Adw.AlertDialog(
             heading=_("Confirm paste"),
@@ -1093,7 +1109,9 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             ),
         )
         scrolled = Gtk.ScrolledWindow(
-            min_content_height=160, max_content_height=300, has_frame=True,
+            min_content_height=160,
+            max_content_height=300,
+            has_frame=True,
         )
         label = Gtk.Label(label=preview, xalign=0.0, yalign=0.0, wrap=True)
         label.add_css_class("monospace")
@@ -1105,9 +1123,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         dialog.set_extra_child(scrolled)
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("paste", _("Paste"))
-        dialog.set_response_appearance(
-            "paste", Adw.ResponseAppearance.SUGGESTED
-        )
+        dialog.set_response_appearance("paste", Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response("cancel")
         dialog.set_close_response("cancel")
 
@@ -1119,10 +1135,10 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         parent = self.parent_window if hasattr(self, "parent_window") else None
         dialog.present(parent if isinstance(parent, Gtk.Widget) else terminal)
 
-    def select_all(self, terminal: Vte.Terminal):
+    def select_all(self, terminal: Vte.Terminal) -> None:
         terminal.select_all()
 
-    def clear_terminal(self, terminal: Vte.Terminal):
+    def clear_terminal(self, terminal: Vte.Terminal) -> None:
         try:
             terminal.reset(True, True)
 
@@ -1154,7 +1170,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         except Exception as e:
             self.logger.error(f"Failed to clear terminal output: {e}")
 
-    def cleanup_all_terminals(self):
+    def cleanup_all_terminals(self) -> None:
         """
         Force closes all terminals managed by this window instance.
         Corrected to only kill processes owned by this window, avoiding global app shutdown.

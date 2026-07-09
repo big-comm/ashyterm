@@ -194,7 +194,7 @@ class TransferManager(GObject.Object):
     def _emit_signal(self, signal_name: str, *args) -> None:
         GLib.idle_add(self.emit, signal_name, *args)
 
-    def start_transfer(self, transfer_id: str):
+    def start_transfer(self, transfer_id: str) -> None:
         with self._transfer_lock:
             transfer = self.active_transfers.get(transfer_id)
             if not transfer:
@@ -206,7 +206,7 @@ class TransferManager(GObject.Object):
         self._last_progress_update = 0  # Reset throttle
         self._update_progress_display()
 
-    def update_progress(self, transfer_id: str, progress: float):
+    def update_progress(self, transfer_id: str, progress: float) -> None:
         with self._transfer_lock:
             transfer = self.active_transfers.get(transfer_id)
             if not transfer:
@@ -232,7 +232,7 @@ class TransferManager(GObject.Object):
             self._emit_signal("transfer-progress", transfer_id, progress)
             self._update_progress_display()
 
-    def complete_transfer(self, transfer_id: str):
+    def complete_transfer(self, transfer_id: str) -> None:
         transfer = None
         with self._transfer_lock:
             if transfer_id in self.active_transfers:
@@ -247,7 +247,7 @@ class TransferManager(GObject.Object):
             self._save_history()
             self._update_progress_display()
 
-    def fail_transfer(self, transfer_id: str, error_message: str):
+    def fail_transfer(self, transfer_id: str, error_message: str) -> None:
         transfer = None
         with self._transfer_lock:
             if transfer_id in self.active_transfers:
@@ -268,7 +268,7 @@ class TransferManager(GObject.Object):
             self._save_history()
             self._update_progress_display()
 
-    def cancel_transfer(self, transfer_id: str):
+    def cancel_transfer(self, transfer_id: str) -> None:
         with self._transfer_lock:
             if transfer_id in self.active_transfers:
                 transfer = self.active_transfers[transfer_id]

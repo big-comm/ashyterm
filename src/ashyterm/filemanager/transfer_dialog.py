@@ -155,102 +155,94 @@ class TransferRow(Gtk.Box):
         )
         action_container.append(self.remove_button)
 
-    def update_state(self):
+    def update_state(self) -> None:
         """Update the display based on transfer status."""
         status = self.transfer.status
         size_str = self._format_file_size(self.transfer.file_size)
-
-        # Update filename
         self.filename_label.set_label(self.transfer.filename)
-
-        # Reset icon color classes
-        for css_class in ["success", "error", "warning", "accent"]:
-            self.type_icon.remove_css_class(css_class)
-            self.status_icon.remove_css_class(css_class)
-            self.status_label.remove_css_class(css_class)
-
-        is_final_state = status in [
+        self._reset_state_styles()
+        is_final_state = status in {
             TransferStatus.COMPLETED,
             TransferStatus.FAILED,
             TransferStatus.CANCELLED,
-        ]
-
-        # Show/hide buttons based on state
+        }
         self.cancel_button.set_visible(not is_final_state)
         self.remove_button.set_visible(is_final_state)
-
-        # Build date string for completed transfers (explicit local tz).
-        date_str = ""
-        if self.transfer.start_time:
-            dt = datetime.fromtimestamp(
-                self.transfer.start_time, tz=datetime.now().astimezone().tzinfo
-            )
-            today = datetime.now().astimezone().date()
-            if dt.date() == today:
-                date_str = dt.strftime("%H:%M")
-            else:
-                date_str = dt.strftime("%d %b %H:%M")
-
+        date_str = self._format_start_time()
         type_str = (
             _("Download")
             if self.transfer.transfer_type == TransferType.DOWNLOAD
             else _("Upload")
         )
 
-        if status == TransferStatus.PENDING:
-            self._set_status(_("Queued"), "content-loading-symbolic", "dim-label")
-            self.details_label.set_label(f"{type_str} • {size_str}")
-            self.progress_container.set_visible(False)
-
-        elif status == TransferStatus.IN_PROGRESS:
-            self.status_box.set_visible(False)
-            self.progress_container.set_visible(True)
-            self.type_icon.add_css_class("accent")
-            self.update_progress()
+        if status == TransferStatus.IN_PROGRESS:
+            self._show_in_progress_state()
             return
-
-        elif status == TransferStatus.COMPLETED:
-            self._set_status(_("Done"), "emblem-ok-symbolic", "success")
-            duration = self.transfer.get_duration()
-            duration_str = self._format_duration(duration) if duration else ""
-
-            details = [type_str, size_str]
-            if duration_str:
-                details.append(duration_str)
-            if date_str:
-                details.append(date_str)
-            self.details_label.set_label(" • ".join(details))
-
-            self.progress_container.set_visible(False)
-            self.type_icon.add_css_class("success")
-
-        elif status == TransferStatus.FAILED:
-            self._set_status(_("Failed"), "dialog-error-symbolic", "error")
-            error_msg = self.transfer.error_message or _("Unknown error")
-
-            details = [type_str, size_str]
-            if date_str:
-                details.append(date_str)
-            self.details_label.set_label(" • ".join(details))
-
-            # Show error as tooltip on the row
-            get_tooltip_helper().add_tooltip(self, error_msg)
-
-            self.progress_container.set_visible(False)
-            self.type_icon.add_css_class("error")
-
-        elif status == TransferStatus.CANCELLED:
-            self._set_status(_("Cancelled"), "process-stop-symbolic", "warning")
-
-            details = [type_str, size_str]
-            if date_str:
-                details.append(date_str)
-            self.details_label.set_label(" • ".join(details))
-
-            self.progress_container.set_visible(False)
-            self.type_icon.add_css_class("warning")
-
+        handlers = {
+            TransferStatus.PENDING: self._show_pending_state,
+            TransferStatus.COMPLETED: self._show_completed_state,
+            TransferStatus.FAILED: self._show_failed_state,
+            TransferStatus.CANCELLED: self._show_cancelled_state,
+        }
+        handler = handlers.get(status)
+        if handler:
+            handler(type_str, size_str, date_str)
         self.status_box.set_visible(True)
+
+    def _reset_state_styles(self) -> None:
+        for css_class in ("success", "error", "warning", "accent"):
+            self.type_icon.remove_css_class(css_class)
+            self.status_icon.remove_css_class(css_class)
+            self.status_label.remove_css_class(css_class)
+
+    def _format_start_time(self) -> str:
+        if not self.transfer.start_time:
+            return ""
+        local_now = datetime.now().astimezone()
+        started = datetime.fromtimestamp(self.transfer.start_time, tz=local_now.tzinfo)
+        return started.strftime(
+            "%H:%M" if started.date() == local_now.date() else "%d %b %H:%M"
+        )
+
+    def _set_transfer_details(self, *parts: str) -> None:
+        self.details_label.set_label(" • ".join(part for part in parts if part))
+
+    def _show_pending_state(self, type_str: str, size_str: str, _date_str: str) -> None:
+        self._set_status(_("Queued"), "content-loading-symbolic", "dim-label")
+        self._set_transfer_details(type_str, size_str)
+        self.progress_container.set_visible(False)
+
+    def _show_in_progress_state(self) -> None:
+        self.status_box.set_visible(False)
+        self.progress_container.set_visible(True)
+        self.type_icon.add_css_class("accent")
+        self.update_progress()
+
+    def _show_completed_state(
+        self, type_str: str, size_str: str, date_str: str
+    ) -> None:
+        self._set_status(_("Done"), "emblem-ok-symbolic", "success")
+        duration = self.transfer.get_duration()
+        duration_str = self._format_duration(duration) if duration else ""
+        self._set_transfer_details(type_str, size_str, duration_str, date_str)
+        self.progress_container.set_visible(False)
+        self.type_icon.add_css_class("success")
+
+    def _show_failed_state(self, type_str: str, size_str: str, date_str: str) -> None:
+        self._set_status(_("Failed"), "dialog-error-symbolic", "error")
+        error_msg = self.transfer.error_message or _("Unknown error")
+        self._set_transfer_details(type_str, size_str, date_str)
+        get_tooltip_helper().add_tooltip(self, error_msg)
+        self.progress_container.set_visible(False)
+        self.type_icon.add_css_class("error")
+
+    def _show_cancelled_state(
+        self, type_str: str, size_str: str, date_str: str
+    ) -> None:
+        self._set_status(_("Cancelled"), "process-stop-symbolic", "warning")
+        self._set_transfer_details(type_str, size_str, date_str)
+        self.progress_container.set_visible(False)
+        self.type_icon.add_css_class("warning")
 
     def _set_status(self, text: str, icon: str, css_class: str):
         """Set status badge with icon and text."""
@@ -259,7 +251,7 @@ class TransferRow(Gtk.Box):
         self.status_label.set_label(text)
         self.status_label.add_css_class(css_class)
 
-    def update_progress(self):
+    def update_progress(self) -> None:
         """Update progress bar and details for active transfers."""
         if self.transfer.status != TransferStatus.IN_PROGRESS:
             return

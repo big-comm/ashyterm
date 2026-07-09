@@ -16,9 +16,9 @@ from ..utils.logger import log_swallowed_exception
 
 
 def start_auto_reconnect(
-    terminal, terminal_id: int, session: SessionItem,
+    terminal: Any, terminal_id: int, session: SessionItem,
     duration_mins: int, interval_secs: int, timeout_secs: int,
-    settings_manager, respawn_fn, show_error_dialog_fn, logger,
+    settings_manager: Any, respawn_fn: Any, show_error_dialog_fn: Any, logger: Any,
 ) -> None:
     """Start automatic reconnection attempts for a failed SSH terminal.
 
@@ -123,7 +123,7 @@ def start_auto_reconnect(
     terminal._auto_reconnect_timer_id = timer_id
 
 
-def cancel_auto_reconnect(terminal, logger) -> None:
+def cancel_auto_reconnect(terminal: Any, logger: Any) -> None:
     """Cancel auto-reconnect, including pending timers."""
     terminal._auto_reconnect_cancelled = True
     terminal._auto_reconnect_active = False
@@ -141,14 +141,14 @@ def cancel_auto_reconnect(terminal, logger) -> None:
     )
 
 
-def is_auto_reconnect_active(terminal) -> bool:
+def is_auto_reconnect_active(terminal: Any) -> bool:
     """Check if auto-reconnect is active for a terminal."""
     return getattr(terminal, "_auto_reconnect_active", False)
 
 
 def retry_ssh_in_same_terminal(
-    terminal, terminal_id: int, session: SessionItem,
-    timeout: int, settings_manager, respawn_fn, logger,
+    terminal: Any, terminal_id: int, session: SessionItem,
+    timeout: int, settings_manager: Any, respawn_fn: Any, logger: Any,
 ) -> bool:
     """Single SSH retry with extended timeout in same terminal.
 

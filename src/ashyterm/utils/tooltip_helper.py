@@ -312,7 +312,7 @@ popover.custom-tooltip-static label {
         self.show_timer_id = None
         return GLib.SOURCE_REMOVE
 
-    def hide(self, immediate: bool = False):
+    def hide(self, immediate: bool = False) -> None:
         """Hide the current tooltip. If immediate=True, skip animation."""
         if self.active_popover:
             popover_to_hide = self.active_popover
@@ -347,7 +347,7 @@ popover.custom-tooltip-static label {
                     GLib.source_remove(self.hide_timer_id)
                 self.hide_timer_id = GLib.timeout_add(300, do_popdown)
 
-    def hide_all(self):
+    def hide_all(self) -> None:
         """Hide all tooltips from all tracked widgets immediately.
 
         Useful to call when opening dialogs or switching focus.

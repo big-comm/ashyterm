@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-import pytest
 
 from ashyterm.sessions.models import LayoutItem, SessionFolder, SessionItem
 from ashyterm.sessions.tree_context_menu import (

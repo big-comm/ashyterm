@@ -7,6 +7,7 @@ from typing import Optional
 
 from ..settings.config import get_config_paths
 from .logger import get_logger
+from typing import Any
 
 
 class ConfigurableComponent:
@@ -37,7 +38,7 @@ class ConfigurableComponent:
         self._config_paths = get_config_paths()
 
     @property
-    def config_paths(self):
+    def config_paths(self) -> Any:
         """Get configuration paths."""
         return self._config_paths
 

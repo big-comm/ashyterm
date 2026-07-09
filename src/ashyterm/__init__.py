@@ -27,7 +27,7 @@ def _get_translation():
     return _translation_module._
 
 
-def setup_signal_handlers():
+def setup_signal_handlers() -> None:
     """SIGINT/SIGTERM → graceful Gtk.Application.quit().
 
     Handler body avoids re-importing gi because the import machinery can
@@ -60,36 +60,63 @@ def setup_signal_handlers():
         print(_("Warning: Could not set up signal handlers: {}").format(e))
 
 
-def main() -> int:
-    """Application entry point."""
+def _configure_wayland_input_method() -> None:
     import os
 
-    # Accents/diacritics on Wayland need GTK_IM_MODULE even without IBus/Fcitx.
-    # Must run before any GTK import.
-    if (
-        os.environ.get("XDG_SESSION_TYPE", "").lower() == "wayland"
-        and not os.environ.get("GTK_IM_MODULE")
-    ):
+    if os.environ.get(
+        "XDG_SESSION_TYPE", ""
+    ).lower() == "wayland" and not os.environ.get("GTK_IM_MODULE"):
         os.environ["GTK_IM_MODULE"] = "simple"
 
-    logger_mod = _get_logger_funcs()
-    _ = _get_translation()
 
-    # Manual pre-parse so --debug/--log-level apply before argparse spins up.
+def _configure_prelaunch_logging(logger_mod) -> None:
     pre_args_debug = "--debug" in sys.argv or "-d" in sys.argv
-    pre_args_log_level = None
-    for i, arg in enumerate(sys.argv[:-1]):
-        if arg == "--log-level" and i + 1 < len(sys.argv):
-            pre_args_log_level = sys.argv[i + 1]
-            break
-
+    pre_args_log_level = next(
+        (
+            sys.argv[index + 1]
+            for index, argument in enumerate(sys.argv[:-1])
+            if argument == "--log-level"
+        ),
+        None,
+    )
     if pre_args_debug:
         logger_mod.enable_debug_mode()
-    elif pre_args_log_level:
-        try:
-            logger_mod.set_console_log_level(pre_args_log_level)
-        except KeyError:
-            print(f"Warning: Invalid log level '{pre_args_log_level}' provided.")
+        return
+    if not pre_args_log_level:
+        return
+    try:
+        logger_mod.set_console_log_level(pre_args_log_level)
+    except KeyError:
+        print(f"Warning: Invalid log level '{pre_args_log_level}' provided.")
+
+
+def _print_help() -> None:
+    print(
+        "Usage: ashyterm [OPTIONS] [DIRECTORY]\n"
+        "\n"
+        "Ashy Terminal - A modern terminal emulator with session management\n"
+        "\n"
+        "Options:\n"
+        "  -h, --help                       Show this help message and exit\n"
+        "  -v, --version                    Show version and exit\n"
+        "  -d, --debug                      Enable debug mode\n"
+        "  --log-level LEVEL                Set logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)\n"
+        "  -w, --working-directory DIR      Set the working directory for the initial terminal\n"
+        "  -e, -x, --execute COMMAND ...    Execute command in the terminal\n"
+        "  --close-after-execute            Close terminal after executing command\n"
+        "  --ssh [USER@]HOST[:PORT][:/PATH] Connect to SSH host\n"
+        "  --new-window                     Force opening a new window\n"
+        "\n"
+        "For more information, visit: https://communitybig.org/"
+    )
+
+
+def main() -> int:
+    """Application entry point."""
+    _configure_wayland_input_method()
+    logger_mod = _get_logger_funcs()
+    _ = _get_translation()
+    _configure_prelaunch_logging(logger_mod)
 
     logger = logger_mod.get_logger("ashyterm.main")
 
@@ -109,24 +136,7 @@ def main() -> int:
         return 0
 
     if "--help" in sys.argv or "-h" in sys.argv:
-        print(
-            "Usage: ashyterm [OPTIONS] [DIRECTORY]\n"
-            "\n"
-            "Ashy Terminal - A modern terminal emulator with session management\n"
-            "\n"
-            "Options:\n"
-            "  -h, --help                       Show this help message and exit\n"
-            "  -v, --version                    Show version and exit\n"
-            "  -d, --debug                      Enable debug mode\n"
-            "  --log-level LEVEL                Set logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)\n"
-            "  -w, --working-directory DIR      Set the working directory for the initial terminal\n"
-            "  -e, -x, --execute COMMAND ...    Execute command in the terminal\n"
-            "  --close-after-execute            Close terminal after executing command\n"
-            "  --ssh [USER@]HOST[:PORT][:/PATH] Connect to SSH host\n"
-            "  --new-window                     Force opening a new window\n"
-            "\n"
-            "For more information, visit: https://communitybig.org/"
-        )
+        _print_help()
         return 0
 
     setup_signal_handlers()

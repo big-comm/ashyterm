@@ -31,7 +31,7 @@ class WindowActions:
         self.window = window
         self.logger = get_logger("ashyterm.ui.actions")
 
-    def setup_actions(self):
+    def setup_actions(self) -> None:
         """Creates and registers all window-level actions."""
         actions_map = {
             "new-local-tab": self.new_local_tab,
@@ -120,7 +120,7 @@ class WindowActions:
 
     # --- Tab and Pane Actions ---
 
-    def new_local_tab(self, *_args):
+    def new_local_tab(self, *_args: Any) -> None:
         # Inherit CWD from the active local terminal so the new tab opens there.
         working_dir = None
         active_terminal = self.window.tab_manager.get_selected_terminal()
@@ -143,33 +143,33 @@ class WindowActions:
 
         self.window.tab_manager.create_local_tab(working_directory=working_dir)
 
-    def close_tab(self, *_args):
+    def close_tab(self, *_args: Any) -> None:
         if self.window.tab_manager.active_tab:
             self.window.tab_manager._on_tab_close_button_clicked(
                 None, self.window.tab_manager.active_tab
             )
 
-    def split_horizontal(self, *_args):
+    def split_horizontal(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.split_horizontal(terminal)
 
-    def split_vertical(self, *_args):
+    def split_vertical(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.split_vertical(terminal)
 
-    def close_pane(self, *_args):
+    def close_pane(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.close_pane(terminal)
 
-    def zoom_pane(self, *_args):
+    def zoom_pane(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.pane_handler.toggle_zoom_pane(terminal)
 
-    def balance_panes(self, *_args):
+    def balance_panes(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             self.window.tab_manager.pane_handler.balance_panes(terminal)
 
-    def save_output(self, *_args):
+    def save_output(self, *_args: Any) -> None:
         terminal = self.window.tab_manager.get_selected_terminal()
         if terminal is None:
             return
@@ -226,24 +226,24 @@ class WindowActions:
             raise error from last_error
         raise error
 
-    def move_tab_left(self, *_args):
+    def move_tab_left(self, *_args: Any) -> None:
         self.window.tab_manager.move_tab_left()
 
-    def move_tab_right(self, *_args):
+    def move_tab_right(self, *_args: Any) -> None:
         self.window.tab_manager.move_tab_right()
 
     # --- Terminal Actions ---
 
-    def copy(self, *_args):
+    def copy(self, *_args: Any) -> None:
         self.window.tab_manager.copy_from_current_terminal()
 
-    def paste(self, *_args):
+    def paste(self, *_args: Any) -> None:
         self.window.tab_manager.paste_to_current_terminal()
 
-    def select_all(self, *_args):
+    def select_all(self, *_args: Any) -> None:
         self.window.tab_manager.select_all_in_current_terminal()
 
-    def clear_session(self, *_args):
+    def clear_session(self, *_args: Any) -> None:
         if self.window.tab_manager.clear_current_terminal():
             self.window.toast_overlay.add_toast(
                 Adw.Toast(title=_("Terminal session cleared."))
@@ -253,10 +253,10 @@ class WindowActions:
                 Adw.Toast(title=_("No active terminal to clear."))
             )
 
-    def ai_assistant(self, *_args):
+    def ai_assistant(self, *_args: Any) -> None:
         self.window._on_ai_assistant_requested()
 
-    def configure_ai(self, *_args):
+    def configure_ai(self, *_args: Any) -> None:
         """Open the AI Assistant configuration dialog."""
         self._hide_tooltip()
         from .dialogs.ai_config_dialog import AIConfigDialog
@@ -316,7 +316,7 @@ class WindowActions:
             # Update button visibility
             self.window.ui_builder.update_ai_button_visibility()
 
-    def highlight_settings(self, *_args):
+    def highlight_settings(self, *_args: Any) -> None:
         """Open the Highlight Colors settings dialog."""
         self._hide_tooltip()
         from .dialogs.highlight_dialog import HighlightDialog
@@ -324,7 +324,7 @@ class WindowActions:
         dialog = HighlightDialog(self.window)
         dialog.present()
 
-    def ask_ai_selection(self, *_args):
+    def ask_ai_selection(self, *_args: Any) -> None:
         """Ask AI about the selected text in the terminal."""
         terminal = self.window.tab_manager.get_selected_terminal()
         if not terminal:
@@ -368,7 +368,7 @@ class WindowActions:
             ).format(text=selected_text.strip())
             self.window.ui_builder.ai_chat_panel.set_initial_text(initial_text)
 
-    def open_url(self, *_args):
+    def open_url(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             if hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
@@ -377,31 +377,31 @@ class WindowActions:
                     self.logger.info(f"URL opened from context menu: {url}")
                 delattr(terminal, "_context_menu_url")
 
-    def copy_url(self, *_args):
+    def copy_url(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             if hasattr(terminal, "_context_menu_url"):
                 url = terminal._context_menu_url
                 Gdk.Display.get_default().get_clipboard().set(url)
                 delattr(terminal, "_context_menu_url")
 
-    def zoom_in(self, *_args):
+    def zoom_in(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             terminal.set_font_scale(terminal.get_font_scale() * 1.1)
             self.window._update_font_sizer_widget()
 
-    def zoom_out(self, *_args):
+    def zoom_out(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             terminal.set_font_scale(terminal.get_font_scale() / 1.1)
             self.window._update_font_sizer_widget()
 
-    def zoom_reset(self, *_args):
+    def zoom_reset(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():
             terminal.set_font_scale(1.0)
             self.window._update_font_sizer_widget()
 
     # --- Session Tree Actions ---
 
-    def connect_sftp(self, *_args):
+    def connect_sftp(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         selected_item = self.window.session_tree.get_selected_item()
         if isinstance(selected_item, SessionItem) and selected_item.is_ssh():
@@ -411,7 +411,7 @@ class WindowActions:
                 Adw.Toast(title=_("Please select an SSH session to connect with SFTP."))
             )
 
-    def edit_session(self, *_args):
+    def edit_session(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
@@ -420,7 +420,7 @@ class WindowActions:
             if found:
                 self._show_session_edit_dialog(item, position)
 
-    def duplicate_session(self, *_args):
+    def duplicate_session(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
@@ -428,14 +428,14 @@ class WindowActions:
             self.window.session_operations.duplicate_session(item)
             # Tree refresh is handled automatically via AppSignals
 
-    def rename_session(self, *_args):
+    def rename_session(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
         ):
             self._show_rename_dialog(item, True)
 
-    def move_session_to_folder(self, *_args):
+    def move_session_to_folder(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionItem
@@ -449,12 +449,12 @@ class WindowActions:
                 self.window.session_operations,
             ).present()
 
-    def delete_selected_items(self, *_args):
+    def delete_selected_items(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if items := self.window.session_tree.get_selected_items():
             self._show_delete_confirmation(items)
 
-    def edit_folder(self, *_args):
+    def edit_folder(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionFolder
@@ -463,14 +463,14 @@ class WindowActions:
             if found:
                 self._show_folder_edit_dialog(item, position)
 
-    def rename_folder(self, *_args):
+    def rename_folder(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionFolder
         ):
             self._show_rename_dialog(item, False)
 
-    def add_session_to_folder(self, *_args):
+    def add_session_to_folder(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         if isinstance(
             item := self.window.session_tree.get_selected_item(), SessionFolder
@@ -479,15 +479,15 @@ class WindowActions:
                 SessionItem(name=_("New Session"), folder_path=item.path), -1
             )
 
-    def cut_item(self, *_args):
+    def cut_item(self, *_args: Any) -> None:
         self.window.session_tree._cut_selected_item()
         self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item cut")))
 
-    def copy_item(self, *_args):
+    def copy_item(self, *_args: Any) -> None:
         self.window.session_tree._copy_selected_item()
         self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item copied")))
 
-    def paste_item(self, *_args):
+    def paste_item(self, *_args: Any) -> None:
         target_path = ""
         if item := self.window.session_tree.get_selected_item():
             target_path = (
@@ -496,43 +496,43 @@ class WindowActions:
         self.window.session_tree._paste_item(target_path)
         self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item pasted")))
 
-    def paste_item_root(self, *_args):
+    def paste_item_root(self, *_args: Any) -> None:
         self.window.session_tree._paste_item("")
         self.window.toast_overlay.add_toast(Adw.Toast(title=_("Item pasted")))
 
-    def add_session_root(self, *_args):
+    def add_session_root(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         self._show_session_edit_dialog(SessionItem(name=_("New Session")), -1)
 
-    def add_folder_root(self, *_args):
+    def add_folder_root(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         self._show_folder_edit_dialog(SessionFolder(name=_("New Folder")), None)
 
     # --- Window and Application Actions ---
 
-    def toggle_sidebar_action(self, *_args):
+    def toggle_sidebar_action(self, *_args: Any) -> None:
         self.window.toggle_sidebar_button.set_active(
             not self.window.toggle_sidebar_button.get_active()
         )
 
-    def toggle_file_manager(self, *_args):
+    def toggle_file_manager(self, *_args: Any) -> None:
         self.window.file_manager_button.set_active(
             not self.window.file_manager_button.get_active()
         )
 
-    def toggle_search(self, *_args):
+    def toggle_search(self, *_args: Any) -> None:
         self.window.search_button.set_active(not self.window.search_button.get_active())
 
-    def toggle_broadcast(self, *_args):
+    def toggle_broadcast(self, *_args: Any) -> None:
         self.window.broadcast_button.set_active(
             not self.window.broadcast_button.get_active()
         )
 
-    def show_command_manager(self, *_args):
+    def show_command_manager(self, *_args: Any) -> None:
         self._hide_tooltip()
         self.window._show_command_manager_dialog()
 
-    def preferences(self, *_args):
+    def preferences(self, *_args: Any) -> None:
         self._hide_tooltip()
         from .dialogs import PreferencesDialog
 
@@ -551,14 +551,14 @@ class WindowActions:
         )
         GLib.idle_add(lambda: dialog.present())
 
-    def shortcuts(self, *_args):
+    def shortcuts(self, *_args: Any) -> None:
         self._hide_tooltip()
         from .dialogs import ShortcutsDialog
 
         dialog = ShortcutsDialog(self.window)
         dialog.present(self.window)
 
-    def command_palette(self, *_args):
+    def command_palette(self, *_args: Any) -> None:
         self._hide_tooltip()
         # Toggle: close if already open
         existing = getattr(self.window, "_command_palette", None)
@@ -576,33 +576,33 @@ class WindowActions:
         )
         palette.present(self.window)
 
-    def quick_connect(self, *_args):
+    def quick_connect(self, *_args: Any) -> None:
         self._hide_tooltip()
         from .dialogs.quick_connect_dialog import QuickConnectDialog
 
         dialog = QuickConnectDialog(self.window)
         dialog.present(self.window)
 
-    def new_window(self, *_args):
+    def new_window(self, *_args: Any) -> None:
         if app := self.window.get_application():
             if new_window := app.create_new_window():
                 new_window.present()
 
-    def save_layout(self, *_args):
+    def save_layout(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()
         self.window.state_manager.save_current_layout()
 
-    def restore_layout(self, action, param):
+    def restore_layout(self, action: Any, param: Any) -> None:
         self._close_sidebar_popover_if_active()
         layout_name = param.get_string()
         self.window.state_manager.restore_saved_layout(layout_name)
 
-    def delete_layout(self, action, param):
+    def delete_layout(self, action: Any, param: Any) -> None:
         self._close_sidebar_popover_if_active()
         layout_name = param.get_string()
         self.window.state_manager.delete_saved_layout(layout_name)
 
-    def move_layout_to_folder(self, action, param):
+    def move_layout_to_folder(self, action: Any, param: Any) -> None:
         self._close_sidebar_popover_if_active()
         layout_name = param.get_string()
         layout = next(

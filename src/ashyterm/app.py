@@ -5,6 +5,7 @@ import os
 from typing import TYPE_CHECKING, Optional
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -52,7 +53,7 @@ class CommTerminalApp(Adw.Application):
         atexit.register(self._cleanup_on_exit)
 
     @property
-    def platform_info(self):
+    def platform_info(self) -> Any:
         if self._platform_info is None:
             from .utils.platform import get_platform_info
 
@@ -60,7 +61,7 @@ class CommTerminalApp(Adw.Application):
         return self._platform_info
 
     @property
-    def backup_manager(self):
+    def backup_manager(self) -> Any:
         if self._backup_manager is None:
             try:
                 from .utils.backup import get_backup_manager
@@ -71,7 +72,7 @@ class CommTerminalApp(Adw.Application):
         return self._backup_manager
 
     @property
-    def security_auditor(self):
+    def security_auditor(self) -> Any:
         if self._security_auditor is None:
             try:
                 from .utils.security import create_security_auditor
@@ -269,7 +270,7 @@ class CommTerminalApp(Adw.Application):
                 self.get_active_window()
             )
 
-    def do_command_line(self, command_line):
+    def do_command_line(self, command_line: Any) -> int:
         """Dispatch CLI args (both first launch and subsequent remote calls)."""
         arguments = command_line.get_arguments()
         self.logger.info(f"Processing command line: {arguments}")
@@ -338,7 +339,7 @@ class CommTerminalApp(Adw.Application):
             self.logger.error(f"Failed to show about dialog: {e}")
 
     @property
-    def backup_handler(self):
+    def backup_handler(self) -> Any:
         if not hasattr(self, "_backup_handler"):
             from .ui.dialogs.backup_dialog import BackupRestoreHandler
 
@@ -483,19 +484,19 @@ class CommTerminalApp(Adw.Application):
     def get_settings_manager(self) -> Optional[SettingsManager]:
         return self.settings_manager
 
-    def do_window_added(self, window) -> None:
+    def do_window_added(self, window: Any) -> None:
         """Handle window being added to application."""
         Adw.Application.do_window_added(self, window)
         if hasattr(window, "is_main_window") and window.is_main_window:
             self._main_window = window
 
-    def do_window_removed(self, window) -> None:
+    def do_window_removed(self, window: Any) -> None:
         """Handle window being removed from application."""
         Adw.Application.do_window_removed(self, window)
         if window == self._main_window:
             self._main_window = None
 
-    def create_new_window(self, **kwargs) -> "CommTerminalWindow":
+    def create_new_window(self, **kwargs: Any) -> "CommTerminalWindow":
         """Create a new main window, passing through any initial arguments."""
         try:
             from .window import CommTerminalWindow

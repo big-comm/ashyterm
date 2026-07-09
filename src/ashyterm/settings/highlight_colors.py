@@ -18,7 +18,7 @@ class HighlightColorResolver:
         self._color_cache: Dict[str, Dict[str, str]] = {}
         self._current_theme_name: str = ""
 
-    def set_settings_manager(self, manager) -> None:
+    def set_settings_manager(self, manager: Any) -> None:
         """Attach settings manager for theme-aware colors. Invalidate cache."""
         self._settings_manager = manager
         self._color_cache.clear()

@@ -124,7 +124,7 @@ class WindowUIBuilder:
         self.ai_paned = None
         self.command_toolbar = None  # Toolbar for pinned commands
 
-    def build_ui(self):
+    def build_ui(self) -> None:
         """Constructs the entire UI and sets it on the parent window."""
         self._setup_styles()
         main_box = self._setup_main_structure()

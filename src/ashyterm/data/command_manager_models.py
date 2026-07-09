@@ -232,7 +232,7 @@ def generate_id() -> str:
 # Built-in example commands — data lives in command_manager_builtins.py.
 # Imported lazily so command_manager_builtins can itself import
 # from this module without a circular reference.
-def get_builtin_commands():
+def get_builtin_commands() -> Any:
     """Return the canned built-in commands (see command_manager_builtins)."""
     from .command_manager_builtins import get_builtin_commands as _impl
     return _impl()
@@ -367,7 +367,7 @@ class CommandButtonManager:
             )
             self._hidden_command_ids = set(data)
 
-    def save_custom_commands(self):
+    def save_custom_commands(self) -> None:
         """Save user-defined commands to file."""
         with self._data_lock:
             data = [cmd.to_dict() for cmd in self._custom_commands]
@@ -413,12 +413,12 @@ class CommandButtonManager:
                 self.command_prefs_file, self._command_prefs, "Command preferences"
             )
 
-    def get_command_pref(self, command_id: str, pref_key: str, default=None):
+    def get_command_pref(self, command_id: str, pref_key: str, default: Any=None) -> Any:
         """Get a preference value for a command."""
         with self._data_lock:
             return self._command_prefs.get(command_id, {}).get(pref_key, default)
 
-    def set_command_pref(self, command_id: str, pref_key: str, value):
+    def set_command_pref(self, command_id: str, pref_key: str, value: Any) -> None:
         """Set a preference value for a command and save."""
         with self._data_lock:
             if command_id not in self._command_prefs:
@@ -487,14 +487,14 @@ class CommandButtonManager:
         with self._data_lock:
             return command_id in self._hidden_command_ids
 
-    def hide_command(self, command_id: str):
+    def hide_command(self, command_id: str) -> None:
         """Hide a command from the interface."""
         with self._data_lock:
             self._hidden_command_ids.add(command_id)
             self._save_hidden_commands()
             self.logger.info(f"Hidden command: {command_id}")
 
-    def unhide_command(self, command_id: str):
+    def unhide_command(self, command_id: str) -> None:
         """Unhide a command."""
         with self._data_lock:
             self._hidden_command_ids.discard(command_id)
@@ -510,12 +510,12 @@ class CommandButtonManager:
         """Check if a command is pinned to the toolbar."""
         return self.get_command_pref(command_id, "pinned", False)
 
-    def pin_command(self, command_id: str):
+    def pin_command(self, command_id: str) -> None:
         """Pin a command to the toolbar."""
         self.set_command_pref(command_id, "pinned", True)
         self.logger.info(f"Pinned command to toolbar: {command_id}")
 
-    def unpin_command(self, command_id: str):
+    def unpin_command(self, command_id: str) -> None:
         """Unpin a command from the toolbar."""
         self.set_command_pref(command_id, "pinned", False)
         self.logger.info(f"Unpinned command from toolbar: {command_id}")
@@ -532,7 +532,7 @@ class CommandButtonManager:
                     pinned.append(cmd)
             return pinned
 
-    def add_custom_command(self, command: CommandButton):
+    def add_custom_command(self, command: CommandButton) -> None:
         """Add a new custom command."""
         with self._data_lock:
             if not command.id:
@@ -548,7 +548,7 @@ class CommandButtonManager:
             self._custom_commands.append(command)
             self.save_custom_commands()
 
-    def update_command(self, command: CommandButton):
+    def update_command(self, command: CommandButton) -> None:
         """Update an existing command (custom or builtin customization)."""
         with self._data_lock:
             # Check if it's a builtin command
@@ -572,7 +572,7 @@ class CommandButtonManager:
                 f"Command not found for update: {command.id}"
             )
 
-    def restore_builtin_default(self, command_id: str):
+    def restore_builtin_default(self, command_id: str) -> None:
         """Restore a builtin command to its default configuration."""
         with self._data_lock:
             if command_id in self._customized_builtins:
@@ -580,7 +580,7 @@ class CommandButtonManager:
                 self._save_customized_builtins()
                 self.logger.info(f"Restored default for builtin: {command_id}")
 
-    def remove_command(self, command_id: str):
+    def remove_command(self, command_id: str) -> None:
         """Remove a custom command by ID."""
         with self._data_lock:
             self._custom_commands = [
@@ -588,7 +588,7 @@ class CommandButtonManager:
             ]
             self.save_custom_commands()
 
-    def reorder_commands(self, command_ids: List[str]):
+    def reorder_commands(self, command_ids: List[str]) -> None:
         """Reorder custom commands based on the given ID order."""
         with self._data_lock:
             id_to_cmd = {cmd.id: cmd for cmd in self._custom_commands}

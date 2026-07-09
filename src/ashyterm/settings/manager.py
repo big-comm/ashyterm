@@ -125,7 +125,7 @@ class SettingsManager:
             self.logger.error(f"Failed to load custom color schemes: {e}")
             return {}
 
-    def save_custom_schemes(self):
+    def save_custom_schemes(self) -> None:
         try:
             atomic_json_write(self.custom_schemes_file, self.custom_schemes)
             self.logger.info(f"Saved {len(self.custom_schemes)} custom schemes.")
@@ -451,7 +451,7 @@ class SettingsManager:
         for ref in dead:
             self._change_listeners.remove(ref)
 
-    def add_change_listener(self, listener: Callable[[str, Any, Any], None]):
+    def add_change_listener(self, listener: Callable[[str, Any, Any], None]) -> None:
         # Use WeakMethod for bound methods so listener is released when owner is GC'd
         if hasattr(listener, "__self__"):
             ref = weakref.WeakMethod(listener)
@@ -463,7 +463,7 @@ class SettingsManager:
                 return
         self._change_listeners.append(ref)
 
-    def remove_change_listener(self, listener: Callable[[str, Any, Any], None]):
+    def remove_change_listener(self, listener: Callable[[str, Any, Any], None]) -> None:
         """Remove a previously added change listener."""
         for ref in list(self._change_listeners):
             if ref() is listener or ref() is None:
@@ -536,7 +536,7 @@ class SettingsManager:
         "#ffffff",
     ]
 
-    def apply_terminal_settings(self, terminal, window) -> None:
+    def apply_terminal_settings(self, terminal: Any, window: Any) -> None:
         self._apply_transparency_css(window)
         self._apply_colors(terminal, window)
         self._apply_font(terminal)
@@ -777,7 +777,7 @@ class SettingsManager:
             self.logger.error(f"Failed to update application theme CSS: {e}")
             log_error_with_context(e, "theme update", self._LOG_AREA)
 
-    def remove_gtk_terminal_theme(self, window) -> None:
+    def remove_gtk_terminal_theme(self, window: Any) -> None:
         """Removes the custom CSS provider for the terminal theme."""
         try:
             if hasattr(window, "_terminal_theme_provider"):
@@ -838,7 +838,7 @@ class SettingsManager:
     def set_sidebar_visible(self, visible: bool) -> None:
         self.set("sidebar_visible", visible)
 
-    def cleanup_css_providers(self, window) -> None:
+    def cleanup_css_providers(self, window: Any) -> None:
         """Remove all CSS providers associated with a window to prevent memory leaks."""
         try:
             display = Gdk.Display.get_default()

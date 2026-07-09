@@ -3,7 +3,6 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
-import pytest
 
 from ashyterm.filemanager.models import FileItem
 from ashyterm.filemanager.transfer_sizes import (

@@ -7,6 +7,7 @@ from gi.repository import Gtk
 
 from .utils.logger import get_logger
 from .utils.security import InputSanitizer
+from typing import Any
 
 
 def is_valid_url(text: str) -> bool:
@@ -126,7 +127,7 @@ def clear_children(widget: Gtk.Widget) -> None:
         widget.remove(child)
 
 
-def create_themed_popover_menu(menu_model, parent_widget=None):
+def create_themed_popover_menu(menu_model: Any, parent_widget: Any=None) -> Any:
     """PopoverMenu with the ashyterm-popover CSS class for consistent theming.
 
     Prefer this over ``Gtk.PopoverMenu.new_from_model`` directly.

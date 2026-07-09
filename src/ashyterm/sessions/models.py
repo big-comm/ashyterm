@@ -64,7 +64,7 @@ class LayoutItem(GObject.GObject):
         return self._name
 
     @name.setter
-    def name(self, value: str):
+    def name(self, value: str) -> None:
         self._name = value
 
     @property
@@ -72,7 +72,7 @@ class LayoutItem(GObject.GObject):
         return self._folder_path
 
     @folder_path.setter
-    def folder_path(self, value: str):
+    def folder_path(self, value: str) -> None:
         self._folder_path = str(normalize_path(value)) if value else ""
 
     @property
@@ -172,7 +172,7 @@ class SessionItem(BaseModel):
         return self._name
 
     @name.setter
-    def name(self, value: str):
+    def name(self, value: str) -> None:
         old_name = self._name
         new_name = InputSanitizer.sanitize_filename(value)
         if old_name != new_name and self.uses_password_auth():
@@ -189,7 +189,7 @@ class SessionItem(BaseModel):
         return self._session_type
 
     @session_type.setter
-    def session_type(self, value: str):
+    def session_type(self, value: str) -> None:
         if value not in ["local", "ssh"]:
             raise SessionValidationError(self.name, [f"Invalid session type: {value}"])
         self._session_type = value
@@ -200,7 +200,7 @@ class SessionItem(BaseModel):
         return self._host
 
     @host.setter
-    def host(self, value: str):
+    def host(self, value: str) -> None:
         self._host = value.strip()
         self._mark_modified()
 
@@ -209,7 +209,7 @@ class SessionItem(BaseModel):
         return self._user
 
     @user.setter
-    def user(self, value: str):
+    def user(self, value: str) -> None:
         self._user = value.strip()
         self._mark_modified()
 
@@ -218,7 +218,7 @@ class SessionItem(BaseModel):
         return self._auth_type
 
     @auth_type.setter
-    def auth_type(self, value: str):
+    def auth_type(self, value: str) -> None:
         if value not in ["key", "password", ""]:
             raise SessionValidationError(self.name, [f"Invalid auth type: {value}"])
         if self._auth_type == "password" and value != "password":
@@ -240,7 +240,7 @@ class SessionItem(BaseModel):
         return self._auth_value
 
     @auth_value.setter
-    def auth_value(self, value: str):
+    def auth_value(self, value: str) -> None:
         """Sets the auth value, storing it in the keyring if it's a password."""
         if self.uses_password_auth():
             crypto = _get_crypto()
@@ -261,7 +261,7 @@ class SessionItem(BaseModel):
         return self._folder_path
 
     @folder_path.setter
-    def folder_path(self, value: str):
+    def folder_path(self, value: str) -> None:
         self._folder_path = str(normalize_path(value)) if value else ""
         self._mark_modified()
 
@@ -270,7 +270,7 @@ class SessionItem(BaseModel):
         return self._port
 
     @port.setter
-    def port(self, value: int):
+    def port(self, value: int) -> None:
         try:
             port_val = int(value)
             if not (1 <= port_val <= 65535):
@@ -287,7 +287,7 @@ class SessionItem(BaseModel):
         return self._tab_color
 
     @tab_color.setter
-    def tab_color(self, value: Optional[str]):
+    def tab_color(self, value: Optional[str]) -> None:
         self._tab_color = value
         self._mark_modified()
 
@@ -296,7 +296,7 @@ class SessionItem(BaseModel):
         return self._post_login_command_enabled
 
     @post_login_command_enabled.setter
-    def post_login_command_enabled(self, value: bool):
+    def post_login_command_enabled(self, value: bool) -> None:
         new_value = bool(value)
         if self._post_login_command_enabled != new_value:
             self._post_login_command_enabled = new_value
@@ -307,7 +307,7 @@ class SessionItem(BaseModel):
         return self._post_login_command
 
     @post_login_command.setter
-    def post_login_command(self, value: str):
+    def post_login_command(self, value: str) -> None:
         new_value = value.strip() if value else ""
         if self._post_login_command != new_value:
             self._post_login_command = new_value
@@ -318,7 +318,7 @@ class SessionItem(BaseModel):
         return self._sftp_session_enabled
 
     @sftp_session_enabled.setter
-    def sftp_session_enabled(self, value: bool):
+    def sftp_session_enabled(self, value: bool) -> None:
         new_value = bool(value)
         if self._sftp_session_enabled != new_value:
             self._sftp_session_enabled = new_value
@@ -329,7 +329,7 @@ class SessionItem(BaseModel):
         return self._sftp_local_directory
 
     @sftp_local_directory.setter
-    def sftp_local_directory(self, value: str):
+    def sftp_local_directory(self, value: str) -> None:
         new_value = str(normalize_path(value)) if value and value.strip() else ""
         if self._sftp_local_directory != new_value:
             self._sftp_local_directory = new_value
@@ -340,7 +340,7 @@ class SessionItem(BaseModel):
         return self._sftp_remote_directory
 
     @sftp_remote_directory.setter
-    def sftp_remote_directory(self, value: str):
+    def sftp_remote_directory(self, value: str) -> None:
         new_value = value.strip() if value else ""
         if self._sftp_remote_directory != new_value:
             self._sftp_remote_directory = new_value
@@ -351,7 +351,7 @@ class SessionItem(BaseModel):
         return deepcopy(self._port_forwardings)
 
     @port_forwardings.setter
-    def port_forwardings(self, value: List[Dict[str, Any]]):
+    def port_forwardings(self, value: List[Dict[str, Any]]) -> None:
         normalized_list: List[Dict[str, Any]] = []
         if value:
             for item in value:
@@ -389,7 +389,7 @@ class SessionItem(BaseModel):
         return self._x11_forwarding
 
     @x11_forwarding.setter
-    def x11_forwarding(self, value: bool):
+    def x11_forwarding(self, value: bool) -> None:
         new_value = bool(value)
         if self._x11_forwarding != new_value:
             self._x11_forwarding = new_value
@@ -401,7 +401,7 @@ class SessionItem(BaseModel):
         return self._proxy_jump
 
     @proxy_jump.setter
-    def proxy_jump(self, value: str):
+    def proxy_jump(self, value: str) -> None:
         new_value = (value or "").strip()
         if self._proxy_jump != new_value:
             self._proxy_jump = new_value
@@ -412,7 +412,7 @@ class SessionItem(BaseModel):
         return self._source
 
     @source.setter
-    def source(self, value: str):
+    def source(self, value: str) -> None:
         new_value = value or "user"
         if self._source != new_value:
             self._source = new_value
@@ -423,7 +423,7 @@ class SessionItem(BaseModel):
         return self._local_working_directory
 
     @local_working_directory.setter
-    def local_working_directory(self, value: str):
+    def local_working_directory(self, value: str) -> None:
         new_value = str(normalize_path(value)) if value and value.strip() else ""
         if self._local_working_directory != new_value:
             self._local_working_directory = new_value
@@ -434,7 +434,7 @@ class SessionItem(BaseModel):
         return self._local_startup_command
 
     @local_startup_command.setter
-    def local_startup_command(self, value: str):
+    def local_startup_command(self, value: str) -> None:
         new_value = value.strip() if value else ""
         if self._local_startup_command != new_value:
             self._local_startup_command = new_value
@@ -450,7 +450,7 @@ class SessionItem(BaseModel):
         return self._output_highlighting
 
     @output_highlighting.setter
-    def output_highlighting(self, value: Optional[bool]):
+    def output_highlighting(self, value: Optional[bool]) -> None:
         if value is not None and not isinstance(value, bool):
             raise SessionValidationError(
                 self.name, ["Invalid output_highlighting value"]
@@ -466,7 +466,7 @@ class SessionItem(BaseModel):
         return self._command_specific_highlighting
 
     @command_specific_highlighting.setter
-    def command_specific_highlighting(self, value: Optional[bool]):
+    def command_specific_highlighting(self, value: Optional[bool]) -> None:
         if value is not None and not isinstance(value, bool):
             raise SessionValidationError(
                 self.name, ["Invalid command_specific_highlighting value"]
@@ -482,7 +482,7 @@ class SessionItem(BaseModel):
         return self._cat_colorization
 
     @cat_colorization.setter
-    def cat_colorization(self, value: Optional[bool]):
+    def cat_colorization(self, value: Optional[bool]) -> None:
         if value is not None and not isinstance(value, bool):
             raise SessionValidationError(self.name, ["Invalid cat_colorization value"])
         if self._cat_colorization != value:
@@ -496,7 +496,7 @@ class SessionItem(BaseModel):
         return self._shell_input_highlighting
 
     @shell_input_highlighting.setter
-    def shell_input_highlighting(self, value: Optional[bool]):
+    def shell_input_highlighting(self, value: Optional[bool]) -> None:
         if value is not None and not isinstance(value, bool):
             raise SessionValidationError(
                 self.name, ["Invalid shell_input_highlighting value"]
@@ -673,11 +673,11 @@ class SessionFolder(BaseModel):
         """Provides the list of children for Gtk.TreeListModel."""
         return self._children
 
-    def add_child(self, item):
+    def add_child(self, item: Any) -> None:
         """Add a child item (SessionItem or SessionFolder) to this folder."""
         self._children.append(item)
 
-    def clear_children(self):
+    def clear_children(self) -> None:
         """Remove all children from this folder."""
         self._children.remove_all()
 
@@ -686,7 +686,7 @@ class SessionFolder(BaseModel):
         return self._name
 
     @name.setter
-    def name(self, value: str):
+    def name(self, value: str) -> None:
         self._name = InputSanitizer.sanitize_filename(value)
         self._mark_modified()
 
@@ -695,7 +695,7 @@ class SessionFolder(BaseModel):
         return self._path
 
     @path.setter
-    def path(self, value: str):
+    def path(self, value: str) -> None:
         self._path = str(normalize_path(value)) if value else ""
         self._mark_modified()
 
@@ -704,7 +704,7 @@ class SessionFolder(BaseModel):
         return self._parent_path
 
     @parent_path.setter
-    def parent_path(self, value: str):
+    def parent_path(self, value: str) -> None:
         self._parent_path = str(normalize_path(value)) if value else ""
         self._mark_modified()
 

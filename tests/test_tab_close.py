@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-import pytest
 
 from ashyterm.terminal.tab_close import (
     any_terminal_has_foreground_process,

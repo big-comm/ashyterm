@@ -55,7 +55,7 @@ class _ColorEditRow(Adw.ActionRow):
             return self.rgba_to_hex(rgba)
         return None
 
-    def set_hex_color(self, hex_str: str):
+    def set_hex_color(self, hex_str: str) -> None:
         """Sets the color from a hex string."""
         self.hex_entry.get_buffer().set_text(hex_str, -1)
         # _on_hex_changed will handle the rest
@@ -417,7 +417,7 @@ class _SchemePreviewRow(Adw.ActionRow):
         a11y_label(self.checkmark_icon, _("Active scheme"))
         self.add_suffix(self.checkmark_icon)
 
-    def set_selected(self, selected: bool):
+    def set_selected(self, selected: bool) -> None:
         self.checkmark_icon.set_visible(selected)
 
     def _draw_rounded_rect(self, cr, x, y, width, height, radius):
