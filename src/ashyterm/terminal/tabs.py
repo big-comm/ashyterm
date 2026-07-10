@@ -26,6 +26,7 @@ from .fm_integration import FileManagerIntegration
 from .manager import TerminalManager
 from .pane_manager import PaneManager
 from .scroll_handler import ScrollHandler
+from .tab_attention import clear_tab_attention, mark_tab_attention
 from .tab_close import (
     any_terminal_has_foreground_process as _any_terminal_has_foreground_process_impl,
     build_close_confirmation_dialog as _build_close_confirmation_dialog_impl,
@@ -385,7 +386,7 @@ class TabManager:
         self.scroll_handler.replace_sw_scroll_controller(sw)
 
     def _on_terminal_bell(self, terminal: Vte.Terminal) -> None:
-        """Flash the tab label briefly when a bell/BEL is received in a background tab."""
+        """Keep a background tab highlighted after a bell/BEL is received."""
         page = getattr(terminal, "ashy_parent_page", None)
         if not page:
             return
@@ -398,19 +399,7 @@ class TabManager:
         if not label:
             return
 
-        # Use CSS animation: add class, remove after timeout
-        if hasattr(tab_widget, "_bell_timeout_id"):
-            GLib.source_remove(tab_widget._bell_timeout_id)
-
-        tab_widget.add_css_class("tab-bell")
-
-        def _remove_bell_class():
-            tab_widget.remove_css_class("tab-bell")
-            if hasattr(tab_widget, "_bell_timeout_id"):
-                del tab_widget._bell_timeout_id
-            return GLib.SOURCE_REMOVE
-
-        tab_widget._bell_timeout_id = GLib.timeout_add(1500, _remove_bell_class)
+        mark_tab_attention(tab_widget)
 
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, session: SessionItem,
@@ -752,6 +741,7 @@ class TabManager:
 
         self.active_tab = tab_to_activate
         self.active_tab.add_css_class("active")
+        clear_tab_attention(self.active_tab)
 
         page = self.pages.get(self.active_tab)
         if not page:
@@ -959,10 +949,7 @@ class TabManager:
 
     def _remove_tab_from_tracking(self, tab: Gtk.Box):
         """Remove tab from all tracking collections."""
-        # Cancel pending bell animation timeout
-        if hasattr(tab, "_bell_timeout_id"):
-            GLib.source_remove(tab._bell_timeout_id)
-            del tab._bell_timeout_id
+        clear_tab_attention(tab)
         # Notify group manager
         self.group_manager.on_tab_removed(self.get_tab_id(tab))
         self.tab_bar_box.remove(tab)
