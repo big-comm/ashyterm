@@ -135,6 +135,11 @@ class TestDefaultSettings:
         assert "scrollback_lines" in defaults
         assert isinstance(defaults["scrollback_lines"], int)
 
+    def test_defaults_use_automatic_scroll_with_kinetic_intensity(self):
+        defaults = self.DS.get_defaults()
+        assert defaults["terminal_scroll_mode"] == "automatic"
+        assert defaults["kinetic_scrolling"] == 50
+
     def test_defaults_has_color_scheme(self):
         defaults = self.DS.get_defaults()
         assert "color_scheme" in defaults

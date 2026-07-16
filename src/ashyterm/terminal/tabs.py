@@ -38,6 +38,11 @@ from .tab_groups import TabGroupManager
 from .tab_groups_controller import TabGroupsController
 from .tab_move_controller import TabMoveController
 from .tab_restore_controller import TabRestoreController
+from .terminal_body import (
+    create_terminal_body,
+    get_terminal_scroll_host,
+    get_terminal_scrolled_window,
+)
 from .tab_titles import (
     append_terminal_count as _append_terminal_count_impl,
     build_display_title as _build_display_title_impl,
@@ -66,6 +71,7 @@ def _create_terminal_pane(
     on_close_callback: Callable[[Vte.Terminal], None],
     on_move_to_tab_callback: Callable[[Vte.Terminal], None],
     settings_manager: SettingsManagerType,
+    terminal_body: Optional[Gtk.Widget] = None,
 ) -> Adw.ToolbarView:
     """
     Creates a terminal pane using Adw.ToolbarView with a custom header to avoid GTK baseline warnings.
@@ -103,11 +109,9 @@ def _create_terminal_pane(
 
     toolbar_view.add_top_bar(header_box)
 
-    # Main content (the terminal)
-    scrolled_window = Gtk.ScrolledWindow(child=terminal)
-    scrolled_window.set_vexpand(True)
-    scrolled_window.set_hexpand(True)
-    toolbar_view.set_content(scrolled_window)
+    # Main content. The dedicated host limits scroll capture to the terminal body.
+    body = terminal_body or create_terminal_body(terminal)
+    toolbar_view.set_content(body)
 
     # Attach important widgets for later access
     toolbar_view.terminal = terminal
@@ -115,6 +119,9 @@ def _create_terminal_pane(
     toolbar_view.move_button = move_to_tab_button
     toolbar_view.close_button = close_button
     toolbar_view.header_box = header_box
+    toolbar_view.terminal_body = body
+    toolbar_view.scrolled_window = get_terminal_scrolled_window(body)
+    toolbar_view.scroll_host = get_terminal_scroll_host(body)
 
     return toolbar_view
 
@@ -382,8 +389,12 @@ class TabManager:
 
     # Kept because tab_restore_controller reaches into it when
     # recreating saved layouts.
-    def _replace_sw_scroll_controller(self, sw: Gtk.ScrolledWindow) -> None:
-        self.scroll_handler.replace_sw_scroll_controller(sw)
+    def _replace_sw_scroll_controller(
+        self, sw: Gtk.ScrolledWindow, host: Optional[Gtk.Widget] = None
+    ) -> None:
+        scroll_host = host or get_terminal_scroll_host(sw)
+        if scroll_host:
+            self.scroll_handler.bind_scroll_controller(scroll_host, sw)
 
     def _on_terminal_bell(self, terminal: Vte.Terminal) -> None:
         """Keep a background tab highlighted after a bell/BEL is received."""
@@ -408,18 +419,18 @@ class TabManager:
         terminal.connect("contents-changed", self.scroll_handler.on_terminal_contents_changed)
         terminal.connect("bell", self._on_terminal_bell)
 
-        scrolled_window = Gtk.ScrolledWindow(child=terminal)
-
-        # Replace ScrolledWindow's built-in EventControllerScroll with our
-        # own so we have full control over scrolling (sensitivity + kinetic).
-        self.scroll_handler.replace_sw_scroll_controller(scrolled_window)
+        terminal_body = create_terminal_body(terminal)
+        scrolled_window = get_terminal_scrolled_window(terminal_body)
+        scroll_host = get_terminal_scroll_host(terminal_body)
+        if scrolled_window and scroll_host:
+            self.scroll_handler.bind_scroll_controller(scroll_host, scrolled_window)
 
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
 
         terminal_area = Adw.Bin()
-        terminal_area.set_child(scrolled_window)
+        terminal_area.set_child(terminal_body)
 
         content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
         content_paned.add_css_class("terminal-content-paned")

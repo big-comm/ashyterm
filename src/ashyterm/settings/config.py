@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.13.0"
+    APP_VERSION = "1.13.1"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -222,9 +222,11 @@ class DefaultSettings:
             "copy_on_select",
             "osc52_clipboard_enabled",
             "paste_warning_enabled",
+            "terminal_scroll_mode",
             "scrollback_lines",
             "mouse_scroll_sensitivity",
             "touchpad_scroll_sensitivity",
+            "kinetic_scrolling",
             "cursor_shape",
             "bidi_enabled",
             "enable_shaping",
@@ -319,9 +321,11 @@ class DefaultSettings:
             "use_login_shell": False,
             "close_multiple_tabs_policy": "ask",  # ask, save_and_close, just_close
             # VTE Features
+            "terminal_scroll_mode": "automatic",
             "scrollback_lines": 10000,
             "mouse_scroll_sensitivity": 30.0,
             "touchpad_scroll_sensitivity": 30.0,
+            "kinetic_scrolling": 50,
             "cursor_shape": 0,
             "bidi_enabled": False,
             "enable_shaping": False,  # For Arabic text shaping

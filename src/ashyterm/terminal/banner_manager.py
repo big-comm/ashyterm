@@ -13,6 +13,7 @@ from gi.repository import Adw, GLib, Gtk, Vte
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.logger import log_swallowed_exception
+from .terminal_body import is_terminal_body
 from typing import Any
 
 if TYPE_CHECKING:
@@ -83,7 +84,12 @@ class BannerManager:
             )
             return False
 
-        container = scrolled_window.get_parent()
+        terminal_body = getattr(scrolled_window, "_ashy_terminal_body", None)
+        container = (
+            terminal_body
+            if is_terminal_body(terminal_body)
+            else scrolled_window.get_parent()
+        )
         if not container:
             self.logger.warning("Cannot show banner - scrolled window has no parent")
             return False
@@ -143,7 +149,11 @@ class BannerManager:
         if banner_box:
             container = banner_box.get_parent()
             banner_box.remove(banner)
-            banner_box.remove(scrolled_window)
+
+            if is_terminal_body(container):
+                container.remove(banner_box)
+            else:
+                banner_box.remove(scrolled_window)
 
             if isinstance(container, Adw.Bin):
                 container.set_child(None)
@@ -376,6 +386,11 @@ class BannerManager:
         terminal: Vte.Terminal,
     ) -> bool:
         """Insert the banner box into the appropriate container type."""
+        if is_terminal_body(container):
+            banner_box.set_vexpand(False)
+            container.prepend(banner_box)
+            return True
+
         if isinstance(container, Adw.Bin):
             container.set_child(None)
             banner_box.append(scrolled_window)

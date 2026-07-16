@@ -430,6 +430,7 @@ class SettingsManager:
             ),
             "transparency": self.validator.validate_transparency,
             "font": self.validator.validate_font,
+            "terminal_scroll_mode": self.validator.validate_terminal_scroll_mode,
         }
         if base_key in validators and not validators[base_key](value):
             raise ConfigValidationError(key, value, f"Invalid value for {base_key}")
@@ -663,7 +664,8 @@ class SettingsManager:
         terminal.set_scroll_on_insert(self.get("scroll_on_insert", True))
         terminal.set_mouse_autohide(self.get("mouse_autohide", True))
         terminal.set_audible_bell(self.get("bell_sound", False))
-        terminal.set_scrollback_lines(self.get("scrollback_lines", 10000))
+        scrollback_lines = self.get("scrollback_lines", 10000)
+        terminal.set_scrollback_lines(-1 if scrollback_lines == 0 else scrollback_lines)
 
     @staticmethod
     def _select_enum(mapping: list, index: int, default):

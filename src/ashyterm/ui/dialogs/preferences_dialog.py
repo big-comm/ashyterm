@@ -7,6 +7,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, GObject, Gtk, Pango
 
 from ...settings.manager import SettingsManager
+from ...settings.scrolling import SCROLL_MODES
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
 from ...utils.accessibility import set_label as a11y_label
@@ -291,6 +292,24 @@ class PreferencesDialog(Adw.PreferencesWindow):
 
         scrolling_group = Adw.PreferencesGroup()
         page.add(scrolling_group)
+
+        scroll_mode_row = Adw.ComboRow(title=_("Scroll Mode"))
+        scroll_mode_row.set_model(
+            Gtk.StringList.new([_("Automatic"), _("Custom"), _("System")])
+        )
+        current_scroll_mode = self.settings_manager.get(
+            "terminal_scroll_mode", "automatic"
+        )
+        selected_scroll_mode = (
+            SCROLL_MODES.index(current_scroll_mode)
+            if current_scroll_mode in SCROLL_MODES
+            else 0
+        )
+        scroll_mode_row.set_selected(selected_scroll_mode)
+        scroll_mode_row.connect(
+            "notify::selected", self._on_terminal_scroll_mode_changed
+        )
+        scrolling_group.add(scroll_mode_row)
 
         scrollback_spin = Adw.SpinRow.new_with_range(0, 100000, 1000)
         scrollback_spin.set_title(_("History Limit"))
@@ -753,6 +772,11 @@ class PreferencesDialog(Adw.PreferencesWindow):
     def _on_scrollback_changed(self, spin_row, _pspec) -> None:
         value = int(spin_row.get_value())
         self._on_setting_changed("scrollback_lines", value)
+
+    def _on_terminal_scroll_mode_changed(self, combo_row, _param) -> None:
+        selected = combo_row.get_selected()
+        if 0 <= selected < len(SCROLL_MODES):
+            self._on_setting_changed("terminal_scroll_mode", SCROLL_MODES[selected])
 
     def _on_mouse_scroll_sensitivity_changed(self, spin_row, _pspec) -> None:
         value = spin_row.get_value()

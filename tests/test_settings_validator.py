@@ -93,6 +93,19 @@ class TestValidateShortcut:
         assert v.validate_shortcut(42) is False
 
 
+# ── validate_terminal_scroll_mode ───────────────────────────
+
+
+class TestValidateTerminalScrollMode:
+    @pytest.mark.parametrize("mode", ["automatic", "custom", "native"])
+    def test_accepts_supported_modes(self, v, mode):
+        assert v.validate_terminal_scroll_mode(mode) is True
+
+    @pytest.mark.parametrize("mode", ["system", "", None, 1, True])
+    def test_rejects_unsupported_modes(self, v, mode):
+        assert v.validate_terminal_scroll_mode(mode) is False
+
+
 # ── validate_shortcuts (dict) ────────────────────────────────
 
 
@@ -168,6 +181,12 @@ class TestValidateSettingsStructure:
         settings["font"] = ""  # empty → invalid
         errors = v.validate_settings_structure(settings, num_schemes=5)
         assert any("font" in e for e in errors)
+
+    def test_invalid_terminal_scroll_mode_reported(self, v):
+        settings = _minimal_valid_settings()
+        settings["terminal_scroll_mode"] = "broken"
+        errors = v.validate_settings_structure(settings, num_schemes=5)
+        assert any("terminal_scroll_mode" in error for error in errors)
 
     def test_boolean_type_enforced(self, v):
         settings = _minimal_valid_settings()

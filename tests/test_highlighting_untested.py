@@ -449,11 +449,11 @@ class TestOutputHighlighterLifecycle:
         highlighter.set_context("ping6", proxy_id=1)
         assert highlighter.get_context(1) == "ping"
 
-    def test_set_context_unknown_command_uses_name(self, highlighter):
-        """Unknown commands are stored as-is (lowercased)."""
+    def test_set_context_unknown_command_uses_global_context(self, highlighter):
+        """Unknown commands reuse global rules without growing the cache."""
         highlighter.register_proxy(1)
         highlighter.set_context("mycommand", proxy_id=1)
-        assert highlighter.get_context(1) == "mycommand"
+        assert highlighter.get_context(1) == ""
 
     def test_set_context_empty_resets(self, highlighter):
         highlighter.register_proxy(1)

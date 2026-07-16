@@ -12,6 +12,11 @@ from gi.repository import Adw, GLib, Gtk, Vte
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from .terminal_body import (
+    get_terminal_scroll_host,
+    get_terminal_scrolled_window,
+    is_terminal_body,
+)
 from typing import Any
 
 if TYPE_CHECKING:
@@ -41,6 +46,12 @@ class PaneManager:
         self, widget: Any, terminals_list: List[Vte.Terminal]
     ) -> None:
         """Recursively find all Vte.Terminal widgets within a container."""
+        if is_terminal_body(widget):
+            terminal = getattr(widget, "terminal", None)
+            if isinstance(terminal, Vte.Terminal):
+                terminals_list.append(terminal)
+            return
+
         if isinstance(widget, Adw.ToolbarView):
             if hasattr(widget, "terminal") and isinstance(
                 widget.terminal, Vte.Terminal
@@ -148,6 +159,8 @@ class PaneManager:
             return
 
         current_parent = terminal.get_parent()
+        if isinstance(current_parent, Gtk.ScrolledWindow):
+            self.tm.scroll_handler.unbind_scrolled_window(current_parent)
         if current_parent and hasattr(current_parent, "set_child"):
             current_parent.set_child(None)
 
@@ -238,10 +251,10 @@ class PaneManager:
 
         is_last_split = not isinstance(grandparent, Gtk.Paned)
         if is_last_split and isinstance(survivor_pane, Adw.ToolbarView):
-            scrolled_win_child = survivor_pane.get_content()
+            terminal_body = survivor_pane.get_content()
             if hasattr(grandparent, "set_child"):
                 survivor_pane.set_content(None)
-                grandparent.set_child(scrolled_win_child)
+                grandparent.set_child(terminal_body)
 
     def _get_terminal_identifier_and_title(self, terminal: Vte.Terminal):
         """Returns the identifier and title for a terminal being split."""
@@ -281,9 +294,10 @@ class PaneManager:
             self.on_move_to_tab_callback,
             self.tm.terminal_manager.settings_manager,
         )
-        sw = new_pane.get_content()
-        if isinstance(sw, Gtk.ScrolledWindow):
-            self.tm.scroll_handler.replace_sw_scroll_controller(sw)
+        sw = get_terminal_scrolled_window(new_pane)
+        scroll_host = get_terminal_scroll_host(new_pane)
+        if sw and scroll_host:
+            self.tm.scroll_handler.bind_scroll_controller(scroll_host, sw)
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self.tm._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
@@ -293,7 +307,7 @@ class PaneManager:
         """Prepares the existing pane for splitting, wrapping if necessary."""
         from .tabs import _create_terminal_pane
 
-        if isinstance(pane_to_replace, Gtk.ScrolledWindow):
+        if is_terminal_body(pane_to_replace):
             uri = focused_terminal.get_current_directory_uri()
             title = "Terminal"
             if uri:
@@ -305,17 +319,32 @@ class PaneManager:
                         path
                     )
                 )
-            pane_to_replace.set_child(None)
+            parent = pane_to_replace.get_parent()
+            if isinstance(parent, Adw.Bin):
+                parent.set_child(None)
             wrapped = _create_terminal_pane(
                 focused_terminal,
                 title,
                 self.close_pane,
                 self.on_move_to_tab_callback,
                 self.tm.terminal_manager.settings_manager,
+                terminal_body=pane_to_replace,
             )
-            sw = wrapped.get_content()
-            if isinstance(sw, Gtk.ScrolledWindow):
-                self.tm.scroll_handler.replace_sw_scroll_controller(sw)
+            return wrapped
+
+        if isinstance(pane_to_replace, Gtk.ScrolledWindow):
+            pane_to_replace.set_child(None)
+            wrapped = _create_terminal_pane(
+                focused_terminal,
+                "Terminal",
+                self.close_pane,
+                self.on_move_to_tab_callback,
+                self.tm.terminal_manager.settings_manager,
+            )
+            sw = get_terminal_scrolled_window(wrapped)
+            scroll_host = get_terminal_scroll_host(wrapped)
+            if sw and scroll_host:
+                self.tm.scroll_handler.bind_scroll_controller(scroll_host, sw)
             return wrapped
         return pane_to_replace
 
