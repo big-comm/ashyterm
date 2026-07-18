@@ -146,7 +146,7 @@ msgstr ""
 # File: src/ashyterm/terminal/tab_close.py, line: 132
 # File: src/ashyterm/terminal/pane_manager.py, line: 429
 # File: src/ashyterm/terminal/tab_groups_controller.py, line: 445
-# File: src/ashyterm/terminal/manager.py, line: 1124
+# File: src/ashyterm/terminal/paste_confirmation.py, line: 35
 # File: src/ashyterm/window_lifecycle.py, line: 595
 # File: src/ashyterm/window_lifecycle.py, line: 632
 # File: src/ashyterm/app.py, line: 394
@@ -394,7 +394,7 @@ msgstr "Cut"
 #
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 157
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 246
-# File: src/ashyterm/terminal/manager.py, line: 1125
+# File: src/ashyterm/terminal/paste_confirmation.py, line: 36
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 36
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 182
@@ -1910,6 +1910,20 @@ msgid "Enter a new name for the group:"
 msgstr "Enter a new name for the group:"
 
 #
+# File: src/ashyterm/terminal/paste_confirmation.py, line: 16
+msgid "Confirm paste"
+msgstr "Confirm paste"
+
+#
+# File: src/ashyterm/terminal/paste_confirmation.py, line: 18
+msgid ""
+"The clipboard contains multiple lines or a potentially risky command. Paste "
+"anyway?"
+msgstr ""
+"The clipboard contains multiple lines or a potentially risky command. Paste "
+"anyway?"
+
+#
 # File: src/ashyterm/terminal/manager.py, line: 466
 msgid "Command Finished"
 msgstr "Command Finished"
@@ -1919,20 +1933,6 @@ msgstr "Command Finished"
 #, python-brace-format
 msgid "{tab} — completed after {time}"
 msgstr "{tab} — completed after {time}"
-
-#
-# File: src/ashyterm/terminal/manager.py, line: 1105
-msgid "Confirm paste"
-msgstr "Confirm paste"
-
-#
-# File: src/ashyterm/terminal/manager.py, line: 1107
-msgid ""
-"The clipboard contains multiple lines or a potentially risky command. Paste "
-"anyway?"
-msgstr ""
-"The clipboard contains multiple lines or a potentially risky command. Paste "
-"anyway?"
 
 #
 # File: src/ashyterm/terminal/ssh_spawn_mixin.py, line: 286
