@@ -258,7 +258,10 @@ class ScrollHandler:
         sm = self.tm.terminal_manager.settings_manager
         if source == Gdk.InputSource.TOUCHPAD:
             sensitivity = sm.get("touchpad_scroll_sensitivity", 30.0)
-            divisor = 50.0
+            # SURFACE deltas are logical pixels. A baseline of 25 keeps the
+            # scale useful without mixing those pixels with VTE row steps:
+            # sensitivity 50 now equals the previous sensitivity 100.
+            divisor = 25.0
         else:
             sensitivity = sm.get("mouse_scroll_sensitivity", 30.0)
             divisor = 10.0

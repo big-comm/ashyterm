@@ -7,10 +7,9 @@ from typing import Any, Callable, Dict, List, Optional, Union
 
 import gi
 
-gi.require_version("Adw", "1")
 gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Vte
+from gi.repository import Gdk, Gio, GLib, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
@@ -21,6 +20,7 @@ from ..utils.osc7_tracker import get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
 from ..utils.translation_utils import _
+from .paste_confirmation import build_paste_confirmation_dialog
 from .registry import ManualSSHTracker, TerminalLifecycleManager, TerminalRegistry
 from .ssh_lifecycle import SSHLifecycleMixin
 from .terminal_config import (
@@ -1100,32 +1100,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         clipboard.read_text_async(None, on_text)
 
     def _show_paste_confirmation(self, terminal: Vte.Terminal, text: str) -> None:
-        preview = text if len(text) <= 600 else text[:600] + "…"
-        dialog = Adw.AlertDialog(
-            heading=_("Confirm paste"),
-            body=_(
-                "The clipboard contains multiple lines or a potentially "
-                "risky command. Paste anyway?"
-            ),
-        )
-        scrolled = Gtk.ScrolledWindow(
-            min_content_height=160,
-            max_content_height=300,
-            has_frame=True,
-        )
-        label = Gtk.Label(label=preview, xalign=0.0, yalign=0.0, wrap=True)
-        label.add_css_class("monospace")
-        label.set_margin_start(8)
-        label.set_margin_end(8)
-        label.set_margin_top(8)
-        label.set_margin_bottom(8)
-        scrolled.set_child(label)
-        dialog.set_extra_child(scrolled)
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("paste", _("Paste"))
-        dialog.set_response_appearance("paste", Adw.ResponseAppearance.SUGGESTED)
-        dialog.set_default_response("cancel")
-        dialog.set_close_response("cancel")
+        dialog = build_paste_confirmation_dialog(text)
 
         def on_response(_dlg, response):
             if response == "paste":

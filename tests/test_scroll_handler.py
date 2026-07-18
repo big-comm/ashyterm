@@ -123,7 +123,7 @@ def test_automatic_wheel_uses_step_and_mouse_sensitivity(scroll_handler):
     assert adjustment.value == 80.0
 
 
-def test_surface_uses_pixel_delta_without_step_multiplier(scroll_handler):
+def test_surface_uses_pixels_with_recalibrated_touchpad_sensitivity(scroll_handler):
     scroll_handler.tm.terminal_manager.settings_manager.values.update(
         {"touchpad_scroll_sensitivity": 30.0}
     )
@@ -136,7 +136,23 @@ def test_surface_uses_pixel_delta_without_step_multiplier(scroll_handler):
     result = run_scroll(scroll_handler, sw, controller, dy=10.0)
 
     assert result == Gdk.EVENT_STOP
-    assert adjustment.value == 56.0
+    assert adjustment.value == 62.0
+
+
+def test_surface_sensitivity_fifty_matches_previous_hundred(scroll_handler):
+    scroll_handler.tm.terminal_manager.settings_manager.values.update(
+        {"touchpad_scroll_sensitivity": 50.0}
+    )
+    adjustment = FakeAdjustment(step=0.0)
+    sw = FakeScrolledWindow(adjustment)
+    controller = FakeController(
+        Gdk.ScrollUnit.SURFACE, source=Gdk.InputSource.TOUCHPAD
+    )
+
+    result = run_scroll(scroll_handler, sw, controller, dy=10.0)
+
+    assert result == Gdk.EVENT_STOP
+    assert adjustment.value == 70.0
 
 
 def test_legacy_gtk_without_scroll_unit_uses_step_increment(scroll_handler):
