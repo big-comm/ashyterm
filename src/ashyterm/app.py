@@ -44,6 +44,7 @@ class CommTerminalApp(Adw.Application):
         self._platform_info = None
         self._initialized = False
         self._shutting_down = False
+        self._ui_watchdog = None
         self._arg_parser = CliArgParser(self)
 
         self.connect("startup", self._on_startup)
@@ -144,6 +145,8 @@ class CommTerminalApp(Adw.Application):
                 self.quit()
                 return
 
+            self._start_ui_watchdog()
+
             # Must run after settings load, before any UI is built.
             self._configure_icon_theme()
 
@@ -154,6 +157,24 @@ class CommTerminalApp(Adw.Application):
             self.logger.critical(f"Application startup failed: {e}")
             self._show_startup_error(str(e))
             self.quit()
+
+    def _start_ui_watchdog(self) -> None:
+        """Start persistent diagnostics for GTK main-loop stalls."""
+        try:
+            from .core.ui_watchdog import UiWatchdog
+            from .settings.config import get_config_paths
+
+            self._ui_watchdog = UiWatchdog(get_config_paths().LOG_DIR)
+            self._ui_watchdog.start()
+        except Exception as exc:
+            self.logger.warning(f"Could not initialize UI watchdog: {exc}")
+
+    def _stop_ui_watchdog(self) -> None:
+        """Stop UI monitoring after application cleanup completes."""
+        watchdog = self._ui_watchdog
+        self._ui_watchdog = None
+        if watchdog is not None:
+            watchdog.stop()
 
     def _configure_icon_theme(self) -> None:
         """Apply ``icon_theme_strategy`` (ashy=bundled SVGs vs system theme).
@@ -423,6 +444,7 @@ class CommTerminalApp(Adw.Application):
             self.logger.error(f"Error shutting down AsyncTaskManager: {e}")
 
         self._shutdown_gracefully()
+        self._stop_ui_watchdog()
 
     def _shutdown_gracefully(self) -> None:
         """Perform a graceful shutdown."""
@@ -447,6 +469,7 @@ class CommTerminalApp(Adw.Application):
         if not self._shutting_down:
             self.logger.info("Emergency cleanup on exit")
             self._shutdown_gracefully()
+        self._stop_ui_watchdog()
 
     def _show_startup_error(self, error_message: str) -> None:
         """Show startup error dialog."""

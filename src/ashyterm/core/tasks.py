@@ -10,10 +10,9 @@ Call sites::
 import multiprocessing
 import threading
 from concurrent.futures import Future, ThreadPoolExecutor
-from typing import Callable, Optional, Set
+from typing import Any, Callable, Optional, Set
 
 from ..utils.logger import get_logger
-from typing import Any
 
 
 class AsyncTaskManager:
@@ -66,7 +65,7 @@ class AsyncTaskManager:
     def _track_future(self, future: Future) -> None:
         with self._futures_lock:
             self._active_futures.add(future)
-            future.add_done_callback(self._remove_future)
+        future.add_done_callback(self._remove_future)
 
     def _remove_future(self, future: Future) -> None:
         with self._futures_lock:
@@ -110,12 +109,10 @@ class AsyncTaskManager:
 
         if not wait:
             with self._futures_lock:
-                cancelled_count = 0
-                for future in list(self._active_futures):
-                    if future.cancel():
-                        cancelled_count += 1
-                if cancelled_count > 0:
-                    self.logger.info(f"Cancelled {cancelled_count} pending tasks")
+                active_futures = tuple(self._active_futures)
+            cancelled_count = sum(future.cancel() for future in active_futures)
+            if cancelled_count > 0:
+                self.logger.info(f"Cancelled {cancelled_count} pending tasks")
 
         if self._io_executor is not None:
             self._io_executor.shutdown(wait=wait, cancel_futures=not wait)

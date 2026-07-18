@@ -333,7 +333,7 @@ class PreferencesDialog(Adw.PreferencesWindow):
         touchpad_scroll_spin.set_title(_("Touchpad Scroll Sensitivity"))
         touchpad_scroll_spin.set_subtitle(_("Lower is slower"))
         touchpad_scroll_spin.set_value(
-            self.settings_manager.get("touchpad_scroll_sensitivity", 30.0)
+            self.settings_manager.get("touchpad_scroll_sensitivity", 50.0)
         )
         touchpad_scroll_spin.connect(
             "notify::value", self._on_touchpad_scroll_sensitivity_changed

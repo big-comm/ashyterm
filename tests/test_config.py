@@ -138,6 +138,7 @@ class TestDefaultSettings:
     def test_defaults_use_automatic_scroll_with_kinetic_intensity(self):
         defaults = self.DS.get_defaults()
         assert defaults["terminal_scroll_mode"] == "automatic"
+        assert defaults["touchpad_scroll_sensitivity"] == 50.0
         assert defaults["kinetic_scrolling"] == 50
 
     def test_defaults_has_color_scheme(self):
