@@ -118,7 +118,7 @@ class BroadcastManager(GObject.Object):
 
         self.show_confirmation_dialog(command, all_terminals)
 
-    def show_confirmation_dialog(self, command: str, all_terminals: List[Vte.Terminal]):
+    def show_confirmation_dialog(self, command: str, all_terminals: List[Vte.Terminal]) -> None:
         """Show the confirmation dialog for broadcasting."""
         dialog = Adw.AlertDialog(
             heading=_("Confirm sending of command"),
@@ -237,7 +237,7 @@ class BroadcastManager(GObject.Object):
         self.ui.broadcast_entry.set_text("")
         self.ui.broadcast_bar.set_search_mode(False)
 
-    def execute_broadcast(self, command: str, terminals: List[Vte.Terminal]):
+    def execute_broadcast(self, command: str, terminals: List[Vte.Terminal]) -> None:
         """Execute the command on multiple terminals."""
         cmd_bytes = command.encode("utf-8") + b"\n"
         for t in terminals:
@@ -260,7 +260,7 @@ class BroadcastManager(GObject.Object):
         page = self.tab_manager.get_page_for_terminal(terminal)
         return page.get_title() if page else str(getattr(terminal, "terminal_id", ""))
 
-    def broadcast_to_all(self, command_text: str):
+    def broadcast_to_all(self, command_text: str) -> None:
         """Directly broadcast to all terminals (e.g. from Command Manager)."""
         all_terminals = self.tab_manager.get_all_terminals_across_tabs()
         if not all_terminals:

@@ -12,6 +12,12 @@ from gi.repository import Adw, GLib, Gtk, Vte
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
 from ..utils.translation_utils import _
+from .terminal_body import (
+    get_terminal_scroll_host,
+    get_terminal_scrolled_window,
+    is_terminal_body,
+)
+from typing import Any
 
 if TYPE_CHECKING:
     from .tabs import TabManager
@@ -37,9 +43,15 @@ class PaneManager:
         return None, None
 
     def find_terminals_recursive(
-        self, widget, terminals_list: List[Vte.Terminal]
+        self, widget: Any, terminals_list: List[Vte.Terminal]
     ) -> None:
         """Recursively find all Vte.Terminal widgets within a container."""
+        if is_terminal_body(widget):
+            terminal = getattr(widget, "terminal", None)
+            if isinstance(terminal, Vte.Terminal):
+                terminals_list.append(terminal)
+            return
+
         if isinstance(widget, Adw.ToolbarView):
             if hasattr(widget, "terminal") and isinstance(
                 widget.terminal, Vte.Terminal
@@ -61,9 +73,7 @@ class PaneManager:
         if hasattr(widget, "get_child") and (child := widget.get_child()):
             self.find_terminals_recursive(child, terminals_list)
 
-    def find_panes_recursive(
-        self, widget, panes_list: List[Adw.ToolbarView]
-    ) -> None:
+    def find_panes_recursive(self, widget: Any, panes_list: List[Adw.ToolbarView]) -> None:
         """Recursively find all ToolbarView panes within a container."""
         if isinstance(widget, Adw.ToolbarView):
             panes_list.append(widget)
@@ -77,7 +87,7 @@ class PaneManager:
         if hasattr(widget, "get_child") and (child := widget.get_child()):
             self.find_panes_recursive(child, panes_list)
 
-    def get_first_terminal_in_widget(self, widget) -> Optional[Vte.Terminal]:
+    def get_first_terminal_in_widget(self, widget: Any) -> Optional[Vte.Terminal]:
         """Find the first terminal in a widget hierarchy."""
         terminals: List[Vte.Terminal] = []
         self.find_terminals_recursive(widget, terminals)
@@ -85,7 +95,7 @@ class PaneManager:
 
     # -- close / remove -------------------------------------------------------
 
-    def remove_pane_ui(self, pane_to_remove, parent_paned) -> None:
+    def remove_pane_ui(self, pane_to_remove: Any, parent_paned: Any) -> None:
         """Remove a pane from a Gtk.Paned and reparent the survivor."""
         if not isinstance(parent_paned, Gtk.Paned):
             self.logger.warning(
@@ -149,6 +159,8 @@ class PaneManager:
             return
 
         current_parent = terminal.get_parent()
+        if isinstance(current_parent, Gtk.ScrolledWindow):
+            self.tm.scroll_handler.unbind_scrolled_window(current_parent)
         if current_parent and hasattr(current_parent, "set_child"):
             current_parent.set_child(None)
 
@@ -239,10 +251,10 @@ class PaneManager:
 
         is_last_split = not isinstance(grandparent, Gtk.Paned)
         if is_last_split and isinstance(survivor_pane, Adw.ToolbarView):
-            scrolled_win_child = survivor_pane.get_content()
+            terminal_body = survivor_pane.get_content()
             if hasattr(grandparent, "set_child"):
                 survivor_pane.set_content(None)
-                grandparent.set_child(scrolled_win_child)
+                grandparent.set_child(terminal_body)
 
     def _get_terminal_identifier_and_title(self, terminal: Vte.Terminal):
         """Returns the identifier and title for a terminal being split."""
@@ -282,9 +294,10 @@ class PaneManager:
             self.on_move_to_tab_callback,
             self.tm.terminal_manager.settings_manager,
         )
-        sw = new_pane.get_content()
-        if isinstance(sw, Gtk.ScrolledWindow):
-            self.tm.scroll_handler.replace_sw_scroll_controller(sw)
+        sw = get_terminal_scrolled_window(new_pane)
+        scroll_host = get_terminal_scroll_host(new_pane)
+        if sw and scroll_host:
+            self.tm.scroll_handler.bind_scroll_controller(scroll_host, sw)
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self.tm._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
@@ -294,27 +307,44 @@ class PaneManager:
         """Prepares the existing pane for splitting, wrapping if necessary."""
         from .tabs import _create_terminal_pane
 
-        if isinstance(pane_to_replace, Gtk.ScrolledWindow):
+        if is_terminal_body(pane_to_replace):
             uri = focused_terminal.get_current_directory_uri()
             title = "Terminal"
             if uri:
                 from urllib.parse import unquote, urlparse
 
                 path = unquote(urlparse(uri).path)
-                title = self.tm.terminal_manager.osc7_tracker.parser._create_display_path(
-                    path
+                title = (
+                    self.tm.terminal_manager.osc7_tracker.parser._create_display_path(
+                        path
+                    )
                 )
-            pane_to_replace.set_child(None)
+            parent = pane_to_replace.get_parent()
+            if isinstance(parent, Adw.Bin):
+                parent.set_child(None)
             wrapped = _create_terminal_pane(
                 focused_terminal,
                 title,
                 self.close_pane,
                 self.on_move_to_tab_callback,
                 self.tm.terminal_manager.settings_manager,
+                terminal_body=pane_to_replace,
             )
-            sw = wrapped.get_content()
-            if isinstance(sw, Gtk.ScrolledWindow):
-                self.tm.scroll_handler.replace_sw_scroll_controller(sw)
+            return wrapped
+
+        if isinstance(pane_to_replace, Gtk.ScrolledWindow):
+            pane_to_replace.set_child(None)
+            wrapped = _create_terminal_pane(
+                focused_terminal,
+                "Terminal",
+                self.close_pane,
+                self.on_move_to_tab_callback,
+                self.tm.terminal_manager.settings_manager,
+            )
+            sw = get_terminal_scrolled_window(wrapped)
+            scroll_host = get_terminal_scroll_host(wrapped)
+            if sw and scroll_host:
+                self.tm.scroll_handler.bind_scroll_controller(scroll_host, sw)
             return wrapped
         return pane_to_replace
 
@@ -411,9 +441,7 @@ class PaneManager:
                     focused_terminal, orientation, "Local", "Local", page
                 )
             elif response_id == "ssh_list":
-                self._show_ssh_session_picker(
-                    focused_terminal, orientation, page
-                )
+                self._show_ssh_session_picker(focused_terminal, orientation, page)
             else:
                 self._perform_split(
                     focused_terminal, orientation, identifier, pane_title, page
@@ -435,11 +463,7 @@ class PaneManager:
             self.logger.warning("No session store available for SSH session picker.")
             return
 
-        ssh_sessions = []
-        for i in range(session_store.get_n_items()):
-            item = session_store.get_item(i)
-            if item.is_ssh():
-                ssh_sessions.append(item)
+        ssh_sessions = self._saved_ssh_sessions(session_store)
 
         if not ssh_sessions:
             toast = Adw.Toast(title=_("No saved SSH sessions found."))
@@ -475,42 +499,72 @@ class PaneManager:
         scrolled.set_child(listbox)
         content_box.append(scrolled)
 
-        rows_data = []
-        for session in ssh_sessions:
+        rows_data = self._populate_ssh_picker_rows(listbox, ssh_sessions)
+        search_entry.connect("search-changed", self._filter_ssh_picker_rows, rows_data)
+        listbox.connect(
+            "row-activated",
+            self._activate_ssh_picker_row,
+            rows_data,
+            dialog,
+            focused_terminal,
+            orientation,
+            page,
+        )
+
+        toolbar_view.set_content(content_box)
+        dialog.set_content(toolbar_view)
+        dialog.present()
+
+    @staticmethod
+    def _saved_ssh_sessions(session_store) -> list:
+        return [
+            item
+            for index in range(session_store.get_n_items())
+            if (item := session_store.get_item(index)).is_ssh()
+        ]
+
+    @staticmethod
+    def _populate_ssh_picker_rows(listbox: Gtk.ListBox, sessions: list) -> list:
+        rows = []
+        for session in sessions:
             row = Adw.ActionRow(
                 title=session.name,
                 subtitle=f"{session.user}@{session.host}",
                 activatable=True,
             )
             listbox.append(row)
-            rows_data.append((row, session))
+            rows.append((row, session))
+        return rows
 
-        def on_filter_changed(entry):
-            text = entry.get_text().lower()
-            for row, session in rows_data:
-                visible = (
-                    text in session.name.lower()
-                    or text in session.host.lower()
-                    or text in session.user.lower()
-                )
-                row.set_visible(visible)
+    @staticmethod
+    def _filter_ssh_picker_rows(_entry, rows_data: list) -> None:
+        text = _entry.get_text().lower()
+        for row, session in rows_data:
+            visible = any(
+                text in field.lower()
+                for field in (session.name, session.host, session.user)
+            )
+            row.set_visible(visible)
 
-        search_entry.connect("search-changed", on_filter_changed)
-
-        def on_row_activated(_listbox, row):
-            for r, session in rows_data:
-                if r is row:
-                    dialog.close()
-                    self._perform_split(
-                        focused_terminal, orientation, session, session.name, page
-                    )
-                    return
-
-        listbox.connect("row-activated", on_row_activated)
-
-        toolbar_view.set_content(content_box)
-        dialog.set_content(toolbar_view)
-        dialog.present()
+    def _activate_ssh_picker_row(
+        self,
+        _listbox,
+        selected_row,
+        rows_data: list,
+        dialog: Adw.Window,
+        focused_terminal: Vte.Terminal,
+        orientation: Gtk.Orientation,
+        page,
+    ) -> None:
+        selected = next(
+            (session for row, session in rows_data if row is selected_row), None
+        )
+        if selected is None:
+            return
+        dialog.close()
+        self._perform_split(
+            focused_terminal, orientation, selected, selected.name, page
+        )
 
     def _perform_split(
         self,
@@ -575,9 +629,11 @@ class PaneManager:
             parent = widget.get_parent()
             if isinstance(parent, Adw.Bin):
                 grandparent = parent.get_parent()
-                if isinstance(grandparent, Gtk.Paned) and getattr(
-                    grandparent, "get_start_child", lambda: None
-                )() is parent:
+                if (
+                    isinstance(grandparent, Gtk.Paned)
+                    and getattr(grandparent, "get_start_child", lambda: None)()
+                    is parent
+                ):
                     return parent
             widget = parent
         return None
@@ -651,9 +707,7 @@ class PaneManager:
         slot_is_start = getattr(root, "_ashy_zoom_slot_is_start", True)
 
         root.set_child(None)
-        if isinstance(hoisted, Adw.ToolbarView) and isinstance(
-            slot_parent, Gtk.Paned
-        ):
+        if isinstance(hoisted, Adw.ToolbarView) and isinstance(slot_parent, Gtk.Paned):
             if slot_is_start:
                 slot_parent.set_start_child(hoisted)
             else:

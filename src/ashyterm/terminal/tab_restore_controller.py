@@ -24,6 +24,7 @@ from gi.repository import Adw, GLib, Gtk, Vte
 
 from ..sessions.models import SessionItem
 from ..utils.logger import get_logger
+from .terminal_body import get_terminal_scroll_host, get_terminal_scrolled_window
 
 if TYPE_CHECKING:
     from .tabs import TabManager
@@ -89,12 +90,12 @@ class TabRestoreController:
     # ── helpers (kept public so tests can exercise them) ─────
 
     def unwrap_toolbar_view(self, root_widget: Gtk.Widget) -> Gtk.Widget:
-        """Unwrap an ``Adw.ToolbarView`` to the inner scrolled window."""
+        """Unwrap an ``Adw.ToolbarView`` to its stable terminal body."""
         if isinstance(root_widget, Adw.ToolbarView):
-            scrolled_win = root_widget.get_content()
-            if scrolled_win:
+            terminal_body = root_widget.get_content()
+            if terminal_body:
                 root_widget.set_content(None)
-                return scrolled_win
+                return terminal_body
         return root_widget
 
     def build_tab_content_paned(
@@ -171,9 +172,10 @@ class TabRestoreController:
             self.manager._on_move_to_tab_callback,
             self.manager.terminal_manager.settings_manager,
         )
-        sw = pane_widget.get_content()
-        if isinstance(sw, Gtk.ScrolledWindow):
-            self.manager._replace_sw_scroll_controller(sw)
+        sw = get_terminal_scrolled_window(pane_widget)
+        scroll_host = get_terminal_scroll_host(pane_widget)
+        if sw and scroll_host:
+            self.manager._replace_sw_scroll_controller(sw, scroll_host)
 
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self.manager._on_pane_focus_in, terminal)

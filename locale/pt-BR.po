@@ -15,6 +15,10 @@ msgstr ""
 msgid "Test string"
 msgstr "String de teste"
 
+#: /src/ashyterm/ui/dialogs/preferences_dialog.py
+msgid "Scroll Mode"
+msgstr "Modo de Rolagem"
+
 #: /tests/test_regression.py:378
 msgid "Hello World"
 msgstr "Olá Mundo"
@@ -2260,9 +2264,11 @@ msgid ""
 "{text}\n"
 "```"
 msgstr ""
-"I'm sorry, but I can only provide translations for the specified text. If "
-"you have any UI strings from the application 'Ashyterm' that need "
-"translation, please provide them, and I'll be happy to assist!"
+"Explique este código ou comando:\n"
+"\n"
+"```\n"
+"{text}\n"
+"```"
 
 #: /src/ashyterm/ui/actions.py:330
 msgid "Please select an SSH session to connect with SFTP."
@@ -5833,6 +5839,18 @@ msgstr ""
 #: /src/ashyterm/ui/widgets/ai_chat/_prompts.py:70
 msgid "How do I use sed?"
 msgstr "Como usar o sed?"
+
+#: /src/ashyterm/ui/dialogs/preferences_dialog.py:341
+msgid "Allow OSC 52 Clipboard Copy"
+msgstr "Permitir cópia para a área de transferência via OSC 52"
+
+#: /src/ashyterm/ui/dialogs/preferences_dialog.py:343
+msgid ""
+"Let local and remote terminal apps write to the clipboard; reopen tabs after "
+"enabling"
+msgstr ""
+"Permite que aplicativos de terminal locais e remotos gravem na área de "
+"transferência; reabra as abas após ativar"
 
 #: /src/ashyterm/ui/widgets/ai_chat/_prompts.py:71
 msgid "How do I count lines?"

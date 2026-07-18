@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -25,7 +26,7 @@ class ColumnViewDelegate:
 
     # ── Column / ColumnView creation ────────────────────────────────────────
 
-    def create_column(self, title, sorter, setup_func, bind_func, expand=False):
+    def create_column(self, title: Any, sorter: Any, setup_func: Any, bind_func: Any, expand: bool=False) -> Any:
         factory = Gtk.SignalListItemFactory()
         factory.connect("setup", setup_func)
         factory.connect("bind", bind_func)
@@ -127,7 +128,7 @@ class ColumnViewDelegate:
 
     # ── Cell setup / bind ───────────────────────────────────────────────────
 
-    def setup_name_cell(self, factory, list_item):
+    def setup_name_cell(self, factory: Any, list_item: Any) -> None:
         box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.HORIZONTAL)
         box.append(Gtk.Image())
         label = Gtk.Label(xalign=0.0)
@@ -148,14 +149,14 @@ class ColumnViewDelegate:
             row.add_controller(right_click_gesture)
             row.right_click_gesture = right_click_gesture
 
-    def unbind_cell(self, factory, list_item):
+    def unbind_cell(self, factory: Any, list_item: Any) -> None:
         """Disconnects handlers to prevent memory leaks."""
         row = list_item.get_child().get_parent()
         if row and hasattr(row, "right_click_gesture"):
             row.remove_controller(row.right_click_gesture)
             delattr(row, "right_click_gesture")
 
-    def bind_name_cell(self, factory, list_item):
+    def bind_name_cell(self, factory: Any, list_item: Any) -> None:
         self._bind_cell_common(list_item)
         box = list_item.get_child()
         icon = box.get_first_child()
@@ -173,33 +174,33 @@ class ColumnViewDelegate:
         else:
             link_icon.set_visible(False)
 
-    def setup_text_cell(self, factory, list_item):
+    def setup_text_cell(self, factory: Any, list_item: Any) -> None:
         label = Gtk.Label(xalign=0.0)
         list_item.set_child(label)
 
-    def setup_size_cell(self, factory, list_item):
+    def setup_size_cell(self, factory: Any, list_item: Any) -> None:
         label = Gtk.Label(xalign=1.0)
         list_item.set_child(label)
 
-    def bind_permissions_cell(self, factory, list_item):
+    def bind_permissions_cell(self, factory: Any, list_item: Any) -> None:
         self._bind_cell_common(list_item)
         label = list_item.get_child()
         file_item = list_item.get_item()
         label.set_text(file_item.permissions)
 
-    def bind_owner_cell(self, factory, list_item):
+    def bind_owner_cell(self, factory: Any, list_item: Any) -> None:
         self._bind_cell_common(list_item)
         label = list_item.get_child()
         file_item = list_item.get_item()
         label.set_text(file_item.owner)
 
-    def bind_group_cell(self, factory, list_item):
+    def bind_group_cell(self, factory: Any, list_item: Any) -> None:
         self._bind_cell_common(list_item)
         label = list_item.get_child()
         file_item = list_item.get_item()
         label.set_text(file_item.group)
 
-    def bind_size_cell(self, factory, list_item):
+    def bind_size_cell(self, factory: Any, list_item: Any) -> None:
         self._bind_cell_common(list_item)
         label = list_item.get_child()
         file_item = list_item.get_item()
@@ -214,7 +215,7 @@ class ColumnViewDelegate:
             size_str = f"{size / 1024**3:.1f} GB"
         label.set_text(size_str)
 
-    def bind_date_cell(self, factory, list_item):
+    def bind_date_cell(self, factory: Any, list_item: Any) -> None:
         self._bind_cell_common(list_item)
         label = list_item.get_child()
         file_item = list_item.get_item()
@@ -223,16 +224,16 @@ class ColumnViewDelegate:
 
     # ── Filtering ───────────────────────────────────────────────────────────
 
-    def setup_filtering_and_sorting(self):
+    def setup_filtering_and_sorting(self) -> None:
         fm = self.fm
         fm.combined_filter = Gtk.CustomFilter()
         fm.combined_filter.set_filter_func(self.filter_files)
         fm.filtered_store.set_filter(fm.combined_filter)
 
-    def on_hidden_toggle(self, _toggle_button):
+    def on_hidden_toggle(self, _toggle_button: Any) -> None:
         self.fm.combined_filter.changed(Gtk.FilterChange.DIFFERENT)
 
-    def filter_files(self, file_item):
+    def filter_files(self, file_item: Any) -> Any:
         fm = self.fm
         search_text = getattr(fm, "search_entry", None)
         search_term = search_text.get_text().lower().strip() if search_text else ""
@@ -252,7 +253,7 @@ class ColumnViewDelegate:
 
         return search_term in file_item.name.lower()
 
-    def is_hidden_file(self, file_item) -> bool:
+    def is_hidden_file(self, file_item: Any) -> bool:
         fm = self.fm
         if fm.recursive_search_enabled and fm._showing_recursive_results:
             name_to_check = file_item.name.split("/")[-1]
@@ -282,10 +283,10 @@ class ColumnViewDelegate:
         name_b = file_item_b.name.lower()
         return (name_a > name_b) - (name_a < name_b)
 
-    def sort_by_name(self, a, b, *_):
+    def sort_by_name(self, a: Any, b: Any, *_: Any) -> Any:
         return self._dolphin_sort_priority(a, b)
 
-    def sort_by_permissions(self, a, b, *_):
+    def sort_by_permissions(self, a: Any, b: Any, *_: Any) -> Any:
         return self._dolphin_sort_priority(
             a,
             b,
@@ -294,22 +295,22 @@ class ColumnViewDelegate:
             ),
         )
 
-    def sort_by_owner(self, a, b, *_):
+    def sort_by_owner(self, a: Any, b: Any, *_: Any) -> Any:
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.owner > y.owner) - (x.owner < y.owner)
         )
 
-    def sort_by_group(self, a, b, *_):
+    def sort_by_group(self, a: Any, b: Any, *_: Any) -> Any:
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.group > y.group) - (x.group < y.group)
         )
 
-    def sort_by_size(self, a, b, *_):
+    def sort_by_size(self, a: Any, b: Any, *_: Any) -> Any:
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.size > y.size) - (x.size < y.size)
         )
 
-    def sort_by_date(self, a, b, *_):
+    def sort_by_date(self, a: Any, b: Any, *_: Any) -> Any:
         return self._dolphin_sort_priority(
             a, b, lambda x, y: (x.date > y.date) - (x.date < y.date)
         )

@@ -9,6 +9,7 @@ including monospace font, margins, and color scheme integration.
 from typing import Dict, List, Optional
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -169,11 +170,11 @@ class BaseSyntaxTextView(Gtk.TextView):
         end = self.buffer.get_end_iter()
         return self.buffer.get_text(start, end, True)
 
-    def set_text(self, text: str):
+    def set_text(self, text: str) -> None:
         """Set the text content of the buffer."""
         self.buffer.set_text(text)
 
-    def connect_changed(self, callback):
+    def connect_changed(self, callback: Any) -> Any:
         """Connect a callback to the buffer's 'changed' signal.
 
         Convenience method for connecting to text changes.
@@ -189,7 +190,7 @@ class BaseSyntaxTextView(Gtk.TextView):
 
     def update_colors_from_scheme(
         self, palette: List[str], foreground: str = "#ffffff"
-    ):
+    ) -> None:
         """
         Update syntax highlighting colors from a terminal color scheme palette.
 

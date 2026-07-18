@@ -1,6 +1,5 @@
 """Tests for TabGroup and TabGroupManager."""
 
-
 from ashyterm.terminal.tab_groups import TabGroup, TabGroupManager
 
 
@@ -98,7 +97,7 @@ class TestTabGroupManager:
         assert "t1" not in g.tab_ids
 
     def test_remove_tab_auto_deletes_empty_group(self):
-        g = self.mgr.create_group("X", initial_tab_ids=["t1"])
+        self.mgr.create_group("X", initial_tab_ids=["t1"])
         self.mgr.remove_tab_from_group("t1")
         assert not self.mgr.has_groups()
 
@@ -122,7 +121,7 @@ class TestTabGroupManager:
         assert self.mgr.groups == [g1, g2, g3]
 
     def test_serialization_roundtrip(self):
-        g1 = self.mgr.create_group("A", color="#f66151", initial_tab_ids=["t1"])
+        self.mgr.create_group("A", color="#f66151", initial_tab_ids=["t1"])
         g2 = self.mgr.create_group("B", color="#62a0ea", initial_tab_ids=["t2", "t3"])
         self.mgr.toggle_collapsed(g2.id)
 

@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-import pytest
 
 from ashyterm.ui.dialogs.session_edit_validators import (
     validate_hostname,

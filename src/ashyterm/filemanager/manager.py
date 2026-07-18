@@ -147,22 +147,22 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self.logger.info("FileManager instance created, awaiting terminal binding.")
 
     @property
-    def parent_window(self):
+    def parent_window(self) -> Any:
         """Dereference weakref to get parent window."""
         return self._parent_window_ref()
 
     @property
-    def terminal_manager(self):
+    def terminal_manager(self) -> Any:
         """Dereference weakref to get terminal manager."""
         return self._terminal_manager_ref()
 
-    def reparent(self, new_parent_window, new_terminal_manager):
+    def reparent(self, new_parent_window: Any, new_terminal_manager: Any) -> None:
         """Updates internal references when moved to a new window."""
         self.logger.info("Reparenting FileManager to a new window.")
         self._parent_window_ref = weakref.ref(new_parent_window)
         self._terminal_manager_ref = weakref.ref(new_terminal_manager)
 
-    def rebind_terminal(self, new_terminal: Vte.Terminal):
+    def rebind_terminal(self, new_terminal: Vte.Terminal) -> None:
         """
         Binds the file manager to a new terminal instance, dynamically adjusting
         its context (local vs. remote) based on the terminal's current state.
@@ -398,7 +398,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self._is_rebinding = False
         return GLib.SOURCE_REMOVE
 
-    def unbind(self):
+    def unbind(self) -> None:
         """Unbinds from the current terminal, effectively pausing updates."""
         if (
             self.bound_terminal
@@ -412,7 +412,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         self.directory_change_handler_id = 0
         self.logger.info("File manager unbound from terminal.")
 
-    def shutdown(self, widget):
+    def shutdown(self, widget: Any) -> None:
         self.logger.info("Shutting down FileManager, cancelling active transfers.")
 
         if self.settings_manager is not None and self.settings_manager.get(
@@ -444,7 +444,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
 
         self.unbind()
 
-    def destroy(self):
+    def destroy(self) -> None:
         """
         Explicitly destroys the FileManager and its components to break reference cycles.
         """
@@ -485,7 +485,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         """Returns information about currently edited temporary files."""
         return list(self.edited_file_metadata.values())
 
-    def cleanup_all_temp_files(self, key_to_clear: Optional[tuple] = None):
+    def cleanup_all_temp_files(self, key_to_clear: Optional[tuple] = None) -> None:
         """
         Cleans up temporary files. If a specific key is provided, only that
         file is cleaned. Otherwise, all temporary files are cleaned.
@@ -607,7 +607,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         except Exception as e:
             self.logger.error(f"Failed to handle terminal directory change: {e}")
 
-    def get_main_widget(self):
+    def get_main_widget(self) -> Any:
         return self.revealer
 
     def _build_ui(self):
@@ -983,7 +983,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
             full_path = Path(self.current_path).joinpath(item.name)
             self._open_local_file(full_path)
 
-    def set_visibility(self, visible: bool, source: str = "filemanager"):
+    def set_visibility(self, visible: bool, source: str = "filemanager") -> None:
         self.revealer.set_reveal_child(visible)
         if visible:
             self.refresh(source=source)
@@ -999,7 +999,7 @@ class FileManager(FileSearchMixin, FileTransferMixin, GObject.Object):
         path: str | None = None,
         source: str = "filemanager",
         clear_search: bool = True,
-    ):
+    ) -> None:
         if hasattr(self, "search_entry") and clear_search:
             self.search_entry.set_text("")
         if path:

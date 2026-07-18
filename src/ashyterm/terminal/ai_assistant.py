@@ -143,7 +143,14 @@ class TerminalAiAssistant(GObject.Object):
         if not provider:
             missing.append("provider")
             return missing
-        if provider in {"groq", "gemini", "openrouter", "cerebras", "github", "mistral"}:
+        if provider in {
+            "groq",
+            "gemini",
+            "openrouter",
+            "cerebras",
+            "github",
+            "mistral",
+        }:
             if not api_key:
                 missing.append("api_key")
         elif provider == "local":
@@ -157,7 +164,7 @@ class TerminalAiAssistant(GObject.Object):
 
     def request_assistance(
         self,
-        terminal,
+        terminal: Any,
         prompt: str,
         streaming_callback: Optional[Callable[[str, bool], None]] = None,
     ) -> bool:
@@ -233,7 +240,7 @@ class TerminalAiAssistant(GObject.Object):
         )
         return True
 
-    def clear_conversation_for_terminal(self, terminal) -> None:
+    def clear_conversation_for_terminal(self, terminal: Any) -> None:
         terminal_id = getattr(terminal, "terminal_id", None)
         if terminal_id is None:
             return
@@ -334,7 +341,9 @@ class TerminalAiAssistant(GObject.Object):
         except Exception as exc:  # pylint: disable=broad-except
             from ..utils.security import redact_secrets
 
-            self.logger.error(f"AI assistant request failed: {redact_secrets(str(exc))}")
+            self.logger.error(
+                f"AI assistant request failed: {redact_secrets(str(exc))}"
+            )
             error_message = "Sorry, I couldn't complete the request: {}".format(
                 redact_secrets(str(exc))
             )
@@ -409,21 +418,21 @@ class TerminalAiAssistant(GObject.Object):
             raise RuntimeError(
                 "Select a provider in Preferences > Terminal > AI Assistant."
             )
-        if config["provider"] == "groq" and not config["model"]:
-            config["model"] = self.DEFAULT_GROQ_MODEL
-        elif config["provider"] == "gemini" and not config["model"]:
-            config["model"] = self.DEFAULT_GEMINI_MODEL
-        elif config["provider"] == "openrouter" and not config["model"]:
-            config["model"] = self.DEFAULT_OPENROUTER_MODEL
-        elif config["provider"] == "local" and not config["model"]:
-            config["model"] = self.DEFAULT_LOCAL_MODEL
-        elif config["provider"] == "cerebras" and not config["model"]:
-            config["model"] = self.DEFAULT_CEREBRAS_MODEL
-        elif config["provider"] == "github" and not config["model"]:
-            config["model"] = self.DEFAULT_GITHUB_MODEL
-        elif config["provider"] == "mistral" and not config["model"]:
-            config["model"] = self.DEFAULT_MISTRAL_MODEL
+        if not config["model"]:
+            config["model"] = self._default_model_for_provider(config["provider"])
         return config
+
+    def _default_model_for_provider(self, provider: str) -> str:
+        defaults = {
+            "groq": self.DEFAULT_GROQ_MODEL,
+            "gemini": self.DEFAULT_GEMINI_MODEL,
+            "openrouter": self.DEFAULT_OPENROUTER_MODEL,
+            "local": self.DEFAULT_LOCAL_MODEL,
+            "cerebras": self.DEFAULT_CEREBRAS_MODEL,
+            "github": self.DEFAULT_GITHUB_MODEL,
+            "mistral": self.DEFAULT_MISTRAL_MODEL,
+        }
+        return defaults.get(provider, "")
 
     # -------------------------------------------------------------------------
     # Generic OpenAI-compatible API helpers (eliminates duplicate code)
@@ -495,42 +504,45 @@ class TerminalAiAssistant(GObject.Object):
     def _process_streaming_response(self, response) -> str:
         """Process streaming response and return full content."""
         terminal_id = getattr(self._thread_local, "terminal_id", -1)
-
-        content_type = response.headers.get("Content-Type", "")
-        if "application/json" in content_type:
-            return self._handle_json_response(response)
-
-        full_content = ""
         try:
-            for line in response.iter_lines():
-                if self._cancel_flags.get(terminal_id):
-                    raise RuntimeError(_("Request cancelled by user."))
-                if not line:
-                    continue
-                line_str = line.decode("utf-8").strip()
-                chunk, is_eof = self._parse_sse_line(line_str)
-                if chunk is None:
-                    continue
-                if is_eof:
-                    break
-                if chunk:
-                    full_content += chunk
-                    if self._streaming_callback:
-                        GLib.idle_add(self._streaming_callback, chunk, False)
+            content_type = response.headers.get("Content-Type", "")
+            if "application/json" in content_type:
+                return self._handle_json_response(response)
+            full_content = self._consume_streaming_lines(response, terminal_id)
         except Exception:
             if self._cancel_flags.get(terminal_id):
                 raise RuntimeError(_("Request cancelled by user."))
             raise
         finally:
-            try:
-                response.close()
-            except Exception as exc:
-                log_swallowed_exception(exc)
+            self._close_response(response)
 
         if self._streaming_callback:
             GLib.idle_add(self._streaming_callback, "", True)
 
         return full_content
+
+    def _consume_streaming_lines(self, response, terminal_id: int) -> str:
+        chunks: list[str] = []
+        for line in response.iter_lines():
+            if self._cancel_flags.get(terminal_id):
+                raise RuntimeError(_("Request cancelled by user."))
+            if not line:
+                continue
+            chunk, is_eof = self._parse_sse_line(line.decode("utf-8").strip())
+            if is_eof:
+                break
+            if chunk:
+                chunks.append(chunk)
+                if self._streaming_callback:
+                    GLib.idle_add(self._streaming_callback, chunk, False)
+        return "".join(chunks)
+
+    @staticmethod
+    def _close_response(response) -> None:
+        try:
+            response.close()
+        except Exception as exc:
+            log_swallowed_exception(exc)
 
     def _handle_json_response(self, response) -> str:
         """Handle a non-streaming JSON response (server ignored stream=True)."""

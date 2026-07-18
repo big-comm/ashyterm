@@ -23,16 +23,32 @@ ANSI_RESET = "\033[0m"
 
 # ANSI color code tables (same as in highlights.py)
 ANSI_COLOR_MAP = {
-    "black": 0, "red": 1, "green": 2, "yellow": 3,
-    "blue": 4, "magenta": 5, "cyan": 6, "white": 7,
-    "bright_black": 8, "bright_red": 9, "bright_green": 10,
-    "bright_yellow": 11, "bright_blue": 12, "bright_magenta": 13,
-    "bright_cyan": 14, "bright_white": 15,
+    "black": 0,
+    "red": 1,
+    "green": 2,
+    "yellow": 3,
+    "blue": 4,
+    "magenta": 5,
+    "cyan": 6,
+    "white": 7,
+    "bright_black": 8,
+    "bright_red": 9,
+    "bright_green": 10,
+    "bright_yellow": 11,
+    "bright_blue": 12,
+    "bright_magenta": 13,
+    "bright_cyan": 14,
+    "bright_white": 15,
 }
 
 ANSI_MODIFIERS = {
-    "bold": "1", "dim": "2", "italic": "3", "underline": "4",
-    "blink": "5", "reverse": "7", "strikethrough": "9",
+    "bold": "1",
+    "dim": "2",
+    "italic": "3",
+    "underline": "4",
+    "blink": "5",
+    "reverse": "7",
+    "strikethrough": "9",
 }
 
 
@@ -55,7 +71,7 @@ def extract_ansi_segments(text: str) -> list:
     for m in _ANSI_CODE_RE.finditer(text):
         # Text before this code
         if m.start() > pos:
-            segments.append((current_code, text[pos:m.start()]))
+            segments.append((current_code, text[pos : m.start()]))
 
         code = m.group(1)
         if code == "0":
@@ -83,6 +99,7 @@ def get_colored_spans(text: str) -> list:
 # 1. Color Resolution Tests
 # ============================================================================
 
+
 class TestColorResolution:
     """Test the HighlightManager color-to-ANSI resolution."""
 
@@ -90,6 +107,7 @@ class TestColorResolution:
     def manager(self):
         from ashyterm.settings.highlights import HighlightManager
         from ashyterm.settings.highlight_colors import HighlightColorResolver
+
         mgr = HighlightManager.__new__(HighlightManager)
         # Minimal init — _colors handles all color resolution
         mgr._colors = HighlightColorResolver()
@@ -122,18 +140,26 @@ class TestColorResolution:
         for name, idx in ANSI_COLOR_MAP.items():
             code = manager._get_foreground_ansi_code(name)
             if idx < 8:
-                assert code == str(30 + idx), f"{name} -> expected {30 + idx}, got {code}"
+                assert code == str(30 + idx), (
+                    f"{name} -> expected {30 + idx}, got {code}"
+                )
             else:
-                assert code == str(90 + idx - 8), f"{name} -> expected {90 + idx - 8}, got {code}"
+                assert code == str(90 + idx - 8), (
+                    f"{name} -> expected {90 + idx - 8}, got {code}"
+                )
 
     def test_background_ansi_code_standard(self, manager):
         """Background colors map to codes 40-47 / 100-107."""
         for name, idx in ANSI_COLOR_MAP.items():
             code = manager._get_background_ansi_code(name)
             if idx < 8:
-                assert code == str(40 + idx), f"on_{name} -> expected {40 + idx}, got {code}"
+                assert code == str(40 + idx), (
+                    f"on_{name} -> expected {40 + idx}, got {code}"
+                )
             else:
-                assert code == str(100 + idx - 8), f"on_{name} -> expected {100 + idx - 8}, got {code}"
+                assert code == str(100 + idx - 8), (
+                    f"on_{name} -> expected {100 + idx - 8}, got {code}"
+                )
 
     def test_background_ansi_code_none(self, manager):
         """No background returns None."""
@@ -199,6 +225,7 @@ class TestColorResolution:
 # 2. Rule Compilation Tests
 # ============================================================================
 
+
 class TestRuleCompilation:
     """Test rule compilation: literal keyword extraction and prefilter."""
 
@@ -246,7 +273,7 @@ class TestRuleCompilation:
 
         # Should find "error" at position 3 and "warning" at position 22
         assert len(matches) == 2
-        texts = [line[m[0]:m[1]] for m in matches]
+        texts = [line[m[0] : m[1]] for m in matches]
         assert "error" in texts
         assert "warning" in texts
 
@@ -267,8 +294,9 @@ class TestRuleCompilation:
 
         # "error" inside "terrorize" should NOT match
         # "errors" should NOT match (word boundary after 'error' fails because 's' is a word char)
-        texts = [line[m[0]:m[1]] for m in matches]
-        assert "terrorize"[:5] not in [line[m[0]:m[1]] for m in matches if m[1] - m[0] == 5 and m[0] == 0]
+        assert "terrorize"[:5] not in [
+            line[m[0] : m[1]] for m in matches if m[1] - m[0] == 5 and m[0] == 0
+        ]
 
     def test_word_boundary_detection(self):
         """is_word_boundary correctly identifies boundaries."""
@@ -316,8 +344,15 @@ class TestRuleCompilation:
         """Optional suffixes are correctly expanded."""
         from ashyterm.terminal.highlighter.rules import expand_optional_suffixes
 
-        assert set(expand_optional_suffixes("fail(?:ure|ed)?")) == {"fail", "failure", "failed"}
-        assert set(expand_optional_suffixes("complete(?:d)?")) == {"complete", "completed"}
+        assert set(expand_optional_suffixes("fail(?:ure|ed)?")) == {
+            "fail",
+            "failure",
+            "failed",
+        }
+        assert set(expand_optional_suffixes("complete(?:d)?")) == {
+            "complete",
+            "completed",
+        }
         assert expand_optional_suffixes("simple") == ["simple"]
 
     def test_smart_split_alternation(self):
@@ -331,6 +366,7 @@ class TestRuleCompilation:
 # ============================================================================
 # 3. Output Highlighting (Line Application) Tests
 # ============================================================================
+
 
 class TestOutputHighlighting:
     """Test that highlighting rules are correctly applied to output lines."""
@@ -358,8 +394,26 @@ class TestOutputHighlighting:
         bold_magenta = "\033[1;35m"
 
         error_rule = LiteralKeywordRule(
-            keywords=frozenset(["error", "failure", "failed", "fatal", "critical", "exception", "crash"]),
-            keyword_tuple=("error", "failure", "failed", "fatal", "critical", "exception", "crash"),
+            keywords=frozenset(
+                [
+                    "error",
+                    "failure",
+                    "failed",
+                    "fatal",
+                    "critical",
+                    "exception",
+                    "crash",
+                ]
+            ),
+            keyword_tuple=(
+                "error",
+                "failure",
+                "failed",
+                "fatal",
+                "critical",
+                "exception",
+                "crash",
+            ),
             ansi_color=bold_red,
             action="next",
         )
@@ -436,9 +490,7 @@ class TestOutputHighlighting:
 
     def test_empty_line_returns_empty(self, highlighter):
         """Empty line returns unchanged."""
-        result = highlighter._apply_highlighting_to_line(
-            "", highlighter._global_rules
-        )
+        result = highlighter._apply_highlighting_to_line("", highlighter._global_rules)
         assert result == ""
 
     def test_no_match_returns_original(self, highlighter):
@@ -495,6 +547,7 @@ class TestOutputHighlighting:
 # 4. Multi-Group Regex Tests
 # ============================================================================
 
+
 class TestMultiGroupRegex:
     """Test multi-group regex patterns with different colors per group."""
 
@@ -521,7 +574,10 @@ class TestMultiGroupRegex:
         )
         kv_rule = CompiledRule(
             pattern=kv_pattern,
-            ansi_colors=("\033[36m", "\033[1;33m"),  # cyan for key, bold yellow for value
+            ansi_colors=(
+                "\033[36m",
+                "\033[1;33m",
+            ),  # cyan for key, bold yellow for value
             action="next",
             num_groups=2,
             prefilter=lambda line: "ttl=" in line,
@@ -584,6 +640,7 @@ class TestMultiGroupRegex:
 # ============================================================================
 # 5. Stop Action Tests
 # ============================================================================
+
 
 class TestStopAction:
     """Test the 'stop' action that prevents further rule processing."""
@@ -660,6 +717,7 @@ class TestStopAction:
 # ============================================================================
 # 6. Context / Command-Specific Tests
 # ============================================================================
+
 
 class TestContextHighlighting:
     """Test command-specific context rules."""
@@ -758,29 +816,34 @@ class TestContextHighlighting:
         """Rules without action default to 'next'."""
         from ashyterm.settings.highlights import HighlightRule
 
-        rule = HighlightRule.from_dict({
-            "name": "test",
-            "pattern": r"test",
-            "colors": ["red"],
-        })
+        rule = HighlightRule.from_dict(
+            {
+                "name": "test",
+                "pattern": r"test",
+                "colors": ["red"],
+            }
+        )
         assert rule.action == "next"
 
     def test_invalid_action_normalized(self):
         """Invalid action values are normalized to 'next'."""
         from ashyterm.settings.highlights import HighlightRule
 
-        rule = HighlightRule.from_dict({
-            "name": "test",
-            "pattern": r"test",
-            "colors": ["red"],
-            "action": "invalid",
-        })
+        rule = HighlightRule.from_dict(
+            {
+                "name": "test",
+                "pattern": r"test",
+                "colors": ["red"],
+                "action": "invalid",
+            }
+        )
         assert rule.action == "next"
 
 
 # ============================================================================
 # 7. System Rules Loading Tests
 # ============================================================================
+
 
 class TestSystemRulesLoading:
     """Test that system JSON rule files are valid and loadable."""
@@ -820,9 +883,17 @@ class TestSystemRulesLoading:
 
     def test_all_rules_have_valid_colors(self):
         """All color names in system rules are recognized."""
-        valid_colors = set(ANSI_COLOR_MAP.keys()) | set(ANSI_MODIFIERS.keys()) | {
-            "foreground", "background", "cursor", "none", "default",
-        }
+        valid_colors = (
+            set(ANSI_COLOR_MAP.keys())
+            | set(ANSI_MODIFIERS.keys())
+            | {
+                "foreground",
+                "background",
+                "cursor",
+                "none",
+                "default",
+            }
+        )
 
         highlights_dir = self._get_highlights_dir()
         for json_file in highlights_dir.glob("*.json"):
@@ -878,6 +949,7 @@ class TestSystemRulesLoading:
 # 8. Cat Command Colorization Tests
 # ============================================================================
 
+
 class TestCatColorization:
     """Test cat command colorization helpers."""
 
@@ -919,12 +991,17 @@ class TestCatColorization:
         """Flags are skipped, filename extracted correctly."""
         handler = self._make_handler()
         assert handler._extract_filename_from_cat_command("cat -n file.sh") == "file.sh"
-        assert handler._extract_filename_from_cat_command("cat -b -E config.json") == "config.json"
+        assert (
+            handler._extract_filename_from_cat_command("cat -b -E config.json")
+            == "config.json"
+        )
 
     def test_extract_filename_with_path(self):
         """Full paths are extracted correctly."""
         handler = self._make_handler()
-        assert handler._extract_filename_from_cat_command("cat /etc/hosts") == "/etc/hosts"
+        assert (
+            handler._extract_filename_from_cat_command("cat /etc/hosts") == "/etc/hosts"
+        )
 
     def test_extract_filename_quoted(self):
         """Quotes are stripped from filenames."""
@@ -935,8 +1012,13 @@ class TestCatColorization:
     def test_extract_filename_full_path_cat(self):
         """'/bin/cat' and '/usr/bin/cat' are recognized."""
         handler = self._make_handler()
-        assert handler._extract_filename_from_cat_command("/bin/cat file.py") == "file.py"
-        assert handler._extract_filename_from_cat_command("/usr/bin/cat file.py") == "file.py"
+        assert (
+            handler._extract_filename_from_cat_command("/bin/cat file.py") == "file.py"
+        )
+        assert (
+            handler._extract_filename_from_cat_command("/usr/bin/cat file.py")
+            == "file.py"
+        )
 
     def test_extract_filename_no_file(self):
         """Returns None when no filename in command."""
@@ -1041,6 +1123,7 @@ class TestCatColorization:
 # 9. Shell Input Highlighting Tests
 # ============================================================================
 
+
 class TestShellInputHighlighting:
     """Test the bits of ShellInputHighlighter that the streaming handler uses."""
 
@@ -1082,6 +1165,7 @@ class TestShellInputHighlighting:
 # 10. Integration: End-to-End Color Application
 # ============================================================================
 
+
 class TestEndToEndColorApplication:
     """Integration tests verifying color application from rule to output."""
 
@@ -1121,15 +1205,9 @@ class TestEndToEndColorApplication:
         yellow = "\033[33m"
 
         rules = (
-            LiteralKeywordRule(
-                frozenset(["error"]), ("error",), bold_red, "next"
-            ),
-            LiteralKeywordRule(
-                frozenset(["warning"]), ("warning",), yellow, "next"
-            ),
-            LiteralKeywordRule(
-                frozenset(["ok"]), ("ok",), green, "next"
-            ),
+            LiteralKeywordRule(frozenset(["error"]), ("error",), bold_red, "next"),
+            LiteralKeywordRule(frozenset(["warning"]), ("warning",), yellow, "next"),
+            LiteralKeywordRule(frozenset(["ok"]), ("ok",), green, "next"),
         )
 
         line = "error then warning then ok"
@@ -1158,9 +1236,7 @@ class TestEndToEndColorApplication:
         h._lock = threading.Lock()
 
         rules = (
-            LiteralKeywordRule(
-                frozenset(["error"]), ("error",), "\033[31m", "next"
-            ),
+            LiteralKeywordRule(frozenset(["error"]), ("error",), "\033[31m", "next"),
         )
 
         line = "prefix error suffix with special chars: <>&\"'"
@@ -1191,7 +1267,9 @@ class TestEndToEndColorApplication:
         )
 
         # Simulate ping time rule: fast response
-        time_pattern = re_engine.compile(r"([0-2]\.\d?\d?\d?) ms$", re_engine.IGNORECASE)
+        time_pattern = re_engine.compile(
+            r"([0-2]\.\d?\d?\d?) ms$", re_engine.IGNORECASE
+        )
         time_rule = CompiledRule(
             pattern=time_pattern,
             ansi_colors=("\033[1;32m",),  # bold green
@@ -1221,6 +1299,7 @@ class TestEndToEndColorApplication:
 # 11. Edge Cases
 # ============================================================================
 
+
 class TestEdgeCases:
     """Test edge cases in the highlighting system."""
 
@@ -1238,15 +1317,21 @@ class TestEdgeCases:
         # Rule 1: matches "error_code"
         pattern1 = re_engine.compile(r"\b(error_code)\b", re_engine.IGNORECASE)
         rule1 = CompiledRule(
-            pattern=pattern1, ansi_colors=("\033[31m",),
-            action="next", num_groups=1, prefilter=None,
+            pattern=pattern1,
+            ansi_colors=("\033[31m",),
+            action="next",
+            num_groups=1,
+            prefilter=None,
         )
 
         # Rule 2: matches "error" (would overlap with "error_code")
         pattern2 = re_engine.compile(r"\b(error)\b", re_engine.IGNORECASE)
         rule2 = CompiledRule(
-            pattern=pattern2, ansi_colors=("\033[33m",),
-            action="next", num_groups=1, prefilter=None,
+            pattern=pattern2,
+            ansi_colors=("\033[33m",),
+            action="next",
+            num_groups=1,
+            prefilter=None,
         )
 
         # "error_code" — rule1 matches longer span starting at same position
@@ -1272,9 +1357,7 @@ class TestEdgeCases:
         h._lock = threading.Lock()
 
         rules = (
-            LiteralKeywordRule(
-                frozenset(["error"]), ("error",), "\033[31m", "next"
-            ),
+            LiteralKeywordRule(frozenset(["error"]), ("error",), "\033[31m", "next"),
         )
 
         # Line with existing ANSI SGR sequences — should be skipped
@@ -1293,9 +1376,7 @@ class TestEdgeCases:
         h._lock = threading.Lock()
 
         rules = (
-            LiteralKeywordRule(
-                frozenset(["error"]), ("error",), "\033[31m", "next"
-            ),
+            LiteralKeywordRule(frozenset(["error"]), ("error",), "\033[31m", "next"),
         )
 
         line = "Há um error na operação — verifique"
@@ -1315,9 +1396,7 @@ class TestEdgeCases:
         h._lock = threading.Lock()
 
         rules = (
-            LiteralKeywordRule(
-                frozenset(["error"]), ("error",), "\033[31m", "next"
-            ),
+            LiteralKeywordRule(frozenset(["error"]), ("error",), "\033[31m", "next"),
         )
 
         # 10KB line with one "error" in the middle
@@ -1341,8 +1420,11 @@ class TestEdgeCases:
         # Match individual digits
         pattern = re_engine.compile(r"(\d)", 0)
         rule = CompiledRule(
-            pattern=pattern, ansi_colors=("\033[33m",),
-            action="next", num_groups=1, prefilter=None,
+            pattern=pattern,
+            ansi_colors=("\033[33m",),
+            action="next",
+            num_groups=1,
+            prefilter=None,
         )
 
         line = "abc123def"
@@ -1358,6 +1440,7 @@ class TestEdgeCases:
 # ============================================================================
 # 12. Constants and Patterns Tests
 # ============================================================================
+
 
 class TestConstants:
     """Test pre-compiled patterns and constants."""

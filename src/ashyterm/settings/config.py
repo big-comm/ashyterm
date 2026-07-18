@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.11.0"
+    APP_VERSION = "1.13.2"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -220,10 +220,13 @@ class DefaultSettings:
         ],
         "terminal": [
             "copy_on_select",
+            "osc52_clipboard_enabled",
             "paste_warning_enabled",
+            "terminal_scroll_mode",
             "scrollback_lines",
             "mouse_scroll_sensitivity",
             "touchpad_scroll_sensitivity",
+            "kinetic_scrolling",
             "cursor_shape",
             "bidi_enabled",
             "enable_shaping",
@@ -310,6 +313,7 @@ class DefaultSettings:
             "scroll_on_keystroke": True,
             "scroll_on_insert": True,  # Scroll to bottom on paste
             "copy_on_select": False,  # Auto-copy selection to clipboard
+            "osc52_clipboard_enabled": True,  # Write-only remote clipboard copy
             "paste_warning_enabled": True,  # Confirm multi-line / risky paste
             "mouse_autohide": True,
             "cursor_blink": 0,
@@ -317,9 +321,11 @@ class DefaultSettings:
             "use_login_shell": False,
             "close_multiple_tabs_policy": "ask",  # ask, save_and_close, just_close
             # VTE Features
+            "terminal_scroll_mode": "automatic",
             "scrollback_lines": 10000,
             "mouse_scroll_sensitivity": 30.0,
             "touchpad_scroll_sensitivity": 30.0,
+            "kinetic_scrolling": 50,
             "cursor_shape": 0,
             "bidi_enabled": False,
             "enable_shaping": False,  # For Arabic text shaping
@@ -467,7 +473,7 @@ def get_config_paths() -> ConfigPaths:
     return _config_paths
 
 
-def initialize_configuration():
+def initialize_configuration() -> None:
     """Initialize configuration system with validation."""
     logger = get_logger("ashyterm.config") if UTILS_AVAILABLE else None
     try:

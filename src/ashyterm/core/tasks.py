@@ -13,6 +13,7 @@ from concurrent.futures import Future, ThreadPoolExecutor
 from typing import Callable, Optional, Set
 
 from ..utils.logger import get_logger
+from typing import Any
 
 
 class AsyncTaskManager:
@@ -71,7 +72,7 @@ class AsyncTaskManager:
         with self._futures_lock:
             self._active_futures.discard(future)
 
-    def submit_io(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
+    def submit_io(self, fn: Callable, *args: Any, **kwargs: Any) -> Optional[Future]:
         """Queue an IO-bound task (files, network, SSH, subprocess)."""
         if self._is_shutdown or self._io_executor is None:
             self.logger.warning("IO task submitted after shutdown, ignoring")
@@ -85,7 +86,7 @@ class AsyncTaskManager:
             self.logger.error(f"Failed to submit IO task: {e}")
             return None
 
-    def submit_cpu(self, fn: Callable, *args, **kwargs) -> Optional[Future]:
+    def submit_cpu(self, fn: Callable, *args: Any, **kwargs: Any) -> Optional[Future]:
         """Queue a CPU-bound task (regex, parsing, highlighting)."""
         if self._is_shutdown or self._cpu_executor is None:
             self.logger.warning("CPU task submitted after shutdown, ignoring")
@@ -131,9 +132,9 @@ class AsyncTaskManager:
         return self._is_shutdown
 
 
-def submit_io(fn: Callable, *args, **kwargs) -> Optional[Future]:
+def submit_io(fn: Callable, *args: Any, **kwargs: Any) -> Optional[Future]:
     return AsyncTaskManager.get().submit_io(fn, *args, **kwargs)
 
 
-def submit_cpu(fn: Callable, *args, **kwargs) -> Optional[Future]:
+def submit_cpu(fn: Callable, *args: Any, **kwargs: Any) -> Optional[Future]:
     return AsyncTaskManager.get().submit_cpu(fn, *args, **kwargs)

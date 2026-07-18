@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable, List, Optional
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -25,6 +26,7 @@ from .fm_integration import FileManagerIntegration
 from .manager import TerminalManager
 from .pane_manager import PaneManager
 from .scroll_handler import ScrollHandler
+from .tab_attention import clear_tab_attention, mark_tab_attention
 from .tab_close import (
     any_terminal_has_foreground_process as _any_terminal_has_foreground_process_impl,
     build_close_confirmation_dialog as _build_close_confirmation_dialog_impl,
@@ -36,6 +38,11 @@ from .tab_groups import TabGroupManager
 from .tab_groups_controller import TabGroupsController
 from .tab_move_controller import TabMoveController
 from .tab_restore_controller import TabRestoreController
+from .terminal_body import (
+    create_terminal_body,
+    get_terminal_scroll_host,
+    get_terminal_scrolled_window,
+)
 from .tab_titles import (
     append_terminal_count as _append_terminal_count_impl,
     build_display_title as _build_display_title_impl,
@@ -64,6 +71,7 @@ def _create_terminal_pane(
     on_close_callback: Callable[[Vte.Terminal], None],
     on_move_to_tab_callback: Callable[[Vte.Terminal], None],
     settings_manager: SettingsManagerType,
+    terminal_body: Optional[Gtk.Widget] = None,
 ) -> Adw.ToolbarView:
     """
     Creates a terminal pane using Adw.ToolbarView with a custom header to avoid GTK baseline warnings.
@@ -101,11 +109,9 @@ def _create_terminal_pane(
 
     toolbar_view.add_top_bar(header_box)
 
-    # Main content (the terminal)
-    scrolled_window = Gtk.ScrolledWindow(child=terminal)
-    scrolled_window.set_vexpand(True)
-    scrolled_window.set_hexpand(True)
-    toolbar_view.set_content(scrolled_window)
+    # Main content. The dedicated host limits scroll capture to the terminal body.
+    body = terminal_body or create_terminal_body(terminal)
+    toolbar_view.set_content(body)
 
     # Attach important widgets for later access
     toolbar_view.terminal = terminal
@@ -113,6 +119,9 @@ def _create_terminal_pane(
     toolbar_view.move_button = move_to_tab_button
     toolbar_view.close_button = close_button
     toolbar_view.header_box = header_box
+    toolbar_view.terminal_body = body
+    toolbar_view.scrolled_window = get_terminal_scrolled_window(body)
+    toolbar_view.scroll_host = get_terminal_scroll_host(body)
 
     return toolbar_view
 
@@ -380,11 +389,15 @@ class TabManager:
 
     # Kept because tab_restore_controller reaches into it when
     # recreating saved layouts.
-    def _replace_sw_scroll_controller(self, sw: Gtk.ScrolledWindow) -> None:
-        self.scroll_handler.replace_sw_scroll_controller(sw)
+    def _replace_sw_scroll_controller(
+        self, sw: Gtk.ScrolledWindow, host: Optional[Gtk.Widget] = None
+    ) -> None:
+        scroll_host = host or get_terminal_scroll_host(sw)
+        if scroll_host:
+            self.scroll_handler.bind_scroll_controller(scroll_host, sw)
 
     def _on_terminal_bell(self, terminal: Vte.Terminal) -> None:
-        """Flash the tab label briefly when a bell/BEL is received in a background tab."""
+        """Keep a background tab highlighted after a bell/BEL is received."""
         page = getattr(terminal, "ashy_parent_page", None)
         if not page:
             return
@@ -397,19 +410,7 @@ class TabManager:
         if not label:
             return
 
-        # Use CSS animation: add class, remove after timeout
-        if hasattr(tab_widget, "_bell_timeout_id"):
-            GLib.source_remove(tab_widget._bell_timeout_id)
-
-        tab_widget.add_css_class("tab-bell")
-
-        def _remove_bell_class():
-            tab_widget.remove_css_class("tab-bell")
-            if hasattr(tab_widget, "_bell_timeout_id"):
-                del tab_widget._bell_timeout_id
-            return GLib.SOURCE_REMOVE
-
-        tab_widget._bell_timeout_id = GLib.timeout_add(1500, _remove_bell_class)
+        mark_tab_attention(tab_widget)
 
     def _create_tab_for_terminal(
         self, terminal: Vte.Terminal, session: SessionItem,
@@ -418,18 +419,18 @@ class TabManager:
         terminal.connect("contents-changed", self.scroll_handler.on_terminal_contents_changed)
         terminal.connect("bell", self._on_terminal_bell)
 
-        scrolled_window = Gtk.ScrolledWindow(child=terminal)
-
-        # Replace ScrolledWindow's built-in EventControllerScroll with our
-        # own so we have full control over scrolling (sensitivity + kinetic).
-        self.scroll_handler.replace_sw_scroll_controller(scrolled_window)
+        terminal_body = create_terminal_body(terminal)
+        scrolled_window = get_terminal_scrolled_window(terminal_body)
+        scroll_host = get_terminal_scroll_host(terminal_body)
+        if scrolled_window and scroll_host:
+            self.scroll_handler.bind_scroll_controller(scroll_host, scrolled_window)
 
         focus_controller = Gtk.EventControllerFocus()
         focus_controller.connect("enter", self._on_pane_focus_in, terminal)
         terminal.add_controller(focus_controller)
 
         terminal_area = Adw.Bin()
-        terminal_area.set_child(scrolled_window)
+        terminal_area.set_child(terminal_body)
 
         content_paned = Gtk.Paned(orientation=Gtk.Orientation.VERTICAL)
         content_paned.add_css_class("terminal-content-paned")
@@ -733,7 +734,7 @@ class TabManager:
     def _is_widget_in_filemanager(self, widget: Gtk.Widget) -> bool:
         return self.fm_handler.is_widget_in_filemanager(widget)
 
-    def set_active_tab(self, tab_to_activate: Gtk.Box):
+    def set_active_tab(self, tab_to_activate: Gtk.Box) -> None:
         if self.active_tab == tab_to_activate:
             return
 
@@ -751,6 +752,7 @@ class TabManager:
 
         self.active_tab = tab_to_activate
         self.active_tab.add_css_class("active")
+        clear_tab_attention(self.active_tab)
 
         page = self.pages.get(self.active_tab)
         if not page:
@@ -809,7 +811,7 @@ class TabManager:
     def _deactivate_file_manager(self, page, paned, fm):
         self.fm_handler.deactivate_file_manager(page, paned, fm)
 
-    def toggle_file_manager_for_active_tab(self, is_active: bool):
+    def toggle_file_manager_for_active_tab(self, is_active: bool) -> None:
         self.fm_handler.toggle_file_manager_for_active_tab(is_active)
 
     def _on_file_manager_paned_position_changed(self, paned, _param_spec, page):
@@ -958,10 +960,7 @@ class TabManager:
 
     def _remove_tab_from_tracking(self, tab: Gtk.Box):
         """Remove tab from all tracking collections."""
-        # Cancel pending bell animation timeout
-        if hasattr(tab, "_bell_timeout_id"):
-            GLib.source_remove(tab._bell_timeout_id)
-            del tab._bell_timeout_id
+        clear_tab_attention(tab)
         # Notify group manager
         self.group_manager.on_tab_removed(self.get_tab_id(tab))
         self.tab_bar_box.remove(tab)
@@ -1028,7 +1027,7 @@ class TabManager:
     ) -> Optional[Adw.ViewStackPage]:
         return getattr(terminal, "ashy_parent_page", None)
 
-    def update_titles_for_terminal(self, terminal, new_title: str, _osc7_info=None):
+    def update_titles_for_terminal(self, terminal: Any, new_title: str, _osc7_info: Any=None) -> None:
         """Updates the tab title and the specific pane title for a terminal."""
         page = self.get_page_for_terminal(terminal)
         if not page:
@@ -1177,13 +1176,13 @@ class TabManager:
     def _find_pane_for_terminal(self, page, terminal_to_find):
         return self.banner_handler.find_pane_for_terminal(page, terminal_to_find)
 
-    def show_error_banner_for_terminal(self, terminal, session_name="", error_message="", session=None, is_auth_error=False, is_host_key_error=False):
+    def show_error_banner_for_terminal(self, terminal: Any, session_name: str="", error_message: str="", session: Any=None, is_auth_error: bool=False, is_host_key_error: bool=False) -> Any:
         return self.banner_handler.show_error_banner_for_terminal(terminal, session_name, error_message, session, is_auth_error, is_host_key_error)
 
-    def hide_error_banner_for_terminal(self, terminal):
+    def hide_error_banner_for_terminal(self, terminal: Any) -> Any:
         return self.banner_handler.hide_error_banner_for_terminal(terminal)
 
-    def has_error_banner(self, terminal):
+    def has_error_banner(self, terminal: Any) -> Any:
         return self.banner_handler.has_error_banner(terminal)
 
     def _handle_banner_action(self, action, terminal, session, terminal_id, config):
@@ -1252,7 +1251,7 @@ class TabManager:
             self.on_tab_count_changed()
         return page
 
-    def select_next_tab(self):
+    def select_next_tab(self) -> None:
         """Selects the next tab in the list."""
         if not self.tabs or len(self.tabs) <= 1:
             return
@@ -1264,7 +1263,7 @@ class TabManager:
             if self.tabs:
                 self.set_active_tab(self.tabs[0])
 
-    def select_previous_tab(self):
+    def select_previous_tab(self) -> None:
         """Selects the previous tab in the list."""
         if not self.tabs or len(self.tabs) <= 1:
             return

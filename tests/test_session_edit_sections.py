@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-import pytest
 
 from ashyterm.sessions.models import SessionItem
 from ashyterm.ui.dialogs.session_edit_sections import (
@@ -30,7 +29,7 @@ def _stub_dialog(
 
     gi.require_version("Gtk", "4.0")
     gi.require_version("Adw", "1")
-    from gi.repository import Adw, Gtk
+    from gi.repository import Adw
 
     session = session or SessionItem(name="s", session_type="local")
     folder_store = MagicMock()

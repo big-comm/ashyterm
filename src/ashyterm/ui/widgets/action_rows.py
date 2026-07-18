@@ -120,14 +120,14 @@ class ManagedListRow(Adw.ActionRow):
             return True
         return False
 
-    def set_reorder_sensitive(self, is_first: bool, is_last: bool):
+    def set_reorder_sensitive(self, is_first: bool, is_last: bool) -> None:
         """Update sensitivity of reorder buttons."""
         if hasattr(self, "_up_btn"):
             self._up_btn.set_sensitive(not is_first)
         if hasattr(self, "_down_btn"):
             self._down_btn.set_sensitive(not is_last)
 
-    def set_active(self, active: bool):
+    def set_active(self, active: bool) -> None:
         """Set the toggle switch state."""
         if hasattr(self, "_switch"):
             # Block signal to avoid recursion if connected via set_active
@@ -141,14 +141,14 @@ class ManagedListRow(Adw.ActionRow):
             return self._switch.get_active()
         return False
 
-    def set_actions_sensitive(self, edit: bool = True, delete: bool = True):
+    def set_actions_sensitive(self, edit: bool = True, delete: bool = True) -> None:
         """Update sensitivity of action buttons."""
         if hasattr(self, "_edit_btn"):
             self._edit_btn.set_sensitive(edit)
         if hasattr(self, "_delete_btn"):
             self._delete_btn.set_sensitive(delete)
 
-    def set_delete_tooltip(self, text: str):
+    def set_delete_tooltip(self, text: str) -> None:
         """Update tooltip for delete button."""
         if hasattr(self, "_delete_btn"):
             get_tooltip_helper().add_tooltip(self._delete_btn, text)
@@ -219,7 +219,7 @@ class ManagedExpanderRow(Adw.ExpanderRow):
             get_tooltip_helper().add_tooltip(self._delete_btn, _("Remove"))
             self.add_suffix(self._delete_btn)
 
-    def set_reorder_sensitive(self, is_first: bool, is_last: bool):
+    def set_reorder_sensitive(self, is_first: bool, is_last: bool) -> None:
         """Update sensitivity of reorder buttons."""
         if hasattr(self, "_up_btn"):
             self._up_btn.set_sensitive(not is_first)

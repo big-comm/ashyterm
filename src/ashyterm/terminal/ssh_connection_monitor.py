@@ -4,6 +4,7 @@
 from typing import Optional
 
 import gi
+from typing import Any
 
 gi.require_version("GLib", "2.0")
 gi.require_version("Vte", "3.91")
@@ -24,7 +25,7 @@ def is_process_alive(pid: int) -> bool:
 
 
 def check_terminal_connection_status(
-    terminal, terminal_id: int, logger
+    terminal: Any, terminal_id: int, logger: Any
 ) -> Optional[bool]:
     """Check terminal text for connection status.
 
@@ -61,7 +62,7 @@ def check_terminal_connection_status(
 
 
 def monitor_connection_status(
-    terminal, terminal_id: int, pid: int, logger, on_success
+    terminal: Any, terminal_id: int, pid: int, logger: Any, on_success: Any
 ) -> None:
     """Start periodic SSH connection health check via GLib.timeout.
 
@@ -100,14 +101,14 @@ def monitor_connection_status(
     GLib.timeout_add(1000, check_connection)
 
 
-def cleanup_connection_monitor(terminal) -> None:
+def cleanup_connection_monitor(terminal: Any) -> None:
     """Remove connection monitoring state from terminal."""
     for attr in ["_monitoring_pid", "_connect_check_count", "_last_line_count"]:
         if hasattr(terminal, attr):
             delattr(terminal, attr)
 
 
-def on_connection_success(terminal, tab_manager=None, cancel_auto_reconnect=None) -> None:
+def on_connection_success(terminal: Any, tab_manager: Any=None, cancel_auto_reconnect: Any=None) -> None:
     """Handle successful SSH connection: hide banner, stop monitors, clear flags."""
     cleanup_connection_monitor(terminal)
 

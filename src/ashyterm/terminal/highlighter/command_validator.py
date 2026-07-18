@@ -14,18 +14,87 @@ from typing import Optional, Set
 
 
 # Shell builtins common to bash/zsh/sh
-_SHELL_BUILTINS: frozenset[str] = frozenset({
-    ".", ":", "[", "alias", "bg", "bind", "break", "builtin", "caller",
-    "case", "cd", "command", "compgen", "complete", "compopt", "continue",
-    "declare", "dirs", "disown", "do", "done", "echo", "elif", "else",
-    "enable", "esac", "eval", "exec", "exit", "export", "false", "fc",
-    "fg", "fi", "for", "function", "getopts", "hash", "help", "history",
-    "if", "in", "jobs", "kill", "let", "local", "logout", "mapfile",
-    "popd", "printf", "pushd", "pwd", "read", "readarray", "readonly",
-    "return", "select", "set", "shift", "shopt", "source", "suspend",
-    "test", "then", "time", "times", "trap", "true", "type", "typeset",
-    "ulimit", "umask", "unalias", "unset", "until", "wait", "while",
-})
+_SHELL_BUILTINS: frozenset[str] = frozenset(
+    {
+        ".",
+        ":",
+        "[",
+        "alias",
+        "bg",
+        "bind",
+        "break",
+        "builtin",
+        "caller",
+        "case",
+        "cd",
+        "command",
+        "compgen",
+        "complete",
+        "compopt",
+        "continue",
+        "declare",
+        "dirs",
+        "disown",
+        "do",
+        "done",
+        "echo",
+        "elif",
+        "else",
+        "enable",
+        "esac",
+        "eval",
+        "exec",
+        "exit",
+        "export",
+        "false",
+        "fc",
+        "fg",
+        "fi",
+        "for",
+        "function",
+        "getopts",
+        "hash",
+        "help",
+        "history",
+        "if",
+        "in",
+        "jobs",
+        "kill",
+        "let",
+        "local",
+        "logout",
+        "mapfile",
+        "popd",
+        "printf",
+        "pushd",
+        "pwd",
+        "read",
+        "readarray",
+        "readonly",
+        "return",
+        "select",
+        "set",
+        "shift",
+        "shopt",
+        "source",
+        "suspend",
+        "test",
+        "then",
+        "time",
+        "times",
+        "trap",
+        "true",
+        "type",
+        "typeset",
+        "ulimit",
+        "umask",
+        "unalias",
+        "unset",
+        "until",
+        "wait",
+        "while",
+    }
+)
 
 # Cache refresh interval in seconds
 _CACHE_TTL: float = 30.0
@@ -97,46 +166,45 @@ class CommandValidator:
         """
         path_var = os.environ.get("PATH", "")
         dirs = [d for d in path_var.split(os.pathsep) if d]
-
-        # Check if any directory has changed
-        needs_full_scan = False
-        new_mtimes: dict[str, float] = {}
-        for directory in dirs:
-            try:
-                mtime = os.stat(directory).st_mtime
-            except OSError:
-                mtime = 0.0
-            new_mtimes[directory] = mtime
-            if mtime != self._dir_mtimes.get(directory, -1.0):
-                needs_full_scan = True
-
-        # Also check if PATH itself changed (new/removed dirs)
-        if set(new_mtimes.keys()) != set(self._dir_mtimes.keys()):
-            needs_full_scan = True
+        new_mtimes = self._collect_path_mtimes(dirs)
+        needs_full_scan = new_mtimes != self._dir_mtimes
 
         if not needs_full_scan and self._path_commands:
             # No changes detected, keep existing cache
             self._last_refresh = time.monotonic()
             return
 
+        self._path_commands = self._scan_path_commands(dirs)
+        self._dir_mtimes = new_mtimes
+        self._last_refresh = time.monotonic()
+
+    @staticmethod
+    def _collect_path_mtimes(dirs: list[str]) -> dict[str, float]:
+        mtimes: dict[str, float] = {}
+        for directory in dirs:
+            try:
+                mtimes[directory] = os.stat(directory).st_mtime
+            except OSError:
+                mtimes[directory] = 0.0
+        return mtimes
+
+    @staticmethod
+    def _scan_path_commands(dirs: list[str]) -> Set[str]:
         commands: Set[str] = set()
         for directory in dirs:
             try:
-                with os.scandir(directory) as entries:
-                    for entry in entries:
-                        try:
-                            if entry.is_file(follow_symlinks=True):
-                                commands.add(entry.name)
-                        except OSError:
-                            continue
-            except (OSError, PermissionError):
+                entries = os.scandir(directory)
+            except OSError:
                 continue
-
-        self._path_commands = commands
-        self._dir_mtimes = new_mtimes
-        self._last_refresh = time.monotonic()
+            with entries:
+                for entry in entries:
+                    try:
+                        if entry.is_file(follow_symlinks=True):
+                            commands.add(entry.name)
+                    except OSError:
+                        continue
+        return commands
 
     def invalidate_cache(self) -> None:
         """Force cache refresh on next lookup."""
         self._last_refresh = 0.0
-

@@ -50,7 +50,11 @@ def extract_dropped_paths(value: Any) -> List[str]:
     except Exception:
         return paths
     for file in files:
-        path = file.get_path()
+        try:
+            path = file.get_path()
+        except Exception as exc:
+            _logger.warning(f"Could not read dropped file path: {exc}")
+            continue
         if path:
             paths.append(path)
     return paths
@@ -68,7 +72,7 @@ def is_terminal_ssh_like(
 
 
 def setup_sftp_drop(
-    terminal: Vte.Terminal, *, on_drop
+    terminal: Vte.Terminal, *, on_drop: Any
 ) -> None:
     """Install an SFTP-style file drop controller on ``terminal``."""
     drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
@@ -77,16 +81,47 @@ def setup_sftp_drop(
 
 
 def setup_ssh_drop(
-    terminal: Vte.Terminal, *, terminal_id: int, on_drop
-) -> None:
+    terminal: Vte.Terminal, *, terminal_id: int, on_drop: Any
+) -> Gtk.DropTarget:
     """Install an SSH-style file drop controller on ``terminal``.
 
     Terminal id is passed to the callback so the manager can look up
     session metadata for the dropped files.
     """
+    existing = getattr(terminal, "ashy_ssh_drop_controller", None)
+    if existing is not None:
+        return existing
+
     drop_target = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
     drop_target.connect("drop", on_drop, terminal, terminal_id)
     terminal.add_controller(drop_target)
+    terminal.ashy_ssh_drop_controller = drop_target
+    if hasattr(terminal, "ashy_controllers"):
+        terminal.ashy_controllers.append(drop_target)
+    return drop_target
+
+
+def remove_ssh_drop(terminal: Vte.Terminal) -> None:
+    """Remove the SSH drop target while preserving other terminal controllers."""
+    controller = getattr(terminal, "ashy_ssh_drop_controller", None)
+    if controller is None:
+        return
+    terminal.remove_controller(controller)
+    if controller in getattr(terminal, "ashy_controllers", []):
+        terminal.ashy_controllers.remove(controller)
+    terminal.ashy_ssh_drop_controller = None
+
+
+def sync_manual_ssh_drop(manager: "TerminalManager", terminal: Vte.Terminal) -> None:
+    """Match a local terminal's drop target to its current manual SSH state."""
+    terminal_id = getattr(terminal, "terminal_id", None)
+    if terminal_id is None:
+        return
+    ssh_target = manager.manual_ssh_tracker.get_ssh_target(terminal_id)
+    if ssh_target:
+        manager._setup_ssh_drag_and_drop(terminal, terminal_id)
+    else:
+        manager._remove_ssh_drag_and_drop(terminal)
 
 
 def handle_sftp_drop(
@@ -99,7 +134,10 @@ def handle_sftp_drop(
     """
     try:
         for path in extract_dropped_paths(value):
-            command_to_send = f'put -r "{path}"\n'
+            command_to_send = build_sftp_put_command(path)
+            if command_to_send is None:
+                _logger.warning("Ignoring dropped path with unsupported control characters")
+                continue
             _logger.info(
                 f"File dropped on SFTP terminal. Sending command: "
                 f"{command_to_send.strip()}"
@@ -109,6 +147,14 @@ def handle_sftp_drop(
     except Exception as e:
         _logger.error(f"Error handling file drop for SFTP: {e}")
         return False
+
+
+def build_sftp_put_command(path: str) -> Optional[str]:
+    """Quote a local path for the OpenSSH SFTP interactive command parser."""
+    if any(character in path for character in ("\x00", "\r", "\n")):
+        return None
+    escaped_path = path.replace("\\", "\\\\").replace('"', '\\"')
+    return f'put -r "{escaped_path}"\n'
 
 
 def handle_ssh_drop(
@@ -134,6 +180,9 @@ def handle_ssh_drop(
 
         session = info.get("identifier")
         ssh_target = manager.manual_ssh_tracker.get_ssh_target(terminal_id)
+        if not ssh_target and info.get("type") == "local":
+            manager.manual_ssh_tracker.check_process_tree(terminal_id)
+            ssh_target = manager.manual_ssh_tracker.get_ssh_target(terminal_id)
 
         if not is_terminal_ssh_like(session=session, ssh_target=ssh_target):
             _logger.info("Drop target is not an SSH session, ignoring")

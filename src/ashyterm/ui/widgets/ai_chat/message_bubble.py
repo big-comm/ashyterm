@@ -56,17 +56,17 @@ class LoadingIndicator(Gtk.Box):
         self._label.add_css_class("dim-label")
         self.append(self._label)
 
-    def start(self):
+    def start(self) -> None:
         """Start the loading animation."""
         self._spinner.start()
         self._label.set_label(_("AI is thinking..."))
         self.set_visible(True)
 
-    def set_streaming_label(self):
+    def set_streaming_label(self) -> None:
         """Update label once streaming content starts arriving."""
         self._label.set_label(_("AI is responding..."))
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the loading animation."""
         self._spinner.stop()
         self.set_visible(False)
@@ -95,7 +95,7 @@ class MessageBubble(Gtk.Box):
 
         self._setup_ui()
 
-    def update_theme(self):
+    def update_theme(self) -> None:
         """Update syntax highlighting and colors based on current theme."""
         # Re-format content with new colors
         formatted_content = self._format_content(self._content)
@@ -503,70 +503,77 @@ class MessageBubble(Gtk.Box):
         # Get colors based on current theme
         colors = self._get_syntax_colors()
 
-        # Define token patterns for shell/bash (most common for terminal commands)
-        if lang in ("bash", "sh", "shell", "zsh", ""):
-            patterns = [
-                # Comments - must be first
-                (r"#[^\n]*", "comment"),
-                # Double-quoted strings
-                (r'"(?:[^"\\]|\\.)*"', "string"),
-                # Single-quoted strings
-                (r"'(?:[^'\\]|\\.)*'", "string"),
-                # Variables $VAR and ${VAR}
-                (r"\$\{?[\w]+\}?", "variable"),
-                # Flags/options (--flag or -f)
-                (r"(?<!\w)--?[\w-]+", "flag"),
-                # Shell keywords
-                (
-                    r"\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|in|function|return|exit|export|source|alias|unset|local|readonly)\b",
-                    "keyword",
-                ),
-                # Common commands (expanded list)
-                (
-                    r"\b(?:sudo|cd|ls|cat|echo|grep|awk|sed|find|xargs|chmod|chown|cp|mv|rm|mkdir|touch|head|tail|sort|uniq|wc|cut|tr|tee|man|which|whereis|apt|apt-get|apt-cache|dpkg|pacman|yay|paru|pip|pip3|npm|npx|yarn|pnpm|git|docker|docker-compose|podman|kubectl|systemctl|journalctl|curl|wget|tar|gzip|gunzip|zip|unzip|ssh|scp|rsync|kill|killall|pkill|ps|top|htop|btop|df|du|free|mount|umount|ln|pwd|date|cal|whoami|hostname|uname|clear|history|alias|export|env|set|bash|zsh|sh|fish|python|python3|node|ruby|perl|make|cmake|gcc|g\+\+|clang|cargo|rustc|go|java|javac|nano|vim|nvim|vi|emacs|code|less|more|diff|patch|install|update|upgrade|remove|purge|autoremove|search|info|show|list|status|start|stop|restart|enable|disable|reload|reboot|shutdown|poweroff|suspend|hibernate|chroot|exec|nohup|screen|tmux|watch|time|timeout|sleep|true|false|test|read|printf|pushd|popd|dirs|fg|bg|jobs|disown|wait|trap|break|continue|shift|getopts|eval|source|type|command|builtin|hash|help|logout|exit|return|declare|typeset|let|readonly|local|global|unset|shopt|complete|compgen|compopt|mapfile|readarray|coproc|select|until|ulimit|umask|fc|bind|caller|enable|mapfile|readarray|times)\b",
-                    "function",
-                ),
-                # Numbers
-                (r"\b\d+\b", "number"),
-            ]
-        elif lang in ("python", "py"):
-            patterns = [
-                # Comments
-                (r"#[^\n]*", "comment"),
-                # Triple-quoted strings
-                (r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'', "string"),
-                # Double-quoted strings
-                (r'"(?:[^"\\]|\\.)*"', "string"),
-                # Single-quoted strings
-                (r"'(?:[^'\\]|\\.)*'", "string"),
-                # Decorators
-                (r"@[\w.]+", "function"),
-                # Keywords
-                (
-                    r"\b(?:def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|True|False|None|async|await|global|nonlocal)\b",
-                    "keyword",
-                ),
-                # Built-in functions
-                (
-                    r"\b(?:print|len|range|str|int|float|list|dict|set|tuple|open|type|isinstance|hasattr|getattr|setattr|delattr|repr|abs|all|any|bin|bool|bytes|callable|chr|complex|dir|divmod|enumerate|eval|exec|filter|format|frozenset|globals|hash|hex|id|input|iter|locals|map|max|min|next|object|oct|ord|pow|property|reversed|round|slice|sorted|staticmethod|sum|super|vars|zip)\b",
-                    "function",
-                ),
-                # Numbers
-                (r"\b\d+\.?\d*\b", "number"),
-            ]
-        elif lang == "json":
-            patterns = [
-                # Keys
-                (r'"[\w_-]+"(?=\s*:)', "variable"),
-                # String values
-                (r'(?<=:\s*)"(?:[^"\\]|\\.)*"', "string"),
-                # Booleans and null
-                (r"\b(?:true|false|null)\b", "keyword"),
-                # Numbers
-                (r"\b\d+\.?\d*\b", "number"),
-            ]
-        else:
-            # No highlighting for unknown languages
+        # Define token patterns for supported languages.
+        shell_patterns = [
+            # Comments - must be first
+            (r"#[^\n]*", "comment"),
+            # Double-quoted strings
+            (r'"(?:[^"\\]|\\.)*"', "string"),
+            # Single-quoted strings
+            (r"'(?:[^'\\]|\\.)*'", "string"),
+            # Variables $VAR and ${VAR}
+            (r"\$\{?[\w]+\}?", "variable"),
+            # Flags/options (--flag or -f)
+            (r"(?<!\w)--?[\w-]+", "flag"),
+            # Shell keywords
+            (
+                r"\b(?:if|then|else|elif|fi|for|while|do|done|case|esac|in|function|return|exit|export|source|alias|unset|local|readonly)\b",
+                "keyword",
+            ),
+            # Common commands (expanded list)
+            (
+                r"\b(?:sudo|cd|ls|cat|echo|grep|awk|sed|find|xargs|chmod|chown|cp|mv|rm|mkdir|touch|head|tail|sort|uniq|wc|cut|tr|tee|man|which|whereis|apt|apt-get|apt-cache|dpkg|pacman|yay|paru|pip|pip3|npm|npx|yarn|pnpm|git|docker|docker-compose|podman|kubectl|systemctl|journalctl|curl|wget|tar|gzip|gunzip|zip|unzip|ssh|scp|rsync|kill|killall|pkill|ps|top|htop|btop|df|du|free|mount|umount|ln|pwd|date|cal|whoami|hostname|uname|clear|history|alias|export|env|set|bash|zsh|sh|fish|python|python3|node|ruby|perl|make|cmake|gcc|g\+\+|clang|cargo|rustc|go|java|javac|nano|vim|nvim|vi|emacs|code|less|more|diff|patch|install|update|upgrade|remove|purge|autoremove|search|info|show|list|status|start|stop|restart|enable|disable|reload|reboot|shutdown|poweroff|suspend|hibernate|chroot|exec|nohup|screen|tmux|watch|time|timeout|sleep|true|false|test|read|printf|pushd|popd|dirs|fg|bg|jobs|disown|wait|trap|break|continue|shift|getopts|eval|source|type|command|builtin|hash|help|logout|exit|return|declare|typeset|let|readonly|local|global|unset|shopt|complete|compgen|compopt|mapfile|readarray|coproc|select|until|ulimit|umask|fc|bind|caller|enable|mapfile|readarray|times)\b",
+                "function",
+            ),
+            # Numbers
+            (r"\b\d+\b", "number"),
+        ]
+        python_patterns = [
+            # Comments
+            (r"#[^\n]*", "comment"),
+            # Triple-quoted strings
+            (r'"""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\'', "string"),
+            # Double-quoted strings
+            (r'"(?:[^"\\]|\\.)*"', "string"),
+            # Single-quoted strings
+            (r"'(?:[^'\\]|\\.)*'", "string"),
+            # Decorators
+            (r"@[\w.]+", "function"),
+            # Keywords
+            (
+                r"\b(?:def|class|if|elif|else|for|while|try|except|finally|with|as|import|from|return|yield|raise|pass|break|continue|and|or|not|in|is|lambda|True|False|None|async|await|global|nonlocal)\b",
+                "keyword",
+            ),
+            # Built-in functions
+            (
+                r"\b(?:print|len|range|str|int|float|list|dict|set|tuple|open|type|isinstance|hasattr|getattr|setattr|delattr|repr|abs|all|any|bin|bool|bytes|callable|chr|complex|dir|divmod|enumerate|eval|exec|filter|format|frozenset|globals|hash|hex|id|input|iter|locals|map|max|min|next|object|oct|ord|pow|property|reversed|round|slice|sorted|staticmethod|sum|super|vars|zip)\b",
+                "function",
+            ),
+            # Numbers
+            (r"\b\d+\.?\d*\b", "number"),
+        ]
+        json_patterns = [
+            # Keys
+            (r'"[\w_-]+"(?=\s*:)', "variable"),
+            # String values
+            (r'(?<=:\s*)"(?:[^"\\]|\\.)*"', "string"),
+            # Booleans and null
+            (r"\b(?:true|false|null)\b", "keyword"),
+            # Numbers
+            (r"\b\d+\.?\d*\b", "number"),
+        ]
+        patterns_by_language = {
+            "": shell_patterns,
+            "bash": shell_patterns,
+            "sh": shell_patterns,
+            "shell": shell_patterns,
+            "zsh": shell_patterns,
+            "python": python_patterns,
+            "py": python_patterns,
+            "json": json_patterns,
+        }
+        patterns = patterns_by_language.get(lang)
+        if patterns is None:
             return GLib.markup_escape_text(code)
 
         # Build a combined pattern with named groups
@@ -732,7 +739,7 @@ class MessageBubble(Gtk.Box):
         clipboard = button.get_clipboard()
         clipboard.set(command)
 
-    def update_content(self, content: str, commands: list[str] | None = None):
+    def update_content(self, content: str, commands: list[str] | None = None) -> None:
         """Update the message content (for streaming)."""
         self._content = content
         formatted_content = self._format_content(content)

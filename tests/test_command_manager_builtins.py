@@ -1,6 +1,5 @@
 """Smoke tests for the builtin-commands catalog."""
 
-import pytest
 
 from ashyterm.data.command_manager_builtins import (
     get_builtin_commands as builtins_entrypoint,

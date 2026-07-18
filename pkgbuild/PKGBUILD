@@ -53,11 +53,6 @@ package() {
 
     python -m installer --destdir="$pkgdir" dist/*.whl
 
-    # Install files
-    cp -a usr/share "${pkgdir}/usr/share"
-    
-    cp -a usr/bin/ashyterm "${pkgdir}/usr/bin/ashyterm"
-
     # Install license file if present
     if [ -f "LICENSE" ]; then
         install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"

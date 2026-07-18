@@ -10,9 +10,9 @@ from gi.repository import GLib
 
 
 def on_spawn_callback(
-    terminal, pid: int, error: Optional[GLib.Error], user_data: Any,
-    registry, logger, tab_manager,
-    monitor_connection_fn, execute_command_fn,
+    terminal: Any, pid: int, error: Optional[GLib.Error], user_data: Any,
+    registry: Any, logger: Any, tab_manager: Any,
+    monitor_connection_fn: Any, execute_command_fn: Any,
 ) -> None:
     """Called when terminal spawn completes.
 
@@ -61,7 +61,7 @@ def on_spawn_callback(
         logger.error(f"Spawn callback failed: {e}")
 
 
-def execute_command_in_terminal(terminal, command: str, close_after_execute: bool = False) -> bool:
+def execute_command_in_terminal(terminal: Any, command: str, close_after_execute: bool = False) -> bool:
     """Execute command in terminal using bracketed paste mode.
 
     Bracketed paste prevents shell from auto-executing pasted content.

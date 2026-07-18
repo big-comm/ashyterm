@@ -1,6 +1,5 @@
 """Tests for stream_escapes (byte-level escape-sequence helpers)."""
 
-import pytest
 
 from ashyterm.terminal.stream_escapes import (
     AltScreenTransition,

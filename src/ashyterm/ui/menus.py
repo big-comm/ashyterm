@@ -2,6 +2,7 @@
 
 import gi
 from typing import Optional
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -148,7 +149,7 @@ class FontSizerWidget(Gtk.CenterBox):
         self.settings_manager.set("font", default_font)
         self.update_display()
 
-    def update_display(self):
+    def update_display(self) -> None:
         font_string = self.settings_manager.get("font")
         _family, size = self._parse_font_string(font_string)
         self.font_size_label.set_text(f"{size} pt")
@@ -158,7 +159,7 @@ class MainApplicationMenu:
     """Factory for creating the main application popover menu."""
 
     @staticmethod
-    def create_main_popover(parent_window) -> tuple[Gtk.Popover, FontSizerWidget]:
+    def create_main_popover(parent_window: Any) -> tuple[Gtk.Popover, FontSizerWidget]:
         popover = Gtk.Popover()
         popover.add_css_class("ashyterm-popover")
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0, hexpand=True)
@@ -227,11 +228,11 @@ class MainApplicationMenu:
 
 
 def create_session_menu(
-    session_item,
-    session_store,
-    position,
-    folder_store=None,
-    clipboard_has_content=False,
+    session_item: Any,
+    session_store: Any,
+    position: Any,
+    folder_store: Any=None,
+    clipboard_has_content: bool=False,
 ) -> Gio.Menu:
     """Factory function to create a session context menu model."""
     menu = Gio.Menu()
@@ -252,11 +253,11 @@ def create_session_menu(
 
 
 def create_folder_menu(
-    folder_item,
-    folder_store,
-    position,
-    session_store=None,
-    clipboard_has_content=False,
+    folder_item: Any,
+    folder_store: Any,
+    position: Any,
+    session_store: Any=None,
+    clipboard_has_content: bool=False,
 ) -> Gio.Menu:
     """Factory function to create a folder context menu model."""
     menu = Gio.Menu()
@@ -271,7 +272,7 @@ def create_folder_menu(
     return menu
 
 
-def create_root_menu(clipboard_has_content=False) -> Gio.Menu:
+def create_root_menu(clipboard_has_content: bool=False) -> Gio.Menu:
     """Factory function to create a root tree view context menu model."""
     menu = Gio.Menu()
     menu.append(_("Add Session"), "win.add-session-root")
@@ -304,7 +305,7 @@ def _detect_url_at_click(terminal, click_x, click_y) -> Optional[str]:
 
 
 def create_terminal_menu(
-    terminal,
+    terminal: Any,
     terminal_id: int,
     settings_manager: Optional["SettingsManager"] = None,
     click_x: Optional[float] = None,

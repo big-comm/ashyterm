@@ -11,6 +11,7 @@ from .local_spawn_mixin import LocalSpawnMixin
 from .process_tracker import ProcessTracker
 from .ssh_spawn_mixin import SSHSpawnMixin
 from ..utils.logger import log_swallowed_exception
+from typing import Any
 
 LOGGER_NAME_SPAWNER = "ashyterm.spawner"
 
@@ -62,7 +63,7 @@ def get_spawner() -> ProcessSpawner:
     return _spawner_instance
 
 
-def get_ssh_connection_checker():
+def get_ssh_connection_checker() -> Any:
     """Get the singleton SSH connection checker instance."""
     global _checker_instance
     if _checker_instance is None:

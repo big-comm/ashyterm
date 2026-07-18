@@ -228,7 +228,7 @@ class WindowActionsMixin:
         if hasattr(self.ui_builder, "_populate_command_toolbar"):
             self.ui_builder._populate_command_toolbar(self.ui_builder._toolbar_inner)
 
-    def execute_toolbar_command(self, command) -> None:
+    def execute_toolbar_command(self, command: Any) -> None:
         """Execute a command from the toolbar."""
         from .data.command_manager_models import ExecutionMode
         from .ui.dialogs.command_manager import CommandFormDialog

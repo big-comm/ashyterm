@@ -11,6 +11,7 @@ from typing import Optional
 import gi
 
 from .tooltip_helper import get_tooltip_helper
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gio, Gtk
@@ -152,7 +153,7 @@ def create_icon_button(
     tooltip: Optional[str] = None,
     css_classes: Optional[list] = None,
     flat: bool = False,
-    on_clicked=None,
+    on_clicked: Any=None,
     callback_args: tuple = (),
     valign: Optional[Gtk.Align] = None,
 ) -> Gtk.Button:

@@ -5,6 +5,7 @@
 from typing import TYPE_CHECKING, Optional
 
 from gi.repository import GLib, Gtk
+from typing import Any
 
 if TYPE_CHECKING:
     from .app import CommTerminalApp
@@ -118,7 +119,7 @@ class CliArgParser:
 
     def create_tab_in_window(
         self,
-        window,
+        window: Any,
         ssh_target: Optional[str],
         execute_command: Optional[str],
         working_directory: Optional[str],

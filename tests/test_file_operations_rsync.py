@@ -3,6 +3,8 @@
 import threading
 from unittest.mock import MagicMock
 
+import pytest
+
 from ashyterm.filemanager import operations as operations_module
 from ashyterm.filemanager.accelerated_download import AcceleratedDownloadUnavailable
 from ashyterm.filemanager.operations import FileOperations, _format_exception_for_log
@@ -136,7 +138,9 @@ def test_start_download_uses_accelerated_path_when_eligible(tmp_path):
     ops._transfer_with_progress.assert_not_called()
 
 
-def test_accelerated_directory_download_calls_recursive_downloader(monkeypatch, tmp_path):
+def test_accelerated_directory_download_calls_recursive_downloader(
+    monkeypatch, tmp_path
+):
     class ImmediateThread:
         def __init__(self, target, daemon):
             self._target = target
@@ -311,3 +315,32 @@ def test_remove_sftp_batch_file_is_best_effort(tmp_path):
     ops._remove_sftp_batch_file(None)
 
     assert not batch_file.exists()
+
+
+def test_sftp_batch_quotes_spaces_quotes_and_backslashes():
+    ops = FileOperations(_session())
+
+    batch = ops._build_sftp_batch(
+        '/tmp/source "copy"\\file.txt',
+        "/remote/target folder/file.txt",
+        is_directory=False,
+        is_download=False,
+    )
+
+    assert batch == (
+        'put -r "/tmp/source \\"copy\\"\\\\file.txt" '
+        '"/remote/target folder/file.txt"\nquit\n'
+    )
+
+
+@pytest.mark.parametrize("unsafe_character", ["\n", "\r", "\0"])
+def test_sftp_batch_rejects_command_separators(unsafe_character):
+    ops = FileOperations(_session())
+
+    with pytest.raises(ValueError):
+        ops._build_sftp_batch(
+            f"/tmp/source{unsafe_character}put /etc/passwd /tmp/leak",
+            "/remote/target",
+            is_directory=False,
+            is_download=False,
+        )

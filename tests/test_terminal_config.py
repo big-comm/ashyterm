@@ -3,8 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-import pytest
-
 from ashyterm.sessions.models import SessionItem
 from ashyterm.terminal.terminal_config import (
     compute_highlighting_config,
@@ -19,6 +17,7 @@ def _settings(**overrides):
     defaults = {
         "cat_colorization_enabled": True,
         "shell_input_highlighting_enabled": False,
+        "osc52_clipboard_enabled": False,
     }
     defaults.update(overrides)
     sm.get = MagicMock(side_effect=lambda k, d=None: defaults.get(k, d))
@@ -172,6 +171,17 @@ class TestComputeHighlightingConfig:
         assert cfg["output_highlighting"] is True
         assert should is True
 
+    def test_osc52_enables_proxy_without_highlighting(self):
+        should, cfg = compute_highlighting_config(
+            session=None,
+            is_local=True,
+            highlight_manager=_hl_manager(local=False),
+            settings_manager=_settings(osc52_clipboard_enabled=True),
+        )
+
+        assert should is True
+        assert not any(cfg.values())
+
 
 # ── get_ssh_highlight_config ────────────────────────────────
 
@@ -215,6 +225,18 @@ class TestSshHighlightConfig:
             settings_manager=_settings(),
         )
         assert cfg["shell_input_enabled"] is True
+        assert cfg["should_highlight"] is True
+
+    def test_osc52_enables_ssh_proxy_without_highlighting(self):
+        session = SessionItem(
+            name="s", session_type="ssh", output_highlighting=False
+        )
+        cfg = get_ssh_highlight_config(
+            session=session,
+            highlight_manager=_hl_manager(ssh=False),
+            settings_manager=_settings(osc52_clipboard_enabled=True),
+        )
+
         assert cfg["should_highlight"] is True
 
 

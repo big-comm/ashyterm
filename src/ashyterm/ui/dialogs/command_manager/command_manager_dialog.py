@@ -82,7 +82,7 @@ class CommandManagerDialog(Adw.Window):
         key_controller.connect("key-pressed", self._on_key_pressed)
         self.add_controller(key_controller)
 
-    def present(self):
+    def present(self) -> None:
         self._presenting = True
         super().present()
         GLib.idle_add(lambda: setattr(self, "_presenting", False))
@@ -829,10 +829,10 @@ class CommandManagerDialog(Adw.Window):
         self.hide()
         return Gdk.EVENT_STOP
 
-    def close(self):
+    def close(self) -> None:
         self.hide()
 
-    def destroy(self):
+    def destroy(self) -> None:
         if not hasattr(self, "_allow_destroy") or not self._allow_destroy:
             self.hide()
             return

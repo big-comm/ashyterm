@@ -12,6 +12,7 @@ from .cat_colorization_delegate import (
     _create_theme_combo_row,
     _create_theme_mode_combo_row,
 )
+from typing import Any
 
 if TYPE_CHECKING:
     from .highlight_dialog import HighlightDialog
@@ -254,7 +255,7 @@ class ShellInputDelegate:
             )
 
     def on_shell_input_highlighting_toggled(
-        self, switch: Adw.SwitchRow, _pspec
+        self, switch: Adw.SwitchRow, _pspec: Any
     ) -> None:
         """Handle shell input highlighting toggle changes."""
         enabled = switch.get_active()
@@ -280,7 +281,7 @@ class ShellInputDelegate:
         )
 
     def on_shell_input_mode_changed(
-        self, combo_row: Adw.ComboRow, _pspec
+        self, combo_row: Adw.ComboRow, _pspec: Any
     ) -> None:
         """Handle theme mode changes (auto/manual)."""
         idx = combo_row.get_selected()
@@ -300,7 +301,7 @@ class ShellInputDelegate:
         self._refresh_shell_input_highlighter()
         self.dlg.logger.debug(f"Shell input theme mode changed to: {mode}")
 
-    def on_dark_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
+    def on_dark_theme_changed(self, combo_row: Adw.ComboRow, _pspec: Any) -> None:
         """Handle dark theme selection changes."""
         idx = combo_row.get_selected()
         if (
@@ -316,7 +317,7 @@ class ShellInputDelegate:
                 f"Shell input dark theme changed to: {theme}"
             )
 
-    def on_light_theme_changed(self, combo_row: Adw.ComboRow, _pspec) -> None:
+    def on_light_theme_changed(self, combo_row: Adw.ComboRow, _pspec: Any) -> None:
         """Handle light theme selection changes."""
         idx = combo_row.get_selected()
         if (
@@ -333,7 +334,7 @@ class ShellInputDelegate:
             )
 
     def on_shell_input_theme_changed(
-        self, combo_row: Adw.ComboRow, _pspec
+        self, combo_row: Adw.ComboRow, _pspec: Any
     ) -> None:
         """Handle shell input color theme changes (manual mode)."""
         idx = combo_row.get_selected()

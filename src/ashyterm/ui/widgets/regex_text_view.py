@@ -96,7 +96,7 @@ class RegexTextView(BaseSyntaxTextView):
 
     def update_colors_from_scheme(
         self, palette: List[str], foreground: str = "#ffffff"
-    ):
+    ) -> None:
         """
         Update syntax highlighting colors from a terminal color scheme palette.
 

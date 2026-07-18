@@ -28,7 +28,7 @@ class ContextMenuDelegate:
 
     # ── Right-click handlers ────────────────────────────────────────────────
 
-    def on_item_right_click(self, gesture, n_press, x, y, list_item):
+    def on_item_right_click(self, gesture: Any, n_press: Any, x: Any, y: Any, list_item: Any) -> None:
         fm = self.fm
         try:
             row = gesture.get_widget()
@@ -61,7 +61,7 @@ class ContextMenuDelegate:
         except Exception as e:
             fm.logger.error(f"Error in right-click handler: {e}")
 
-    def on_column_view_background_click(self, gesture, n_press, x, y):
+    def on_column_view_background_click(self, gesture: Any, n_press: Any, x: Any, y: Any) -> None:
         fm = self.fm
         try:
             target = fm.column_view.pick(int(x), int(y), Gtk.PickFlags.DEFAULT)
@@ -91,7 +91,7 @@ class ContextMenuDelegate:
         except Exception as e:
             fm.logger.error(f"Error in background right-click handler: {e}")
 
-    def on_scrolled_window_background_click(self, gesture, n_press, x, y):
+    def on_scrolled_window_background_click(self, gesture: Any, n_press: Any, x: Any, y: Any) -> None:
         fm = self.fm
         try:
             widget = gesture.get_widget()
@@ -134,7 +134,7 @@ class ContextMenuDelegate:
 
     # ── Context menu construction ───────────────────────────────────────────
 
-    def create_context_menu_model(self, items: List[FileItem]):
+    def create_context_menu_model(self, items: List[FileItem]) -> Any:
         fm = self.fm
         menu = Gio.Menu()
         num_items = len(items)
@@ -178,11 +178,11 @@ class ContextMenuDelegate:
 
     def setup_action_group(
         self,
-        popover,
+        popover: Any,
         actions: dict,
         group_name: str = "context",
         items: Optional[List[FileItem]] = None,
-    ):
+    ) -> None:
         fm = self.fm
         action_group = Gio.SimpleActionGroup()
         for name, callback in actions.items():
@@ -200,7 +200,7 @@ class ContextMenuDelegate:
             action_group.add_action(action)
         popover.insert_action_group(group_name, action_group)
 
-    def setup_context_actions(self, popover, items: List[FileItem]):
+    def setup_context_actions(self, popover: Any, items: List[FileItem]) -> None:
         fm = self.fm
         actions = {
             "open_edit": fm._on_open_edit_action,
@@ -215,7 +215,7 @@ class ContextMenuDelegate:
         }
         self.setup_action_group(popover, actions, "context", items)
 
-    def setup_general_context_actions(self, popover):
+    def setup_general_context_actions(self, popover: Any) -> None:
         actions = {
             "create_folder": self.on_create_folder_action,
             "create_file": self.on_create_file_action,
@@ -232,7 +232,7 @@ class ContextMenuDelegate:
             return int(translated.x), int(translated.y)
         return int(x), int(y)
 
-    def show_general_context_menu(self, x, y):
+    def show_general_context_menu(self, x: Any, y: Any) -> None:
         fm = self.fm
         menu = Gio.Menu()
 
@@ -258,7 +258,7 @@ class ContextMenuDelegate:
         popover.set_pointing_to(rect)
         popover.popup()
 
-    def show_context_menu(self, items: List[FileItem], x, y):
+    def show_context_menu(self, items: List[FileItem], x: Any, y: Any) -> None:
         fm = self.fm
         menu_model = self.create_context_menu_model(items)
         popover = create_themed_popover_menu(menu_model, fm.main_box)
@@ -276,7 +276,7 @@ class ContextMenuDelegate:
 
     # ── CRUD actions ────────────────────────────────────────────────────────
 
-    def on_create_folder_action(self, *_args):
+    def on_create_folder_action(self, *_args: Any) -> None:
         fm = self.fm
         base_path = PurePosixPath(fm.current_path or "/")
 
@@ -294,7 +294,7 @@ class ContextMenuDelegate:
             callback=create_folder,
         )
 
-    def on_create_file_action(self, *_args):
+    def on_create_file_action(self, *_args: Any) -> None:
         fm = self.fm
         base_path = PurePosixPath(fm.current_path or "/")
 
@@ -338,13 +338,13 @@ class ContextMenuDelegate:
         fm._clipboard_session_key = fm._get_current_session_key()
         fm._show_toast(toast_message)
 
-    def on_copy_action(self, _action, _param, items: List[FileItem]):
+    def on_copy_action(self, _action: Any, _param: Any, items: List[FileItem]) -> None:
         self._set_clipboard_operation(items, "copy", _("Items copied to clipboard."))
 
-    def on_cut_action(self, _action, _param, items: List[FileItem]):
+    def on_cut_action(self, _action: Any, _param: Any, items: List[FileItem]) -> None:
         self._set_clipboard_operation(items, "cut", _("Items marked for move."))
 
-    def on_paste_action(self):
+    def on_paste_action(self) -> None:
         fm = self.fm
         if not fm._can_paste():
             fm._show_toast(_("Nothing to paste."))
@@ -374,7 +374,7 @@ class ContextMenuDelegate:
 
     # ── Delete ──────────────────────────────────────────────────────────────
 
-    def on_delete_action(self, _action, _param, items: List[FileItem]):
+    def on_delete_action(self, _action: Any, _param: Any, items: List[FileItem]) -> None:
         fm = self.fm
         count = len(items)
         if count == 1:
@@ -409,7 +409,7 @@ class ContextMenuDelegate:
 
     # ── Permissions ─────────────────────────────────────────────────────────
 
-    def on_chmod_action(self, _action, _param, items: List[FileItem]):
+    def on_chmod_action(self, _action: Any, _param: Any, items: List[FileItem]) -> None:
         self._show_permissions_dialog(items)
 
     def _show_permissions_dialog(self, items: List[FileItem]):
@@ -478,9 +478,15 @@ class ContextMenuDelegate:
         self._update_mode_display()
 
         for checkbox in [
-            self._owner_read, self._owner_write, self._owner_execute,
-            self._group_read, self._group_write, self._group_execute,
-            self._others_read, self._others_write, self._others_execute,
+            self._owner_read,
+            self._owner_write,
+            self._owner_execute,
+            self._group_read,
+            self._group_write,
+            self._group_execute,
+            self._others_read,
+            self._others_write,
+            self._others_execute,
         ]:
             checkbox.connect("toggled", lambda _: self._update_mode_display())
 
@@ -540,7 +546,7 @@ class ContextMenuDelegate:
 
     # ── Keyboard handlers ───────────────────────────────────────────────────
 
-    def on_search_key_pressed(self, controller, keyval, _keycode, state):
+    def on_search_key_pressed(self, controller: Any, keyval: Any, _keycode: Any, state: Any) -> Any:
         fm = self.fm
         if not fm.selection_model:
             return Gdk.EVENT_PROPAGATE
@@ -596,52 +602,67 @@ class ContextMenuDelegate:
             return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def on_column_view_key_pressed(self, controller, keyval, _keycode, state):
+    def on_column_view_key_pressed(self, controller: Any, keyval: Any, _keycode: Any, state: Any) -> Any:
         fm = self.fm
         unicode_val = Gdk.keyval_to_unicode(keyval)
-        if unicode_val != 0:
-            char = chr(unicode_val)
-            if char.isprintable():
-                fm.search_entry.set_text(char)
-                fm.search_entry.set_position(-1)
-                fm.search_entry.grab_focus()
-                return Gdk.EVENT_STOP
-
-        if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
-            if (
-                fm.selection_model
-                and fm.selection_model.get_selection().get_size() > 0
-            ):
-                pos = fm.selection_model.get_selection().get_nth(0)
-                fm._on_row_activated(fm.column_view, pos)
-                return Gdk.EVENT_STOP
-
-        elif keyval == Gdk.KEY_BackSpace:
-            if not fm.search_entry.get_text().strip():
-                fm._navigate_up_directory()
-                return Gdk.EVENT_STOP
-
-        elif keyval in (Gdk.KEY_Delete, Gdk.KEY_KP_Delete):
-            selected_items = [
-                item for item in fm.get_selected_items() if item.name != ".."
-            ]
-            if selected_items:
-                self.on_delete_action(None, None, selected_items)
-                return Gdk.EVENT_STOP
-
-        elif keyval == Gdk.KEY_Menu or (
-            keyval == Gdk.KEY_F10 and state & Gdk.ModifierType.SHIFT_MASK
-        ):
-            selected_items = fm.get_selected_items()
-            if selected_items:
-                self.show_context_menu(selected_items, 0, 0)
-            else:
-                self.show_general_context_menu(0, 0)
+        if unicode_val and chr(unicode_val).isprintable():
+            fm.search_entry.set_text(chr(unicode_val))
+            fm.search_entry.set_position(-1)
+            fm.search_entry.grab_focus()
             return Gdk.EVENT_STOP
-
+        if self._handle_column_view_action_key(keyval, state):
+            return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def on_column_view_key_released(self, controller, keyval, _keycode, state):
+    def _handle_column_view_action_key(self, keyval, state) -> bool:
+        handlers = {
+            Gdk.KEY_Return: self._activate_selected_item,
+            Gdk.KEY_KP_Enter: self._activate_selected_item,
+            Gdk.KEY_BackSpace: self._navigate_up_from_empty_search,
+            Gdk.KEY_Delete: self._delete_selected_items,
+            Gdk.KEY_KP_Delete: self._delete_selected_items,
+        }
+        if handler := handlers.get(keyval):
+            return handler()
+        is_context_menu_key = keyval == Gdk.KEY_Menu or (
+            keyval == Gdk.KEY_F10 and state & Gdk.ModifierType.SHIFT_MASK
+        )
+        if is_context_menu_key:
+            self._show_keyboard_context_menu()
+            return True
+        return False
+
+    def _activate_selected_item(self) -> bool:
+        selection_model = self.fm.selection_model
+        if not selection_model or selection_model.get_selection().get_size() == 0:
+            return False
+        position = selection_model.get_selection().get_nth(0)
+        self.fm._on_row_activated(self.fm.column_view, position)
+        return True
+
+    def _navigate_up_from_empty_search(self) -> bool:
+        if self.fm.search_entry.get_text().strip():
+            return False
+        self.fm._navigate_up_directory()
+        return True
+
+    def _delete_selected_items(self) -> bool:
+        selected_items = [
+            item for item in self.fm.get_selected_items() if item.name != ".."
+        ]
+        if not selected_items:
+            return False
+        self.on_delete_action(None, None, selected_items)
+        return True
+
+    def _show_keyboard_context_menu(self) -> None:
+        selected_items = self.fm.get_selected_items()
+        if selected_items:
+            self.show_context_menu(selected_items, 0, 0)
+        else:
+            self.show_general_context_menu(0, 0)
+
+    def on_column_view_key_released(self, controller: Any, keyval: Any, _keycode: Any, state: Any) -> Any:
         fm = self.fm
         if keyval in (Gdk.KEY_Alt_L, Gdk.KEY_Alt_R):
             selected_items = fm.get_selected_items()
@@ -650,5 +671,5 @@ class ContextMenuDelegate:
                 return Gdk.EVENT_STOP
         return Gdk.EVENT_PROPAGATE
 
-    def on_hidden_toggle(self, _toggle_button):
+    def on_hidden_toggle(self, _toggle_button: Any) -> None:
         self.fm.combined_filter.changed(Gtk.FilterChange.DIFFERENT)

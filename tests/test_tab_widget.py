@@ -1,6 +1,5 @@
 """Tests for tab_widget (tab button factory + color helpers)."""
 
-import pytest
 
 from ashyterm.sessions.models import SessionItem
 from ashyterm.terminal.tab_widget import (

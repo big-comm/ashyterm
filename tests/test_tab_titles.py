@@ -1,6 +1,5 @@
 """Tests for tab_titles (pure tab title composition helpers)."""
 
-import pytest
 
 from ashyterm.terminal.tab_titles import (
     append_terminal_count,

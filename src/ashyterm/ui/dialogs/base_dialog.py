@@ -170,7 +170,7 @@ class BaseDialog(Adw.Window):
     def _on_cancel_clicked(self, button):
         self.close()
 
-    def present(self):
+    def present(self) -> None:
         """Present the dialog, hiding any tooltips first.
 
         Implements a fallback mechanism to recover UI responsiveness if the

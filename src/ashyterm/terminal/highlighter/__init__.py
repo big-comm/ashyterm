@@ -31,6 +31,7 @@ from .constants import (
 
 # Rules are also lightweight
 from .rules import CompiledRule, LiteralKeywordRule
+from typing import Any
 
 # Type checking imports don't affect runtime
 if TYPE_CHECKING:
@@ -61,7 +62,7 @@ _shell_input_module = None
 _highlighter_impl_module = None
 
 
-def get_output_highlighter():
+def get_output_highlighter() -> Any:
     """Get the singleton OutputHighlighter instance (lazy import)."""
     global _output_highlighter_module
     if _output_highlighter_module is None:
@@ -71,7 +72,7 @@ def get_output_highlighter():
     return _output_highlighter_module()
 
 
-def get_shell_input_highlighter():
+def get_shell_input_highlighter() -> Any:
     """Get the singleton ShellInputHighlighter instance (lazy import)."""
     global _shell_input_module
     if _shell_input_module is None:

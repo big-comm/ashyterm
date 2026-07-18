@@ -3,6 +3,7 @@ import re
 from typing import TYPE_CHECKING
 
 import gi
+from typing import Any
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
@@ -135,7 +136,7 @@ class SearchManager(GObject.Object):
         if self.ui.terminal_search_entry.get_text():
             self.perform_search(self.ui.terminal_search_entry.get_text())
 
-    def perform_search(self, text):
+    def perform_search(self, text: Any) -> None:
         terminal = self.tab_manager.get_selected_terminal()
         if not terminal:
             return
@@ -210,7 +211,7 @@ class SearchManager(GObject.Object):
         else:
             self.update_occurrence_display()
 
-    def update_occurrence_display(self):
+    def update_occurrence_display(self) -> None:
         text = (
             str(self.current_occurrence)
             if self.active and self.current_occurrence > 0
@@ -218,7 +219,7 @@ class SearchManager(GObject.Object):
         )
         self.ui.search_occurrence_label.set_text(text)
 
-    def clear_search(self):
+    def clear_search(self) -> None:
         terminal = self.tab_manager.get_selected_terminal()
         if terminal:
             terminal.search_set_regex(None, 0)
@@ -227,13 +228,13 @@ class SearchManager(GObject.Object):
         self.current_occurrence = 0
         self.update_occurrence_display()
 
-    def stop_search(self):
+    def stop_search(self) -> None:
         self.clear_search()
         terminal = self.tab_manager.get_selected_terminal()
         if terminal:
             terminal.grab_focus()
 
-    def hide_if_terminal_changed(self):
+    def hide_if_terminal_changed(self) -> None:
         """Hide search if the current terminal is different from when search was started."""
         current_terminal = self.tab_manager.get_selected_terminal()
         if self.active and current_terminal != self.current_terminal:

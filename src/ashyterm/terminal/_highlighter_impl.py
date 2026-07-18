@@ -75,6 +75,7 @@ from .stream_escapes import (
     count_backspaces as _count_backspaces_impl,
     detect_alt_screen_transition as _detect_alt_screen_transition_impl,
 )
+from .osc52 import OSC52StreamParser, consume_osc52_output
 
 # Re-export _PROMPT_MARKER for any external consumers
 __all__ = [
@@ -150,6 +151,7 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
 
         # Buffer for partial lines
         self._partial_line_buffer: bytes = b""
+        self._osc52_parser = OSC52StreamParser()
 
         # Burst detection counter
         # Tracks consecutive large chunks to detect file dumps vs commands
@@ -608,6 +610,7 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         self._line_queue.clear()
         self._queue_processing = False
         self._partial_line_buffer = b""
+        self._osc52_parser.reset()
         self._burst_counter = 0
         self._in_bracketed_paste = False
 
@@ -691,15 +694,12 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             if not self._verify_terminal_valid(term):
                 return False
 
-            # 5. Handle partial escape sequences from previous read
-            data = self._combine_with_partial_buffer(data)
+            # 5. Consume clipboard requests and buffer partial escapes.
+            data = self._prepare_pty_data(data, term)
+            if data is None:
+                return True
 
-            # 6. Check for incomplete escape sequence and buffer if needed
-            if self._has_incomplete_escape(data):
-                self._partial_line_buffer = data
-                return True  # Wait for next chunk
-
-            # 7. Process data
+            # 6. Process data
             return self._process_pty_data(data, term)
 
         except OSError:
@@ -714,6 +714,32 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
             except Exception as exc:
                 log_swallowed_exception(exc)
             return True
+
+    def _prepare_pty_data(
+        self, data: bytes, term: Vte.Terminal
+    ) -> Optional[bytes]:
+        """Consume OSC 52 and retain incomplete escape sequences."""
+        data = self._consume_osc52(data, term)
+        if not data:
+            return None
+        data = self._combine_with_partial_buffer(data)
+        if self._has_incomplete_escape(data):
+            self._partial_line_buffer = data
+            return None
+        return data
+
+    def _consume_osc52(self, data: bytes, term: Vte.Terminal) -> bytes:
+        """Apply write-only OSC 52 requests and remove them from output."""
+        from ..settings.manager import get_settings_manager
+
+        return consume_osc52_output(
+            self._osc52_parser,
+            data,
+            term,
+            enabled=lambda: bool(
+                get_settings_manager().get("osc52_clipboard_enabled", True)
+            ),
+        )
 
     def _verify_terminal_valid(self, term: Vte.Terminal | None) -> bool:
         """Verify terminal widget is still valid and usable."""

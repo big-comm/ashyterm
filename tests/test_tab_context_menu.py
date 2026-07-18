@@ -2,7 +2,6 @@
 
 from unittest.mock import MagicMock
 
-import pytest
 
 from ashyterm.sessions.models import SessionItem
 from ashyterm.terminal.tab_context_menu import build_menu_model

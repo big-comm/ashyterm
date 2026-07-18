@@ -7,6 +7,7 @@ highlighting rules to terminal output text using ANSI escape codes.
 """
 
 import threading
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from ...utils.re_engine import engine as re_engine
@@ -20,8 +21,6 @@ from .rules import (
     extract_literal_keywords,
     extract_prefilter,
 )
-from ...utils.logger import log_swallowed_exception
-
 if TYPE_CHECKING:
     from ...settings.highlights import HighlightManager
 
@@ -29,6 +28,18 @@ if TYPE_CHECKING:
 # Singleton instance
 _output_highlighter: Optional["OutputHighlighter"] = None
 _output_highlighter_lock = threading.Lock()
+
+_REGEX_MATCH_TIMEOUT_SECONDS = 0.05
+
+
+@dataclass(frozen=True, slots=True)
+class _RegexRuleSpec:
+    """Pure-Python snapshot safe to compile outside the GTK thread."""
+
+    name: str
+    pattern: str
+    ansi_colors: tuple[str, ...]
+    action: str
 
 
 class OutputHighlighter:
@@ -61,6 +72,9 @@ class OutputHighlighter:
         self._context_rules_cache: Dict[
             str, Tuple[Union[CompiledRule, LiteralKeywordRule], ...]
         ] = {}
+        self._context_compile_pending: set[tuple[int, str]] = set()
+        self._rules_generation = 0
+        self._disabled_rule_ids: set[int] = set()
 
         # Global compiled rules (tuple for faster iteration)
         self._global_rules: Tuple[Union[CompiledRule, LiteralKeywordRule], ...] = ()
@@ -84,7 +98,6 @@ class OutputHighlighter:
         self.logger.info("Using regex module (PCRE2) for high-performance highlighting")
 
         self._refresh_rules()
-        self._precompile_common_contexts()
         self._manager.connect("rules-changed", self._on_rules_changed)
 
     def _refresh_ignored_commands(self) -> None:
@@ -126,9 +139,10 @@ class OutputHighlighter:
 
     def _on_rules_changed(self, manager) -> None:
         self._refresh_rules()
-        # Clear context cache when rules change
         with self._lock:
+            self._rules_generation += 1
             self._context_rules_cache.clear()
+            self._disabled_rule_ids.clear()
 
     def _compile_rule(
         self, rule: HighlightRule
@@ -144,27 +158,31 @@ class OutputHighlighter:
         - ANSI color tuple
         - Pre-filter function for fast skipping
         """
+        prepared = self._prepare_rule(rule)
+        if prepared is None:
+            return None
+        return self._compile_prepared_rule(prepared)
+
+    def _prepare_rule(
+        self, rule: HighlightRule
+    ) -> Optional[Union[_RegexRuleSpec, LiteralKeywordRule]]:
+        """Resolve settings-dependent fields before leaving the GTK thread."""
         if not rule.enabled or not rule.pattern:
             return None
 
-        # Get action (default: "next")
         action = getattr(rule, "action", "next")
         if action not in ("next", "stop"):
             action = "next"
 
-        # Check if this is a simple keyword pattern that can use optimized matching
         literal_keywords = extract_literal_keywords(rule.pattern)
         if literal_keywords:
-            # Use optimized literal keyword matching (no regex!)
-            # Resolve first color only (keyword rules use single color)
-            if rule.colors and rule.colors[0]:
-                ansi_color = self._manager.resolve_color_to_ansi(rule.colors[0])
-            else:
-                ansi_color = ""
-
+            ansi_color = (
+                self._manager.resolve_color_to_ansi(rule.colors[0])
+                if rule.colors and rule.colors[0]
+                else ""
+            )
             if not ansi_color:
                 return None
-
             return LiteralKeywordRule(
                 keywords=frozenset(literal_keywords),
                 keyword_tuple=literal_keywords,
@@ -172,67 +190,66 @@ class OutputHighlighter:
                 action=action,
             )
 
-        # Fall back to regex for complex patterns
-        try:
-            # Compile with regex engine (PCRE2) - use faster VERSION1 mode if available
-            flags = re_engine.IGNORECASE | getattr(re_engine, "VERSION1", 0)
-            pattern = re_engine.compile(rule.pattern, flags)
-            num_groups = pattern.groups
-
-            # Resolve colors to ANSI sequences (tuple for faster iteration)
-            ansi_colors = (
-                tuple(
-                    self._manager.resolve_color_to_ansi(c) if c else ""
-                    for c in rule.colors
-                )
-                if rule.colors
-                else ("",)
+        ansi_colors = (
+            tuple(
+                self._manager.resolve_color_to_ansi(color) if color else ""
+                for color in rule.colors
             )
+            if rule.colors
+            else ("",)
+        )
+        if not any(ansi_colors):
+            return None
+        return _RegexRuleSpec(rule.name, rule.pattern, ansi_colors, action)
 
-            if not any(ansi_colors):
-                return None
-
-            # Create pre-filter for fast skipping
-            prefilter = extract_prefilter(rule.pattern, rule.name)
-
+    def _compile_prepared_rule(
+        self, prepared: Union[_RegexRuleSpec, LiteralKeywordRule]
+    ) -> Optional[Union[CompiledRule, LiteralKeywordRule]]:
+        """Compile a settings-free rule snapshot."""
+        if isinstance(prepared, LiteralKeywordRule):
+            return prepared
+        try:
+            flags = re_engine.IGNORECASE | getattr(re_engine, "VERSION1", 0)
+            pattern = re_engine.compile(prepared.pattern, flags)
+            num_groups = pattern.groups
             return CompiledRule(
                 pattern=pattern,
-                ansi_colors=ansi_colors,
-                action=action,
+                ansi_colors=prepared.ansi_colors,
+                action=prepared.action,
                 num_groups=num_groups,
-                prefilter=prefilter,
+                prefilter=extract_prefilter(prepared.pattern, prepared.name),
             )
-
         except Exception as e:
-            self.logger.warning(f"Invalid regex pattern in rule '{rule.name}': {e}")
+            self.logger.warning(
+                f"Invalid regex pattern in rule '{prepared.name}': {e}"
+            )
             return None
 
     def _refresh_rules(self) -> None:
         """Refresh compiled rules from the manager."""
+        rules_list = self._manager.rules
+        self.logger.debug(f"Refreshing global rules: {len(rules_list)} total")
+
+        compiled = []
+        literal_count = 0
+        regex_count = 0
+
+        for rule in rules_list:
+            cr = self._compile_rule(rule)
+            if cr:
+                compiled.append(cr)
+                if isinstance(cr, LiteralKeywordRule):
+                    literal_count += 1
+                else:
+                    regex_count += 1
+
         with self._lock:
-            rules_list = self._manager.rules
-            self.logger.debug(f"Refreshing global rules: {len(rules_list)} total")
-
-            compiled = []
-            literal_count = 0
-            regex_count = 0
-
-            for rule in rules_list:
-                cr = self._compile_rule(rule)
-                if cr:
-                    compiled.append(cr)
-                    if isinstance(cr, LiteralKeywordRule):
-                        literal_count += 1
-                    else:
-                        regex_count += 1
-
-            # Convert to tuple for faster iteration
             self._global_rules = tuple(compiled)
 
-            self.logger.debug(
-                f"Compiled {len(self._global_rules)} global rules "
-                f"({literal_count} literal, {regex_count} regex)"
-            )
+        self.logger.debug(
+            f"Compiled {len(compiled)} global rules "
+            f"({literal_count} literal, {regex_count} regex)"
+        )
 
     def _precompile_common_contexts(self) -> None:
         """Pre-compile rules for commonly used contexts to avoid first-use latency."""
@@ -250,12 +267,7 @@ class OutputHighlighter:
         )
         for name in _COMMON_CONTEXTS:
             if self._manager.get_context_for_command(name):
-                try:
-                    self._context_rules_cache[name] = self._compile_rules_for_context(
-                        name
-                    )
-                except Exception as exc:
-                    log_swallowed_exception(exc)
+                self._schedule_context_compilation(name, self._rules_generation)
 
     def set_context(
         self, command_name: str, proxy_id: int = 0, full_command: str = ""
@@ -296,9 +308,10 @@ class OutputHighlighter:
                         command_name
                     )
                     if not resolved_context:
-                        # Command not in any context's triggers - use command name as-is
-                        # This allows the ignored command check to work
-                        resolved_context = command_name.lower()
+                        # Unknown commands use the already-compiled global rules.
+                        # Keeping arbitrary command text as a context caused an
+                        # unbounded cache and redundant compilation on the GTK thread.
+                        resolved_context = ""
 
             # Get current context for this proxy
             current_context = self._proxy_contexts.get(proxy_id, "")
@@ -397,15 +410,31 @@ class OutputHighlighter:
 
         This merges global rules with context-specific rules.
         """
+        prepared = self._prepare_rules_for_context(context_name)
+        return self._compile_prepared_rules(prepared)
+
+    def _prepare_rules_for_context(
+        self, context_name: str
+    ) -> tuple[Union[_RegexRuleSpec, LiteralKeywordRule], ...]:
+        """Snapshot context rules while access to managers remains on the caller."""
         rules = self._manager.get_rules_for_context(context_name)
-        self.logger.debug(f"Compiling {len(rules)} rules for context '{context_name}'")
+        self.logger.debug(f"Preparing {len(rules)} rules for context '{context_name}'")
+        return tuple(
+            prepared
+            for rule in rules
+            if (prepared := self._prepare_rule(rule)) is not None
+        )
 
+    def _compile_prepared_rules(
+        self,
+        prepared_rules: tuple[Union[_RegexRuleSpec, LiteralKeywordRule], ...],
+    ) -> Tuple[Union[CompiledRule, LiteralKeywordRule], ...]:
+        """Compile pure snapshots without consulting GTK-backed managers."""
         compiled = []
-        for rule in rules:
-            cr = self._compile_rule(rule)
-            if cr:
-                compiled.append(cr)
-
+        for prepared in prepared_rules:
+            rule = self._compile_prepared_rule(prepared)
+            if rule:
+                compiled.append(rule)
         return tuple(compiled)
 
     def _get_active_rules(
@@ -426,15 +455,89 @@ class OutputHighlighter:
         if not context or not self._manager.context_aware_enabled:
             return self._global_rules
 
-        # Check cache
-        if context in self._context_rules_cache:
-            return self._context_rules_cache[context]
+        with self._lock:
+            cached = self._context_rules_cache.get(context)
+        if cached is not None:
+            return cached
 
-        # Compile and cache rules for this context
+        # Never hold the shared state lock while compiling regular expressions.
         context_rules = self._compile_rules_for_context(context)
-        self._context_rules_cache[context] = context_rules
+        with self._lock:
+            return self._context_rules_cache.setdefault(context, context_rules)
 
-        return context_rules
+    def get_context_and_rules(
+        self, proxy_id: int = 0
+    ) -> tuple[str, Tuple[Union[CompiledRule, LiteralKeywordRule], ...]]:
+        """Return a proxy snapshot without compiling on the caller thread."""
+        with self._lock:
+            context = self._proxy_contexts.get(proxy_id, "")
+            if context and context.lower() in self._ignored_commands:
+                return context, ()
+            if not context or not self._manager.context_aware_enabled:
+                return context, self._global_rules
+            cached = self._context_rules_cache.get(context)
+            if cached is not None:
+                return context, cached
+            generation = getattr(self, "_rules_generation", 0)
+
+        self._schedule_context_compilation(context, generation)
+        return context, self._global_rules
+
+    def _schedule_context_compilation(self, context: str, generation: int) -> None:
+        """Compile one context in an isolated daemon worker."""
+        key = (generation, context)
+        with self._lock:
+            if not hasattr(self, "_context_compile_pending"):
+                self._context_compile_pending = set()
+            if key in self._context_compile_pending:
+                return
+            self._context_compile_pending.add(key)
+
+        try:
+            prepared_rules = self._prepare_rules_for_context(context)
+        except Exception as exc:
+            with self._lock:
+                self._context_compile_pending.discard(key)
+            self.logger.warning(
+                f"Could not prepare highlight context '{context}': {exc}"
+            )
+            return
+
+        worker = threading.Thread(
+            target=self._compile_context_worker,
+            args=(context, generation, prepared_rules),
+            name=f"ashy-highlight-{context[:24]}",
+            daemon=True,
+        )
+        try:
+            worker.start()
+        except RuntimeError as exc:
+            with self._lock:
+                self._context_compile_pending.discard(key)
+            self.logger.warning(
+                f"Could not start highlight compiler for '{context}': {exc}"
+            )
+
+    def _compile_context_worker(
+        self,
+        context: str,
+        generation: int,
+        prepared_rules: tuple[Union[_RegexRuleSpec, LiteralKeywordRule], ...],
+    ) -> None:
+        """Publish compiled rules only when their source generation is current."""
+        key = (generation, context)
+        try:
+            compiled = self._compile_prepared_rules(prepared_rules)
+            with self._lock:
+                if generation == getattr(self, "_rules_generation", 0):
+                    self._context_rules_cache[context] = compiled
+        except Exception as exc:
+            self.logger.warning(
+                f"Failed to compile highlight context '{context}': {exc}"
+            )
+        finally:
+            with self._lock:
+                self._context_compile_pending.discard(key)
 
     def highlight_text(self, text: str, proxy_id: int = 0) -> str:
         """
@@ -450,16 +553,7 @@ class OutputHighlighter:
         if not text:
             return text
 
-        # Fast path: get context and rules with minimal locking
-        with self._lock:
-            context = self._get_context_unlocked(proxy_id)
-
-            # Early return for ignored commands (tools with native coloring)
-            # This preserves their ANSI colors and saves CPU
-            if context and context.lower() in self._ignored_commands:
-                return text
-
-            rules = self._get_active_rules(context)
+        _context, rules = self.get_context_and_rules(proxy_id)
 
         if not rules:
             return text
@@ -481,15 +575,7 @@ class OutputHighlighter:
         if not line:
             return line
 
-        with self._lock:
-            context = self._get_context_unlocked(proxy_id)
-
-            # Early return for ignored commands (tools with native coloring)
-            # This preserves their ANSI colors and saves CPU
-            if context and context.lower() in self._ignored_commands:
-                return line
-
-            rules = self._get_active_rules(context)
+        _context, rules = self.get_context_and_rules(proxy_id)
 
         if not rules:
             return line
@@ -609,13 +695,31 @@ class OutputHighlighter:
         if rule.prefilter is not None and not rule.prefilter(line_lower):
             return False
 
+        disabled_rule_ids = getattr(self, "_disabled_rule_ids", set())
+        if id(rule) in disabled_rule_ids:
+            return False
+
         try:
             rule_matched = False
-            for match in rule.pattern.finditer(line):
+            try:
+                matches_iter = rule.pattern.finditer(
+                    line, timeout=_REGEX_MATCH_TIMEOUT_SECONDS
+                )
+            except TypeError:
+                matches_iter = rule.pattern.finditer(line)
+            for match in matches_iter:
                 rule_matched = True
                 self._extract_match_colors(match, rule, matches)
 
             return rule_matched and rule.action == "stop"
+        except TimeoutError:
+            disabled_rule_ids.add(id(rule))
+            self._disabled_rule_ids = disabled_rule_ids
+            if hasattr(self, "logger"):
+                self.logger.warning(
+                    "Highlight rule timed out and was disabled until rules reload"
+                )
+            return False
         except Exception as e:
             if hasattr(self, "logger"):
                 self.logger.debug(f"Rule pattern matching failed: {e}")

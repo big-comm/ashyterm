@@ -3,7 +3,6 @@
 import pytest
 
 from ashyterm.terminal.shell_prompt_detect import (
-    FANCY_PROMPT_CHARS,
     PROMPT_TRIGGER_CHARS,
     READLINE_SEQUENCES,
     SEARCH_PROMPT_PATTERNS,

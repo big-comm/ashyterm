@@ -20,6 +20,7 @@ gi.require_version("Pango", "1.0")
 from gi.repository import Gtk, Pango
 
 from ..utils.logger import get_logger
+from .scrolling import SCROLL_MODES
 
 
 # Boolean flags the validator enforces strictly — anything that lands
@@ -29,6 +30,7 @@ _BOOLEAN_SETTINGS = (
     "auto_hide_sidebar",
     "scroll_on_output",
     "scroll_on_keystroke",
+    "osc52_clipboard_enabled",
     "mouse_autohide",
     "bell_sound",
     "file_transfer_accelerated_downloads",
@@ -79,6 +81,10 @@ class SettingsValidator:
             self.logger.debug(f"Shortcut validation failed for '{value}': {e}")
             return False
 
+    def validate_terminal_scroll_mode(self, value: Any) -> bool:
+        """Terminal scroll mode must select one supported event route."""
+        return isinstance(value, str) and value in SCROLL_MODES
+
     # ── aggregate validators ─────────────────────────────────
 
     def validate_shortcuts(self, shortcuts: Dict[str, str]) -> List[str]:
@@ -124,6 +130,7 @@ class SettingsValidator:
             "color_scheme": lambda v: self.validate_color_scheme(v, num_schemes),
             "transparency": self.validate_transparency,
             "font": self.validate_font,
+            "terminal_scroll_mode": self.validate_terminal_scroll_mode,
         }
         for key, validator in validators.items():
             if key in settings and not validator(settings[key]):

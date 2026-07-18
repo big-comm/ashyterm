@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Callable, Dict, List, Optional, Set, Tuple
 
 import gi
+from typing import Any
 gi.require_version("GObject", "2.0")
 from gi.repository import GObject
 
@@ -65,7 +66,7 @@ class HighlightManager(GObject.GObject):
 
     # ── Color Resolution ────────────────────────────────────────────
 
-    def set_settings_manager(self, manager) -> None:
+    def set_settings_manager(self, manager: Any) -> None:
         """Attach settings manager for theme-aware colors."""
         self._colors.set_settings_manager(manager)
 

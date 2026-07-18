@@ -1,6 +1,15 @@
 """Tests for file transfer user feedback."""
 
+import pytest
+
+from ashyterm.filemanager import transfers
 from ashyterm.filemanager.transfers import FileTransferMixin
+
+
+@pytest.fixture(autouse=True)
+def _use_source_messages(monkeypatch):
+    """Keep assertions independent from the desktop's active locale."""
+    monkeypatch.setattr(transfers, "_", lambda message: message)
 
 
 def test_transfer_failure_toast_mentions_remote_io_error():

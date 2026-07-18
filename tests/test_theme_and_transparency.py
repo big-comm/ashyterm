@@ -8,6 +8,7 @@ sidebar transparency CSS, and adaptive alpha calculations.
 
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -241,12 +242,12 @@ class TestWelcomeScreenRemoved:
 
         # Reload to get fresh module
         importlib.reload(win_module)
-        source = open(win_module.__file__).read()
+        source = Path(win_module.__file__).read_text()
         assert "_show_first_run_tips" not in source
 
     def test_no_first_run_shown_setting(self):
         """No code should reference first_run_shown setting."""
         import ashyterm.window as win_module
 
-        source = open(win_module.__file__).read()
+        source = Path(win_module.__file__).read_text()
         assert "first_run_shown" not in source

@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock
 
 import gi
-import pytest
 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk

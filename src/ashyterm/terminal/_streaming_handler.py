@@ -386,10 +386,7 @@ class StreamingHandler:
 
     def _get_streaming_context_and_rules(self) -> tuple:
         """Get context and rules for streaming highlighting."""
-        with self._highlighter._lock:
-            context = self._highlighter._proxy_contexts.get(self._proxy_id, "")
-            rules = self._highlighter._get_active_rules(context)
-        return context, rules
+        return self._highlighter.get_context_and_rules(self._proxy_id)
 
     def _should_apply_shell_input_highlighting(
         self, chunk_is_likely_user_input: bool
@@ -448,10 +445,7 @@ class StreamingHandler:
     ) -> bool:
         """Handle newline at prompt with empty buffer."""
         # Re-obtain context (may have been updated)
-        with self._highlighter._lock:
-            context = self._highlighter._proxy_contexts.get(self._proxy_id, "")
-            if context:
-                rules = self._highlighter._get_active_rules(context)
+        context, rules = self._highlighter.get_context_and_rules(self._proxy_id)
 
         if context and rules:
             self._at_shell_prompt = False

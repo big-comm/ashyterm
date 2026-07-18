@@ -232,7 +232,7 @@ class ConversationHistoryPanel(Gtk.Box):
         else:
             row.set_header(None)
 
-    def refresh(self):
+    def refresh(self) -> None:
         """Refresh the conversation list."""
         # Clear existing rows
         self._row_map.clear()

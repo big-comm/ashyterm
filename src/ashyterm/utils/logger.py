@@ -10,6 +10,7 @@ import os
 import sys
 import threading
 from typing import TYPE_CHECKING, Dict, Optional
+from typing import Any
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -98,7 +99,7 @@ class ColoredFormatter(logging.Formatter):
         "RESET": "\033[0m",
     }
 
-    def format(self, record):
+    def format(self, record: Any) -> Any:
         levelname = record.levelname
         original_levelname = record.levelname
         padding_width = 8
@@ -177,22 +178,22 @@ class ThreadSafeLogger:
                 error_file_handler.setFormatter(file_formatter)
                 self._logger.addHandler(error_file_handler)
 
-    def debug(self, message: str, **kwargs):
+    def debug(self, message: str, **kwargs: Any) -> None:
         self._logger.debug(message, **kwargs)
 
-    def info(self, message: str, **kwargs):
+    def info(self, message: str, **kwargs: Any) -> None:
         self._logger.info(message, **kwargs)
 
-    def warning(self, message: str, **kwargs):
+    def warning(self, message: str, **kwargs: Any) -> None:
         self._logger.warning(message, **kwargs)
 
-    def error(self, message: str, exc_info: bool = False, **kwargs):
+    def error(self, message: str, exc_info: bool = False, **kwargs: Any) -> None:
         self._logger.error(message, exc_info=exc_info, **kwargs)
 
-    def critical(self, message: str, exc_info: bool = True, **kwargs):
+    def critical(self, message: str, exc_info: bool = True, **kwargs: Any) -> None:
         self._logger.critical(message, exc_info=exc_info, **kwargs)
 
-    def exception(self, message: str, **kwargs):
+    def exception(self, message: str, **kwargs: Any) -> None:
         self._logger.exception(message, **kwargs)
 
 
@@ -229,32 +230,32 @@ class LoggerManager:
                     self._loggers[name] = ThreadSafeLogger(name, self.config)
         return self._loggers[name]
 
-    def reconfigure_all_loggers(self):
+    def reconfigure_all_loggers(self) -> None:
         """Re-applies configuration to all existing logger instances."""
         with self._lock:
             for logger in self._loggers.values():
                 logger._setup_logger()
 
-    def set_console_level(self, level: int):
+    def set_console_level(self, level: int) -> None:
         with self._lock:
             self.config.console_level = level
             self.reconfigure_all_loggers()
 
-    def set_log_to_file_enabled(self, enabled: bool):
+    def set_log_to_file_enabled(self, enabled: bool) -> None:
         with self._lock:
             if self.config.log_to_file != enabled:
                 self.config.log_to_file = enabled
                 self.reconfigure_all_loggers()
 
-    def enable_debug_mode(self):
+    def enable_debug_mode(self) -> None:
         self.set_console_level(LogLevel.DEBUG)
         os.environ["ASHYTERM_DEBUG"] = "1"
 
-    def disable_debug_mode(self):
+    def disable_debug_mode(self) -> None:
         self.set_console_level(LogLevel.INFO)
         os.environ.pop("ASHYTERM_DEBUG", None)
 
-    def cleanup_old_logs(self, days_to_keep: int = 30):
+    def cleanup_old_logs(self, days_to_keep: int = 30) -> None:
         try:
             datetime_cls = _get_datetime()
             cutoff_time = datetime_cls.now().timestamp() - (days_to_keep * 24 * 60 * 60)
@@ -284,7 +285,7 @@ def get_logger(name: Optional[str] = None) -> ThreadSafeLogger:
     return _logger_manager.get_logger(name)
 
 
-def set_console_log_level(level_str: str):
+def set_console_log_level(level_str: str) -> None:
     """Set console logging level globally from a string."""
     level_map = {
         "DEBUG": LogLevel.DEBUG,
@@ -300,40 +301,40 @@ def set_console_log_level(level_str: str):
         get_logger().error(f"Invalid log level string: {level_str}")
 
 
-def set_log_to_file_enabled(enabled: bool):
+def set_log_to_file_enabled(enabled: bool) -> None:
     """Enable or disable logging to files globally."""
     _logger_manager.set_log_to_file_enabled(enabled)
 
 
-def enable_debug_mode():
+def enable_debug_mode() -> None:
     """Enable debug mode for all loggers."""
     _logger_manager.enable_debug_mode()
 
 
-def disable_debug_mode():
+def disable_debug_mode() -> None:
     """Disable debug mode for all loggers."""
     _logger_manager.disable_debug_mode()
 
 
-def cleanup_old_logs(days_to_keep: int = 30):
+def cleanup_old_logs(days_to_keep: int = 30) -> None:
     """Clean up old log files."""
     _logger_manager.cleanup_old_logs(days_to_keep)
 
 
-def log_app_start():
+def log_app_start() -> None:
     """Log application startup."""
     logger = get_logger("ashyterm.startup")
     logger.info("Ashy Terminal starting up")
     cleanup_old_logs()
 
 
-def log_app_shutdown():
+def log_app_shutdown() -> None:
     """Log application shutdown."""
     logger = get_logger("ashyterm.shutdown")
     logger.info("Ashy Terminal shutting down")
 
 
-def log_terminal_event(event_type: str, terminal_name: str, details: str = ""):
+def log_terminal_event(event_type: str, terminal_name: str, details: str = "") -> None:
     """Log terminal-related events."""
     logger = get_logger("ashyterm.terminal")
     message = f"Terminal '{terminal_name}' {event_type}"
@@ -342,7 +343,7 @@ def log_terminal_event(event_type: str, terminal_name: str, details: str = ""):
     logger.info(message)
 
 
-def log_session_event(event_type: str, item_name: str, details: str = ""):
+def log_session_event(event_type: str, item_name: str, details: str = "") -> None:
     """Log session or folder-related events."""
     logger = get_logger("ashyterm.sessions")
     item_type = "Folder" if "folder" in event_type else "Session"
@@ -354,7 +355,7 @@ def log_session_event(event_type: str, item_name: str, details: str = ""):
 
 def log_error_with_context(
     error: Exception, context: str, logger_name: Optional[str] = None
-):
+) -> None:
     """Log an error with context information."""
     logger = get_logger(logger_name)
     logger.error(f"Error in {context}: {str(error)}", exc_info=True)

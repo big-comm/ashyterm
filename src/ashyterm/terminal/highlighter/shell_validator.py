@@ -89,216 +89,236 @@ def validate_shell_input(buffer: str) -> List[SyntaxIssue]:
 def _scan_brackets_and_quotes(buffer: str, issues: List[SyntaxIssue]) -> None:
     """Scan for unbalanced brackets and unclosed quotes."""
     bracket_stack: List[Tuple[str, int]] = []
-    i = 0
-    length = len(buffer)
+    scanners = (
+        _scan_escaped_character,
+        _scan_heredoc,
+        _scan_single_quote,
+        _scan_double_quote,
+        _scan_backtick_quote,
+        _scan_compound_opener,
+        _scan_compound_closer,
+        _scan_simple_opener,
+        _scan_simple_closer,
+        _scan_comment,
+    )
+    index = 0
+    while index < len(buffer):
+        for scanner in scanners:
+            next_index = scanner(buffer, index, bracket_stack, issues)
+            if next_index is not None:
+                index = next_index
+                break
+        else:
+            index += 1
 
-    while i < length:
-        ch = buffer[i]
-
-        # Skip escaped characters
-        if ch == "\\" and i + 1 < length:
-            i += 2
-            continue
-
-        # Handle heredoc (<<EOF ... EOF or <<-EOF ... EOF or <<<)
-        if ch == "<" and i + 1 < length and buffer[i + 1] == "<":
-            if i + 2 < length and buffer[i + 2] == "<":
-                # Here-string (<<<) — skip to end of line
-                i += 3
-                while i < length and buffer[i] != "\n":
-                    i += 1
-                continue
-            # Heredoc: <<[-]DELIMITER
-            i += 2
-            if i < length and buffer[i] == "-":
-                i += 1
-            # Skip whitespace before delimiter
-            while i < length and buffer[i] in (" ", "\t"):
-                i += 1
-            # Extract delimiter (may be quoted)
-            delim_start = i
-            quote_char = ""
-            if i < length and buffer[i] in ("'", '"', "\\"):
-                quote_char = buffer[i]
-                i += 1
-            while i < length and buffer[i] not in (
-                " ",
-                "\t",
-                "\n",
-                ";",
-                quote_char if quote_char else "",
-            ):
-                i += 1
-            delimiter = buffer[delim_start:i].strip("'\"\\")
-            if quote_char and i < length and buffer[i] == quote_char:
-                i += 1
-            if not delimiter:
-                continue
-            # Skip to the closing delimiter line
-            while i < length:
-                # Find start of next line
-                nl = buffer.find("\n", i)
-                if nl == -1:
-                    i = length
-                    break
-                i = nl + 1
-                # Check if this line is the closing delimiter
-                line_end = buffer.find("\n", i)
-                if line_end == -1:
-                    line_end = length
-                line_content = buffer[i:line_end].strip()
-                if line_content == delimiter:
-                    i = line_end
-                    break
-            continue
-
-        # Handle single quotes
-        if ch == "'":
-            start = i
-            i += 1
-            while i < length and buffer[i] != "'":
-                i += 1
-            if i >= length:
-                issues.append(
-                    SyntaxIssue(start, start + 1, ErrorKind.UNCLOSED_QUOTE, "'")
-                )
-            else:
-                i += 1
-            continue
-
-        # Handle double quotes
-        if ch == '"':
-            start = i
-            i += 1
-            while i < length:
-                if buffer[i] == "\\" and i + 1 < length:
-                    i += 2
-                    continue
-                if buffer[i] == '"':
-                    break
-                i += 1
-            if i >= length:
-                issues.append(
-                    SyntaxIssue(start, start + 1, ErrorKind.UNCLOSED_QUOTE, '"')
-                )
-            else:
-                i += 1
-            continue
-
-        # Handle backtick quotes
-        if ch == "`":
-            start = i
-            i += 1
-            while i < length and buffer[i] != "`":
-                if buffer[i] == "\\" and i + 1 < length:
-                    i += 2
-                    continue
-                i += 1
-            if i >= length:
-                issues.append(
-                    SyntaxIssue(start, start + 1, ErrorKind.UNCLOSED_QUOTE, "`")
-                )
-            else:
-                i += 1
-            continue
-
-        # Handle $(( arithmetic expansion
-        if (
-            ch == "$"
-            and i + 2 < length
-            and buffer[i + 1] == "("
-            and buffer[i + 2] == "("
-        ):
-            bracket_stack.append(("$((", i))
-            i += 3
-            continue
-
-        # Handle $( command substitution
-        if ch == "$" and i + 1 < length and buffer[i + 1] == "(":
-            bracket_stack.append(("$(", i))
-            i += 2
-            continue
-
-        # Handle ${ parameter expansion
-        if ch == "$" and i + 1 < length and buffer[i + 1] == "{":
-            bracket_stack.append(("${", i))
-            i += 2
-            continue
-
-        # Handle [[ double bracket
-        if ch == "[" and i + 1 < length and buffer[i + 1] == "[":
-            bracket_stack.append(("[[", i))
-            i += 2
-            continue
-
-        # Handle ]] double bracket closer
-        if ch == "]" and i + 1 < length and buffer[i + 1] == "]":
-            if bracket_stack and bracket_stack[-1][0] == "[[":
-                bracket_stack.pop()
-            else:
-                issues.append(
-                    SyntaxIssue(i, i + 2, ErrorKind.UNMATCHED_BRACKET, "]]")
-                )
-            i += 2
-            continue
-
-        # Handle (( arithmetic
-        if ch == "(" and i + 1 < length and buffer[i + 1] == "(":
-            bracket_stack.append(("((", i))
-            i += 2
-            continue
-
-        # Handle )) arithmetic closer
-        if ch == ")" and i + 1 < length and buffer[i + 1] == ")":
-            if bracket_stack and bracket_stack[-1][0] in ("((", "$(("):
-                bracket_stack.pop()
-            else:
-                issues.append(
-                    SyntaxIssue(i, i + 2, ErrorKind.UNMATCHED_BRACKET, "))")
-                )
-            i += 2
-            continue
-
-        # Simple bracket openers
-        if ch in _BRACKET_PAIRS:
-            bracket_stack.append((ch, i))
-            i += 1
-            continue
-
-        # Simple bracket closers
-        if ch in _BRACKET_CLOSERS:
-            if bracket_stack:
-                top_char = bracket_stack[-1][0]
-                if (
-                    (ch == ")" and top_char in ("(", "$("))
-                    or (ch == "}" and top_char in ("{", "${"))
-                    or (ch == "]" and top_char == "[")
-                ):
-                    bracket_stack.pop()
-                else:
-                    issues.append(
-                        SyntaxIssue(i, i + 1, ErrorKind.UNMATCHED_BRACKET, ch)
-                    )
-            else:
-                issues.append(
-                    SyntaxIssue(i, i + 1, ErrorKind.UNMATCHED_BRACKET, ch)
-                )
-            i += 1
-            continue
-
-        # Handle # comments
-        if ch == "#":
-            if i == 0 or buffer[i - 1] in (" ", "\t", ";", "\n", "("):
-                while i < length and buffer[i] != "\n":
-                    i += 1
-                continue
-
-        i += 1
-
-    # Remaining unclosed brackets
     for opener, pos in bracket_stack:
         end = pos + len(opener)
         issues.append(SyntaxIssue(pos, end, ErrorKind.UNMATCHED_BRACKET, opener))
+
+
+def _scan_escaped_character(
+    buffer: str,
+    index: int,
+    _stack: List[Tuple[str, int]],
+    _issues: List[SyntaxIssue],
+) -> int | None:
+    if buffer[index] == "\\" and index + 1 < len(buffer):
+        return index + 2
+    return None
+
+
+def _scan_heredoc(
+    buffer: str,
+    index: int,
+    _stack: List[Tuple[str, int]],
+    _issues: List[SyntaxIssue],
+) -> int | None:
+    if not buffer.startswith("<<", index):
+        return None
+    if buffer.startswith("<<<", index):
+        line_end = buffer.find("\n", index + 3)
+        return len(buffer) if line_end == -1 else line_end
+    cursor, delimiter = _parse_heredoc_delimiter(buffer, index + 2)
+    if not delimiter:
+        return cursor
+    return _find_heredoc_end(buffer, cursor, delimiter)
+
+
+def _parse_heredoc_delimiter(buffer: str, cursor: int) -> Tuple[int, str]:
+    if cursor < len(buffer) and buffer[cursor] == "-":
+        cursor += 1
+    while cursor < len(buffer) and buffer[cursor] in (" ", "\t"):
+        cursor += 1
+    delimiter_start = cursor
+    quote_char = ""
+    if cursor < len(buffer) and buffer[cursor] in ("'", '"', "\\"):
+        quote_char = buffer[cursor]
+        cursor += 1
+    stops = {" ", "\t", "\n", ";"}
+    if quote_char:
+        stops.add(quote_char)
+    while cursor < len(buffer) and buffer[cursor] not in stops:
+        cursor += 1
+    delimiter = buffer[delimiter_start:cursor].strip("'\"\\")
+    if quote_char and cursor < len(buffer) and buffer[cursor] == quote_char:
+        cursor += 1
+    return cursor, delimiter
+
+
+def _find_heredoc_end(buffer: str, cursor: int, delimiter: str) -> int:
+    while cursor < len(buffer):
+        newline = buffer.find("\n", cursor)
+        if newline == -1:
+            return len(buffer)
+        line_start = newline + 1
+        line_end = buffer.find("\n", line_start)
+        if line_end == -1:
+            line_end = len(buffer)
+        if buffer[line_start:line_end].strip() == delimiter:
+            return line_end
+        cursor = line_start
+    return cursor
+
+
+def _scan_single_quote(
+    buffer: str,
+    index: int,
+    _stack: List[Tuple[str, int]],
+    issues: List[SyntaxIssue],
+) -> int | None:
+    if buffer[index] != "'":
+        return None
+    closing = buffer.find("'", index + 1)
+    if closing == -1:
+        issues.append(SyntaxIssue(index, index + 1, ErrorKind.UNCLOSED_QUOTE, "'"))
+        return len(buffer)
+    return closing + 1
+
+
+def _scan_escaped_quote(
+    buffer: str, index: int, quote: str, issues: List[SyntaxIssue]
+) -> int | None:
+    if buffer[index] != quote:
+        return None
+    cursor = index + 1
+    while cursor < len(buffer):
+        if buffer[cursor] == "\\" and cursor + 1 < len(buffer):
+            cursor += 2
+            continue
+        if buffer[cursor] == quote:
+            return cursor + 1
+        cursor += 1
+    issues.append(SyntaxIssue(index, index + 1, ErrorKind.UNCLOSED_QUOTE, quote))
+    return len(buffer)
+
+
+def _scan_double_quote(
+    buffer: str,
+    index: int,
+    _stack: List[Tuple[str, int]],
+    issues: List[SyntaxIssue],
+) -> int | None:
+    return _scan_escaped_quote(buffer, index, '"', issues)
+
+
+def _scan_backtick_quote(
+    buffer: str,
+    index: int,
+    _stack: List[Tuple[str, int]],
+    issues: List[SyntaxIssue],
+) -> int | None:
+    return _scan_escaped_quote(buffer, index, "`", issues)
+
+
+def _scan_compound_opener(
+    buffer: str,
+    index: int,
+    stack: List[Tuple[str, int]],
+    _issues: List[SyntaxIssue],
+) -> int | None:
+    for opener in ("$((", "$(", "${", "[[", "(("):
+        if buffer.startswith(opener, index):
+            stack.append((opener, index))
+            return index + len(opener)
+    return None
+
+
+def _scan_compound_closer(
+    buffer: str,
+    index: int,
+    stack: List[Tuple[str, int]],
+    issues: List[SyntaxIssue],
+) -> int | None:
+    closers = (("]]", ("[[",)), ("))", ("((", "$((")))
+    for closer, expected in closers:
+        if buffer.startswith(closer, index):
+            _close_bracket(stack, expected, closer, index, issues)
+            return index + len(closer)
+    return None
+
+
+def _close_bracket(
+    stack: List[Tuple[str, int]],
+    expected: tuple[str, ...],
+    closer: str,
+    index: int,
+    issues: List[SyntaxIssue],
+) -> None:
+    if stack and stack[-1][0] in expected:
+        stack.pop()
+        return
+    issues.append(
+        SyntaxIssue(index, index + len(closer), ErrorKind.UNMATCHED_BRACKET, closer)
+    )
+
+
+def _scan_simple_opener(
+    buffer: str,
+    index: int,
+    stack: List[Tuple[str, int]],
+    _issues: List[SyntaxIssue],
+) -> int | None:
+    character = buffer[index]
+    if character not in _BRACKET_PAIRS:
+        return None
+    stack.append((character, index))
+    return index + 1
+
+
+def _scan_simple_closer(
+    buffer: str,
+    index: int,
+    stack: List[Tuple[str, int]],
+    issues: List[SyntaxIssue],
+) -> int | None:
+    closer = buffer[index]
+    if closer not in _BRACKET_CLOSERS:
+        return None
+    expected = {
+        ")": ("(", "$("),
+        "}": ("{", "${"),
+        "]": ("[",),
+    }[closer]
+    _close_bracket(stack, expected, closer, index, issues)
+    return index + 1
+
+
+def _is_comment_start(buffer: str, index: int) -> bool:
+    return buffer[index] == "#" and (
+        index == 0 or buffer[index - 1] in (" ", "\t", ";", "\n", "(")
+    )
+
+
+def _scan_comment(
+    buffer: str,
+    index: int,
+    _stack: List[Tuple[str, int]],
+    _issues: List[SyntaxIssue],
+) -> int | None:
+    if not _is_comment_start(buffer, index):
+        return None
+    line_end = buffer.find("\n", index)
+    return len(buffer) if line_end == -1 else line_end
 
 
 def _scan_control_structures(buffer: str, issues: List[SyntaxIssue]) -> None:
@@ -364,59 +384,69 @@ def _close_structure(
 def _extract_shell_words(buffer: str) -> List[Tuple[str, int]]:
     """Extract word tokens from buffer, skipping quoted regions."""
     words: List[Tuple[str, int]] = []
-    i = 0
-    length = len(buffer)
-
-    while i < length:
-        ch = buffer[i]
-
-        # Skip whitespace
-        if ch in (" ", "\t", "\n"):
-            i += 1
-            continue
-
-        # Skip single-quoted strings
-        if ch == "'":
-            i += 1
-            while i < length and buffer[i] != "'":
-                i += 1
-            if i < length:
-                i += 1
-            continue
-
-        # Skip double-quoted strings
-        if ch == '"':
-            i += 1
-            while i < length:
-                if buffer[i] == "\\" and i + 1 < length:
-                    i += 2
-                    continue
-                if buffer[i] == '"':
-                    break
-                i += 1
-            if i < length:
-                i += 1
-            continue
-
-        # Skip comments
-        if ch == "#" and (i == 0 or buffer[i - 1] in (" ", "\t", ";", "\n", "(")):
-            while i < length and buffer[i] != "\n":
-                i += 1
-            continue
-
-        # Collect a word
-        if ch.isalpha() or ch == "_":
-            start = i
-            while i < length and (buffer[i].isalnum() or buffer[i] == "_"):
-                i += 1
-            word = buffer[start:i]
-            words.append((word, start))
-            continue
-
-        # Skip operators and other characters
-        i += 1
+    scanners = (
+        _skip_shell_whitespace,
+        _skip_shell_quoted_text,
+        _skip_shell_comment,
+        _collect_shell_word,
+    )
+    index = 0
+    while index < len(buffer):
+        for scanner in scanners:
+            next_index = scanner(buffer, index, words)
+            if next_index is not None:
+                index = next_index
+                break
+        else:
+            index += 1
 
     return words
+
+
+def _skip_shell_whitespace(
+    buffer: str, index: int, _words: List[Tuple[str, int]]
+) -> int | None:
+    if buffer[index] in (" ", "\t", "\n"):
+        return index + 1
+    return None
+
+
+def _skip_shell_quoted_text(
+    buffer: str, index: int, _words: List[Tuple[str, int]]
+) -> int | None:
+    quote = buffer[index]
+    if quote not in ("'", '"'):
+        return None
+    cursor = index + 1
+    while cursor < len(buffer):
+        if quote == '"' and buffer[cursor] == "\\" and cursor + 1 < len(buffer):
+            cursor += 2
+            continue
+        if buffer[cursor] == quote:
+            return cursor + 1
+        cursor += 1
+    return cursor
+
+
+def _skip_shell_comment(
+    buffer: str, index: int, _words: List[Tuple[str, int]]
+) -> int | None:
+    if not _is_comment_start(buffer, index):
+        return None
+    line_end = buffer.find("\n", index)
+    return len(buffer) if line_end == -1 else line_end
+
+
+def _collect_shell_word(
+    buffer: str, index: int, words: List[Tuple[str, int]]
+) -> int | None:
+    if not (buffer[index].isalpha() or buffer[index] == "_"):
+        return None
+    cursor = index + 1
+    while cursor < len(buffer) and (buffer[cursor].isalnum() or buffer[cursor] == "_"):
+        cursor += 1
+    words.append((buffer[index:cursor], index))
+    return cursor
 
 
 # ANSI codes for syntax error indication

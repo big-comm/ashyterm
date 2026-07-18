@@ -24,11 +24,13 @@ import pytest
 # 1. Shell Validator Tests
 # ============================================================================
 
+
 class TestShellValidator:
     """Test shell_validator.validate_shell_input and supporting functions."""
 
     def _validate(self, buf):
         from ashyterm.terminal.highlighter.shell_validator import validate_shell_input
+
         return validate_shell_input(buf)
 
     def _kinds(self, buf):
@@ -87,6 +89,7 @@ class TestShellValidator:
 
     def test_unclosed_paren(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo (hello")
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNMATCHED_BRACKET
@@ -94,6 +97,7 @@ class TestShellValidator:
 
     def test_unclosed_brace(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo { a; b")
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNMATCHED_BRACKET
@@ -101,12 +105,14 @@ class TestShellValidator:
 
     def test_unclosed_bracket(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo [test")
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNMATCHED_BRACKET
 
     def test_extra_closing_paren(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo hello)")
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNMATCHED_BRACKET
@@ -114,11 +120,13 @@ class TestShellValidator:
 
     def test_extra_closing_double_bracket(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo ]]")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
     def test_extra_closing_double_paren(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo ))")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
@@ -126,6 +134,7 @@ class TestShellValidator:
 
     def test_unclosed_single_quote(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo 'hello")
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNCLOSED_QUOTE
@@ -133,6 +142,7 @@ class TestShellValidator:
 
     def test_unclosed_double_quote(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate('echo "hello')
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNCLOSED_QUOTE
@@ -140,6 +150,7 @@ class TestShellValidator:
 
     def test_unclosed_backtick(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo `date")
         assert len(issues) == 1
         assert issues[0].kind == ErrorKind.UNCLOSED_QUOTE
@@ -166,6 +177,7 @@ class TestShellValidator:
     def test_mismatched_nesting(self):
         """Paren closed with brace is a mismatch."""
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo (hello}")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
@@ -173,6 +185,7 @@ class TestShellValidator:
 
     def test_if_without_fi(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("if true; then echo yes")
         assert any(i.kind == ErrorKind.INCOMPLETE_STRUCTURE for i in issues)
         assert any(i.token == "if" for i in issues)
@@ -183,6 +196,7 @@ class TestShellValidator:
 
     def test_case_without_esac(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("case $x in a) echo a;;")
         assert any(i.kind == ErrorKind.INCOMPLETE_STRUCTURE for i in issues)
 
@@ -192,6 +206,7 @@ class TestShellValidator:
 
     def test_for_without_done(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("for i in 1 2 3; do echo $i")
         assert any(i.kind == ErrorKind.INCOMPLETE_STRUCTURE for i in issues)
 
@@ -201,18 +216,25 @@ class TestShellValidator:
 
     def test_while_without_done(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("while true; do echo yes")
         assert any(i.kind == ErrorKind.INCOMPLETE_STRUCTURE for i in issues)
 
     def test_orphan_fi(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo hello; fi")
-        assert any(i.kind == ErrorKind.UNMATCHED_BRACKET and i.token == "fi" for i in issues)
+        assert any(
+            i.kind == ErrorKind.UNMATCHED_BRACKET and i.token == "fi" for i in issues
+        )
 
     def test_orphan_done(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo hello; done")
-        assert any(i.kind == ErrorKind.UNMATCHED_BRACKET and i.token == "done" for i in issues)
+        assert any(
+            i.kind == ErrorKind.UNMATCHED_BRACKET and i.token == "done" for i in issues
+        )
 
     # --- Comments ---
 
@@ -224,6 +246,7 @@ class TestShellValidator:
 
     def test_get_error_indicators(self):
         from ashyterm.terminal.highlighter.shell_validator import get_error_indicators
+
         issues = get_error_indicators("echo 'unclosed")
         assert len(issues) == 1
 
@@ -239,12 +262,14 @@ class TestShellValidator:
 # 2. Command Validator Tests
 # ============================================================================
 
+
 class TestCommandValidator:
     """Test command_validator.CommandValidator."""
 
     @pytest.fixture
     def validator(self):
         from ashyterm.terminal.highlighter.command_validator import CommandValidator
+
         v = CommandValidator()
         v._enabled = True
         return v
@@ -253,10 +278,30 @@ class TestCommandValidator:
 
     def test_builtins_are_valid(self, validator):
         """All shell builtins are recognized as valid."""
-        for builtin in ("cd", "echo", "export", "exit", "set", "unset", "alias",
-                        "bg", "fg", "jobs", "kill", "read", "test", "true", "false",
-                        "source", ".", ":", "["):
-            assert validator.is_valid_command(builtin), f"Builtin '{builtin}' not recognized"
+        for builtin in (
+            "cd",
+            "echo",
+            "export",
+            "exit",
+            "set",
+            "unset",
+            "alias",
+            "bg",
+            "fg",
+            "jobs",
+            "kill",
+            "read",
+            "test",
+            "true",
+            "false",
+            "source",
+            ".",
+            ":",
+            "[",
+        ):
+            assert validator.is_valid_command(builtin), (
+                f"Builtin '{builtin}' not recognized"
+            )
 
     def test_empty_command_returns_true(self, validator):
         """Empty command is not flagged as invalid."""
@@ -326,6 +371,7 @@ class TestCommandValidator:
 
     def test_singleton(self):
         from ashyterm.terminal.highlighter.command_validator import CommandValidator
+
         a = CommandValidator.get_instance()
         b = CommandValidator.get_instance()
         assert a is b
@@ -334,6 +380,7 @@ class TestCommandValidator:
 # ============================================================================
 # 3. OutputHighlighter Lifecycle Tests
 # ============================================================================
+
 
 class TestOutputHighlighterLifecycle:
     """Test OutputHighlighter proxy management and context handling."""
@@ -358,9 +405,13 @@ class TestOutputHighlighterLifecycle:
         h._manager.context_aware_enabled = True
         h._manager.enabled_for_local = True
         h._manager.enabled_for_ssh = False
-        h._manager.get_context_for_command = MagicMock(side_effect=lambda cmd: {
-            "ping": "ping", "ping6": "ping", "docker": "docker",
-        }.get(cmd.lower()))
+        h._manager.get_context_for_command = MagicMock(
+            side_effect=lambda cmd: {
+                "ping": "ping",
+                "ping6": "ping",
+                "docker": "docker",
+            }.get(cmd.lower())
+        )
         h._manager.rules = []
         return h
 
@@ -398,11 +449,11 @@ class TestOutputHighlighterLifecycle:
         highlighter.set_context("ping6", proxy_id=1)
         assert highlighter.get_context(1) == "ping"
 
-    def test_set_context_unknown_command_uses_name(self, highlighter):
-        """Unknown commands are stored as-is (lowercased)."""
+    def test_set_context_unknown_command_uses_global_context(self, highlighter):
+        """Unknown commands reuse global rules without growing the cache."""
         highlighter.register_proxy(1)
         highlighter.set_context("mycommand", proxy_id=1)
-        assert highlighter.get_context(1) == "mycommand"
+        assert highlighter.get_context(1) == ""
 
     def test_set_context_empty_resets(self, highlighter):
         highlighter.register_proxy(1)
@@ -479,9 +530,7 @@ class TestOutputHighlighterLifecycle:
         highlighter.register_proxy(1)
         highlighter._proxy_contexts[1] = "ls"
         highlighter._global_rules = (
-            LiteralKeywordRule(
-                frozenset(["error"]), ("error",), "\033[31m", "next"
-            ),
+            LiteralKeywordRule(frozenset(["error"]), ("error",), "\033[31m", "next"),
         )
 
         result = highlighter.highlight_line("error in output", proxy_id=1)
@@ -515,6 +564,7 @@ class TestOutputHighlighterLifecycle:
 # 4. OutputHighlighter._compile_rule Tests
 # ============================================================================
 
+
 class TestCompileRule:
     """Test OutputHighlighter._compile_rule with real HighlightRules."""
 
@@ -529,9 +579,13 @@ class TestCompileRule:
         # Real manager-like mock with resolve_color_to_ansi
         h._manager = MagicMock()
         h._manager.resolve_color_to_ansi = MagicMock(
-            side_effect=lambda c: f"\033[31m" if c == "bold red" else (
-                f"\033[32m" if c == "green" else (
-                    f"\033[33m" if c == "yellow" else ""
+            side_effect=lambda c: (
+                "\033[31m"
+                if c == "bold red"
+                else (
+                    "\033[32m"
+                    if c == "green"
+                    else ("\033[33m" if c == "yellow" else "")
                 )
             )
         )
@@ -570,7 +624,9 @@ class TestCompileRule:
     def test_compile_disabled_rule_returns_none(self, highlighter):
         from ashyterm.settings.highlights import HighlightRule
 
-        rule = HighlightRule(name="Test", pattern=r"\btest\b", colors=["bold red"], enabled=False)
+        rule = HighlightRule(
+            name="Test", pattern=r"\btest\b", colors=["bold red"], enabled=False
+        )
         assert highlighter._compile_rule(rule) is None
 
     def test_compile_empty_pattern_returns_none(self, highlighter):
@@ -621,13 +677,17 @@ class TestCompileRule:
 # 5. HighlightManager Trigger Map & Context Resolution
 # ============================================================================
 
+
 class TestHighlightManagerTriggers:
     """Test HighlightManager trigger map and context resolution."""
 
     @pytest.fixture
     def manager(self):
         from ashyterm.settings.highlights import (
-            HighlightConfig, HighlightContext, HighlightManager, HighlightRule,
+            HighlightConfig,
+            HighlightContext,
+            HighlightManager,
+            HighlightRule,
         )
 
         mgr = HighlightManager.__new__(HighlightManager)
@@ -643,20 +703,32 @@ class TestHighlightManagerTriggers:
             enabled_for_ssh=True,
             context_aware_enabled=True,
             global_rules=[
-                HighlightRule(name="Error", pattern=r"\b(error)\b", colors=["bold red"]),
+                HighlightRule(
+                    name="Error", pattern=r"\b(error)\b", colors=["bold red"]
+                ),
             ],
             contexts={
                 "ping": HighlightContext(
                     command_name="ping",
                     triggers=["ping", "ping6"],
-                    rules=[HighlightRule(name="TTL", pattern=r"ttl=\d+", colors=["magenta"])],
+                    rules=[
+                        HighlightRule(
+                            name="TTL", pattern=r"ttl=\d+", colors=["magenta"]
+                        )
+                    ],
                     enabled=True,
                     use_global_rules=False,
                 ),
                 "docker": HighlightContext(
                     command_name="docker",
                     triggers=["docker", "podman"],
-                    rules=[HighlightRule(name="Container", pattern=r"\b[a-f0-9]{12}\b", colors=["cyan"])],
+                    rules=[
+                        HighlightRule(
+                            name="Container",
+                            pattern=r"\b[a-f0-9]{12}\b",
+                            colors=["cyan"],
+                        )
+                    ],
                     enabled=True,
                     use_global_rules=True,
                 ),
@@ -759,6 +831,7 @@ class TestHighlightManagerTriggers:
 # 6. HighlightManager Layered Loading Tests
 # ============================================================================
 
+
 class TestHighlightManagerLoading:
     """Test layered config loading (system + user)."""
 
@@ -776,7 +849,14 @@ class TestHighlightManagerLoading:
         mgr = HighlightManager.__new__(HighlightManager)
         mgr.logger = MagicMock()
 
-        path = Path(__file__).parent.parent / "src" / "ashyterm" / "data" / "highlights" / "ping.json"
+        path = (
+            Path(__file__).parent.parent
+            / "src"
+            / "ashyterm"
+            / "data"
+            / "highlights"
+            / "ping.json"
+        )
         if path.exists():
             ctx = mgr._load_context_from_file(path)
             assert ctx is not None
@@ -805,6 +885,7 @@ class TestHighlightManagerLoading:
 # 7. HighlightedTerminalProxy Helper Tests
 # ============================================================================
 
+
 class TestProxyHelpers:
     """Test HighlightedTerminalProxy helper methods without GTK."""
 
@@ -823,15 +904,23 @@ class TestProxyHelpers:
                 self._at_shell_prompt = True
 
             # Borrow methods from HighlightedTerminalProxy
-            _handle_backspace_in_buffer = HighlightedTerminalProxy._handle_backspace_in_buffer
-            _detect_interactive_marker = HighlightedTerminalProxy._detect_interactive_marker
-            _is_in_unclosed_multiline_block = HighlightedTerminalProxy._is_in_unclosed_multiline_block
+            _handle_backspace_in_buffer = (
+                HighlightedTerminalProxy._handle_backspace_in_buffer
+            )
+            _detect_interactive_marker = (
+                HighlightedTerminalProxy._detect_interactive_marker
+            )
+            _is_in_unclosed_multiline_block = (
+                HighlightedTerminalProxy._is_in_unclosed_multiline_block
+            )
             _has_keyword = HighlightedTerminalProxy._has_keyword
             _has_unclosed_braces = HighlightedTerminalProxy._has_unclosed_braces
             _ends_with_continuation = HighlightedTerminalProxy._ends_with_continuation
             _check_block_openings = HighlightedTerminalProxy._check_block_openings
             _has_incomplete_escape = HighlightedTerminalProxy._has_incomplete_escape
-            _check_escape_sequence_complete = HighlightedTerminalProxy._check_escape_sequence_complete
+            _check_escape_sequence_complete = (
+                HighlightedTerminalProxy._check_escape_sequence_complete
+            )
             _is_csi_incomplete = HighlightedTerminalProxy._is_csi_incomplete
             _is_osc_incomplete = HighlightedTerminalProxy._is_osc_incomplete
 
@@ -940,13 +1029,18 @@ class TestProxyHelpers:
         assert proxy._is_in_unclosed_multiline_block("if true; then echo yes") is True
 
     def test_multiline_if_then_with_fi(self, proxy):
-        assert proxy._is_in_unclosed_multiline_block("if true; then echo yes; fi") is False
+        assert (
+            proxy._is_in_unclosed_multiline_block("if true; then echo yes; fi") is False
+        )
 
     def test_multiline_for_do_without_done(self, proxy):
         assert proxy._is_in_unclosed_multiline_block("for i in 1 2; do echo $i") is True
 
     def test_multiline_for_do_with_done(self, proxy):
-        assert proxy._is_in_unclosed_multiline_block("for i in 1 2; do echo $i; done") is False
+        assert (
+            proxy._is_in_unclosed_multiline_block("for i in 1 2; do echo $i; done")
+            is False
+        )
 
     def test_multiline_while_do_without_done(self, proxy):
         assert proxy._is_in_unclosed_multiline_block("while true; do echo x") is True
@@ -970,7 +1064,9 @@ class TestProxyHelpers:
         assert proxy._is_in_unclosed_multiline_block("func() {") is True
 
     def test_multiline_else_continuation(self, proxy):
-        assert proxy._is_in_unclosed_multiline_block("if true; then echo a\nelse") is True
+        assert (
+            proxy._is_in_unclosed_multiline_block("if true; then echo a\nelse") is True
+        )
 
     # --- _has_incomplete_escape ---
 
@@ -1009,6 +1105,7 @@ class TestProxyHelpers:
 # ============================================================================
 # 8. StreamingHandler Helper Tests
 # ============================================================================
+
 
 class TestStreamingHandlerHelpers:
     """Test StreamingHandler mixin helper methods."""
@@ -1139,6 +1236,7 @@ class TestStreamingHandlerHelpers:
 # 9. _enhance_token_type and _is_command_position Tests
 # ============================================================================
 
+
 class TestTokenEnhancement:
     """Test token type enhancement in StreamingHandler."""
 
@@ -1165,11 +1263,13 @@ class TestTokenEnhancement:
 
     def test_option_long_flag(self, handler):
         from pygments.token import Token
+
         result = handler._enhance_token_type(Token.Text, "--verbose")
         assert result == Token.Name.Attribute
 
     def test_option_short_flag(self, handler):
         from pygments.token import Token
+
         result = handler._enhance_token_type(Token.Text, "-l")
         assert result == Token.Name.Attribute
 
@@ -1177,44 +1277,51 @@ class TestTokenEnhancement:
         """Single dash in command position is treated as unknown command."""
         from ashyterm.terminal._streaming_handler import _COMMAND_NOT_FOUND
         from pygments.token import Token
+
         handler._input_highlight_buffer = "-"
         result = handler._enhance_token_type(Token.Text, "-")
         assert result is _COMMAND_NOT_FOUND
 
     def test_command_position_detected(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "ls"
         result = handler._enhance_token_type(Token.Text, "ls")
         assert result == Token.Name.Function
 
     def test_warning_command_sudo(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "sudo"
         result = handler._enhance_token_type(Token.Text, "sudo")
         assert result == Token.Name.Exception
 
     def test_warning_command_rm(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "rm"
         result = handler._enhance_token_type(Token.Text, "rm")
         assert result == Token.Name.Exception
 
     def test_command_after_pipe(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "cat file | grep"
         result = handler._enhance_token_type(Token.Text, "grep")
         assert result == Token.Name.Function
 
     def test_command_after_semicolon(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "cd /tmp; ls"
         result = handler._enhance_token_type(Token.Text, "ls")
         assert result == Token.Name.Function
 
     def test_command_after_and(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "make && make install"
-        result = handler._enhance_token_type(Token.Name, "install")
+        handler._enhance_token_type(Token.Name, "install")
         # "install" comes after "make" (which is not a prefix command), so
         # it's NOT in command position: "make install" is make's argument
         # Actually "make &&" puts "make" as a command, but "install" comes after "make" not "&&"
@@ -1226,6 +1333,7 @@ class TestTokenEnhancement:
 
     def test_command_after_prefix_sudo(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "sudo apt"
         result = handler._enhance_token_type(Token.Text, "apt")
         assert result == Token.Name.Function
@@ -1254,17 +1362,20 @@ class TestTokenEnhancement:
         handler._input_highlight_buffer = "zzz_nonexistent_42"
 
         from pygments.token import Token
+
         result = handler._enhance_token_type(Token.Text, "zzz_nonexistent_42")
         assert result is _COMMAND_NOT_FOUND
 
     def test_empty_token_value(self, handler):
         from pygments.token import Token
+
         result = handler._enhance_token_type(Token.Text, "")
         assert result == Token.Text
 
     def test_non_text_token_passthrough(self, handler):
         """Non-Text/Name tokens pass through unchanged."""
         from pygments.token import Token
+
         result = handler._enhance_token_type(Token.Keyword, "if")
         assert result == Token.Keyword
 
@@ -1273,11 +1384,13 @@ class TestTokenEnhancement:
 # 10. Shell Validator Edge Cases
 # ============================================================================
 
+
 class TestShellValidatorEdgeCases:
     """Advanced edge cases for shell_validator."""
 
     def _validate(self, buf):
         from ashyterm.terminal.highlighter.shell_validator import validate_shell_input
+
         return validate_shell_input(buf)
 
     def test_nested_brackets_valid(self):
@@ -1285,7 +1398,7 @@ class TestShellValidatorEdgeCases:
 
     def test_deeply_nested_quotes_and_brackets(self):
         """Complex nesting with quotes and brackets."""
-        issues = self._validate('echo "$(echo \'hello\')"')
+        issues = self._validate("echo \"$(echo 'hello')\"")
         assert issues == []
 
     def test_heredoc_style_ignored(self):
@@ -1296,37 +1409,44 @@ class TestShellValidatorEdgeCases:
 
     def test_multiple_unclosed_quotes(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo 'a \"b")
         # Single quote unclosed first, then scanner doesn't reach double quote
         assert any(i.kind == ErrorKind.UNCLOSED_QUOTE for i in issues)
 
     def test_dollar_brace_unclosed(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo ${VAR")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
     def test_dollar_paren_unclosed(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo $(cmd")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
     def test_arithmetic_unclosed(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("echo $((1 + 2")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
     def test_double_bracket_unclosed(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("[[ -f file")
         assert any(i.kind == ErrorKind.UNMATCHED_BRACKET for i in issues)
 
     def test_select_without_done(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("select opt in a b c; do echo $opt")
         assert any(i.kind == ErrorKind.INCOMPLETE_STRUCTURE for i in issues)
 
     def test_until_without_done(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind
+
         issues = self._validate("until false; do echo yes")
         assert any(i.kind == ErrorKind.INCOMPLETE_STRUCTURE for i in issues)
 
@@ -1354,21 +1474,25 @@ class TestShellValidatorEdgeCases:
 # 11. SyntaxIssue Dataclass Tests
 # ============================================================================
 
+
 class TestSyntaxIssue:
     """Test SyntaxIssue dataclass properties."""
 
     def test_frozen(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind, SyntaxIssue
+
         issue = SyntaxIssue(start=0, end=1, kind=ErrorKind.UNCLOSED_QUOTE, token="'")
         with pytest.raises(AttributeError):
             issue.start = 5  # frozen=True
 
     def test_slots(self):
         from ashyterm.terminal.highlighter.shell_validator import SyntaxIssue
+
         assert hasattr(SyntaxIssue, "__slots__")
 
     def test_equality(self):
         from ashyterm.terminal.highlighter.shell_validator import ErrorKind, SyntaxIssue
+
         a = SyntaxIssue(0, 1, ErrorKind.UNCLOSED_QUOTE, "'")
         b = SyntaxIssue(0, 1, ErrorKind.UNCLOSED_QUOTE, "'")
         assert a == b
@@ -1378,11 +1502,13 @@ class TestSyntaxIssue:
 # 12. Heredoc Support Tests (Improvement 4)
 # ============================================================================
 
+
 class TestShellValidatorHeredoc:
     """Test heredoc handling in shell_validator."""
 
     def _validate(self, buf):
         from ashyterm.terminal.highlighter.shell_validator import validate_shell_input
+
         return validate_shell_input(buf)
 
     def test_heredoc_with_closing_delimiter(self):
@@ -1418,12 +1544,14 @@ class TestShellValidatorHeredoc:
 # 13. CommandValidator mtime Cache Tests (Improvement 3)
 # ============================================================================
 
+
 class TestCommandValidatorMtimeCache:
     """Test the mtime-aware PATH cache."""
 
     @pytest.fixture
     def validator(self):
         from ashyterm.terminal.highlighter.command_validator import CommandValidator
+
         v = CommandValidator()
         v._enabled = True
         return v
@@ -1467,25 +1595,30 @@ class TestCommandValidatorMtimeCache:
 # 14. Thread-safe Singleton Tests (Improvement 5/6)
 # ============================================================================
 
+
 class TestSingletonThreadSafety:
     """Test thread-safe singleton construction."""
 
     def test_output_highlighter_singleton_lock_exists(self):
         from ashyterm.terminal.highlighter import output
+
         assert hasattr(output, "_output_highlighter_lock")
 
     def test_command_validator_singleton_lock_exists(self):
         from ashyterm.terminal.highlighter.command_validator import CommandValidator
+
         assert hasattr(CommandValidator, "_instance_lock")
 
     def test_shell_input_highlighter_singleton_lock_exists(self):
         from ashyterm.terminal.highlighter import shell_input
+
         assert hasattr(shell_input, "_shell_input_highlighter_lock")
 
 
 # ============================================================================
 # 15. Buffer Limit Tests (Improvement 6)
 # ============================================================================
+
 
 class TestBufferLimit:
     """Test input buffer limit in StreamingHandler."""
@@ -1536,6 +1669,7 @@ class TestBufferLimit:
 # 16. ShellInputHighlighter Tests (Improvement 9)
 # ============================================================================
 
+
 class TestShellInputHighlighter:
     """Test ShellInputHighlighter auto-theme detection.
 
@@ -1546,6 +1680,7 @@ class TestShellInputHighlighter:
     @pytest.fixture
     def highlighter(self):
         from ashyterm.terminal.highlighter.shell_input import ShellInputHighlighter
+
         h = ShellInputHighlighter.__new__(ShellInputHighlighter)
         h.logger = MagicMock()
         h._enabled = True
@@ -1580,6 +1715,7 @@ class TestShellInputHighlighter:
 # 17. CatModeHandler Helper Tests (Improvement 9)
 # ============================================================================
 
+
 class TestCatModeHandlerHelpers:
     """Test CatModeHandler helper methods."""
 
@@ -1598,7 +1734,9 @@ class TestCatModeHandlerHelpers:
                 self._proxy_id = 1
                 self.logger = MagicMock()
 
-            _extract_filename_from_cat_command = CatModeHandler._extract_filename_from_cat_command
+            _extract_filename_from_cat_command = (
+                CatModeHandler._extract_filename_from_cat_command
+            )
 
         return FakeCatHandler()
 
@@ -1609,13 +1747,21 @@ class TestCatModeHandlerHelpers:
         assert handler._extract_filename_from_cat_command("cat -n file.sh") == "file.sh"
 
     def test_extract_filename_with_multiple_flags(self, handler):
-        assert handler._extract_filename_from_cat_command("cat -n -E file.txt") == "file.txt"
+        assert (
+            handler._extract_filename_from_cat_command("cat -n -E file.txt")
+            == "file.txt"
+        )
 
     def test_extract_filename_absolute_path(self, handler):
-        assert handler._extract_filename_from_cat_command("/bin/cat file.py") == "file.py"
+        assert (
+            handler._extract_filename_from_cat_command("/bin/cat file.py") == "file.py"
+        )
 
     def test_extract_filename_usr_bin_path(self, handler):
-        assert handler._extract_filename_from_cat_command("/usr/bin/cat file.py") == "file.py"
+        assert (
+            handler._extract_filename_from_cat_command("/usr/bin/cat file.py")
+            == "file.py"
+        )
 
     def test_extract_filename_quoted_no_spaces(self, handler):
         """Quotes are stripped from individual args."""
@@ -1638,12 +1784,14 @@ class TestCatModeHandlerHelpers:
 # 18. OutputHighlighter _get_context_unlocked Tests (Improvement 1)
 # ============================================================================
 
+
 class TestGetContextUnlocked:
     """Test _get_context_unlocked internal method."""
 
     @pytest.fixture
     def highlighter(self):
         from ashyterm.terminal.highlighter.output import OutputHighlighter
+
         h = OutputHighlighter.__new__(OutputHighlighter)
         h.logger = MagicMock()
         h._lock = threading.Lock()
@@ -1678,6 +1826,7 @@ class TestGetContextUnlocked:
 # 19. Builtin Command & Variable Assignment Fix Tests
 # ============================================================================
 
+
 class TestBuiltinAndAssignmentFixes:
     """Test incremental fixes to _enhance_token_type."""
 
@@ -1708,18 +1857,21 @@ class TestBuiltinAndAssignmentFixes:
     def test_builtin_echo_becomes_function(self, handler):
         """Token.Name.Builtin (echo) should map to Token.Name.Function."""
         from pygments.token import Token
+
         handler._input_highlight_buffer = "echo hello"
         result = handler._enhance_token_type(Token.Name.Builtin, "echo")
         assert result == Token.Name.Function
 
     def test_builtin_cd_becomes_function(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "cd /tmp"
         result = handler._enhance_token_type(Token.Name.Builtin, "cd")
         assert result == Token.Name.Function
 
     def test_builtin_export_becomes_function(self, handler):
         from pygments.token import Token
+
         handler._input_highlight_buffer = "export VAR=10"
         result = handler._enhance_token_type(Token.Name.Builtin, "export")
         assert result == Token.Name.Function
@@ -1727,6 +1879,7 @@ class TestBuiltinAndAssignmentFixes:
     def test_builtin_pseudo_becomes_function(self, handler):
         """Token.Name.Builtin.Pseudo should also be promoted."""
         from pygments.token import Token
+
         handler._input_highlight_buffer = "true"
         result = handler._enhance_token_type(Token.Name.Builtin.Pseudo, "true")
         assert result == Token.Name.Function
@@ -1736,14 +1889,17 @@ class TestBuiltinAndAssignmentFixes:
     def test_variable_assignment_not_command_not_found(self, handler):
         """VAR= in buffer should not trigger command-not-found."""
         from ashyterm.terminal._streaming_handler import _COMMAND_NOT_FOUND
+
         handler._input_highlight_buffer = "bruno=10"
         from pygments.token import Token
+
         result = handler._enhance_token_type(Token.Text, "bruno")
         assert result is not _COMMAND_NOT_FOUND
 
     def test_variable_assignment_returns_original_type(self, handler):
         """VAR= should return original token type (not Function or Error)."""
         from pygments.token import Token
+
         handler._input_highlight_buffer = "MY_VAR=hello"
         result = handler._enhance_token_type(Token.Text, "MY_VAR")
         assert result == Token.Text
@@ -1751,6 +1907,7 @@ class TestBuiltinAndAssignmentFixes:
     def test_regular_command_still_validated(self, handler):
         """Non-assignment tokens at command position still get validated."""
         from pygments.token import Token
+
         handler._input_highlight_buffer = "ls"
         result = handler._enhance_token_type(Token.Text, "ls")
         assert result == Token.Name.Function  # ls is valid
@@ -1758,6 +1915,7 @@ class TestBuiltinAndAssignmentFixes:
     def test_command_after_pipe_still_works(self, handler):
         """Commands after pipe should still be validated."""
         from pygments.token import Token
+
         handler._input_highlight_buffer = "echo a | grep test"
         result = handler._enhance_token_type(Token.Text, "grep")
         assert result == Token.Name.Function
@@ -1765,7 +1923,7 @@ class TestBuiltinAndAssignmentFixes:
     def test_warning_commands_unaffected(self, handler):
         """Warning commands like rm/sudo should still be flagged."""
         from pygments.token import Token
+
         handler._input_highlight_buffer = "rm -rf"
         result = handler._enhance_token_type(Token.Text, "rm")
         assert result == Token.Name.Exception
-

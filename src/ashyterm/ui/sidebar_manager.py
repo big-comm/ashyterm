@@ -113,7 +113,7 @@ class SidebarManager:
         elif isinstance(item, SessionFolder):
             self.window.action_handler.edit_folder()
 
-    def initialize_state(self):
+    def initialize_state(self) -> None:
         """Sets the initial state of the sidebar based on settings."""
         auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
         self.handle_auto_hide_change(auto_hide, is_initial_setup=True)
@@ -121,7 +121,7 @@ class SidebarManager:
 
     def handle_auto_hide_change(
         self, auto_hide_enabled: bool, is_initial_setup: bool = False
-    ):
+    ) -> None:
         """Switches the sidebar between normal (flap) and auto-hide (popover) modes."""
         # Safely unparent the sidebar_box from its known containers.
         if self.flap.get_sidebar() == self.sidebar_box:
@@ -280,7 +280,7 @@ class SidebarManager:
             tree_widget.grab_focus()
         return False
 
-    def update_sidebar_sizes(self):
+    def update_sidebar_sizes(self) -> None:
         """Update sidebar sizes for both flap and popover modes."""
         auto_hide = self.settings_manager.get("auto_hide_sidebar", False)
         if auto_hide:
