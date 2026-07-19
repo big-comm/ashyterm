@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.13.2"
+    APP_VERSION = "1.13.3"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -324,7 +324,7 @@ class DefaultSettings:
             "terminal_scroll_mode": "automatic",
             "scrollback_lines": 10000,
             "mouse_scroll_sensitivity": 30.0,
-            "touchpad_scroll_sensitivity": 30.0,
+            "touchpad_scroll_sensitivity": 50.0,
             "kinetic_scrolling": 50,
             "cursor_shape": 0,
             "bidi_enabled": False,
