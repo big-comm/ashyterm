@@ -20,6 +20,7 @@ from ..utils.osc7_tracker import get_osc7_tracker
 from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
 from ..utils.translation_utils import _
+from .clipboard_image import clipboard_has_image, save_clipboard_image_async
 from .paste_confirmation import build_paste_confirmation_dialog
 from .registry import ManualSSHTracker, TerminalLifecycleManager, TerminalRegistry
 from .ssh_lifecycle import SSHLifecycleMixin
@@ -1019,6 +1020,17 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             terminal.add_controller(key_controller)
             terminal.ashy_controllers.append(key_controller)
 
+            # Ctrl+V normally reaches the shell as ^V (quoted insert). We only
+            # steal it when the clipboard holds an image, which is never what
+            # ^V is meant for, so CLI tools can receive pasted screenshots.
+            image_paste_controller = Gtk.EventControllerKey()
+            image_paste_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            image_paste_controller.connect(
+                "key-pressed", self._on_terminal_key_pressed_for_image_paste, terminal
+            )
+            terminal.add_controller(image_paste_controller)
+            terminal.ashy_controllers.append(image_paste_controller)
+
             terminal.terminal_id = terminal_id
         except Exception as e:
             self.logger.error(
@@ -1077,10 +1089,64 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         gesture.set_state(Gtk.EventSequenceState.CLAIMED)
 
     def paste_clipboard(self, terminal: Vte.Terminal) -> None:
+        clipboard = terminal.get_clipboard()
+        if clipboard_has_image(clipboard):
+            self._paste_clipboard_image(terminal, clipboard)
+            return
         if not self.settings_manager.get("paste_warning_enabled", True):
             terminal.paste_clipboard()
             return
         self._paste_with_confirmation(terminal)
+
+    def _on_terminal_key_pressed_for_image_paste(
+        self,
+        _controller: Gtk.EventControllerKey,
+        keyval: int,
+        _keycode: int,
+        state: Gdk.ModifierType,
+        terminal: Vte.Terminal,
+    ) -> bool:
+        """Turn plain Ctrl+V into an image paste when the clipboard has one.
+
+        Anything else — including Ctrl+V over text — is left alone so the
+        shell keeps receiving ^V as usual.
+        """
+        if keyval not in (Gdk.KEY_v, Gdk.KEY_V):
+            return Gdk.EVENT_PROPAGATE
+        if not (state & Gdk.ModifierType.CONTROL_MASK):
+            return Gdk.EVENT_PROPAGATE
+        if state & (Gdk.ModifierType.SHIFT_MASK | Gdk.ModifierType.ALT_MASK):
+            return Gdk.EVENT_PROPAGATE
+
+        try:
+            clipboard = terminal.get_clipboard()
+            if not clipboard_has_image(clipboard):
+                return Gdk.EVENT_PROPAGATE
+            self._paste_clipboard_image(terminal, clipboard)
+        except Exception as exc:
+            self.logger.error(f"Ctrl+V image paste failed: {exc}")
+            return Gdk.EVENT_PROPAGATE
+        return Gdk.EVENT_STOP
+
+    def _paste_clipboard_image(
+        self, terminal: Vte.Terminal, clipboard: Gdk.Clipboard
+    ) -> None:
+        """Save the clipboard image to a file and paste its path.
+
+        The terminal can read the Wayland clipboard, but the programs
+        running inside it cannot, so the path is the bridge.
+        """
+
+        def on_saved(path) -> None:
+            if path is None:
+                self.logger.warning("Clipboard image paste produced no file")
+                return
+            try:
+                terminal.paste_text(str(path))
+            except Exception as exc:
+                self.logger.error(f"Failed to paste clipboard image path: {exc}")
+
+        save_clipboard_image_async(clipboard, on_saved)
 
     def _paste_with_confirmation(self, terminal: Vte.Terminal) -> None:
         """Read clipboard, confirm if multi-line or risky, then paste."""
