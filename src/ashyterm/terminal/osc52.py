@@ -102,12 +102,11 @@ def consume_osc52_output(
 ) -> bytes:
     """Consume OSC 52 output and apply allowed writes to GTK clipboards."""
     visible, requests = parser.feed(chunk)
-    if not requests:
-        return visible
-    should_write = enabled() if callable(enabled) else enabled
-    if should_write:
-        for request in requests:
-            _write_clipboard(terminal, request)
+    if requests:
+        should_write = enabled() if callable(enabled) else enabled
+        if should_write:
+            for request in requests:
+                _write_clipboard(terminal, request)
     return visible
 
 
