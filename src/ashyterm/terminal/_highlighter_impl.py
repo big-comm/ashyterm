@@ -664,10 +664,7 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         if transition is AltScreenTransition.ENTERED:
             self._is_alt_screen = True
             return True
-        if transition in (
-            AltScreenTransition.EXITED,
-            AltScreenTransition.TOGGLED_ENDED,
-        ):
+        if transition is AltScreenTransition.EXITED:
             self._is_alt_screen = False
             return True
         return False

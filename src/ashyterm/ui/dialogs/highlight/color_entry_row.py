@@ -6,7 +6,6 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GObject, Gtk
 
-from ....settings.highlights import get_highlight_manager
 from ....utils.accessibility import set_label as a11y_label
 from ....utils.tooltip_helper import get_tooltip_helper
 from ....utils.translation_utils import _
@@ -222,27 +221,6 @@ class ColorEntryRow(Adw.ActionRow):
 
     def _update_color_preview(self) -> None:
         """Update the color preview box showing foreground, background, and effects."""
-        manager = get_highlight_manager()
-
-        manager.resolve_color(self._fg_color)
-
-        bg_hex = None
-        if self._bg_color:
-            bg_color_name = (
-                self._bg_color[3:]
-                if self._bg_color.startswith("on_")
-                else self._bg_color
-            )
-            bg_hex = manager.resolve_color(bg_color_name)
-
-
-        if bg_hex:
-            pass
-        else:
-            pass
-
-
-
         from .global_rules_delegate import GlobalRulesDelegate
 
         GlobalRulesDelegate.apply_color_to_box(self._color_box, self._current_hex)

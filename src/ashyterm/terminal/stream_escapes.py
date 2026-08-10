@@ -45,10 +45,6 @@ class AltScreenTransition(Enum):
     NO_CHANGE = "no_change"
     ENTERED = "entered"
     EXITED = "exited"
-    # Chunk contains both an enter and an exit: the caller should
-    # treat the net effect as "exited" (disable wins) because the
-    # alt-screen lifecycle end-state is what we care about.
-    TOGGLED_ENDED = "toggled_ended"
 
 
 # xterm sequences for switching to/from the alternate screen buffer.
@@ -84,21 +80,19 @@ def detect_alt_screen_transition(
       NOT already in alt-screen.
     * ``EXITED`` — ``data`` contains a disable sequence and we WERE
       in alt-screen.
-    * ``TOGGLED_ENDED`` — ``data`` contains both enable and disable,
-      and we started in alt-screen; the net effect is still "exited".
     * ``NO_CHANGE`` — state doesn't need to flip (either no sequence
       matched, or the matching sequence doesn't change our belief).
+
+    A chunk holding both an enable and a disable resolves by our current
+    belief: starting inside alt-screen the disable wins (``EXITED``),
+    starting outside the enable wins (``ENTERED``).
     """
     has_enable = _contains_any(data, _ALT_SCREEN_ENABLE)
     has_disable = _contains_any(data, _ALT_SCREEN_DISABLE)
 
-    # Check enable first but let disable win when both are present —
-    # the end state after a complete toggle is "exited".
     entered = has_enable and not currently_alt
     exited = has_disable and currently_alt
 
-    if entered and exited:
-        return AltScreenTransition.TOGGLED_ENDED
     if entered:
         return AltScreenTransition.ENTERED
     if exited:

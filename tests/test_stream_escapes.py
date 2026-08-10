@@ -79,7 +79,7 @@ class TestDetectAltScreenTransition:
             is AltScreenTransition.NO_CHANGE
         )
 
-    def test_both_enable_and_disable_while_alt_yields_toggled_ended(self):
+    def test_both_enable_and_disable_while_alt_yields_exited(self):
         # We enter alt briefly then exit in the same chunk: net effect
         # is "back to normal".
         data = b"\x1b[?1049h something \x1b[?1049l"

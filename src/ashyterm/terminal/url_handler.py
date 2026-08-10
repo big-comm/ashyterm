@@ -16,7 +16,7 @@ from ..settings.config import PROMPT_TERMINATOR_PATTERN
 
 # Pre-compiled pattern for ANSI escape sequences used in command detection
 _ANSI_ESCAPE_PATTERN = re.compile(
-    r"\x1b\[\??[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+\??(?:\d*[;]?)*[ABCDEFGHJKPSTfmnsuhl]"
+    r"\x1b\[\??[0-9;]*[A-Za-z]|\x1b\].*?\x07|\[+\??[0-9;]*[ABCDEFGHJKPSTfmnsuhl]"
 )
 
 
