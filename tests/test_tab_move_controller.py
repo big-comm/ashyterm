@@ -5,7 +5,11 @@ from unittest.mock import MagicMock
 import pytest
 
 from ashyterm.terminal.tab_groups import TabGroupManager
-from ashyterm.terminal.tab_move_controller import TabMoveController
+from ashyterm.terminal.tab_move_controller import (
+    DRAG_START_THRESHOLD,
+    TabMoveController,
+    resolve_drop_slot,
+)
 
 
 class _FakeTab:
@@ -278,3 +282,187 @@ class TestTabsIntegration:
 
         mgr._drop_side = "right"
         assert mgr._drop_side == "right"
+
+
+# ── drag-to-reorder slot resolution ────────────────────────
+
+# Three 100px tabs laid out end to end, as measured against the tab bar.
+THREE_TABS = [(0.0, 100.0), (100.0, 100.0), (200.0, 100.0)]
+
+
+class TestResolveDropSlot:
+    def test_left_half_drops_before(self):
+        assert resolve_drop_slot(THREE_TABS, 120.0) == (1, "left")
+
+    def test_right_half_drops_after(self):
+        assert resolve_drop_slot(THREE_TABS, 180.0) == (1, "right")
+
+    def test_exact_midpoint_drops_after(self):
+        assert resolve_drop_slot(THREE_TABS, 150.0) == (1, "right")
+
+    def test_tab_boundary_belongs_to_the_later_tab(self):
+        assert resolve_drop_slot(THREE_TABS, 100.0) == (1, "left")
+
+    def test_dragging_past_the_right_end_lands_last(self):
+        # Makes "drag to the far right to send it to the end" work.
+        assert resolve_drop_slot(THREE_TABS, 5000.0) == (2, "right")
+
+    def test_dragging_past_the_left_end_lands_first(self):
+        assert resolve_drop_slot(THREE_TABS, -400.0) == (0, "left")
+
+    def test_no_tabs_resolves_to_nothing(self):
+        assert resolve_drop_slot([], 10.0) is None
+
+    def test_gap_between_tabs_falls_to_the_next_tab(self):
+        # Spacing between tabs must not produce a dead zone.
+        spaced = [(0.0, 100.0), (110.0, 100.0)]
+        assert resolve_drop_slot(spaced, 105.0) == (1, "left")
+
+    def test_varying_widths_use_each_tabs_own_midpoint(self):
+        mixed = [(0.0, 40.0), (40.0, 200.0)]
+        assert resolve_drop_slot(mixed, 30.0) == (0, "right")
+        assert resolve_drop_slot(mixed, 100.0) == (1, "left")
+        assert resolve_drop_slot(mixed, 200.0) == (1, "right")
+
+
+class TestDragThreshold:
+    def test_threshold_is_small_enough_to_feel_immediate(self):
+        # Big enough not to swallow clicks, small enough not to feel sticky.
+        assert 4.0 <= DRAG_START_THRESHOLD <= 16.0
+
+
+# ── drag handlers on TabManager ────────────────────────────
+
+
+class _FakeGesture:
+    """Gtk.GestureDrag stand-in: start point plus sequence-state capture."""
+
+    def __init__(self, start_x: float = 10.0):
+        self._start_x = start_x
+        self.claimed = False
+
+    def get_start_point(self):
+        return True, self._start_x, 0.0
+
+    def set_state(self, _state):
+        self.claimed = True
+
+
+class _Rect:
+    def __init__(self, x: float, width: float):
+        self.origin = type("O", (), {"x": x, "y": 0.0})()
+        self.size = type("S", (), {"width": width, "height": 30.0})()
+
+
+class _BoundedTab(_FakeTab):
+    """Tab that reports a fixed allocation inside the tab bar."""
+
+    def __init__(self, name: str, left: float, width: float = 100.0):
+        super().__init__(name)
+        self._rect = _Rect(left, width)
+
+    def compute_bounds(self, _target):
+        return True, self._rect
+
+
+def _drag_manager(tabs):
+    from ashyterm.terminal.tabs import TabManager
+
+    mgr = object.__new__(TabManager)
+    mgr.tabs = tabs
+    mgr.tab_bar_box = MagicMock()
+    mgr._tab_drag_armed = False
+    mgr.group_manager = TabGroupManager()
+    mgr.group_controller = MagicMock()
+    mgr.group_controller.is_moving_group.return_value = False
+    mgr.get_tab_id = MagicMock(side_effect=lambda t: t.name)
+    mgr._rebuild_tab_bar_order = MagicMock()
+    mgr._get_tab_close_button = MagicMock(side_effect=lambda tab: tab.close_button)
+    mgr.logger = MagicMock()
+    mgr.move_controller = TabMoveController(mgr)
+    return mgr
+
+
+class TestDragHandlers:
+    def test_small_movement_does_not_start_a_move(self):
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        gesture = _FakeGesture()
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        mgr._on_tab_drag_update(gesture, 3.0, 0.0, tabs[0])
+
+        assert mgr._tab_being_moved is None
+
+    def test_passing_the_threshold_starts_the_move(self):
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        gesture = _FakeGesture()
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        mgr._on_tab_drag_update(gesture, DRAG_START_THRESHOLD + 1, 0.0, tabs[0])
+
+        assert mgr._tab_being_moved is tabs[0]
+
+    def test_drag_across_reorders_on_release(self):
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        gesture = _FakeGesture(start_x=10.0)
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        # Pointer at 10 + 170 = 180 -> right half of tab "b".
+        mgr._on_tab_drag_update(gesture, 170.0, 0.0, tabs[0])
+        mgr._on_tab_drag_end(gesture, 170.0, 0.0, tabs[0])
+
+        assert [t.name for t in mgr.tabs] == ["b", "a"]
+        assert mgr._tab_being_moved is None
+
+    def test_release_without_crossing_leaves_order_alone(self):
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        gesture = _FakeGesture()
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        mgr._on_tab_drag_update(gesture, DRAG_START_THRESHOLD + 1, 0.0, tabs[0])
+        mgr._on_tab_drag_end(gesture, DRAG_START_THRESHOLD + 1, 0.0, tabs[0])
+
+        assert [t.name for t in mgr.tabs] == ["a", "b"]
+        assert mgr._tab_being_moved is None
+
+    def test_group_move_in_progress_blocks_tab_drag(self):
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        mgr.group_controller.is_moving_group.return_value = True
+        gesture = _FakeGesture()
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        mgr._on_tab_drag_update(gesture, 200.0, 0.0, tabs[0])
+
+        assert mgr._tab_being_moved is None
+
+    def test_drag_does_not_hijack_a_menu_move_on_another_tab(self):
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        mgr._start_tab_move(tabs[1])  # menu-initiated move of "b"
+        gesture = _FakeGesture()
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        mgr._on_tab_drag_update(gesture, 200.0, 0.0, tabs[0])
+        mgr._on_tab_drag_end(gesture, 200.0, 0.0, tabs[0])
+
+        # "b" is still the one being moved and nothing was reordered.
+        assert mgr._tab_being_moved is tabs[1]
+        assert [t.name for t in mgr.tabs] == ["a", "b"]
+
+    def test_starting_a_drag_claims_the_event_sequence(self):
+        # Without claiming, the enclosing ScrolledWindow's pan gesture takes
+        # over a few pixels in and the drag dies mid-flight.
+        tabs = [_BoundedTab("a", 0.0), _BoundedTab("b", 100.0)]
+        mgr = _drag_manager(tabs)
+        gesture = _FakeGesture()
+
+        mgr._on_tab_drag_begin(gesture, 10.0, 0.0, tabs[0])
+        assert gesture.claimed is False
+
+        mgr._on_tab_drag_update(gesture, DRAG_START_THRESHOLD + 1, 0.0, tabs[0])
+        assert gesture.claimed is True

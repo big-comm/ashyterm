@@ -150,6 +150,15 @@ def create_tab_widget(
     right_click.connect("pressed", manager._on_tab_right_click, tab_widget)
     tab_widget.add_controller(right_click)
 
+    # Press-and-drag to reorder. The pointer is grabbed by this gesture for the
+    # whole drag, so the sibling tabs' motion controllers stay silent and the
+    # drop target is resolved from coordinates instead.
+    drag = Gtk.GestureDrag.new()
+    drag.connect("drag-begin", manager._on_tab_drag_begin, tab_widget)
+    drag.connect("drag-update", manager._on_tab_drag_update, tab_widget)
+    drag.connect("drag-end", manager._on_tab_drag_end, tab_widget)
+    tab_widget.add_controller(drag)
+
     # Motion controller drives the drop-target highlight during tab/group move.
     motion_controller = Gtk.EventControllerMotion()
     motion_controller.connect("motion", manager._on_tab_motion, tab_widget)

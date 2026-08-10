@@ -1,18 +1,18 @@
 # ashyterm/terminal/tab_move_controller.py
 """Tab-move (drag-reorder) state for the tab bar.
 
-The tab-move UX is a two-step flow: the user picks "Move Tab" from the
-context menu (which puts the tab bar into "move mode"), then clicks
-the drop target. This module owns that mode's state — the moving tab,
-the current drop target, the left/right drop side, and the CSS tags
-that visualize them — plus the list-mutation logic that commits a
-drop. The sibling ``tab_groups_controller`` has the same job for
-groups; both collaborate with ``TabManager``.
+Move mode can be entered two ways: by picking "Move Tab" from the context
+menu and then clicking the drop target, or by pressing a tab and dragging
+it. Both funnel through this module, which owns the mode's state — the
+moving tab, the current drop target, the left/right drop side, and the CSS
+tags that visualize them — plus the list-mutation logic that commits a
+drop. The sibling ``tab_groups_controller`` has the same job for groups;
+both collaborate with ``TabManager``.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional, Sequence, Tuple
 
 import gi
 
@@ -23,6 +23,45 @@ from ..utils.logger import get_logger
 
 if TYPE_CHECKING:
     from .tabs import TabManager
+
+
+# Pointer travel, in pixels, before a press turns into a drag. Below this a
+# press is still a plain click that activates the tab.
+DRAG_START_THRESHOLD = 8.0
+
+
+def resolve_drop_slot(
+    bounds: Sequence[Tuple[float, float]], x: float
+) -> Optional[Tuple[int, str]]:
+    """Find which tab ``x`` is over and which half of it, or None if outside.
+
+    ``bounds`` is one ``(left, width)`` pair per tab, in tab-bar coordinates
+    and visual order. Dragging past either end clamps to the outermost tab so
+    the drop still lands where the pointer is heading, which is what makes
+    "drag to the far right to move it last" work.
+    """
+    if not bounds:
+        return None
+
+    for index, (left, width) in enumerate(bounds):
+        if x < left + width:
+            if x < left:
+                # Left of this tab and of every earlier one: drop before it.
+                return index, "left"
+            return index, "left" if x < left + width / 2 else "right"
+
+    return len(bounds) - 1, "right"
+
+
+def tab_bounds_in_bar(manager: "TabManager") -> List[Tuple[float, float]]:
+    """``(left, width)`` for each tab, measured against the tab bar."""
+    measured: List[Tuple[float, float]] = []
+    for tab in manager.tabs:
+        found, rect = tab.compute_bounds(manager.tab_bar_box)
+        if not found:
+            return []
+        measured.append((rect.origin.x, rect.size.width))
+    return measured
 
 
 class TabMoveController:

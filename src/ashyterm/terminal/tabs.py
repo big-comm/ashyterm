@@ -42,7 +42,12 @@ from .tab_close import (
 from .tab_context_menu import show_tab_context_menu as _show_tab_context_menu
 from .tab_groups import TabGroupManager
 from .tab_groups_controller import TabGroupsController
-from .tab_move_controller import TabMoveController
+from .tab_move_controller import (
+    DRAG_START_THRESHOLD,
+    TabMoveController,
+    resolve_drop_slot,
+    tab_bounds_in_bar,
+)
 from .tab_restore_controller import TabRestoreController
 from .terminal_body import (
     create_terminal_body,
@@ -180,6 +185,7 @@ class TabManager:
         # the backing properties below keep legacy internal references
         # working until every call site is migrated.
         self.move_controller = TabMoveController(self)
+        self._tab_drag_armed = False
 
         # Set up tab bar for receiving move drop events
         self._setup_tab_bar_move_handlers()
@@ -573,6 +579,76 @@ class TabManager:
 
         # Update highlight
         self._update_move_highlight(tab_widget, side)
+
+    def _on_tab_drag_begin(self, _gesture, _start_x, _start_y, _tab_widget):
+        """Arm a possible drag; move mode waits for the drag threshold."""
+        self._tab_drag_armed = True
+
+    def _on_tab_drag_update(self, gesture, offset_x, offset_y, tab_widget):
+        """Enter move mode once past the threshold, then track the drop slot."""
+        if not self._tab_drag_armed:
+            return
+
+        # A group move already owns the tab bar; don't fight over it.
+        if self.group_controller.is_moving_group():
+            return
+
+        if self._tab_being_moved is None:
+            if max(abs(offset_x), abs(offset_y)) < DRAG_START_THRESHOLD:
+                return
+            # Take the sequence, or the enclosing ScrolledWindow's pan gesture
+            # claims it a few pixels in and our drag is denied mid-flight.
+            # Claiming only now keeps a plain click working as a click.
+            gesture.set_state(Gtk.EventSequenceState.CLAIMED)
+            self._start_tab_move(tab_widget)
+        elif self._tab_being_moved is not tab_widget:
+            # A move started from the context menu on a different tab owns the
+            # bar; dragging this one must not retarget it.
+            return
+
+        slot = self._resolve_drag_slot(gesture, offset_x, tab_widget)
+        if slot is None:
+            self._clear_tab_drop_highlights()
+            return
+
+        target_tab, side = slot
+        if target_tab == tab_widget:
+            self._clear_tab_drop_highlights()
+            return
+        self._update_move_highlight(target_tab, side)
+
+    def _on_tab_drag_end(self, gesture, offset_x, _offset_y, tab_widget):
+        """Commit the drop the highlight is pointing at, if any."""
+        self._tab_drag_armed = False
+        if self._tab_being_moved is not tab_widget:
+            # Either no drag ever started, or a menu-initiated move owns the bar.
+            return
+
+        slot = self._resolve_drag_slot(gesture, offset_x, tab_widget)
+        if slot is not None:
+            target_tab, side = slot
+            if target_tab != tab_widget:
+                self.move_controller.set_drop_target(target_tab, side)
+                self._perform_tab_move()
+        self._cancel_tab_move()
+
+    def _resolve_drag_slot(self, gesture, offset_x, tab_widget):
+        """Map the pointer's position to a ``(tab, side)`` drop slot."""
+        found, origin = tab_widget.compute_bounds(self.tab_bar_box)
+        if not found:
+            return None
+
+        ok, start_x, _start_y = gesture.get_start_point()
+        if not ok:
+            return None
+
+        pointer_x = origin.origin.x + start_x + offset_x
+        slot = resolve_drop_slot(tab_bounds_in_bar(self), pointer_x)
+        if slot is None:
+            return None
+
+        index, side = slot
+        return self.tabs[index], side
 
     def _on_tab_leave(self, controller, tab_widget):
         """Handle mouse leaving a tab during move mode."""
