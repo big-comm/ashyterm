@@ -26,7 +26,13 @@ from .fm_integration import FileManagerIntegration
 from .manager import TerminalManager
 from .pane_manager import PaneManager
 from .scroll_handler import ScrollHandler
-from .tab_attention import clear_tab_attention, mark_tab_attention
+from .tab_attention import (
+    PROGRESS_HINT_INACTIVE,
+    ProgressAttentionTracker,
+    TitleActivityTracker,
+    clear_tab_attention,
+    mark_tab_attention,
+)
 from .tab_close import (
     any_terminal_has_foreground_process as _any_terminal_has_foreground_process_impl,
     build_close_confirmation_dialog as _build_close_confirmation_dialog_impl,
@@ -59,6 +65,23 @@ if TYPE_CHECKING:
 
 # Pre-compiled pattern for parsing RGBA color strings
 _RGBA_COLOR_PATTERN = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+),?.*\)")
+
+# OSC 9;4 progress reporting reaches us as a VTE termprop, which requires
+# VTE >= 0.80. Older stacks (Ubuntu 24.04, AppImages built against them) lack
+# the constant and the "termprop-changed" signal, and there we simply keep
+# relying on BEL alone for tab attention.
+HAS_PROGRESS_TERMPROP = hasattr(Vte, "TERMPROP_PROGRESS_HINT")
+
+# VTE >= 0.78 exposes the window title as a termprop and deprecates both
+# "window-title-changed" and get_window_title(). Prefer the termprop where it
+# exists and keep the old signal as the fallback for older stacks.
+HAS_TITLE_TERMPROP = hasattr(Vte, "TERMPROP_XTERM_TITLE")
+
+
+def _progress_key(terminal: Vte.Terminal):
+    """Stable key identifying ``terminal`` for progress tracking."""
+    terminal_id = getattr(terminal, "terminal_id", None)
+    return terminal_id if terminal_id is not None else id(terminal)
 
 # CSS for tab moving visual feedback is now loaded from:
 # data/styles/components.css (loaded by window_ui.py at startup)
@@ -164,6 +187,8 @@ class TabManager:
         self._creation_lock = threading.Lock()
         self._cleanup_lock = threading.Lock()
         self._last_focused_terminal = None
+        self._progress_attention = ProgressAttentionTracker()
+        self._title_attention = TitleActivityTracker()
 
         # Tab groups — data model + UI controller
         self.group_manager = TabGroupManager()
@@ -398,6 +423,51 @@ class TabManager:
 
     def _on_terminal_bell(self, terminal: Vte.Terminal) -> None:
         """Keep a background tab highlighted after a bell/BEL is received."""
+        self._mark_attention_for_terminal(terminal)
+
+    def _on_terminal_termprop_changed(
+        self, terminal: Vte.Terminal, prop: str
+    ) -> None:
+        """Route termprop updates to the matching attention source."""
+        if HAS_TITLE_TERMPROP and prop == Vte.TERMPROP_XTERM_TITLE:
+            title, _size = terminal.get_termprop_string(Vte.TERMPROP_XTERM_TITLE)
+            self._handle_title_activity(terminal, title)
+        elif HAS_PROGRESS_TERMPROP and prop == Vte.TERMPROP_PROGRESS_HINT:
+            self._handle_progress_hint(terminal)
+
+    def _handle_progress_hint(self, terminal: Vte.Terminal) -> None:
+        """Highlight a background tab when reported progress finishes.
+
+        Tools that publish OSC 9;4 progress announce completion by going
+        inactive rather than by ringing the bell.
+        """
+        found, hint = terminal.get_termprop_int(Vte.TERMPROP_PROGRESS_HINT)
+        # A reset termprop reads back as absent, which means "no progress".
+        if not found:
+            hint = PROGRESS_HINT_INACTIVE
+
+        if self._progress_attention.update(_progress_key(terminal), hint):
+            self._mark_attention_for_terminal(terminal)
+
+    def _handle_title_activity(
+        self, terminal: Vte.Terminal, title: Optional[str]
+    ) -> None:
+        """Highlight a background tab when a working tool goes idle.
+
+        Long-running CLIs keep a spinner in the window title while busy and drop
+        it when they finish. Unlike BEL or OSC 9;4, the title is emitted without
+        the tool needing to recognise or be configured for this terminal, which
+        makes this the source that works out of the box.
+        """
+        if self._title_attention.update(_progress_key(terminal), title or ""):
+            self._mark_attention_for_terminal(terminal)
+
+    def _on_terminal_title_changed(self, terminal: Vte.Terminal) -> None:
+        """Title fallback for VTE < 0.78, which has no title termprop."""
+        self._handle_title_activity(terminal, terminal.get_window_title())
+
+    def _mark_attention_for_terminal(self, terminal: Vte.Terminal) -> None:
+        """Flag the background tab owning ``terminal`` as needing attention."""
         page = getattr(terminal, "ashy_parent_page", None)
         if not page:
             return
@@ -418,6 +488,10 @@ class TabManager:
     ) -> None:
         terminal.connect("contents-changed", self.scroll_handler.on_terminal_contents_changed)
         terminal.connect("bell", self._on_terminal_bell)
+        if HAS_PROGRESS_TERMPROP or HAS_TITLE_TERMPROP:
+            terminal.connect("termprop-changed", self._on_terminal_termprop_changed)
+        if not HAS_TITLE_TERMPROP:
+            terminal.connect("window-title-changed", self._on_terminal_title_changed)
 
         terminal_body = create_terminal_body(terminal)
         scrolled_window = get_terminal_scrolled_window(terminal_body)
@@ -885,6 +959,8 @@ class TabManager:
         with self._cleanup_lock:
             page = self.get_page_for_terminal(terminal)
             terminal_id = getattr(terminal, "terminal_id", "N/A")
+            self._progress_attention.forget(_progress_key(terminal))
+            self._title_attention.forget(_progress_key(terminal))
 
             self.logger.info(f"[PROCESS_EXITED] Terminal {terminal_id} process exited")
             self.logger.info(
