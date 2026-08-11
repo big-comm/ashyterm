@@ -20,6 +20,7 @@ from ..settings.manager import SettingsManager as SettingsManagerType
 from ..utils.accessibility import set_label as a11y_label
 from ..utils.icons import icon_button
 from ..utils.logger import get_logger
+from ..utils.sound import SOUND_NONE, play_notification_sound
 from ..utils.translation_utils import _
 from .banner_manager import BannerManager
 from .fm_integration import FileManagerIntegration
@@ -59,6 +60,7 @@ from .tab_titles import (
     build_display_title as _build_display_title_impl,
 )
 from .tab_widget import (
+    apply_attention_color as _apply_attention_color_impl,
     apply_tab_color as _apply_tab_color_impl,
     contrasting_text_for_rgba as _contrasting_text_for_rgba_impl,
     create_tab_widget as _create_tab_widget_impl,
@@ -486,7 +488,12 @@ class TabManager:
         if not label:
             return
 
+        settings = self.terminal_manager.settings_manager
+        _apply_attention_color_impl(
+            tab_widget, settings.get("tab_attention_color", "")
+        )
         mark_tab_attention(tab_widget)
+        play_notification_sound(settings.get("tab_attention_sound", SOUND_NONE))
 
     def _connect_terminal_signals(self, terminal: Vte.Terminal) -> None:
         """Wire the per-terminal signals a tab needs, at most once.

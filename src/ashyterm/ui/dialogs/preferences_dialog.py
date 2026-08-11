@@ -11,6 +11,11 @@ from ...settings.scrolling import SCROLL_MODES
 from ...utils.logger import get_logger
 from ...utils.translation_utils import _
 from ...utils.accessibility import set_label as a11y_label
+from ...utils.sound import (
+    NOTIFICATION_SOUNDS,
+    SOUND_NONE,
+    play_notification_sound,
+)
 from .base_dialog import create_mapped_combo_row
 
 
@@ -405,8 +410,116 @@ class PreferencesDialog(Adw.PreferencesWindow):
         cmd_notify_spin.connect("notify::value", self._on_long_cmd_threshold_changed)
         notifications_group.add(cmd_notify_spin)
 
+        self._add_tab_attention_rows(notifications_group)
+
         shell_group = Adw.PreferencesGroup()
         page.add(shell_group)
+        self._setup_shell_group(shell_group)
+
+    def _add_tab_attention_rows(self, group: Adw.PreferencesGroup) -> None:
+        """Sound + color for the background-tab attention flash."""
+        sound_values = [SOUND_NONE, *NOTIFICATION_SOUNDS]
+        # Keyed by the bundled file name; unknown names degrade to a title-cased
+        # label so adding a sound never leaves the row blank.
+        sound_labels = {
+            "pop": _("Pop"),
+            "blip": _("Blip"),
+            "double": _("Double Beep"),
+            "pluck": _("Pluck"),
+            "rise": _("Rising"),
+            "settle": _("Falling"),
+            "success": _("Success"),
+            "chime": _("Chime"),
+            "bell": _("Bell"),
+            "soft": _("Soft Bell"),
+        }
+        displays = [_("None")] + [
+            sound_labels.get(name, name.title()) for name in NOTIFICATION_SOUNDS
+        ]
+
+        self._attention_sound_row = create_mapped_combo_row(
+            _("Tab Notification Sound"),
+            sound_values,
+            displays,
+            self.settings_manager.get("tab_attention_sound", SOUND_NONE),
+            lambda value: self._on_setting_changed("tab_attention_sound", value),
+            subtitle=_("Plays when a background tab finishes a task"),
+        )
+        preview_button = Gtk.Button(
+            icon_name="media-playback-start-symbolic", valign=Gtk.Align.CENTER
+        )
+        preview_button.add_css_class("flat")
+        a11y_label(preview_button, _("Test sound"))
+        preview_button.connect("clicked", self._on_test_attention_sound)
+        self._attention_sound_row.add_suffix(preview_button)
+        group.add(self._attention_sound_row)
+
+        color_row = Adw.ActionRow(
+            title=_("Tab Notification Color"),
+            subtitle=_("Unset follows the theme's warning color"),
+        )
+        self._attention_color_button = Gtk.Button(valign=Gtk.Align.CENTER)
+        self._attention_color_button.add_css_class("flat")
+        a11y_label(self._attention_color_button, _("Choose color"))
+        self._attention_color_button.connect("clicked", self._on_pick_attention_color)
+        self._update_attention_color_button()
+        color_row.add_suffix(self._attention_color_button)
+
+        reset_button = Gtk.Button(
+            icon_name="edit-clear-symbolic", valign=Gtk.Align.CENTER
+        )
+        reset_button.add_css_class("flat")
+        a11y_label(reset_button, _("Use theme color"))
+        reset_button.connect("clicked", self._on_reset_attention_color)
+        color_row.add_suffix(reset_button)
+        group.add(color_row)
+
+    def _update_attention_color_button(self) -> None:
+        """Show the chosen color as a swatch, or a hint when following the theme."""
+        color = self.settings_manager.get("tab_attention_color", "")
+        if not color:
+            self._attention_color_button.set_label(_("Theme"))
+            return
+
+        swatch = Gtk.Box()
+        swatch.set_size_request(24, 24)
+        swatch.add_css_class("circular")
+        provider = Gtk.CssProvider()
+        provider.load_from_string(f"box {{ background: {color}; border-radius: 12px; }}")
+        swatch.get_style_context().add_provider(
+            provider, Gtk.STYLE_PROVIDER_PRIORITY_USER
+        )
+        self._attention_color_button.set_child(swatch)
+
+    def _on_test_attention_sound(self, _button) -> None:
+        """Play whatever sound is currently selected in the row."""
+        play_notification_sound(
+            self.settings_manager.get("tab_attention_sound", SOUND_NONE)
+        )
+
+    def _on_pick_attention_color(self, _button) -> None:
+        dialog = Gtk.ColorDialog(title=_("Tab Notification Color"))
+        dialog.choose_rgba(
+            self.get_root(), None, None, self._on_attention_color_chosen
+        )
+
+    def _on_attention_color_chosen(self, dialog, result) -> None:
+        try:
+            color = dialog.choose_rgba_finish(result)
+        except GLib.Error:
+            return
+        color_str = (
+            f"rgba({int(color.red * 255)},{int(color.green * 255)},"
+            f"{int(color.blue * 255)},{color.alpha:.2f})"
+        )
+        self._on_setting_changed("tab_attention_color", color_str)
+        self._update_attention_color_button()
+
+    def _on_reset_attention_color(self, _button) -> None:
+        self._on_setting_changed("tab_attention_color", "")
+        self._update_attention_color_button()
+
+    def _setup_shell_group(self, shell_group: Adw.PreferencesGroup) -> None:
 
         login_shell_row = self._create_switch_row(
             _("Run Command as a Login Shell"),

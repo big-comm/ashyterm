@@ -2,7 +2,7 @@
 
 import inspect
 from types import SimpleNamespace
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -16,6 +16,19 @@ from ashyterm.terminal.tab_attention import (
     title_shows_spinner,
 )
 from ashyterm.terminal.tabs import HAS_PROGRESS_TERMPROP, TabManager
+
+
+def _stub_attention_settings(tab_manager, sound="none", color=""):
+    """Give a bare TabManager the settings that marking attention reads."""
+    tab_manager.terminal_manager = MagicMock()
+    tab_manager.terminal_manager.settings_manager.get = MagicMock(
+        side_effect=lambda key, default=None: {
+            "tab_attention_sound": sound,
+            "tab_attention_color": color,
+        }.get(key, default)
+    )
+    return tab_manager
+
 
 # Vte.ProgressHint values other than INACTIVE all mean "still working".
 PROGRESS_HINT_ACTIVE = 1
@@ -47,6 +60,7 @@ def test_background_terminal_bell_marks_tab_until_visited() -> None:
     tab_manager = TabManager.__new__(TabManager)
     tab_manager.active_tab = MagicMock()
     tab_manager._find_tab_for_page = MagicMock(return_value=tab_widget)
+    _stub_attention_settings(tab_manager)
 
     tab_manager._on_terminal_bell(SimpleNamespace(ashy_parent_page=page))
 
@@ -192,6 +206,7 @@ def test_background_tab_marked_when_spinner_stops() -> None:
     tab_manager.active_tab = MagicMock()
     tab_manager._find_tab_for_page = MagicMock(return_value=tab_widget)
     tab_manager._title_attention = TitleActivityTracker()
+    _stub_attention_settings(tab_manager)
 
     terminal = MagicMock()
     terminal.ashy_parent_page = object()
@@ -227,6 +242,7 @@ class TestTermpropAttention:
         tab_manager.active_tab = MagicMock()
         tab_manager._find_tab_for_page = MagicMock(return_value=tab_widget)
         tab_manager._progress_attention = ProgressAttentionTracker()
+        _stub_attention_settings(tab_manager)
         return tab_manager
 
     @staticmethod
@@ -384,3 +400,60 @@ def test_split_panes_wire_their_terminal():
 
     source = inspect.getsource(PaneManager._create_pane_for_split)
     assert "_connect_terminal_signals" in source
+
+
+# ── configurable color + sound on attention ────────────────
+
+
+def _attention_manager(sound="none", color=""):
+    tab_widget = MagicMock()
+    tab_widget.label_widget = MagicMock()
+    tab_manager = TabManager.__new__(TabManager)
+    tab_manager.active_tab = MagicMock()
+    tab_manager._find_tab_for_page = MagicMock(return_value=tab_widget)
+    tab_manager.terminal_manager = MagicMock()
+    tab_manager.terminal_manager.settings_manager.get = MagicMock(
+        side_effect=lambda key, default=None: {
+            "tab_attention_sound": sound,
+            "tab_attention_color": color,
+        }.get(key, default)
+    )
+    return tab_manager, tab_widget
+
+
+def test_attention_plays_the_configured_sound() -> None:
+    tab_manager, _tab = _attention_manager(sound="bell")
+
+    with patch("ashyterm.terminal.tabs.play_notification_sound") as play:
+        tab_manager._mark_attention_for_terminal(
+            SimpleNamespace(ashy_parent_page=object())
+        )
+
+    play.assert_called_once_with("bell")
+
+
+def test_attention_on_active_tab_plays_nothing() -> None:
+    # Sound on a tab you are already looking at would be pure noise.
+    tab_manager, tab_widget = _attention_manager(sound="bell")
+    tab_manager.active_tab = tab_widget
+
+    with patch("ashyterm.terminal.tabs.play_notification_sound") as play:
+        tab_manager._mark_attention_for_terminal(
+            SimpleNamespace(ashy_parent_page=object())
+        )
+
+    play.assert_not_called()
+
+
+def test_configured_color_is_applied_before_flashing() -> None:
+    tab_manager, tab_widget = _attention_manager(color="rgba(255,0,0,1.00)")
+
+    # Nested rather than parenthesized: the project targets Python 3.8.
+    with patch("ashyterm.terminal.tabs.play_notification_sound"), patch(
+        "ashyterm.terminal.tabs._apply_attention_color_impl"
+    ) as apply_color:
+        tab_manager._mark_attention_for_terminal(
+            SimpleNamespace(ashy_parent_page=object())
+        )
+
+    apply_color.assert_called_once_with(tab_widget, "rgba(255,0,0,1.00)")

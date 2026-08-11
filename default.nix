@@ -10,6 +10,7 @@
   sshpass,
   pkg-config,
   libsecret,
+  gsound,
   wrapGAppsHook4,
   gobject-introspection,
   makeWrapper,
@@ -81,6 +82,7 @@ python3Packages.buildPythonApplication {
     rsync
     sshpass
     libsecret
+    gsound # tab notification sounds; silently disabled if absent
   ] ++ lib.optionals useAllocator [
     allocatorCfg.package
     libchildenv

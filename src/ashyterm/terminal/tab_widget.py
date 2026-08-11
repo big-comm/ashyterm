@@ -93,6 +93,39 @@ def apply_tab_color(widget: Gtk.Widget, color_string: Optional[str]) -> None:
     widget._color_provider = provider
 
 
+def apply_attention_color(widget: Gtk.Widget, color_string: Optional[str]) -> None:
+    """Override the attention flash color on ``widget``, or clear the override.
+
+    The stock ``tab-bell-flash`` keyframes in window.css hard-code the theme's
+    warning color, and the animation ends with ``forwards`` — so the final
+    keyframe wins over any plain background rule. Overriding the color means
+    restating the keyframes, which is why this generates an animation rather
+    than a single declaration. Passing an empty color restores the theme's.
+    """
+    style_context = widget.get_style_context()
+    if hasattr(widget, "_attention_provider"):
+        style_context.remove_provider(widget._attention_provider)
+        del widget._attention_provider
+
+    if not color_string:
+        return
+
+    provider = Gtk.CssProvider()
+    css = f"""
+        @keyframes tab-bell-flash-custom {{
+            0% {{ background: {color_string}; }}
+            50% {{ background: transparent; }}
+            100% {{ background: {color_string}; }}
+        }}
+        .custom-tab-button.tab-bell {{
+            animation: tab-bell-flash-custom 0.5s ease-in-out 2 forwards;
+        }}
+    """
+    provider.load_from_string(css)
+    style_context.add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    widget._attention_provider = provider
+
+
 def _icon_name_for_session(session: SessionItem) -> Optional[str]:
     """Pick the tab icon based on session type.
 

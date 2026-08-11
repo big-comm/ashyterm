@@ -45,7 +45,7 @@ class AppConstants:
 
     APP_ID = "org.communitybig.ashyterm"
     APP_TITLE = "Ashy Terminal"
-    APP_VERSION = "1.16.1"
+    APP_VERSION = "1.17.0"
     DEVELOPER_NAME = "BigCommunity"
     DEVELOPER_TEAM = ["BigCommunity Team"]
     COPYRIGHT = "© 2025 BigCommunity"
@@ -196,6 +196,7 @@ class DefaultSettings:
             "bold_is_bright",
             "tab_alignment",
             "icon_theme_strategy",
+            "tab_attention_color",
         ],
         "window": [
             "window_width",
@@ -217,6 +218,7 @@ class DefaultSettings:
             "new_instance_behavior",
             "use_login_shell",
             "close_multiple_tabs_policy",
+            "tab_attention_sound",
         ],
         "terminal": [
             "copy_on_select",
@@ -429,6 +431,10 @@ class DefaultSettings:
             "icon_theme_strategy": "ashy",
             # Notification threshold in seconds for long-running commands (0 = disabled)
             "long_command_threshold": 30,
+            # Background-tab attention: bundled sound name ("none" = silent) and
+            # the flash color ("" = follow the theme's warning color).
+            "tab_attention_sound": "none",
+            "tab_attention_color": "",
             # Shortcuts
             "shortcuts": {
                 "new-local-tab": "<Control><Shift>t",
