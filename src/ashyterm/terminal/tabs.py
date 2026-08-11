@@ -488,16 +488,33 @@ class TabManager:
 
         mark_tab_attention(tab_widget)
 
-    def _create_tab_for_terminal(
-        self, terminal: Vte.Terminal, session: SessionItem,
-        working_directory: Optional[str] = None,
-    ) -> None:
-        terminal.connect("contents-changed", self.scroll_handler.on_terminal_contents_changed)
+    def _connect_terminal_signals(self, terminal: Vte.Terminal) -> None:
+        """Wire the per-terminal signals a tab needs, at most once.
+
+        Terminals reach the tab bar through three paths — a new tab, a restored
+        session and a split pane — and only the first used to wire these, so
+        restored and split terminals silently had no tab attention and no
+        auto-scroll. Guarded because a terminal must never end up with the
+        handlers attached twice.
+        """
+        if getattr(terminal, "_ashy_signals_connected", False):
+            return
+        terminal._ashy_signals_connected = True
+
+        terminal.connect(
+            "contents-changed", self.scroll_handler.on_terminal_contents_changed
+        )
         terminal.connect("bell", self._on_terminal_bell)
         if HAS_PROGRESS_TERMPROP or HAS_TITLE_TERMPROP:
             terminal.connect("termprop-changed", self._on_terminal_termprop_changed)
         if not HAS_TITLE_TERMPROP:
             terminal.connect("window-title-changed", self._on_terminal_title_changed)
+
+    def _create_tab_for_terminal(
+        self, terminal: Vte.Terminal, session: SessionItem,
+        working_directory: Optional[str] = None,
+    ) -> None:
+        self._connect_terminal_signals(terminal)
 
         terminal_body = create_terminal_body(terminal)
         scrolled_window = get_terminal_scrolled_window(terminal_body)

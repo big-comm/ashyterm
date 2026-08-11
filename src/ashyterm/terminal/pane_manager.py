@@ -294,6 +294,7 @@ class PaneManager:
             self.on_move_to_tab_callback,
             self.tm.terminal_manager.settings_manager,
         )
+        self.tm._connect_terminal_signals(terminal)
         sw = get_terminal_scrolled_window(new_pane)
         scroll_host = get_terminal_scroll_host(new_pane)
         if sw and scroll_host:

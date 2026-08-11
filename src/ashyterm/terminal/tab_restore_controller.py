@@ -69,6 +69,7 @@ class TabRestoreController:
         page.content_paned = content_paned
         for term in terminals:
             term.ashy_parent_page = page
+            self.manager._connect_terminal_signals(term)
 
         tab_widget = self.manager._create_tab_widget(page, session)
         self.manager.tabs.append(tab_widget)

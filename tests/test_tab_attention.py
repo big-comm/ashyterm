@@ -1,5 +1,6 @@
 """Tests for persistent terminal tab attention state."""
 
+import inspect
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -328,3 +329,58 @@ class TestTermpropAttention:
         )
 
         tab_widget.add_css_class.assert_not_called()
+
+
+# ── signal wiring across every tab-creation path ───────────
+
+
+def _wiring_manager():
+    tab_manager = TabManager.__new__(TabManager)
+    tab_manager.scroll_handler = MagicMock()
+    return tab_manager
+
+
+def _fake_terminal():
+    terminal = MagicMock()
+    # A fresh Vte.Terminal has no wiring marker yet.
+    del terminal._ashy_signals_connected
+    return terminal
+
+
+def test_connect_terminal_signals_wires_bell_and_title():
+    tab_manager = _wiring_manager()
+    terminal = _fake_terminal()
+
+    tab_manager._connect_terminal_signals(terminal)
+
+    wired = {call.args[0] for call in terminal.connect.call_args_list}
+    assert "bell" in wired
+    assert "contents-changed" in wired
+    assert "termprop-changed" in wired or "window-title-changed" in wired
+
+
+def test_connect_terminal_signals_is_idempotent():
+    # Restored tabs and split panes can both reach the same terminal; wiring
+    # twice would fire every handler twice.
+    tab_manager = _wiring_manager()
+    terminal = _fake_terminal()
+
+    tab_manager._connect_terminal_signals(terminal)
+    first = terminal.connect.call_count
+    tab_manager._connect_terminal_signals(terminal)
+
+    assert terminal.connect.call_count == first
+
+
+def test_restored_tabs_wire_every_terminal():
+    from ashyterm.terminal.tab_restore_controller import TabRestoreController
+
+    source = inspect.getsource(TabRestoreController.recreate_tab_from_structure)
+    assert "_connect_terminal_signals" in source
+
+
+def test_split_panes_wire_their_terminal():
+    from ashyterm.terminal.pane_manager import PaneManager
+
+    source = inspect.getsource(PaneManager._create_pane_for_split)
+    assert "_connect_terminal_signals" in source
