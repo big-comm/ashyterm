@@ -147,10 +147,33 @@ CC_WORKING_TITLE_2 = "⠐ Confirmação de entendimento"
 CC_DONE_TITLE = "✳ Confirmação de entendimento"
 
 
+# Titles captured from Claude Code 2.1.238, which replaced the braille spinner
+# with circle halves. Detection must cover both, since either version may be
+# installed and other tools use other families.
+CC_238_WORKING = "◐ Ok"
+CC_238_WORKING_2 = "◑ Ok"
+CC_238_DONE = "✳ Ok"
+
+
 class TestTitleShowsSpinner:
     def test_braille_frames_count_as_working(self) -> None:
         assert title_shows_spinner(CC_WORKING_TITLE) is True
         assert title_shows_spinner(CC_WORKING_TITLE_2) is True
+
+    def test_circle_half_frames_count_as_working(self) -> None:
+        # Regression: Claude Code 2.1.238 switched to these and attention broke.
+        assert title_shows_spinner(CC_238_WORKING) is True
+        assert title_shows_spinner(CC_238_WORKING_2) is True
+
+    def test_other_spinner_families_count_as_working(self) -> None:
+        for frame in "◴◵◶◷◜◝◞◟▖▘▝▗▁▃▆▇⬒⬓◢◣":
+            assert title_shows_spinner(f"{frame} building") is True, frame
+
+    def test_idle_asterisk_is_not_a_spinner(self) -> None:
+        # U+2733 is Claude Code's idle glyph; treating it as a spinner would
+        # leave the tab permanently "busy" and never fire.
+        assert title_shows_spinner(CC_238_DONE) is False
+        assert title_shows_spinner("\u2733 anything") is False
 
     def test_idle_titles_do_not(self) -> None:
         assert title_shows_spinner(CC_IDLE_TITLE) is False
@@ -457,3 +480,13 @@ def test_configured_color_is_applied_before_flashing() -> None:
         )
 
     apply_color.assert_called_once_with(tab_widget, "rgba(255,0,0,1.00)")
+
+
+def test_circle_spinner_then_idle_fires_once() -> None:
+    """The 2.1.238 sequence end to end: circle frames, then back to idle."""
+    tracker = TitleActivityTracker()
+
+    assert tracker.update("t1", "✳ Claude Code") is False
+    assert tracker.update("t1", CC_238_WORKING) is False
+    assert tracker.update("t1", CC_238_WORKING_2) is False
+    assert tracker.update("t1", CC_238_DONE) is True

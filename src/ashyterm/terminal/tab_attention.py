@@ -9,16 +9,37 @@ ATTENTION_CSS_CLASS = "tab-bell"
 # this module stays importable — and unit-testable — without a VTE stack.
 PROGRESS_HINT_INACTIVE = 0
 
-# Braille Patterns. Modern CLIs animate spinners with these code points, and
-# tools that keep a spinner in the window title (Claude Code, for one) thereby
-# advertise "still working" on a channel every terminal already receives.
-_SPINNER_FIRST = 0x2800
-_SPINNER_LAST = 0x28FF
+# Code point ranges CLIs animate spinners with. A tool that keeps a spinner in
+# its window title advertises "still working" on a channel every terminal
+# already receives, which is what lets tab attention work without the tool
+# being configured for this terminal.
+#
+# Several families are covered on purpose: matching only one is fragile. Claude
+# Code shipped braille frames up to 2.1.220 and switched to circle halves in
+# 2.1.238, which silently broke detection until this list grew. These are the
+# families used by the common spinner libraries (cli-spinners, indicatif, rich).
+_SPINNER_RANGES = (
+    (0x2800, 0x28FF),  # Braille Patterns — "dots", the most common
+    (0x25D0, 0x25D3),  # ◐◑◒◓ circle halves — Claude Code 2.1.238+
+    (0x25F4, 0x25F7),  # ◴◵◶◷ circle quarters
+    (0x25DC, 0x25DF),  # ◜◝◞◟ arcs
+    (0x2596, 0x259F),  # ▖▘▝▗ quadrants
+    (0x2581, 0x2588),  # ▁▃▄▅▆▇ growing bars
+    (0x2B12, 0x2B15),  # ⬒⬓⬔⬕ half-filled squares
+    (0x25E2, 0x25E5),  # ◢◣◤◥ triangles
+)
+
+# U+2733 (✳) is deliberately absent: Claude Code uses it for the *idle* state,
+# so counting it as a spinner would mean the tab never stops looking busy.
 
 
 def title_shows_spinner(title: str) -> bool:
-    """True when ``title`` carries a braille spinner frame."""
-    return any(_SPINNER_FIRST <= ord(char) <= _SPINNER_LAST for char in title)
+    """True when ``title`` carries a spinner frame from any known family."""
+    return any(
+        first <= ord(char) <= last
+        for char in title
+        for first, last in _SPINNER_RANGES
+    )
 
 
 class CssClassWidget(Protocol):
