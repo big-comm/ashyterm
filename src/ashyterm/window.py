@@ -49,6 +49,7 @@ class CommTerminalWindow(
 
     def __init__(self, application, settings_manager: SettingsManager, **kwargs):
         super().__init__(application=application)
+        self.add_css_class("ashyterm-window")
         self.logger = get_logger("ashyterm.window")
         self.logger.info("Initializing main window")
 
