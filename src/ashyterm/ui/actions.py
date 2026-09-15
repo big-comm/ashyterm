@@ -56,6 +56,7 @@ class WindowActions:
             "zoom-out": self.zoom_out,
             "zoom-reset": self.zoom_reset,
             "connect-sftp": self.connect_sftp,
+            "open-sftp-files": self.open_sftp_files,
             "edit-session": self.edit_session,
             "duplicate-session": self.duplicate_session,
             "rename-session": self.rename_session,
@@ -383,6 +384,30 @@ class WindowActions:
                 url = terminal._context_menu_url
                 Gdk.Display.get_default().get_clipboard().set(url)
                 delattr(terminal, "_context_menu_url")
+
+    def open_sftp_files(self, *_args: Any) -> None:
+        """Open the remote directory of the active SSH terminal in the file manager."""
+        from ..terminal.sftp_open import build_sftp_uri, launch_file_manager_for_uri
+
+        terminal = self.window.tab_manager.get_selected_terminal()
+        target = (
+            self.window.terminal_manager.get_remote_file_target(terminal)
+            if terminal
+            else None
+        )
+        if target is None:
+            self._toast(_("The active terminal is not connected to an SSH host."))
+            return
+        uri = build_sftp_uri(target)
+        if launch_file_manager_for_uri(uri):
+            self.logger.info(f"Opened remote files in file manager: {uri}")
+            return
+        self._toast(_("Could not open the file manager for {}").format(uri))
+
+    def _toast(self, title: str) -> None:
+        overlay = getattr(self.window, "toast_overlay", None)
+        if overlay is not None:
+            overlay.add_toast(Adw.Toast(title=title))
 
     def zoom_in(self, *_args: Any) -> None:
         if terminal := self.window.tab_manager.get_selected_terminal():

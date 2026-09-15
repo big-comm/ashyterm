@@ -310,8 +310,15 @@ def create_terminal_menu(
     settings_manager: Optional["SettingsManager"] = None,
     click_x: Optional[float] = None,
     click_y: Optional[float] = None,
+    remote_files_available: bool = False,
 ) -> Gio.Menu:
-    """Factory function to create a terminal context menu model."""
+    """Factory function to create a terminal context menu model.
+
+    ``remote_files_available`` is decided by the caller (it needs the
+    registry and the manual-SSH tracker); when True an "Open Files
+    (SFTP)" entry is added that opens the remote directory in the
+    system file manager.
+    """
     menu = Gio.Menu()
 
     url_at_click = _detect_url_at_click(terminal, click_x, click_y)
@@ -345,6 +352,11 @@ def create_terminal_menu(
     standard_section.append(_("Select All"), "win.select-all")
     standard_section.append(_("Clear Session"), "win.clear-session")
     menu.append_section(None, standard_section)
+
+    if remote_files_available:
+        remote_section = Gio.Menu()
+        remote_section.append(_("Open Files (SFTP)"), "win.open-sftp-files")
+        menu.append_section(None, remote_section)
 
     split_section = Gio.Menu()
     split_section.append_item(

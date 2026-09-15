@@ -49,6 +49,7 @@ PALETTE_COMMANDS = [
     # Panels
     ("toggle-sidebar", _("Toggle Sessions Panel"), _("View"), "win"),
     ("toggle-file-manager", _("Toggle File Manager"), _("View"), "win"),
+    ("open-sftp-files", _("Open Files (SFTP)"), _("View"), "win"),
     ("show-command-manager", _("Command Manager"), _("View"), "win"),
     # Session management
     ("add-session-root", _("New SSH Session"), _("Sessions"), "win"),
