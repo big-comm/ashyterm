@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ashyterm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-08 00:27+0000\n"
+"POT-Creation-Date: 2026-09-15 03:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -507,12 +507,12 @@ msgid "Configure the Mistral API key in Preferences."
 msgstr "Configure the Mistral API key in Preferences."
 
 #
-# File: src/ashyterm/terminal/manager.py, line: 467
+# File: src/ashyterm/terminal/manager.py, line: 468
 msgid "Command Finished"
 msgstr "Command Finished"
 
 #
-# File: src/ashyterm/terminal/manager.py, line: 469
+# File: src/ashyterm/terminal/manager.py, line: 470
 #, python-brace-format
 msgid "{tab} — completed after {time}"
 msgstr "{tab} — completed after {time}"
@@ -662,8 +662,8 @@ msgstr "A process is still running in this tab. Close anyway?"
 # File: src/ashyterm/ui/widgets/conversation_history.py, line: 391
 # File: src/ashyterm/ui/color_scheme_dialog.py, line: 203
 # File: src/ashyterm/ui/color_scheme_dialog.py, line: 726
-# File: src/ashyterm/ui/actions.py, line: 659
-# File: src/ashyterm/ui/actions.py, line: 708
+# File: src/ashyterm/ui/actions.py, line: 684
+# File: src/ashyterm/ui/actions.py, line: 733
 # File: src/ashyterm/ui/broadcast_manager.py, line: 200
 # File: src/ashyterm/window_lifecycle.py, line: 595
 # File: src/ashyterm/window_lifecycle.py, line: 632
@@ -898,7 +898,7 @@ msgstr "Enter a new name for the group:"
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 176
 # File: src/ashyterm/ui/menus.py, line: 246
 # File: src/ashyterm/ui/menus.py, line: 266
-# File: src/ashyterm/ui/actions.py, line: 660
+# File: src/ashyterm/ui/actions.py, line: 685
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 150
 # File: src/ashyterm/filemanager/transfers.py, line: 1005
 # File: src/ashyterm/filemanager/transfers.py, line: 1013
@@ -953,7 +953,7 @@ msgstr ""
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 45
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 182
 # File: src/ashyterm/ui/menus.py, line: 269
-# File: src/ashyterm/ui/menus.py, line: 344
+# File: src/ashyterm/ui/menus.py, line: 351
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 157
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 246
 msgid "Paste"
@@ -2399,7 +2399,7 @@ msgstr "File Manager"
 #
 # File: src/ashyterm/ui/header_bar_builder.py, line: 92
 # File: src/ashyterm/ui/header_bar_builder.py, line: 249
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 52
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 53
 # File: src/ashyterm/ui/dialogs/command_manager/command_manager_dialog.py, line: 67
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 66
 msgid "Command Manager"
@@ -2562,7 +2562,7 @@ msgstr "Close Active Pane"
 #
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 35
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 44
-# File: src/ashyterm/ui/menus.py, line: 343
+# File: src/ashyterm/ui/menus.py, line: 350
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 154
 msgid "Copy"
 msgstr "Copy"
@@ -2574,7 +2574,7 @@ msgstr "Copy"
 #
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 37
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 46
-# File: src/ashyterm/ui/menus.py, line: 345
+# File: src/ashyterm/ui/menus.py, line: 352
 msgid "Select All"
 msgstr "Select All"
 
@@ -2585,7 +2585,7 @@ msgstr "Select All"
 #
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 38
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 47
-# File: src/ashyterm/ui/menus.py, line: 346
+# File: src/ashyterm/ui/menus.py, line: 353
 msgid "Clear Session"
 msgstr "Clear Session"
 
@@ -2654,6 +2654,7 @@ msgstr "Toggle Sessions Panel"
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 50
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 51
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 52
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 53
 msgid "View"
 msgstr "View"
 
@@ -2663,35 +2664,43 @@ msgid "Toggle File Manager"
 msgstr "Toggle File Manager"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 54
+# #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
+#
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 52
+# File: src/ashyterm/ui/menus.py, line: 358
+msgid "Open Files (SFTP)"
+msgstr "Open Files (SFTP)"
+
+#
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 55
 msgid "New SSH Session"
 msgstr "New SSH Session"
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 54
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 55
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 56
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 57
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 58
 # File: src/ashyterm/ui/widgets/inline_context_menu.py, line: 220
 msgid "Sessions"
 msgstr "Sessions"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 55
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 56
 msgid "New Session Folder"
 msgstr "New Session Folder"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 56
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 57
 msgid "Quick Connect (SSH Config)"
 msgstr "Quick Connect (SSH Config)"
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 57
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 58
 # File: src/ashyterm/state/window_state.py, line: 126
 msgid "Save Layout"
 msgstr "Save Layout"
@@ -2701,14 +2710,13 @@ msgstr "Save Layout"
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 59
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 60
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 67
 # File: src/ashyterm/ui/menus.py, line: 179
 msgid "New Window"
 msgstr "New Window"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 59
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 60
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 61
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 62
@@ -2716,6 +2724,7 @@ msgstr "New Window"
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 64
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 65
 # File: src/ashyterm/ui/dialogs/command_palette.py, line: 66
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 67
 msgid "Application"
 msgstr "Application"
 
@@ -2724,7 +2733,7 @@ msgstr "Application"
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 60
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 61
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 83
 # File: src/ashyterm/ui/menus.py, line: 188
 msgid "Keyboard Shortcuts"
@@ -2737,7 +2746,7 @@ msgstr "Keyboard Shortcuts"
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 61
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 62
 # File: src/ashyterm/ui/dialogs/preferences_dialog.py, line: 38
 # File: src/ashyterm/ui/dialogs/shortcuts_dialog.py, line: 68
 # File: src/ashyterm/ui/menus.py, line: 181
@@ -2745,38 +2754,38 @@ msgid "Preferences"
 msgstr "Preferences"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 62
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 63
 msgid "Highlight Settings"
 msgstr "Highlight Settings"
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 63
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 64
 # File: src/ashyterm/ui/menus.py, line: 189
 msgid "About"
 msgstr "About"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 64
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 65
 msgid "Backup Now"
 msgstr "Backup Now"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 65
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 66
 msgid "Restore Backup"
 msgstr "Restore Backup"
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 66
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 67
 # File: src/ashyterm/ui/menus.py, line: 191
 msgid "Quit"
 msgstr "Quit"
 
 #
-# File: src/ashyterm/ui/dialogs/command_palette.py, line: 107
+# File: src/ashyterm/ui/dialogs/command_palette.py, line: 108
 msgid "Type a command…"
 msgstr "Type a command…"
 
@@ -2835,8 +2844,8 @@ msgstr "Move Failed"
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/ui/dialogs/move_dialogs.py, line: 141
-# File: src/ashyterm/ui/actions.py, line: 652
-# File: src/ashyterm/ui/actions.py, line: 729
+# File: src/ashyterm/ui/actions.py, line: 677
+# File: src/ashyterm/ui/actions.py, line: 754
 msgid "Session"
 msgstr "Session"
 
@@ -2844,7 +2853,7 @@ msgstr "Session"
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/ui/dialogs/move_dialogs.py, line: 163
-# File: src/ashyterm/ui/actions.py, line: 733
+# File: src/ashyterm/ui/actions.py, line: 758
 msgid "Layout"
 msgstr "Layout"
 
@@ -4340,7 +4349,7 @@ msgstr "Pin to Toolbar"
 # File: src/ashyterm/ui/color_scheme_dialog.py, line: 727
 # File: src/ashyterm/ui/menus.py, line: 251
 # File: src/ashyterm/ui/menus.py, line: 271
-# File: src/ashyterm/ui/actions.py, line: 709
+# File: src/ashyterm/ui/actions.py, line: 734
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 170
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 393
 # File: src/ashyterm/state/window_state.py, line: 242
@@ -4935,8 +4944,8 @@ msgstr "Choose where to store this session"
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
 # File: src/ashyterm/ui/dialogs/session_edit_sections.py, line: 77
-# File: src/ashyterm/ui/actions.py, line: 652
-# File: src/ashyterm/ui/actions.py, line: 731
+# File: src/ashyterm/ui/actions.py, line: 677
+# File: src/ashyterm/ui/actions.py, line: 756
 msgid "Folder"
 msgstr "Folder"
 
@@ -8290,32 +8299,32 @@ msgid "Colors"
 msgstr "Colors"
 
 #
-# File: src/ashyterm/ui/menus.py, line: 321
+# File: src/ashyterm/ui/menus.py, line: 328
 msgid "Open Link"
 msgstr "Open Link"
 
 #
-# File: src/ashyterm/ui/menus.py, line: 322
+# File: src/ashyterm/ui/menus.py, line: 329
 msgid "Copy Link"
 msgstr "Copy Link"
 
 #
-# File: src/ashyterm/ui/menus.py, line: 336
+# File: src/ashyterm/ui/menus.py, line: 343
 msgid "Ask AI"
 msgstr "Ask AI"
 
 #
-# File: src/ashyterm/ui/menus.py, line: 351
+# File: src/ashyterm/ui/menus.py, line: 363
 msgid "Split Left/Right"
 msgstr "Split Left/Right"
 
 #
-# File: src/ashyterm/ui/menus.py, line: 354
+# File: src/ashyterm/ui/menus.py, line: 366
 msgid "Split Top/Bottom"
 msgstr "Split Top/Bottom"
 
 #
-# File: src/ashyterm/ui/menus.py, line: 359
+# File: src/ashyterm/ui/menus.py, line: 371
 msgid "Save Output to File…"
 msgstr "Save Output to File…"
 
@@ -8360,38 +8369,38 @@ msgid "Blink"
 msgstr "Blink"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 177
+# File: src/ashyterm/ui/actions.py, line: 178
 msgid "Save Terminal Output"
 msgstr "Save Terminal Output"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 199
+# File: src/ashyterm/ui/actions.py, line: 200
 #, python-brace-format
 msgid "Could not save output: {}"
 msgstr "Could not save output: {}"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 204
+# File: src/ashyterm/ui/actions.py, line: 205
 msgid "Output saved"
 msgstr "Output saved"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 224
+# File: src/ashyterm/ui/actions.py, line: 225
 msgid "Could not read terminal output."
 msgstr "Could not read terminal output."
 
 #
-# File: src/ashyterm/ui/actions.py, line: 249
+# File: src/ashyterm/ui/actions.py, line: 250
 msgid "Terminal session cleared."
 msgstr "Terminal session cleared."
 
 #
-# File: src/ashyterm/ui/actions.py, line: 253
+# File: src/ashyterm/ui/actions.py, line: 254
 msgid "No active terminal to clear."
 msgstr "No active terminal to clear."
 
 #
-# File: src/ashyterm/ui/actions.py, line: 367
+# File: src/ashyterm/ui/actions.py, line: 368
 #, python-brace-format
 msgid ""
 "Explain this code or command:\n"
@@ -8407,72 +8416,83 @@ msgstr ""
 "```"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 411
+# File: src/ashyterm/ui/actions.py, line: 399
+msgid "The active terminal is not connected to an SSH host."
+msgstr "The active terminal is not connected to an SSH host."
+
+#
+# File: src/ashyterm/ui/actions.py, line: 405
+#, python-brace-format
+msgid "Could not open the file manager for {}"
+msgstr "Could not open the file manager for {}"
+
+#
+# File: src/ashyterm/ui/actions.py, line: 436
 msgid "Please select an SSH session to connect with SFTP."
 msgstr "Please select an SSH session to connect with SFTP."
 
 #
-# File: src/ashyterm/ui/actions.py, line: 479
-# File: src/ashyterm/ui/actions.py, line: 505
+# File: src/ashyterm/ui/actions.py, line: 504
+# File: src/ashyterm/ui/actions.py, line: 530
 msgid "New Session"
 msgstr "New Session"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 484
+# File: src/ashyterm/ui/actions.py, line: 509
 msgid "Item cut"
 msgstr "Item cut"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 488
+# File: src/ashyterm/ui/actions.py, line: 513
 msgid "Item copied"
 msgstr "Item copied"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 497
-# File: src/ashyterm/ui/actions.py, line: 501
+# File: src/ashyterm/ui/actions.py, line: 522
+# File: src/ashyterm/ui/actions.py, line: 526
 msgid "Item pasted"
 msgstr "Item pasted"
 
 #
 # #-#-#-#-#  ashyterm.pot (ashyterm)  #-#-#-#-#
 #
-# File: src/ashyterm/ui/actions.py, line: 509
+# File: src/ashyterm/ui/actions.py, line: 534
 # File: src/ashyterm/filemanager/fm_context_menu.py, line: 292
 msgid "New Folder"
 msgstr "New Folder"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 654
+# File: src/ashyterm/ui/actions.py, line: 679
 #, python-brace-format
 msgid "Rename {type}"
 msgstr "Rename {type}"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 655
+# File: src/ashyterm/ui/actions.py, line: 680
 #, python-brace-format
 msgid "Enter new name for \"{name}\":"
 msgstr "Enter new name for \"{name}\":"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 717
+# File: src/ashyterm/ui/actions.py, line: 742
 #, python-brace-format
 msgid "Deleted \"{name}\""
 msgstr "Deleted \"{name}\""
 
 #
-# File: src/ashyterm/ui/actions.py, line: 719
+# File: src/ashyterm/ui/actions.py, line: 744
 #, python-brace-format
 msgid "Deleted {count} items"
 msgstr "Deleted {count} items"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 741
+# File: src/ashyterm/ui/actions.py, line: 766
 #, python-brace-format
 msgid "Delete {type}"
 msgstr "Delete {type}"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 747
+# File: src/ashyterm/ui/actions.py, line: 772
 #, python-brace-format
 msgid ""
 "The folder \"{name}\" is not empty. Are you sure you want to permanently "
@@ -8482,35 +8502,35 @@ msgstr ""
 "delete it and all its contents?"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 750
+# File: src/ashyterm/ui/actions.py, line: 775
 #, python-brace-format
 msgid "Delete \"{name}\" ({user}@{host}:{port})?"
 msgstr "Delete \"{name}\" ({user}@{host}:{port})?"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 757
+# File: src/ashyterm/ui/actions.py, line: 782
 #, python-brace-format
 msgid "Are you sure you want to delete \"{name}\"?"
 msgstr "Are you sure you want to delete \"{name}\"?"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 761
+# File: src/ashyterm/ui/actions.py, line: 786
 msgid "Delete Items"
 msgstr "Delete Items"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 763
+# File: src/ashyterm/ui/actions.py, line: 788
 #, python-brace-format
 msgid "Are you sure you want to permanently delete these {count} items?"
 msgstr "Are you sure you want to permanently delete these {count} items?"
 
 #
-# File: src/ashyterm/ui/actions.py, line: 771
+# File: src/ashyterm/ui/actions.py, line: 796
 msgid "This will also delete all contents of any selected folders."
 msgstr "This will also delete all contents of any selected folders."
 
 #
-# File: src/ashyterm/ui/actions.py, line: 801
+# File: src/ashyterm/ui/actions.py, line: 826
 msgid "Undo"
 msgstr "Undo"
 
@@ -9529,14 +9549,17 @@ msgstr "Delete Layout?"
 msgid "Are you sure you want to permanently delete the layout '{name}'?"
 msgstr "Are you sure you want to permanently delete the layout '{name}'?"
 
-#: src/ashyterm/ui/menus.py
-msgid "Open Files (SFTP)"
-msgstr "Open Files (SFTP)"
+#
+# File: src/ashyterm/state/window_state.py, line: 263
+msgid "Layout Deleted"
+msgstr "Layout Deleted"
 
-#: src/ashyterm/ui/menus.py
-msgid "The active terminal is not connected to an SSH host."
-msgstr "The active terminal is not connected to an SSH host."
+#
+# File: src/ashyterm/state/window_state.py, line: 268
+msgid "Error Deleting Layout"
+msgstr "Error Deleting Layout"
 
-#: src/ashyterm/ui/menus.py
-msgid "Could not open the file manager for {}"
-msgstr "Could not open the file manager for {}"
+#
+# File: src/ashyterm/state/window_state.py, line: 314
+msgid "Error Moving Layout"
+msgstr "Error Moving Layout"
