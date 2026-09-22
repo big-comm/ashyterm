@@ -23,6 +23,7 @@ from ..utils.translation_utils import _
 from .clipboard_image import clipboard_has_image, save_clipboard_image_async
 from .paste_confirmation import build_paste_confirmation_dialog
 from .registry import ManualSSHTracker, TerminalLifecycleManager, TerminalRegistry
+from .sftp_open import RemoteFileTarget, resolve_remote_file_target
 from .ssh_lifecycle import SSHLifecycleMixin
 from .terminal_config import (
     compute_highlighting_config as _compute_highlighting_config_impl,
@@ -1051,8 +1052,37 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             terminal,
             terminal_id,
             settings_manager=self.settings_manager,
+            remote_files_available=self.get_remote_file_target(terminal) is not None,
         )
         terminal.set_context_menu_model(menu_model)
+
+    def get_remote_file_target(
+        self, terminal: Vte.Terminal
+    ) -> Optional[RemoteFileTarget]:
+        """Remote host/path behind ``terminal``, or ``None`` when it is local."""
+        terminal_id = getattr(terminal, "terminal_id", None)
+        if terminal_id is None:
+            return None
+        info = self.registry.get_terminal_info(terminal_id)
+        if not info:
+            return None
+        ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
+        if not ssh_target and info.get("type") == "local":
+            # The tracker polls every 2s; refresh so a just-typed ``ssh``
+            # is already reflected when the menu opens.
+            self.manual_ssh_tracker.check_process_tree(terminal_id)
+            ssh_target = self.manual_ssh_tracker.get_ssh_target(terminal_id)
+        try:
+            directory_uri = terminal.get_current_directory_uri()
+        except Exception:
+            directory_uri = None
+        return resolve_remote_file_target(
+            session=info.get("identifier"),
+            ssh_target=ssh_target,
+            terminal_type=info.get("type"),
+            directory_uri=directory_uri,
+            local_hostname=self._cached_hostname,
+        )
 
     def _on_terminal_focus_in(self, _controller, terminal, terminal_id):
         try:
