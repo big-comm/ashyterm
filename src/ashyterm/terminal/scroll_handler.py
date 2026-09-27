@@ -182,6 +182,17 @@ class ScrollHandler:
                 self._cancel_kinetic_scroll(sw)
                 return Gdk.EVENT_PROPAGATE
 
+            adjustment = sw.get_vadjustment()
+            if adjustment and (
+                adjustment.get_upper() - adjustment.get_lower()
+                <= adjustment.get_page_size()
+            ):
+                # Alternate-screen applications need VTE's mouse/key reporting.
+                # An empty history is not a scrollback boundary to consume.
+                controller._ashy_scroll_route = None
+                self._cancel_kinetic_scroll(sw)
+                return Gdk.EVENT_PROPAGATE
+
             route = getattr(controller, "_ashy_scroll_route", None)
             if mode == SCROLL_MODE_AUTOMATIC and route == SCROLL_MODE_NATIVE:
                 return Gdk.EVENT_PROPAGATE
