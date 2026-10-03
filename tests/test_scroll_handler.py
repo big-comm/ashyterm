@@ -73,6 +73,9 @@ class FakeScrolledWindow:
     def get_vadjustment(self):
         return self.adjustment
 
+    def get_child(self):
+        return None
+
 
 class FakeController:
     def __init__(self, unit, source=Gdk.InputSource.MOUSE, control=False):

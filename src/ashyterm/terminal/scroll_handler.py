@@ -24,6 +24,7 @@ from ..settings.scrolling import (
     normalize_scroll_mode,
 )
 from ..utils.logger import get_logger
+from .application_scroll import ApplicationScrollHandler
 
 if TYPE_CHECKING:
     from .tabs import TabManager
@@ -38,6 +39,7 @@ class _ScrollBinding:
     host_ref: weakref.ReferenceType[Gtk.Widget]
     controller: Gtk.EventControllerScroll
     unmap_handler_id: int
+    application_scroll: Optional[ApplicationScrollHandler] = None
 
 
 class ScrollHandler:
@@ -98,10 +100,17 @@ class ScrollHandler:
         controller.connect("scroll-end", self._on_scroll_end, sw_ref)
         host.add_controller(controller)
         unmap_handler_id = host.connect("unmap", self._on_scroll_host_unmap, sw_ref)
+        terminal = sw.get_child()
+        application_scroll = None
+        if isinstance(terminal, Vte.Terminal):
+            application_scroll = ApplicationScrollHandler.attach(
+                terminal, self.tm.terminal_manager.settings_manager, self
+            )
         self._bindings[sw] = _ScrollBinding(
             host_ref=weakref.ref(host),
             controller=controller,
             unmap_handler_id=unmap_handler_id,
+            application_scroll=application_scroll,
         )
 
     def replace_sw_scroll_controller(self, sw: Gtk.ScrolledWindow) -> None:
@@ -160,6 +169,7 @@ class ScrollHandler:
         controller._ashy_scroll_route = None
         if sw := sw_ref():
             self._cancel_kinetic_scroll(sw)
+            self._cancel_application_scroll(sw)
 
     def _on_scroll_end(self, controller, _sw_ref) -> None:
         """Release per-gesture routing state."""
@@ -175,6 +185,7 @@ class ScrollHandler:
         try:
             state = controller.get_current_event_state()
             if state & Gdk.ModifierType.CONTROL_MASK:
+                self._cancel_application_scroll(sw)
                 self._handle_scroll_zoom(dy)
                 return Gdk.EVENT_STOP
 
@@ -437,6 +448,8 @@ class ScrollHandler:
         self, sw: Gtk.ScrolledWindow, binding: _ScrollBinding
     ) -> None:
         self._cancel_kinetic_scroll(sw)
+        if binding.application_scroll:
+            binding.application_scroll.detach()
         host = binding.host_ref()
         if host is None:
             return
@@ -452,10 +465,20 @@ class ScrollHandler:
     def _on_scroll_host_unmap(self, _host, sw_ref) -> None:
         if sw := sw_ref():
             self._cancel_kinetic_scroll(sw)
+            self._cancel_application_scroll(sw)
+
+    def _cancel_application_scroll(self, sw: Gtk.ScrolledWindow) -> None:
+        binding = self._bindings.get(sw)
+        if binding and binding.application_scroll:
+            binding.application_scroll.cancel_momentum()
 
     def _on_setting_changed(self, key: str, _old_value, _new_value) -> None:
-        if key not in {"terminal_scroll_mode", "kinetic_scrolling"}:
+        if key not in {
+            "terminal_scroll_mode", "kinetic_scrolling",
+            "touchpad_scroll_sensitivity", "mouse_scroll_sensitivity",
+        }:
             return
         for sw, binding in list(self._bindings.items()):
             binding.controller._ashy_scroll_route = None
             self._cancel_kinetic_scroll(sw)
+            self._cancel_application_scroll(sw)
