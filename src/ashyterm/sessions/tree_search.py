@@ -38,13 +38,12 @@ def item_matches_filter(
     ``folder_matcher`` so membership checks can recurse through the
     owning view's populator without duplicating that logic here.
     """
-    if not filter_text:
-        return True
-
     # Tree list rows expose get_item(); plain items do not.
     actual = item.get_item() if hasattr(item, "get_item") else item
-    if actual is None:
+    if actual is None or getattr(actual, "hidden", False):
         return False
+    if not filter_text:
+        return True
 
     item_name = getattr(actual, "name", "").lower()
     if filter_text in item_name:
@@ -91,6 +90,8 @@ class SessionTreeSearch:
             self.view._populate_folder_children(folder)
 
         for child in folder.children:
+            if getattr(child, "hidden", False):
+                continue
             child_name = getattr(child, "name", "").lower()
             if self._filter_text in child_name:
                 return True

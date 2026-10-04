@@ -62,6 +62,8 @@ SHORTCUT_DATA = [
         "group_title": _("Application &amp; Window"),
         "shortcuts": [
             ("toggle-sidebar", _("Sessions Panel")),
+            ("manage-session-visibility", _("Gerenciar favoritos")),
+            ("hide-session", _("Ocultar favorito selecionado")),
             ("toggle-file-manager", _("File Manager")),
             ("show-command-manager", _("Command Manager")),
             ("new-window", _("New Window")),

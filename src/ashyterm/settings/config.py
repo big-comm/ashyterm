@@ -447,6 +447,8 @@ class DefaultSettings:
                 "quit": "<Control><Shift>q",
                 "new-window": "<Control><Shift>n",
                 "toggle-sidebar": "<Control><Shift>h",
+                "manage-session-visibility": "",
+                "hide-session": "",
                 "show-command-manager": "<Control><Shift>m",
                 "zoom-in": "<Control>plus",
                 "zoom-out": "<Control>minus",

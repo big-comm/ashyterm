@@ -112,6 +112,8 @@ class SidebarManager:
             self.window.action_handler.edit_session()
         elif isinstance(item, SessionFolder):
             self.window.action_handler.edit_folder()
+        elif item is None:
+            self.window.action_handler.manage_session_visibility()
 
     def initialize_state(self) -> None:
         """Sets the initial state of the sidebar based on settings."""

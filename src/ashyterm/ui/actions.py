@@ -58,6 +58,8 @@ class WindowActions:
             "connect-sftp": self.connect_sftp,
             "open-sftp-files": self.open_sftp_files,
             "edit-session": self.edit_session,
+            "hide-session": self.hide_session,
+            "manage-session-visibility": self.manage_session_visibility,
             "duplicate-session": self.duplicate_session,
             "rename-session": self.rename_session,
             "move-session-to-folder": self.move_session_to_folder,
@@ -444,6 +446,24 @@ class WindowActions:
             found, position = self.window.session_store.find(item)
             if found:
                 self._show_session_edit_dialog(item, position)
+
+    def manage_session_visibility(self, *_args: Any) -> None:
+        self._close_sidebar_popover_if_active()
+        from .dialogs.session_visibility_dialog import SessionVisibilityDialog
+
+        SessionVisibilityDialog(self.window).present(self.window)
+
+    def hide_session(self, *_args: Any) -> None:
+        self._close_sidebar_popover_if_active()
+        session = self.window.session_tree.get_selected_item()
+        if not isinstance(session, SessionItem):
+            return
+        result = self.window.session_operations.set_session_hidden(session, True)
+        toast = Adw.Toast(title=_("Favorito ocultado.") if result.success else result.message)
+        if result.success:
+            toast.set_button_label(_("Gerenciar favoritos"))
+            toast.connect("button-clicked", self.manage_session_visibility)
+        self.window.toast_overlay.add_toast(toast)
 
     def duplicate_session(self, *_args: Any) -> None:
         self._close_sidebar_popover_if_active()

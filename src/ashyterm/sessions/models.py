@@ -113,6 +113,7 @@ class SessionItem(BaseModel):
         command_specific_highlighting: Optional[bool] = None,
         cat_colorization: Optional[bool] = None,
         shell_input_highlighting: Optional[bool] = None,
+        hidden: bool = False,
     ):
         super().__init__()
         self.logger = get_logger("ashyterm.sessions.model")
@@ -144,6 +145,7 @@ class SessionItem(BaseModel):
         self._x11_forwarding = bool(x11_forwarding)
         self._proxy_jump = (proxy_jump or "").strip()
         self._source = source or "user"
+        self._hidden = hidden is True
         # Local terminal specific properties
         self._local_working_directory = (
             str(normalize_path(local_working_directory))
@@ -419,6 +421,16 @@ class SessionItem(BaseModel):
             self._mark_modified()
 
     @property
+    def hidden(self) -> bool:
+        return self._hidden
+
+    @hidden.setter
+    def hidden(self, value: bool) -> None:
+        if self._hidden != value:
+            self._hidden = bool(value)
+            self._mark_modified()
+
+    @property
     def local_working_directory(self) -> str:
         return self._local_working_directory
 
@@ -596,6 +608,7 @@ class SessionItem(BaseModel):
             "created_at": self._created_at,
             "modified_at": self._modified_at,
             "source": self._source,
+            "hidden": self.hidden,
         }
 
     @classmethod
@@ -618,6 +631,7 @@ class SessionItem(BaseModel):
             x11_forwarding=data.get("x11_forwarding", False),
             proxy_jump=data.get("proxy_jump", ""),
             source=data.get("source", "user"),
+            hidden=data.get("hidden", False),
             local_working_directory=data.get("local_working_directory", ""),
             local_startup_command=data.get("local_startup_command", ""),
             # Highlighting overrides (tri-state)
