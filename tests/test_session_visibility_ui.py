@@ -46,7 +46,7 @@ def test_management_lists_hidden_sessions_and_switches_both_ways():
     _dialog, rows, operations = make_dialog([session])
     assert len(rows) == 1
     assert not rows[0].get_active()
-    assert "github.com" in rows[0].get_subtitle()
+    assert rows[0].get_subtitle().split(" · ")[0] == "github.com"
 
     rows[0].set_active(True)
     assert not session.hidden
