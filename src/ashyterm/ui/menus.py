@@ -244,6 +244,7 @@ def create_session_menu(
     menu.append(_("Edit"), "win.edit-session")
     menu.append(_("Duplicate"), "win.duplicate-session")
     menu.append(_("Rename"), "win.rename-session")
+    menu.append(_("Ocultar dos favoritos"), "win.hide-session")
     menu.append_section(None, Gio.Menu())
     if folder_store and folder_store.get_n_items() > 0:
         menu.append(_("Move to Folder..."), "win.move-session-to-folder")
@@ -277,6 +278,7 @@ def create_root_menu(clipboard_has_content: bool=False) -> Gio.Menu:
     menu = Gio.Menu()
     menu.append(_("Add Session"), "win.add-session-root")
     menu.append(_("Add Folder"), "win.add-folder-root")
+    menu.append(_("Gerenciar favoritos"), "win.manage-session-visibility")
     if clipboard_has_content:
         menu.append_section(None, Gio.Menu())
         menu.append(_("Paste to Root"), "win.paste-item-root")

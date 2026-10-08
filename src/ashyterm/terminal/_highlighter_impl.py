@@ -716,6 +716,9 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         self, data: bytes, term: Vte.Terminal
     ) -> Optional[bytes]:
         """Consume OSC 52 and retain incomplete escape sequences."""
+        application_scroll = getattr(term, "_ashy_application_scroll", None)
+        if application_scroll is not None:
+            application_scroll.observe_output(data)
         data = self._consume_osc52(data, term)
         if not data:
             return None

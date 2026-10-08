@@ -10,6 +10,7 @@ from gi.repository import Gio
 
 from ..core.signals import AppSignals
 from ..helpers import generate_unique_name
+from ..utils.exceptions import StorageError
 from ..utils.logger import get_logger
 from ..utils.ssh_config_parser import SSHConfigParser
 from ..utils.translation_utils import _
@@ -150,6 +151,28 @@ class SessionOperations:
             )
             AppSignals.get().emit("session-updated", original_session.name)
             return result
+
+    def set_session_hidden(self, session: SessionItem, hidden: bool) -> OperationResult:
+        """Persist favorite visibility without removing the session or SSH host."""
+        with self._operation_lock:
+            if self._find_item_position(session) == -1:
+                return OperationResult(False, _("Favorito não encontrado."))
+            if session.hidden == hidden:
+                return OperationResult(True)
+            previous_hidden = session.hidden
+            previous_modified = session._modified_at
+            session.hidden = hidden
+            try:
+                saved = self._save_changes()
+            except StorageError as exc:
+                self.logger.error(f"Failed to save favorite visibility: {exc}")
+                saved = False
+            if not saved:
+                session.hidden = previous_hidden
+                session._modified_at = previous_modified
+                return OperationResult(False, _("Não foi possível salvar a visibilidade do favorito."))
+            AppSignals.get().emit("session-updated", session.name)
+            return OperationResult(True)
 
     def remove_session(self, session: SessionItem) -> OperationResult:
         """Removes a session from the store."""

@@ -48,7 +48,7 @@ def _build_action_toolbar(builder: "WindowUIBuilder") -> Gtk.Box:
     specs: list[tuple[str, str, str, str | None]] = [
         ("add_session_button", "list-add-symbolic", _("Add Session"), None),
         ("add_folder_button", "folder-new-symbolic", _("Add Folder"), None),
-        ("edit_button", "document-edit-symbolic", _("Edit Selected"), None),
+        ("edit_button", "document-edit-symbolic", _("Editar seleção ou gerenciar favoritos"), None),
         (
             "save_layout_button",
             "document-save-symbolic",

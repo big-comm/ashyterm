@@ -73,6 +73,9 @@ class FakeScrolledWindow:
     def get_vadjustment(self):
         return self.adjustment
 
+    def get_child(self):
+        return None
+
 
 class FakeController:
     def __init__(self, unit, source=Gdk.InputSource.MOUSE, control=False):
@@ -258,6 +261,48 @@ def test_boundary_is_handled_without_invoking_native(scroll_handler):
 
     assert result == Gdk.EVENT_STOP
     assert adjustment.writes == []
+
+
+@pytest.mark.parametrize("mode", ["automatic", "custom"])
+@pytest.mark.parametrize("dy", [-1.0, 1.0])
+@pytest.mark.parametrize("lower", [0.0, 100.0])
+def test_no_scrollback_reaches_application(scroll_handler, mode, dy, lower):
+    scroll_handler.tm.terminal_manager.settings_manager.values[
+        "terminal_scroll_mode"
+    ] = mode
+    adjustment = FakeAdjustment(
+        value=lower, lower=lower, upper=lower + 20.0, page_size=20.0
+    )
+    sw = FakeScrolledWindow(adjustment)
+
+    result = run_scroll(
+        scroll_handler, sw, FakeController(Gdk.ScrollUnit.WHEEL), dy=dy
+    )
+
+    assert result == Gdk.EVENT_PROPAGATE
+    assert adjustment.writes == []
+
+
+@pytest.mark.parametrize("mode", ["automatic", "custom"])
+def test_entering_fullscreen_releases_custom_gesture(scroll_handler, mode):
+    scroll_handler.tm.terminal_manager.settings_manager.values[
+        "terminal_scroll_mode"
+    ] = mode
+    adjustment = FakeAdjustment()
+    sw = FakeScrolledWindow(adjustment)
+    controller = FakeController(Gdk.ScrollUnit.SURFACE, Gdk.InputSource.TOUCHPAD)
+    assert run_scroll(scroll_handler, sw, controller) == Gdk.EVENT_STOP
+    sw._k_history = [(1.0, 2.0)]
+    adjustment.value = adjustment.lower
+    adjustment.upper = adjustment.page_size
+
+    assert run_scroll(scroll_handler, sw, controller) == Gdk.EVENT_PROPAGATE
+    assert controller._ashy_scroll_route is None
+    assert sw._k_history == []
+
+    adjustment.upper = 200.0
+    assert run_scroll(scroll_handler, sw, controller) == Gdk.EVENT_STOP
+    assert adjustment.value > adjustment.lower
 
 
 @pytest.mark.parametrize("dy", [0.0, float("nan"), float("inf")])

@@ -143,6 +143,9 @@ class InlineContextMenu(Gtk.Box):
         self._add_action_button(
             _("Rename"), "text-editor-symbolic", "win.rename-session"
         )
+        self._add_action_button(
+            _("Ocultar dos favoritos"), "view-conceal-symbolic", "win.hide-session"
+        )
 
         # Move to folder (if folders exist)
         if folder_store and folder_store.get_n_items() > 0:
@@ -226,6 +229,9 @@ class InlineContextMenu(Gtk.Box):
         )
         self._add_action_button(
             _("Add Folder"), "folder-new-symbolic", "win.add-folder-root"
+        )
+        self._add_action_button(
+            _("Gerenciar favoritos"), "view-reveal-symbolic", "win.manage-session-visibility"
         )
 
         # Paste option (if clipboard has content)
