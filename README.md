@@ -1,188 +1,133 @@
-# Ashy Terminal
-
 <p align="center">
-  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/Version-1.9.0-blue.svg" alt="Version"/></a>
-  <a href="https://communitybig.org">
-  <img src="https://img.shields.io/badge/BigCommunity-Platform-blue" alt="BigCommunity Platform">
-</a>
-  <a href="https://github.com/big-comm/ashyterm/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"/></a>
+  <img src="usr/share/icons/hicolor/scalable/apps/ashyterm.svg" alt="Ashy Terminal logo" width="128" height="128"/>
 </p>
 
-**Ashy Terminal** is a modern, intuitive, and innovative terminal built with GTK4 and Adwaita. While it offers advanced features appreciated by developers and system administrators, it also stands out for making the command-line environment more accessible, helping those who are just beginning to learn how to use the terminal. Its simplified session management, built-in file manager, automatic color highlighting for improved readability, and a variety of other features bring convenience to users of all skill levels on Linux distributions such as BigLinux.
+<h1 align="center">Ashy Terminal</h1>
 
-## Summary
+<p align="center">
+  <strong>A modern GTK4 / libadwaita terminal emulator with SSH session management, an integrated file manager and smart output highlighting.</strong>
+</p>
 
-- [Key Features](#key-features)
-- [Dependencies](#dependencies)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Contributing](#contributing)
-- [License](#license)
+<p align="center">
+  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/version-1.9.0-blue.svg" alt="Version"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"/></a>
+  <img src="https://img.shields.io/badge/python-3.8%2B-3776AB.svg?logo=python&logoColor=white" alt="Python 3.8+"/>
+  <img src="https://img.shields.io/badge/GTK-4%20%2B%20libadwaita-4A86CF.svg?logo=gtk&logoColor=white" alt="GTK4 + libadwaita"/>
+  <a href="https://communitybig.org"><img src="https://img.shields.io/badge/BigCommunity-platform-blue.svg" alt="BigCommunity"/></a>
+</p>
 
-## Screenshots
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#configuration">Configuration</a> •
+  <a href="#contributing">Contributing</a>
+</p>
 
-<img width="1526" height="1151" alt="AshyTerm" src="https://github.com/user-attachments/assets/ab92d508-b559-46bb-895c-dad64ea6cfbf" />
+<p align="center">
+  <img src="docs/screenshots/hero.png" alt="Ashy Terminal with the sessions sidebar and fastfetch output"/>
+</p>
 
-<img width="1386" height="944" alt="image" src="https://github.com/user-attachments/assets/ae48ce7e-a597-44cd-ba70-4e9c28987730" />
+**Ashy Terminal** is a terminal built with GTK4 and Adwaita for Linux desktops. It covers what developers and system administrators expect — SSH sessions, split panes, tab groups, remote file transfer — and it also makes the command line friendlier for newcomers by colorizing command output automatically, without touching your shell configuration.
 
-<img width="1235" height="669" alt="image" src="https://github.com/user-attachments/assets/2837c12f-cf94-4191-bb71-b6d5db3b9ea7" />
+It ships as the **default terminal on [BigLinux](https://www.biglinux.com.br/) and [BigCommunity](https://communitybig.org/)**.
 
-<img width="1231" height="660" alt="image" src="https://github.com/user-attachments/assets/5b80da29-81ce-4551-8386-8f7d6cf5c1ac" />
+## Features
 
+### Sessions and SSH
 
+<p align="center">
+  <img src="docs/screenshots/session-edit.png" alt="SSH session editor" width="560"/>
+</p>
 
-## Key Features
+- **Session manager** — save Local, SSH and SFTP sessions, organize them in folders, color-code their tabs and search them from the sidebar.
+- **SSH done right** — key or password authentication (passwords stored in GNOME Keyring / KWallet via libsecret), ControlMaster connection reuse, ProxyJump, port forwarding, X11 forwarding and post-login commands.
+- **`~/.ssh/config` import** — hosts from your SSH config show up automatically.
+- **Quick connect** — `ashyterm --ssh user@host` or the quick-connect action.
 
-### 🤖 AI Assistant Integration
-<img width="1386" height="944" alt="AshyTerm AI Assistant" src="https://github.com/user-attachments/assets/22d329c8-d20f-4714-b30e-e83792ac6154" />
+### Smart output highlighting
 
-Ashy Terminal creates a bridge between your shell and Large Language Models (LLMs), offering an **optional** and fully **non-intrusive** AI experience. The assistant only processes the content that **you explicitly select and choose to send**, ensuring full control over your privacy.
-* **Multi-Provider Support**: Native integration with **Groq**, **Google Gemini**, **OpenRouter**, and **Local LLMs** (Ollama/LM Studio).
-* **Context Aware**: The AI understands your OS and distribution context to provide accurate and relevant commands.
-* **Chat Panel**: A dedicated side panel for persistent conversations, command suggestions, and "Click-to-Run" code snippets.
-* **Smart Suggestions**: Ask how to perform tasks and receive ready-to-execute commands directly in the UI.
+<p align="center">
+  <img src="docs/screenshots/highlight.png" alt="Automatic highlighting of ping, df, free and systemctl output"/>
+</p>
 
+Colors are applied **inside Ashy Terminal**, not by your shell — no changes to `.bashrc` / `.zshrc` needed. That makes it just as useful on servers, containers and restricted environments where you can't customize the shell.
 
-### 🎨 Smart Context<img width="1386" height="944" alt="AshyTerm colors1" src="https://github.com/user-attachments/assets/1674352a-b1ad-4668-b514-21c41306c58e" />
-**Aware Highlighting**
-<img width="1386" height="944" alt="AshyTerm colors1" src="https://github.com/user-attachments/assets/ff8fb678-0aac-405a-a2c2-0835511a59db" />
+- **Command-aware rules** — 50+ rule sets applied automatically for tools such as `ping`, `docker`, `systemctl`, `ip`, `lsblk`, `git`, `kubectl` and more.
+- **Pattern highlighting** — IP addresses, UUIDs, URLs, errors and warnings stand out in any output.
+- **`cat` with syntax highlighting** — source files printed with `cat` are colorized via Pygments.
+- **Live input highlighting** — commands are colorized as you type (optional).
 
-Go beyond basic color schemes. Ashy Terminal applies **dynamic, real-time highlighting** based on both the *content* and the *command being executed*—**without requiring any configuration in Bash or whatever shell you are using**. All color processing happens directly inside Ashy Terminal’s interface, which is especially helpful when working on servers, containers, or restricted environments where you cannot modify files like `.bashrc` or `.zshrc`.
+<table>
+  <tr>
+    <td><img src="docs/screenshots/highlight-settings.png" alt="Terminal color schemes"/></td>
+    <td><img src="docs/screenshots/highlight-commands.png" alt="Per-command highlighting rules"/></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Built-in color schemes, all editable</em></td>
+    <td align="center"><em>Per-command rules you can toggle, edit or add</em></td>
+  </tr>
+</table>
 
-* **Command-Specific Rules**: Different highlighting rules are automatically applied when running tools such as `docker`, `ping`, `lspci`, `ip`, and more.
-* **Live Input Highlighting**: Shell commands are colorized in real time as you type (powered by Pygments).
-* **Output Colorization**: Automatically highlights IP addresses, UUIDs, URLs, error messages, JSON structures, and other patterns in logs.
-* **File Viewer**: Enhances `cat` output with full syntax highlighting for code files.
-<img width="1386" height="944" alt="AshyTerm have color2" src="https://github.com/user-attachments/assets/10cc985e-a31f-4d45-bd64-57dfe68a91ef" />
+Every rule is customizable: foreground and background colors, **bold**, *italic*, underline, ~~strikethrough~~ and blinking text for critical information.
 
-In addition, Ashy Terminal offers a **complete customization interface**, allowing you to adjust:
+### Split panes and tab groups
 
-<img width="1386" height="944" alt="AshyTerm have color3" src="https://github.com/user-attachments/assets/c42461ac-c8ae-41b7-883f-534ea9b333b8" />
+<p align="center">
+  <img src="docs/screenshots/splits.png" alt="Split panes running cat, git log and htop"/>
+</p>
 
-* **Text and background colors**
-* **Bold**, *italic*, ***underline***, ~~strikethrough~~
-* **Blinking mode** for drawing attention to critical information
+- **Split panes** horizontally and vertically, maximize a single pane and rebalance them; save and restore complete **layouts**.
+- **Tab groups** — Chrome-style color-coded groups that can be collapsed, reordered by drag and drop, and auto-joined.
+- **Live directory tracking** — tab titles follow the current working directory (OSC 7), with the full path in the tooltip.
 
-<img width="1386" height="944" alt="AshyTerm have color4" src="https://github.com/user-attachments/assets/091e9c39-0958-49ca-8209-6c4c264a0c11" />
+<p align="center">
+  <img src="docs/screenshots/tabgroups-broadcast.png" alt="Tab groups and the input broadcast bar"/>
+</p>
 
-This gives you a clearer, more readable view of command output—especially in environments where traditional shell customization is not possible.
+- **Input broadcasting** — type a command once and send it to several tabs and panes at the same time.
 
+### Integrated file manager
 
-### 📂 Advanced File Manager & Remote Editing
-<img width="823" height="1162" alt="image" src="https://github.com/user-attachments/assets/a112042a-ebca-41cd-a0bd-e4454a3eacf5" />
+<p align="center">
+  <img src="docs/screenshots/filemanager.png" alt="Integrated file manager following the terminal directory"/>
+</p>
 
--   **Integrated Side Panel**: Browse local and remote file systems without leaving the terminal.
--   **Remote Editing**: Click to edit remote files (SSH/SFTP) in your favorite local editor. Ashy watches the file and automatically uploads changes on save.
--   **Drag & Drop Transfer**: Upload files to remote servers simply by dragging them into the terminal window over (SFTP/Rsync)
--   **Transfer Manager**: Track uploads and downloads with a detailed progress manager and history.
-<img width="1386" height="944" alt="image" src="https://github.com/user-attachments/assets/37d7e497-999d-4740-b9bb-cfec9cba17fc" />
+- **Side panel that follows the terminal** — browse local and remote (SFTP) file systems; it tracks the shell's current directory.
+- **Remote editing** — open a remote file in your local editor; Ashy watches it and uploads every save.
+- **Drag and drop transfers** — drop files on the terminal to upload them to the remote host (rsync when available, SFTP otherwise).
+- **Transfer manager** — progress and history for uploads and downloads.
 
+### Command manager
 
-### ⚡ Productivity Tools
-<img width="458" height="422" alt="image" src="https://github.com/user-attachments/assets/eb16295b-00ea-4ab7-b6d4-a5fef3d40f6a" />
+<p align="center">
+  <img src="docs/screenshots/command-manager.png" alt="Command manager with ready-to-use command forms" width="760"/>
+</p>
 
--   **Input Broadcasting**: Type commands in one terminal and execute them simultaneously across multiple selected tabs/panes.
--   **Quick Prompts**: One-click AI prompts for common tasks (e.g., "Explain this error", "Optimize this command").
+Ready-to-use command forms (compress, extract, find files, `journalctl`, `pacman`, `systemctl`, …) for people who don't remember every flag — and you can add your own.
 
+### Optional AI assistant
 
-### 🖥️ Core Terminal Functionality
--   **Session Management**: Save, organize (with folders), and launch Local, SSH, and SFTP sessions.
--   **Flexible Layouts**: Split panes horizontally and vertically; save and restore complex window layouts.
--   **Tab Groups**: Chrome-style tab grouping with color-coded chips, drag-to-reorder, collapse/expand, and auto-join. Group names follow alphabetical sequence (A, B, ..., Z, 1A, 1B, ...).
--   **Live Directory Tracking**: Tab titles update in real-time to show the current working directory via `/proc/<pid>/cwd` polling, with full path tooltip on hover.
--   **Deep Customization**: Visual theme editor, font sizing, transparency (window and headerbar), and extensive keyboard shortcuts.
+A fully **opt-in** side panel that connects your terminal to an LLM. Nothing is sent unless you explicitly select text and ask for it.
 
+- Providers: **Groq**, **Google Gemini**, **OpenRouter** and **local models** (Ollama, LM Studio).
+- Distribution-aware answers, persistent chat history and click-to-run command suggestions.
 
-## Dependencies
-To build and run Ashy Terminal, you will need:
+### Deep customization
 
--   **Python 3.9+**
--   **GTK4** and **Adwaita 1.0+** (`libadwaita`)
--   **VTE for GTK4** (`vte4` >= 0.76 recommended)
--   **Python Libraries**:
-    -   `PyGObject` (GTK bindings)
-    -   `requests` (For AI API connectivity)
-    -   `pygments` (For syntax highlighting)
-    -   `psutil` (For advanced process tracking)
-    -   `regex` (For high-performance highlighting patterns)
-    -   `py7zr` (For 7z backup/restore archives)
--   **System Libraries**:
-    -   `libsecret` (Secure password storage via GNOME Keyring / KWallet)
-    -   `sshpass` (Required only for SSH password authentication)
-    -   `rsync` (Faster SFTP-like transfers; falls back to sftp when absent)
+<p align="center">
+  <img src="docs/screenshots/preferences.png" alt="Preferences window" width="640"/>
+</p>
 
-On an Arch/Manjaro-based system:
-```bash
-sudo pacman -S python python-gobject vte4 python-cryptography python-psutil python-requests python-pygments
-````
+Fonts, line spacing, terminal and headerbar transparency, cursor, scrollback, scroll sensitivity, icon theme, tab appearance and fully configurable keyboard shortcuts. Settings and sessions can be exported to an encrypted 7z backup.
 
 ## Installation
 
-#### Pre-installed on BigLinux/BigCommunity
+### BigLinux / BigCommunity
 
-Ashy Terminal comes **pre-installed as the default terminal emulator** on [BigLinux](https://www.biglinux.com.br/) and [BigCommunity](https://communitybig.org/) distributions. No installation required!
+Ashy Terminal comes **pre-installed** as the default terminal. Nothing to do.
 
----
-
-> Note: You can build different versions from the source. They have minor changes to improve performance and usability.
-
-
-| Package | Extra Dependencies | Description |
-|---------|--------|-------------|
-| `ashyterm` | none | Base terminal emulator |
-| `ashyterm-performance` | `regex` | Faster regex matching |
-| `ashyterm-highlighting` | `Pygments` | Syntax highlighting support |
-| `ashyterm-backup` | `py7zr` | 7z backup/restore support |
-| `ashyterm-all` | all of the above | All optional dependencies |
-
----
-
-#### From Package (Recommended)
-
-If a package is available for your distribution:
-
-```bash
-sudo pacman -U ashyterm-*-x86_64.pkg.tar.zst
-```
-
-#### From Source
-
-1.  Clone the repository:
-
-    ```bash
-    git clone https://github.com/big-comm/ashyterm.git
-    cd ashyterm
-    ```
-
-2.  Run the application directly:
-
-    ```bash
-    # to just run locally
-    export PYTHONPATH="$PWD/src:$PYTHONPATH"
-    python -m ashyterm
-
-    # to install locally
-    pip install . --user && ashyterm # make sure the pip installed globally or use "python -m pip" instead of just "pip"
-    ```
-
-#### From Source With Nix (optional)
-
-```bash
-# run directly from the repository (no clone needed)
-nix run github:big-comm/ashyterm
-# OR you can append the build version by adding the target 
-nix run github:big-comm/ashyterm#ashyterm-all # you can replace 'ashyterm-all' by 'ashyterm-performance' or 'ashyterm-highlighting' or 'ashyterm-backup'
-
-# run locally from a cloned repository
-nix run .#ashyterm # you can replace 'ashyterm' by 'ashyterm-all' or 'ashyterm-performance' or 'ashyterm-highlighting' or 'ashyterm-backup'
-
-# enter a development shell
-nix develop
-python -m ashyterm
-```
-
-#### Build From Source for Arch/Manjaro
+### Arch Linux / Manjaro (build from source)
 
 ```bash
 git clone https://github.com/big-comm/ashyterm.git
@@ -190,72 +135,112 @@ cd ashyterm
 makepkg -si
 ```
 
+### Nix
+
+```bash
+# Run without cloning
+nix run github:big-comm/ashyterm
+
+# Variant with all optional dependencies
+# (also available: ashyterm-performance, ashyterm-highlighting, ashyterm-backup)
+nix run github:big-comm/ashyterm#ashyterm-all
+
+# Development shell from a local clone
+nix develop
+python -m ashyterm
+```
+
+| Package | Extra dependencies | Description |
+|---------|--------------------|-------------|
+| `ashyterm` | — | Base terminal emulator |
+| `ashyterm-performance` | `regex` | Faster highlighting regex engine |
+| `ashyterm-highlighting` | `Pygments` | Syntax highlighting support |
+| `ashyterm-backup` | `py7zr` | Encrypted 7z backup / restore |
+| `ashyterm-all` | all of the above | Every optional dependency |
+
+### Run from source
+
+```bash
+git clone https://github.com/big-comm/ashyterm.git
+cd ashyterm
+
+# Run without installing
+PYTHONPATH="$PWD/src" python -m ashyterm
+
+# Or install for the current user
+python -m pip install --user .
+ashyterm
+```
+
+### Dependencies
+
+| Type | Packages |
+|------|----------|
+| Runtime | Python 3.8+, GTK 4, libadwaita 1, VTE for GTK4 (`vte4`), PyGObject, libsecret |
+| Python | `requests`, `psutil`, `setproctitle`, `regex`, `Pygments`, `py7zr` |
+| Tools | `rsync` (fast transfers, falls back to SFTP), `sshpass` (only for SSH password auth) |
+
+On Arch / Manjaro:
+
+```bash
+sudo pacman -S gtk4 libadwaita vte4 libsecret python-gobject python-requests \
+  python-psutil python-setproctitle python-regex python-pygments python-py7zr \
+  rsync sshpass
+```
+
 ## Usage
 
 ```bash
-ashyterm [options] [directory]
+ashyterm [OPTIONS] [DIRECTORY]
 ```
-
-#### Arguments
 
 | Option | Description |
 |--------|-------------|
-| `-w, --working-directory DIR` | Set initial working directory |
-| `-e, -x, --execute COMMAND` | Execute command on startup (all remaining args are included) |
-| `--close-after-execute` | Close the terminal tab after the command finishes |
-| `--ssh [USER@]HOST` | Immediately connect to an SSH host |
-| `--new-window` | Force opening a new window instead of a tab |
-
-#### Examples
+| `-w, --working-directory DIR` | Working directory for the initial terminal |
+| `-e, -x, --execute COMMAND ...` | Execute a command on startup (all remaining arguments are included) |
+| `--close-after-execute` | Close the tab when the command finishes |
+| `--ssh [USER@]HOST[:PORT][:/PATH]` | Connect straight to an SSH host |
+| `--new-window` | Open a new window instead of a tab |
+| `-d, --debug` | Enable debug mode |
+| `--log-level LEVEL` | `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL` |
+| `-v, --version` / `-h, --help` | Show version / help |
 
 ```bash
-# Open terminal in a specific directory
-ashyterm ~/projects
-
-# Execute a command
-ashyterm -e htop
-
-# SSH connection
-ashyterm --ssh user@server.example.com
-
-# Execute command and close after completion
-ashyterm --close-after-execute -e "ls -la"
+ashyterm ~/projects                         # open in a directory
+ashyterm -e htop                            # run a command
+ashyterm --ssh admin@server.example.com     # connect over SSH
+ashyterm --close-after-execute -e "ls -la"  # run and close
 ```
 
 ## Configuration
 
-Configuration files are stored in `~/.config/ashyterm/`:
+Everything lives in `~/.config/ashyterm/`:
 
-| File/Directory | Description |
-|----------------|-------------|
-| `settings.json` | General preferences, appearance, terminal behavior, shortcuts, and AI configuration |
-| `sessions.json` | Saved SSH/SFTP connections and session folders |
+| Path | Contents |
+|------|----------|
+| `settings.json` | Preferences, appearance, terminal behavior, shortcuts and AI settings |
+| `sessions.json` | Saved sessions and folders |
 | `session_state.json` | Window state and session restore data |
-| `layouts/` | Saved window layouts (split panes configuration) |
+| `layouts/` | Saved split-pane layouts |
+| `highlights/` | Your custom highlighting rules (bundled rules live in `data/highlights/`) |
+| `backups/` | Encrypted backup archives |
 | `logs/` | Application logs (when logging to file is enabled) |
-| `backups/` | Manual encrypted backup archives |
-
-**Note**: Syntax highlighting rules are bundled with the application in `data/highlights/` and include rules for 50+ commands (docker, git, systemctl, kubectl, and more).
 
 ## Contributing
 
-Contributions are welcome\!
+Contributions are welcome!
 
-1.  Fork the repository.
-2.  Create your feature branch (`git checkout -b feature/amazing-feature`).
-3.  Commit your changes.
-4.  Push to the branch.
-5.  Open a Pull Request.
+1. Fork the repository and create a branch: `git checkout -b feature/my-feature`
+2. Make your change and run the test suite: `pytest tests/ -q`
+3. Commit, push and open a Pull Request.
+
+See [AGENTS.md](AGENTS.md) for the project layout and coding conventions.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+Released under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-  - The **BigCommunity** and **BigLinux** teams.
-  - Developers of **GNOME**, **GTK**, **VTE**, and **Pygments**.
-
-<!-- end list -->
-
-```
+- The **BigCommunity** and **BigLinux** teams.
+- The developers of **GNOME**, **GTK**, **VTE** and **Pygments**.
