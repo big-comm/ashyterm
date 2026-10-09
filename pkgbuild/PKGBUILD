@@ -26,7 +26,7 @@ depends=(
     'gsound' # Optional, tab notification sounds (silently disabled without it)
 )
 optdepends=(
-    'libchildenv: isolamento do alocador de memória nos processos filhos'
+    'libchildenv: enables the mimalloc/tcmalloc allocator that keeps memory usage from growing in long sessions'
 )
 makedepends=(
     'git'
@@ -41,7 +41,7 @@ provides=('comm-ashyterm')
 replaces=('comm-ashyterm')
 
 pkgver=$(date +%y.%m.%d)
-pkgrel=1
+pkgrel=$(date +%H%M)
 
 arch=('any')
 license=('MIT')

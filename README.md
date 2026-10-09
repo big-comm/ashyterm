@@ -129,8 +129,18 @@ Ashy Terminal comes **pre-installed** as the default terminal. Nothing to do.
 
 ### Arch Linux / Manjaro (build from source)
 
+`libchildenv` is optional but recommended for long sessions. It enables allocator
+preloading (mimalloc/tcmalloc/jemalloc) and removes `LD_PRELOAD` from child processes,
+so terminal commands do not inherit the custom allocator. Without it, Ashy skips
+the memory optimization even if mimalloc is installed.
+
 ```bash
 sudo pacman -S --needed base-devel git
+
+# Recommended: keeps Ashy's memory usage stable in long sessions
+git clone https://github.com/biglinux/libchildenv.git
+cd libchildenv/pkgbuild && makepkg -si && cd ../..
+
 git clone https://github.com/big-comm/ashyterm.git
 cd ashyterm/pkgbuild
 makepkg -si
