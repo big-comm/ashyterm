@@ -538,10 +538,7 @@ class WindowLifecycleMixin:
 
     def _on_quit_application_requested(self) -> None:
         """Handle quit request from tab manager."""
-        if app := self.get_application():
-            app.quit()
-        else:
-            self.destroy()
+        self.destroy()
 
     # ─── Transparency ──────────────────────────────────────────────────
 
