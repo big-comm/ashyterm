@@ -11,20 +11,25 @@ depends=(
     'python'
     'python-py7zr'
     'python-gobject'
+    'python-cairo'
     'python-setproctitle'
     'python-requests'
     'python-psutil'
     'python-asyncssh'
+    'openssh'
     'sshpass'
     'rsync'
     'vte4'
-    'libchildenv' # Optional, but recommended to improve GTK memory management.
     'mimalloc' # Optional, but recommended to improve GTK memory management.
     'python-regex' # Optional, Improved syntax highlighting performance'
     'python-pygments' # Optional, Enhanced syntax highlighting in AI chat'
     'gsound' # Optional, tab notification sounds (silently disabled without it)
 )
+optdepends=(
+    'libchildenv: enables the mimalloc/tcmalloc allocator that keeps memory usage from growing in long sessions'
+)
 makedepends=(
+    'git'
     'python-build'
     'python-installer'
     'python-uv-build'
