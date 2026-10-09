@@ -130,8 +130,9 @@ Ashy Terminal comes **pre-installed** as the default terminal. Nothing to do.
 ### Arch Linux / Manjaro (build from source)
 
 ```bash
+sudo pacman -S --needed base-devel git
 git clone https://github.com/big-comm/ashyterm.git
-cd ashyterm
+cd ashyterm/pkgbuild
 makepkg -si
 ```
 
@@ -176,16 +177,16 @@ ashyterm
 
 | Type | Packages |
 |------|----------|
-| Runtime | Python 3.8+, GTK 4, libadwaita 1, VTE for GTK4 (`vte4`), PyGObject, libsecret |
-| Python | `requests`, `psutil`, `setproctitle`, `regex`, `Pygments`, `py7zr` |
-| Tools | `rsync` (fast transfers, falls back to SFTP), `sshpass` (only for SSH password auth) |
+| Runtime | Python 3.8+, GTK 4, libadwaita 1, VTE for GTK4 (`vte4`), PyGObject, pycairo, libsecret |
+| Python | `requests`, `psutil`, `setproctitle`, `regex`, `Pygments`, `py7zr`, `asyncssh` |
+| Tools | `openssh`, `rsync` (fast transfers, falls back to SFTP), `sshpass` (only for SSH password auth) |
 
 On Arch / Manjaro:
 
 ```bash
-sudo pacman -S gtk4 libadwaita vte4 libsecret python-gobject python-requests \
+sudo pacman -S gtk4 libadwaita vte4 libsecret python-gobject python-cairo python-requests \
   python-psutil python-setproctitle python-regex python-pygments python-py7zr \
-  rsync sshpass
+  python-asyncssh openssh rsync sshpass
 ```
 
 ## Usage
