@@ -3,6 +3,8 @@
 import os
 import sys
 
+import pytest
+
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -115,3 +117,24 @@ class TestWindowLayouts:
 
         source = inspect.getsource(CommTerminalWindow._lifecycle_init_common)
         assert "self.layouts" in source
+
+
+class TestWindowShellExit:
+    @pytest.mark.parametrize("window_count", [1, 2])
+    def test_last_terminal_exit_closes_only_its_window(
+        self, window_count: int
+    ) -> None:
+        from unittest.mock import MagicMock
+        from ashyterm.window_lifecycle import WindowLifecycleMixin
+
+        application = MagicMock()
+        open_windows = [MagicMock() for _ in range(window_count)]
+        window = open_windows[0]
+        window.get_application.return_value = application
+        window.destroy.side_effect = lambda: open_windows.remove(window)
+        application.quit.side_effect = open_windows.clear
+        expected_windows = open_windows[1:]
+
+        WindowLifecycleMixin._on_quit_application_requested(window)
+
+        assert open_windows == expected_windows
