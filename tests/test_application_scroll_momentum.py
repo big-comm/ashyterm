@@ -114,6 +114,24 @@ def test_replay_stops_when_terminal_hides_or_leaves_alternate_screen(momentum, c
     assert audit.terminal.sent == []
 
 
+def test_replay_continues_over_scrollback_while_mouse_is_tracked(momentum):
+    audit = momentum
+    guard = ScrollModeGuard.for_terminal(audit.terminal)
+    guard.feed(b"\x1b[?1000h\x1b[?1006h")
+    audit.terminal.upper = 2000
+    audit.engine._start_kinetic_deceleration(audit.target)
+    audit.clock.now += 0.02
+
+    assert audit.engine._kinetic_tick(audit.target) is True
+    assert audit.terminal.sent
+
+    guard.feed(b"\x1b[?1000l")
+    sent = len(audit.terminal.sent)
+    audit.clock.now += 0.02
+    assert audit.engine._kinetic_tick(audit.target) is False
+    assert len(audit.terminal.sent) == sent
+
+
 def test_direction_change_discards_previous_velocity(momentum):
     audit = momentum
     audit.clock.now += 0.02
@@ -146,7 +164,7 @@ def test_only_vertical_scroll_reports_can_be_replayed(report, direction):
 
 @pytest.mark.parametrize("sequence", [
     b"\x1b[?1049l", b"\x1b[?1000;1002;1006l", b"\x1b[?1007h",
-    b"\x1b[?1r", b"\x1bc", b"\x1b[!p", b"\x9b?1006l",
+    b"\x1b[?1r", b"\x1bc", b"\x1b[!p", "\u009b?1006l".encode(),
 ])
 def test_mode_changes_are_detected_at_every_chunk_boundary(sequence):
     for offset in range(len(sequence) + 1):
@@ -158,7 +176,7 @@ def test_mode_changes_are_detected_at_every_chunk_boundary(sequence):
 
 @pytest.mark.parametrize("sequence", [
     b"\x1b[?25l\x1b[?2026htext\x1b[?2026l", b"\x1b[H\x1b[2J",
-    b"\x1b]0;\x1b[?1049l\x07", b"\x1bP\x1b[?1000l\x1b\\",
+    b"\x1b]0;[?1049l\x07", b"\x1bP[?1000l\x1b\\", "ě?1006l".encode(),
 ])
 def test_redraws_and_string_payloads_do_not_cancel_inertia(sequence):
     guard = ScrollModeGuard()
@@ -168,16 +186,15 @@ def test_redraws_and_string_payloads_do_not_cancel_inertia(sequence):
 def test_proxy_observes_modes_before_buffering_output():
     from ashyterm.terminal._highlighter_impl import HighlightedTerminalProxy
 
-    guard = ScrollModeGuard()
-    changes = []
-    terminal = SimpleNamespace(_ashy_application_scroll=SimpleNamespace(
-        observe_output=lambda chunk: changes.append(guard.feed(chunk))
-    ))
+    handler = MagicMock()
+    terminal = SimpleNamespace(_ashy_application_scroll=handler)
     proxy = HighlightedTerminalProxy.__new__(HighlightedTerminalProxy)
     proxy._consume_osc52 = lambda chunk, _terminal: chunk
     proxy._combine_with_partial_buffer = lambda chunk: chunk
     proxy._has_incomplete_escape = lambda _chunk: True
 
-    assert proxy._prepare_pty_data(b"\x1b[?104", terminal) is None
-    assert proxy._prepare_pty_data(b"9l", terminal) is None
-    assert changes == [False, True]
+    assert proxy._prepare_pty_data(b"\x1b[?100", terminal) is None
+    handler.cancel_momentum.assert_not_called()
+    assert proxy._prepare_pty_data(b"0h", terminal) is None
+    handler.cancel_momentum.assert_called_once_with()
+    assert ScrollModeGuard.for_terminal(terminal).mouse_tracking

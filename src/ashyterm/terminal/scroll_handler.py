@@ -25,6 +25,7 @@ from ..settings.scrolling import (
 )
 from ..utils.logger import get_logger
 from .application_scroll import ApplicationScrollHandler
+from .scroll_mode_guard import wheel_reaches_application
 
 if TYPE_CHECKING:
     from .tabs import TabManager
@@ -194,12 +195,9 @@ class ScrollHandler:
                 return Gdk.EVENT_PROPAGATE
 
             adjustment = sw.get_vadjustment()
-            if adjustment and (
-                adjustment.get_upper() - adjustment.get_lower()
-                <= adjustment.get_page_size()
-            ):
-                # Alternate-screen applications need VTE's mouse/key reporting.
-                # An empty history is not a scrollback boundary to consume.
+            if adjustment and wheel_reaches_application(sw.get_child(), adjustment):
+                # Mouse-tracking (tmux, vim, htop) and alternate-screen apps
+                # need VTE's reporting; scrollback must not take the wheel.
                 controller._ashy_scroll_route = None
                 self._cancel_kinetic_scroll(sw)
                 return Gdk.EVENT_PROPAGATE

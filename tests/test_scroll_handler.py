@@ -12,6 +12,7 @@ from gi.repository import Gdk
 
 import ashyterm.terminal.scroll_handler as scroll_module
 from ashyterm.terminal.scroll_handler import ScrollHandler
+from ashyterm.terminal.scroll_mode_guard import ScrollModeGuard
 from ashyterm.terminal.terminal_body import is_terminal_body
 
 
@@ -67,14 +68,22 @@ class FakeAdjustment:
 
 
 class FakeScrolledWindow:
-    def __init__(self, adjustment):
+    def __init__(self, adjustment, child=None):
         self.adjustment = adjustment
+        self.child = child
 
     def get_vadjustment(self):
         return self.adjustment
 
     def get_child(self):
-        return None
+        return self.child
+
+
+def tracking_terminal(output=b"\x1b[?1000h\x1b[?1002h\x1b[?1006h"):
+    """Terminal whose PTY output enabled tmux-style mouse tracking."""
+    terminal = SimpleNamespace()
+    ScrollModeGuard.for_terminal(terminal).feed(output)
+    return terminal
 
 
 class FakeController:
@@ -281,6 +290,61 @@ def test_no_scrollback_reaches_application(scroll_handler, mode, dy, lower):
 
     assert result == Gdk.EVENT_PROPAGATE
     assert adjustment.writes == []
+
+
+@pytest.mark.parametrize("mode", ["automatic", "custom"])
+@pytest.mark.parametrize("unit,source", [
+    (Gdk.ScrollUnit.WHEEL, Gdk.InputSource.MOUSE),
+    (Gdk.ScrollUnit.SURFACE, Gdk.InputSource.TOUCHPAD),
+])
+@pytest.mark.parametrize("dy", [-1.0, 1.0])
+def test_mouse_tracking_with_scrollback_reaches_application(
+    scroll_handler, mode, unit, source, dy
+):
+    """Regression: tmux `mouse on` lost the wheel when history existed."""
+    scroll_handler.tm.terminal_manager.settings_manager.values[
+        "terminal_scroll_mode"
+    ] = mode
+    adjustment = FakeAdjustment(value=1980.0, upper=2000.0)
+    sw = FakeScrolledWindow(adjustment, tracking_terminal())
+    sw._k_history = [(1.0, 2.0)]
+
+    result = run_scroll(scroll_handler, sw, FakeController(unit, source), dy=dy)
+
+    assert result == Gdk.EVENT_PROPAGATE
+    assert adjustment.writes == []
+    assert sw._k_history == []
+
+
+@pytest.mark.parametrize("mode", ["automatic", "custom"])
+def test_disabling_mouse_tracking_restores_custom_history(scroll_handler, mode):
+    scroll_handler.tm.terminal_manager.settings_manager.values[
+        "terminal_scroll_mode"
+    ] = mode
+    terminal = tracking_terminal()
+    adjustment = FakeAdjustment()
+    sw = FakeScrolledWindow(adjustment, terminal)
+    controller = FakeController(Gdk.ScrollUnit.WHEEL)
+    assert run_scroll(scroll_handler, sw, controller) == Gdk.EVENT_PROPAGATE
+
+    ScrollModeGuard.for_terminal(terminal).feed(b"\x1b[?1000l\x1b[?1002l")
+
+    assert run_scroll(scroll_handler, sw, controller) == Gdk.EVENT_STOP
+    assert adjustment.value == 80.0
+
+
+def test_control_wheel_zooms_even_with_mouse_tracking(scroll_handler, monkeypatch):
+    settings = scroll_handler.tm.terminal_manager.settings_manager
+    settings.values["font"] = "Monospace 12"
+    apply_font = MagicMock()
+    scroll_handler.tm.terminal_manager._apply_font_size_change = apply_font
+    idle_add = MagicMock()
+    monkeypatch.setattr(scroll_module, "GLib", SimpleNamespace(idle_add=idle_add))
+    sw = FakeScrolledWindow(FakeAdjustment(), tracking_terminal())
+    controller = FakeController(Gdk.ScrollUnit.WHEEL, control=True)
+
+    assert run_scroll(scroll_handler, sw, controller, dy=1.0) == Gdk.EVENT_STOP
+    idle_add.assert_called_once_with(apply_font, "Monospace", 11)
 
 
 @pytest.mark.parametrize("mode", ["automatic", "custom"])
