@@ -107,7 +107,7 @@ class ScrollModeGuard:
         if byte == 0x5B:
             self._start_csi()
             return False
-        return byte == 0x63 and self._reset()  # RIS
+        return byte == 0x63 and self._reset_modes()  # RIS
 
     def _start_csi(self) -> None:
         self._state = _CSI
@@ -131,7 +131,7 @@ class ScrollModeGuard:
         if len(parameters) + len(intermediates) >= _MAX_SEQUENCE:
             return True  # Same outcome as the byte-wise bound.
         if final == 0x70 and intermediates == b"!":  # DECSTR
-            return self._reset()
+            return self._reset_modes()
         if intermediates or final not in (_SET, _RESET, _SAVE, _RESTORE):
             return False
         if not _PRIVATE_MODES.fullmatch(parameters):
@@ -160,7 +160,12 @@ class ScrollModeGuard:
         else:
             self._mouse_modes.discard(mode)
 
-    def _reset(self) -> bool:
+    def reset(self) -> None:
+        """Mirror ``Vte.Terminal.reset()``, which also discards a partial sequence."""
+        self._state = _TEXT
+        self._reset_modes()
+
+    def _reset_modes(self) -> bool:
         """RIS and DECSTR clear active and saved modes, as in VTE."""
         self._mouse_modes.clear()
         self._saved_modes.clear()

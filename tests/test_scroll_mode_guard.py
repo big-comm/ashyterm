@@ -2,7 +2,7 @@
 
 import time
 from types import SimpleNamespace
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -136,6 +136,31 @@ def test_oversized_control_is_dropped_and_stops_momentum():
     assert not guard.mouse_tracking
     assert guard.feed(b"\x1b[?1000h") is True
     assert guard.mouse_tracking
+
+
+def test_reset_clears_active_saved_and_partial_modes():
+    guard = ScrollModeGuard()
+    guard.feed(b"\x1b[?1002h\x1b[?1002s\x1b[?10")
+
+    guard.reset()
+    guard.feed(b"00h\x1b[?1002r")
+
+    assert not guard.mouse_tracking
+
+
+def test_clear_terminal_returns_the_wheel_to_scrollback():
+    """Regression: VTE drops mouse tracking on reset, so the guard must too."""
+    from ashyterm.terminal.manager import TerminalManager
+
+    terminal = MagicMock()
+    ScrollModeGuard.for_terminal(terminal).feed(TMUX_MOUSE_ON)
+    assert wheel_reaches_application(terminal, adjustment(2000.0))
+
+    with patch("ashyterm.terminal.manager.GLib.timeout_add"):
+        TerminalManager.clear_terminal(MagicMock(), terminal)
+
+    terminal.reset.assert_called_once_with(True, True)
+    assert not wheel_reaches_application(terminal, adjustment(2000.0))
 
 
 def test_terminal_owns_one_guard_across_scroll_bindings():
