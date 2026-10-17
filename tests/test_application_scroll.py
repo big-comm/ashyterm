@@ -10,7 +10,10 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 from gi.repository import Gdk, Gio, Gtk
 
-from ashyterm.terminal.application_scroll import ApplicationScrollHandler
+from ashyterm.terminal.application_scroll import (
+    ApplicationScrollHandler,
+    observe_terminal_output,
+)
 
 
 class FakeTerminal:
@@ -144,6 +147,31 @@ def test_history_fallback_is_not_scaled_twice(application_scroll):
     assert audit.received == [(0.0, -10.0)]
 
 
+def test_mouse_tracking_scales_wheel_despite_scrollback(application_scroll):
+    audit = application_scroll
+    audit.terminal.upper = 800.0
+    observe_terminal_output(audit.terminal, b"\x1b[?1000h\x1b[?1006h")
+
+    audit.controller.emit("scroll", 0.0, -10.0)
+
+    assert audit.received == [(0.0, -1.0)]
+
+
+def test_rebinding_keeps_mouse_tracking_observed_before(application_scroll):
+    audit = application_scroll
+    audit.terminal.upper = 800.0
+    observe_terminal_output(audit.terminal, b"\x1b[?1002h")
+    audit.handler.detach()
+
+    handler = ApplicationScrollHandler.attach(audit.terminal, audit.settings)
+    try:
+        audit.controller.emit("scroll", 0.0, -10.0)
+    finally:
+        handler.detach()
+
+    assert audit.received == [(0.0, -1.0)]
+
+
 def test_horizontal_application_scroll_remains_unchanged(application_scroll):
     audit = application_scroll
 
@@ -211,7 +239,7 @@ def test_native_reports_feed_shared_engine_only_with_output_observer(momentum_sc
     audit.controller.emit("scroll", 0.0, -10.0)
     audit.engine._track_kinetic_scroll.assert_not_called()
 
-    audit.handler.observe_output(b"\x1b[?1006h")
+    observe_terminal_output(audit.terminal, b"\x1b[?1006h")
     audit.controller.emit("scroll", 0.0, -10.0)
 
     audit.engine._track_kinetic_scroll.assert_called_once_with(
@@ -222,13 +250,13 @@ def test_native_reports_feed_shared_engine_only_with_output_observer(momentum_sc
 @pytest.mark.parametrize("event", ["input", "focus", "unmap", "mode", "key", "click"])
 def test_activity_cancels_captured_report(momentum_scroll, event):
     audit = momentum_scroll
-    audit.handler.observe_output(b"ready")
+    observe_terminal_output(audit.terminal, b"ready")
     audit.controller.emit("scroll", 0.0, -10.0)
     assert audit.handler._momentum._report
     if event == "input":
         audit.terminal.commit("x")
     elif event == "mode":
-        audit.handler.observe_output(b"\x1b[?1006l")
+        observe_terminal_output(audit.terminal, b"\x1b[?1006l")
     elif event == "focus":
         audit.terminal.focused = False
         audit.handler._on_focus_changed(audit.terminal, None)
@@ -248,7 +276,7 @@ def test_activity_cancels_captured_report(momentum_scroll, event):
 
 def test_replayed_commit_does_not_cancel_own_momentum(momentum_scroll):
     audit = momentum_scroll
-    audit.handler.observe_output(b"ready")
+    observe_terminal_output(audit.terminal, b"ready")
     audit.controller.emit("scroll", 0.0, -10.0)
     audit.handler._momentum.replaying = True
 

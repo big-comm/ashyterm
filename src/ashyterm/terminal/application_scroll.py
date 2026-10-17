@@ -13,17 +13,25 @@ from gi.repository import Gdk, GObject, Gtk, Vte
 from ..settings.scrolling import SCROLL_MODE_NATIVE, normalize_scroll_mode
 from ..utils.logger import get_logger
 from .application_scroll_momentum import ApplicationScrollMomentum
-from .scroll_mode_guard import ScrollModeGuard
+from .scroll_mode_guard import ScrollModeGuard, wheel_reaches_application
 
 _logger = get_logger("ashyterm.terminal.application_scroll")
+
+
+def observe_terminal_output(terminal: Vte.Terminal, chunk: bytes) -> None:
+    """Mirror input modes from PTY output before VTE parses it."""
+    if ScrollModeGuard.for_terminal(terminal).feed(chunk):
+        handler = getattr(terminal, "_ashy_application_scroll", None)
+        if handler is not None:
+            handler.cancel_momentum()
 
 
 class ApplicationScrollHandler:
     """Normalize deltas before VTE encodes mouse reports or cursor keys.
 
     VTE has no public scroll multiplier. Its GTK scroll signal is wrapped
-    without replacing the controller, synthesizing events, or parsing private
-    terminal modes. Re-emission keeps the original event and pointer position.
+    without replacing the controller or synthesizing events. Re-emission
+    keeps the original event and pointer position.
     """
 
     def __init__(
@@ -42,8 +50,7 @@ class ApplicationScrollHandler:
         controller.handler_block(native_handler_id)
         self._momentum = None
         self._reports = None
-        self._output_observed = False
-        self._mode_guard = ScrollModeGuard()
+        self._mode_guard = ScrollModeGuard.for_terminal(terminal)
         self._terminal_handlers = []
         self._input_controllers = []
         if scroll_engine is not None:
@@ -90,12 +97,6 @@ class ApplicationScrollHandler:
         controller.disconnect(self._handler_id)
         controller.handler_unblock(self._native_handler_id)
         self._handler_id = 0
-
-    def observe_output(self, chunk: bytes) -> None:
-        """Cancel momentum before terminal mode changes reach VTE."""
-        self._output_observed = True
-        if self._mode_guard.feed(chunk):
-            self.cancel_momentum()
 
     def cancel_momentum(self, *_args: Any) -> None:
         """Stop application inertia without changing native input handling."""
@@ -152,7 +153,7 @@ class ApplicationScrollHandler:
             self._reports = None
 
     def _track_momentum(self, controller: Gtk.EventControllerScroll, handled: bool) -> None:
-        if self._momentum is None or not self._output_observed or not handled:
+        if self._momentum is None or not self._mode_guard.observed or not handled:
             return
         if normalize_scroll_mode(self._settings.get("terminal_scroll_mode")) == SCROLL_MODE_NATIVE:
             return
@@ -182,8 +183,7 @@ class ApplicationScrollHandler:
         terminal = self._terminal_ref()
         if mode == SCROLL_MODE_NATIVE or terminal is None:
             return dy
-        adjustment = terminal.get_vadjustment()
-        if adjustment.get_upper() - adjustment.get_lower() > adjustment.get_page_size():
+        if not wheel_reaches_application(terminal, terminal.get_vadjustment()):
             return dy
         unit = controller.get_unit()
         if unit not in (Gdk.ScrollUnit.SURFACE, Gdk.ScrollUnit.WHEEL):

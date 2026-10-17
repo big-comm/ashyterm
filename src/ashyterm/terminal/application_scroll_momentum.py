@@ -12,6 +12,8 @@ import gi
 gi.require_version("Vte", "3.91")
 from gi.repository import Vte
 
+from .scroll_mode_guard import wheel_reaches_application
+
 _SGR_WHEEL = re.compile(r"\x1b\[<(\d+);\d+;\d+M\Z")
 _CURSOR = re.compile(r"\x1b(?:O|\[)(?:1;\d+)?([AB])\Z")
 
@@ -72,12 +74,11 @@ class ApplicationScrollMomentum:
             engine._track_kinetic_scroll(self, source, pixels)
 
     def get_vadjustment(self) -> Optional["ApplicationScrollMomentum"]:
-        """Stop when the terminal hides or returns to its normal history."""
+        """Stop when the terminal hides or the wheel returns to its history."""
         terminal = self._terminal_ref()
         if terminal is None or not self._report or not terminal.get_mapped():
             return None
-        adjustment = terminal.get_vadjustment()
-        if adjustment.get_upper() - adjustment.get_lower() > adjustment.get_page_size():
+        if not wheel_reaches_application(terminal, terminal.get_vadjustment()):
             return None
         return self
 

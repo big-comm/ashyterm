@@ -23,6 +23,7 @@ from ..utils.translation_utils import _
 from .clipboard_image import clipboard_has_image, save_clipboard_image_async
 from .paste_confirmation import build_paste_confirmation_dialog
 from .registry import ManualSSHTracker, TerminalLifecycleManager, TerminalRegistry
+from .scroll_mode_guard import ScrollModeGuard
 from .sftp_open import RemoteFileTarget, resolve_remote_file_target
 from .ssh_lifecycle import SSHLifecycleMixin
 from .terminal_config import (
@@ -1212,6 +1213,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
     def clear_terminal(self, terminal: Vte.Terminal) -> None:
         try:
             terminal.reset(True, True)
+            ScrollModeGuard.for_terminal(terminal).reset()
 
             def _send_newline():
                 try:

@@ -76,6 +76,7 @@ from .stream_escapes import (
     detect_alt_screen_transition as _detect_alt_screen_transition_impl,
 )
 from .osc52 import OSC52StreamParser, consume_osc52_output
+from .application_scroll import observe_terminal_output
 
 # Re-export _PROMPT_MARKER for any external consumers
 __all__ = [
@@ -716,9 +717,7 @@ class HighlightedTerminalProxy(CatModeHandler, StreamingHandler):
         self, data: bytes, term: Vte.Terminal
     ) -> Optional[bytes]:
         """Consume OSC 52 and retain incomplete escape sequences."""
-        application_scroll = getattr(term, "_ashy_application_scroll", None)
-        if application_scroll is not None:
-            application_scroll.observe_output(data)
+        observe_terminal_output(term, data)
         data = self._consume_osc52(data, term)
         if not data:
             return None
