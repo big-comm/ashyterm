@@ -11,7 +11,7 @@ GTK4/libadwaita terminal emulator for Linux (BigLinux/Manjaro focus). Pure Pytho
 - **Language:** Python 3.8+. Type hints on every public signature.
 - **UI:** GTK 4.0, libadwaita 1, VTE 3.91. Also Pango, Gdk, Gio, GLib, Graphene, Secret.
 - **Runtime deps:** PyGObject, py7zr (encrypted backup), regex, Pygments, setproctitle, requests, psutil.
-- **Build:** `pyproject.toml` (uv-build). Packaging: `pkgbuild/PKGBUILD`.
+- **Build:** `pyproject.toml` (hatchling; version read from `APP_VERSION` in `settings/config.py`). Packaging: `pkgbuild/PKGBUILD`.
 - **Tests:** pytest, 2267 tests, ~6s full suite. Optional: `hypothesis` for property tests.
 
 ## Layout

@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/version-1.9.0-blue.svg" alt="Version"/></a>
+  <a href="https://github.com/big-comm/ashyterm/releases"><img src="https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbig-comm%2Fashyterm%2Fmain%2Fsrc%2Fashyterm%2Fsettings%2Fconfig.py&search=APP_VERSION%20%3D%20%22(%5B%5E%22%5D%2B)%22&replace=%241&label=version&color=blue" alt="Version"/></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT"/></a>
   <img src="https://img.shields.io/badge/python-3.8%2B-3776AB.svg?logo=python&logoColor=white" alt="Python 3.8+"/>
   <img src="https://img.shields.io/badge/GTK-4%20%2B%20libadwaita-4A86CF.svg?logo=gtk&logoColor=white" alt="GTK4 + libadwaita"/>
