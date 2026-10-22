@@ -23,6 +23,11 @@
 }:
 
 let
+  # gitrepo bumps APP_VERSION on every commit; read it instead of duplicating it.
+  appVersionLine = lib.findFirst (line: lib.hasInfix "APP_VERSION = \"" line) null
+    (lib.splitString "\n" (builtins.readFile ./src/ashyterm/settings/config.py));
+  appVersion = builtins.head (builtins.match ".*APP_VERSION = \"([^\"]+)\".*" appVersionLine);
+
   libchildenv = callPackage ./nix/libchildenv.nix { };
 
   allocatorCfg =
@@ -50,13 +55,13 @@ let
 in
 python3Packages.buildPythonApplication {
   pname = "ashyterm";
-  version = "0.1.0";
+  version = appVersion;
 
   src = ./.;
 
   pyproject = true;
 
-  build-system = with python3Packages; [ uv-build ];
+  build-system = with python3Packages; [ hatchling ];
   dependencies = with python3Packages;
     [
       pygobject3
