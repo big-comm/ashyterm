@@ -90,6 +90,26 @@ def _configure_prelaunch_logging(logger_mod) -> None:
         print(f"Warning: Invalid log level '{pre_args_log_level}' provided.")
 
 
+def _set_process_name(logger) -> None:
+    """Name the process "ashyterm" instead of "python3".
+
+    setproctitle finds the command line by walking back from the first
+    environment string. libchildenv removes LD_PRELOAD and CHILD_ENV_RULES
+    from environ before main() runs, and the launcher's CHILD_ENV_RULES comes
+    first, so setproctitle silently keeps the old title. setthreadtitle sets
+    the kernel's process name directly, which is what top, pkill, ps -e and
+    fastfetch read. Call it from the main thread.
+    """
+    try:
+        import setproctitle
+
+        setproctitle.setproctitle("ashyterm")
+        setproctitle.setthreadtitle("ashyterm")
+        logger.info("Process title set to 'ashyterm'.")
+    except Exception as e:
+        logger.error(f"Failed to set process title: {e}", exc_info=True)
+
+
 def _print_help() -> None:
     print(
         "Usage: ashyterm [OPTIONS] [DIRECTORY]\n"
@@ -119,14 +139,7 @@ def main() -> int:
     _configure_prelaunch_logging(logger_mod)
 
     logger = logger_mod.get_logger("ashyterm.main")
-
-    try:
-        import setproctitle
-
-        setproctitle.setproctitle("ashyterm")
-        logger.info("Process title set to 'ashyterm'.")
-    except Exception as e:
-        logger.error(f"Failed to set process title: {e}", exc_info=True)
+    _set_process_name(logger)
 
     # --version / --help short-circuit before loading GTK.
     if "--version" in sys.argv or "-v" in sys.argv:
