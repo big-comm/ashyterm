@@ -7,6 +7,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List
 
+from .logger import get_logger
+
 
 _RECORD_HOST_PROCESS = (
     'umask 077; IFS= read -r stat < "/proc/$$/stat"; '
@@ -21,24 +23,35 @@ _READ_HOST_PROCESS = (
 )
 
 
+@lru_cache(maxsize=1)
 def is_flatpak() -> bool:
     return Path("/.flatpak-info").is_file()
 
 
 @lru_cache(maxsize=1)
 def get_host_shell() -> str:
-    """Resolve the shell in the host environment, including NixOS paths."""
-    result = subprocess.run(
-        ["flatpak-spawn", "--host", "sh", "-c", 'printf "%s" "$SHELL"'],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=10,
+    """Resolve the shell in the host environment, including NixOS paths.
+
+    Falls back to /bin/sh so a misbehaving host never blocks opening a tab.
+    """
+    try:
+        result = subprocess.run(
+            ["flatpak-spawn", "--host", "sh", "-c", 'printf "%s" "$SHELL"'],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        shell = result.stdout.strip()
+        if shell.startswith("/"):
+            return shell
+        reason = f"non-absolute SHELL {shell!r}"
+    except (OSError, subprocess.SubprocessError) as exc:
+        reason = str(exc)
+    get_logger(__name__).warning(
+        f"Could not resolve the host shell ({reason}); using /bin/sh"
     )
-    shell = result.stdout.strip()
-    if not shell.startswith("/"):
-        raise RuntimeError("The host did not provide an absolute SHELL path")
-    return shell
+    return "/bin/sh"
 
 
 def shell_temp_root() -> str:
