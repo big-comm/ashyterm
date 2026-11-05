@@ -17,6 +17,7 @@ from .utils.translation_utils import _
 from .window_actions import MSG_NO_ACTIVE_TERMINAL, PASTE_END, PASTE_START, WindowActionsMixin
 from .window_file_drop import FileDragDropManager
 from .window_lifecycle import WindowLifecycleMixin
+from .window_session import WindowSessionMixin
 from .window_layouts import WindowLayoutsMixin
 from .window_tabs import WindowTabsMixin
 
@@ -42,6 +43,7 @@ class CommTerminalWindow(
     WindowTabsMixin,
     WindowActionsMixin,
     WindowLayoutsMixin,
+    WindowSessionMixin,
     FileDragDropManager,
     Adw.ApplicationWindow,
 ):
@@ -66,6 +68,7 @@ class CommTerminalWindow(
         self._is_for_detached_tab = kwargs.get("_is_for_detached_tab", False)
         self.detached_terminals_data = kwargs.get("detached_terminals_data")
         self.detached_file_manager = kwargs.get("detached_file_manager")
+        self.restored_window_state = kwargs.get("restored_window_state")
 
         self._setup_initial_window_size()
         self.set_title(APP_TITLE)
