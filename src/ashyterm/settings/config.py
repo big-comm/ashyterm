@@ -218,6 +218,7 @@ class DefaultSettings:
             "new_instance_behavior",
             "use_login_shell",
             "close_multiple_tabs_policy",
+            "restore_tabs_after_crash",
             "tab_attention_sound",
         ],
         "terminal": [
@@ -322,6 +323,8 @@ class DefaultSettings:
             "new_instance_behavior": "new_tab",
             "use_login_shell": False,
             "close_multiple_tabs_policy": "ask",  # ask, save_and_close, just_close
+            # Keep a live snapshot of open tabs so they return after a crash.
+            "restore_tabs_after_crash": True,
             # VTE Features
             "terminal_scroll_mode": "automatic",
             "scrollback_lines": 10000,

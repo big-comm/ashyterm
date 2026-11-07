@@ -41,6 +41,7 @@ class CommTerminalApp(Adw.Application):
         self._main_window: Optional["CommTerminalWindow"] = None
         self._backup_manager = None
         self._security_auditor = None
+        self._session_autosaver = None
         self._platform_info = None
         self._initialized = False
         self._shutting_down = False
@@ -52,6 +53,20 @@ class CommTerminalApp(Adw.Application):
         self.connect("shutdown", self._on_shutdown)
         self.connect("command-line", self._on_command_line)
         atexit.register(self._cleanup_on_exit)
+
+    @property
+    def session_autosaver(self) -> Any:
+        """Session snapshot shared by every window; None before settings load."""
+        if self._session_autosaver is None and self.settings_manager is not None:
+            from pathlib import Path
+
+            from .settings.config import STATE_FILE
+            from .state.session_autosave import SessionAutosaver
+
+            self._session_autosaver = SessionAutosaver(
+                self.settings_manager, Path(STATE_FILE), self.get_windows
+            )
+        return self._session_autosaver
 
     @property
     def platform_info(self) -> Any:
@@ -433,6 +448,9 @@ class CommTerminalApp(Adw.Application):
 
     def _on_shutdown(self, app) -> None:
         self.logger.info("Application shutdown initiated")
+        # Quit, logout and SIGTERM keep the last snapshot for the next start.
+        if self._session_autosaver is not None:
+            self._session_autosaver.freeze()
         from .core.tasks import AsyncTaskManager
         from .terminal.spawner import cleanup_spawner
 
@@ -518,6 +536,8 @@ class CommTerminalApp(Adw.Application):
         Adw.Application.do_window_removed(self, window)
         if window == self._main_window:
             self._main_window = None
+        if self._session_autosaver is not None:
+            self._session_autosaver.on_window_removed(window)
 
     def create_new_window(self, **kwargs: Any) -> "CommTerminalWindow":
         """Create a new main window, passing through any initial arguments."""
@@ -535,6 +555,7 @@ class CommTerminalApp(Adw.Application):
                 ),
                 "detached_terminals_data": kwargs.get("detached_terminals_data"),
                 "detached_file_manager": kwargs.get("detached_file_manager"),
+                "restored_window_state": kwargs.get("restored_window_state"),
             }
             if self.settings_manager is None:
                 raise RuntimeError(

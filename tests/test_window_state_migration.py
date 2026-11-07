@@ -1,12 +1,12 @@
 # tests/test_window_state_migration.py
-"""Tests for the v1 → v2 session-state migration added by PR #46."""
+"""Tests for the session-state migrations (v1 → v2 groups, v2 → v3 windows)."""
 
 import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-from ashyterm.state.window_state import _migrate_v1_to_v2
+from ashyterm.state.session_autosave import _migrate_v1_to_v2, _migrate_v2_to_v3
 
 
 class TestMigrateV1ToV2:
@@ -32,18 +32,29 @@ class TestMigrateV1ToV2:
         assert result == data
 
 
-class TestMigrationsMapping:
-    def test_migrations_bound_for_v1(self):
-        from ashyterm.state.window_state import WindowStateManager
+class TestMigrateV2ToV3:
+    def test_wraps_tabs_and_groups_into_one_window(self):
+        data = {"tabs": [{"name": "t1"}], "groups": [{"id": "g1"}]}
+        assert _migrate_v2_to_v3(data) == {
+            "windows": [{"groups": [{"id": "g1"}], "tabs": [{"name": "t1"}]}]
+        }
 
-        assert 1 in WindowStateManager.MIGRATIONS
-        assert WindowStateManager.SCHEMA_VERSION == 2
+    def test_empty_state_has_no_windows(self):
+        assert _migrate_v2_to_v3({"tabs": [], "groups": []}) == {"windows": []}
+
+
+class TestMigrationsMapping:
+    def test_migrations_bound_for_v1_and_v2(self):
+        from ashyterm.state import session_autosave
+
+        assert set(session_autosave.MIGRATIONS) == {1, 2}
+        assert session_autosave.SCHEMA_VERSION == 3
 
     def test_migration_callable_is_plain_function(self):
         """We intentionally avoided staticmethod.__func__ so this stays portable."""
-        from ashyterm.state.window_state import WindowStateManager
+        from ashyterm.state import session_autosave
 
-        fn = WindowStateManager.MIGRATIONS[1]
+        fn = session_autosave.MIGRATIONS[1]
         assert callable(fn)
         # Not a bound or descriptor — must be a plain function we can call.
         out = fn({"tabs": []})
