@@ -56,6 +56,8 @@ def any_terminal_has_foreground_process(
     False so the user doesn't get spurious warnings; the hard path
     still waits for the child-exit event from VTE.
     """
+    from ..utils.flatpak_host import host_terminal_has_children, is_flatpak
+
     try:
         import psutil
     except ImportError:
@@ -67,6 +69,10 @@ def any_terminal_has_foreground_process(
             continue
         info = terminal_manager.registry.get_terminal_info(terminal_id)
         if not info:
+            continue
+        if is_flatpak() and info.get("type") == "local":
+            if host_terminal_has_children(terminal):
+                return True
             continue
         pid = info.get("process_id")
         if not pid or pid == -1:

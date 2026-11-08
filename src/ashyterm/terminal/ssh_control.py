@@ -119,7 +119,7 @@ class SSHConnectionChecker:
 
     def cleanup_stale_sockets(self) -> int:
         """Remove stale control socket files without active connections."""
-        cache_dir = self.spawner.platform_info.cache_dir
+        cache_dir = self.spawner._get_ssh_control_dir()
         cleaned = 0
 
         if not cache_dir.exists():
