@@ -275,16 +275,11 @@ class WindowLifecycleMixin:
     def _create_initial_tab_safe(self) -> bool:
         """Safely create initial tab, trying to restore session first."""
         try:
-            if not self.state_manager.restore_session_state():
-                if self.tab_manager.get_tab_count() == 0:
-                    if self.initial_ssh_target:
-                        self.create_ssh_tab(self.initial_ssh_target)
-                    else:
-                        self.tab_manager.create_initial_tab_if_empty(
-                            working_directory=self.initial_working_directory,
-                            execute_command=self.initial_execute_command,
-                            close_after_execute=self.close_after_execute,
-                        )
+            restored = self._restore_saved_session()
+            if self.tab_manager.get_tab_count() == 0 or (
+                restored and self._has_launch_request()
+            ):
+                self._create_requested_tab()
         except Exception as e:
             self.logger.error(f"Failed to create initial tab: {e}")
             self._show_error_dialog(
@@ -292,6 +287,17 @@ class WindowLifecycleMixin:
                 _("Failed to initialize terminal: {error}").format(error=str(e)),
             )
         return False
+
+    def _create_requested_tab(self) -> None:
+        """Open the tab the launch asked for (SSH target, command or directory)."""
+        if self.initial_ssh_target:
+            self.create_ssh_tab(self.initial_ssh_target)
+        else:
+            self.tab_manager.create_local_tab(
+                working_directory=self.initial_working_directory,
+                execute_command=self.initial_execute_command,
+                close_after_execute=self.close_after_execute,
+            )
 
     # ─── Data Loading ──────────────────────────────────────────────────
 
@@ -563,19 +569,11 @@ class WindowLifecycleMixin:
         if self._force_closing:
             return Gdk.EVENT_PROPAGATE
 
-        tab_count = self.tab_manager.get_tab_count()
-        if tab_count > 1:
-            close_policy = self.settings_manager.get(
-                "close_multiple_tabs_policy", "ask"
-            )
-            if close_policy == "ask":
-                self._show_close_multiple_tabs_dialog()
-                return Gdk.EVENT_STOP
-            elif close_policy == "save_and_close":
-                self.state_manager.save_session_state()
-                return self._continue_close_process()
-            self.state_manager.clear_session_state()
-
+        self._session_close_response = None
+        close_policy = self.settings_manager.get("close_multiple_tabs_policy", "ask")
+        if self.tab_manager.get_tab_count() > 1 and close_policy == "ask":
+            self._show_close_multiple_tabs_dialog()
+            return Gdk.EVENT_STOP
         return self._continue_close_process()
 
     def _show_close_multiple_tabs_dialog(self) -> None:
@@ -600,11 +598,8 @@ class WindowLifecycleMixin:
 
     def _on_close_multiple_tabs_dialog_response(self, dialog, response_id):
         """Handle response from close multiple tabs dialog."""
-        if response_id == "save":
-            self.state_manager.save_session_state()
-            self._continue_close_process(force_close=True)
-        elif response_id == "close":
-            self.state_manager.clear_session_state()
+        if response_id in ("save", "close"):
+            self._session_close_response = response_id
             self._continue_close_process(force_close=True)
 
     def _continue_close_process(self, force_close=False) -> bool:
@@ -612,6 +607,7 @@ class WindowLifecycleMixin:
             self._show_window_ssh_close_confirmation()
             return Gdk.EVENT_STOP
 
+        self._apply_session_close_choice()
         self._perform_cleanup()
         if force_close:
             self._force_closing = True
@@ -634,6 +630,7 @@ class WindowLifecycleMixin:
         def on_response(dlg, response_id):
             if response_id == "close":
                 self._force_closing = True
+                self._apply_session_close_choice()
                 self._perform_cleanup()
                 self.close()
 

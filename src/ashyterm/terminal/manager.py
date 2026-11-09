@@ -343,6 +343,10 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         GTK main thread can still stall the UI when /proc is slow (e.g.
         under heavy fork load or on containers with cgroup limits).
         """
+        # Host processes are outside the PID namespace; rely on OSC7 instead.
+        from ..utils.flatpak_host import is_flatpak
+        if is_flatpak():
+            return
         candidates = self._local_cwd_candidates(self.spawner.process_tracker.snapshot())
         if not candidates:
             return

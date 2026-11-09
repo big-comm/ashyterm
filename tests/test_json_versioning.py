@@ -106,9 +106,9 @@ class TestStampVersion:
 
 def _load_module_migrations(module_name: str):
     """Look up ``SCHEMA_VERSION`` + ``MIGRATIONS`` for a known module."""
-    if module_name == "window_state":
-        from ashyterm.state.window_state import WindowStateManager
-        return WindowStateManager.SCHEMA_VERSION, WindowStateManager.MIGRATIONS
+    if module_name == "session_state":
+        from ashyterm.state import session_autosave
+        return session_autosave.SCHEMA_VERSION, session_autosave.MIGRATIONS
     raise ValueError(f"Unknown module: {module_name}")
 
 

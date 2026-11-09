@@ -1,5 +1,6 @@
 # ashyterm/terminal/ssh_spawn_mixin.py
 
+import hashlib
 import os
 import shlex
 import subprocess
@@ -50,14 +51,26 @@ class SSHSpawnMixin:
     # - _spawn_lock
     # - _last_sshpass_file
 
+    def _get_ssh_control_dir(self) -> Path:
+        """Directory for SSH ControlMaster sockets.
+
+        Unix socket paths are limited to ~108 bytes, and Flatpak's cache dir
+        (~/.var/app/<app-id>/cache) leaves no room for long names, so prefer
+        the runtime dir, which is short and meant for sockets.
+        """
+        runtime_dir = os.environ.get("XDG_RUNTIME_DIR")
+        if runtime_dir:
+            return Path(runtime_dir) / "ashyterm"
+        return self.platform_info.cache_dir
+
     def _get_ssh_control_path(self, session: "SessionItem") -> str:
         """Generate SSH ControlMaster socket path."""
         user = session.user or os.getlogin()
         port = session.port or 22
-        self.platform_info.cache_dir.mkdir(parents=True, exist_ok=True)
-        return str(
-            self.platform_info.cache_dir / f"ssh_control_{session.host}_{port}_{user}"
-        )
+        control_dir = self._get_ssh_control_dir()
+        control_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+        key = hashlib.sha256(f"{user}@{session.host}:{port}".encode()).hexdigest()
+        return str(control_dir / f"ssh_control_{key[:16]}")
 
     def _resolve_sftp_working_dir(
         self, command_type: str, sftp_local_dir: Optional[str]
@@ -136,7 +149,7 @@ class SSHSpawnMixin:
                     working_dir,
                     remote_cmd,
                     env_list,
-                    GLib.SpawnFlags.DEFAULT,
+                    GLib.SpawnFlags.SEARCH_PATH,
                     None,
                     None,
                     -1,
@@ -714,7 +727,7 @@ class SSHSpawnMixin:
             "ConnectTimeout": str(connect_timeout),
             "ControlMaster": "auto",
             "ControlPath": self._get_ssh_control_path(session),
-            "BatchMode": "yes",
+            "BatchMode": "no" if session.uses_password_auth() else "yes",
             "ServerAliveInterval": "5",
             "ServerAliveCountMax": "2",
             "StrictHostKeyChecking": self._get_strict_host_key_checking(),

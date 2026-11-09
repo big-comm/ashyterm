@@ -565,6 +565,15 @@ class PreferencesDialog(Adw.PreferencesWindow):
         )
         startup_group.add(close_policy_row)
 
+        startup_group.add(
+            self._create_switch_row(
+                _("Restore Tabs After an Unexpected Shutdown"),
+                _("Reopen tabs, splits and windows after a crash or power loss"),
+                "restore_tabs_after_crash",
+                default_value=True,
+            )
+        )
+
         backup_group = Adw.PreferencesGroup()
         page.add(backup_group)
 

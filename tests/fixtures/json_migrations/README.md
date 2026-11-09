@@ -8,16 +8,17 @@ the project. The `after` is the exact byte-equivalent of what
 
 ```
 json_migrations/
-  window_state/
+  session_state/                           # state/session_autosave.py
     v1_*.before.json / v1_*.after.json   # migrate v1 → current
-    v2_passthrough.*                       # already-current = identity
+    v2_*.before.json / v2_*.after.json   # single window → windows list
+    v3_passthrough.*                       # already-current = identity
 ```
 
 ## Porting to Rust
 
 Each migration function has an implementation-language-specific body.
 The **contract** — input byte-for-byte → output byte-for-byte — is
-language-agnostic. A Rust port of `WindowStateManager::migrate` (or
+language-agnostic. A Rust port of the session-state migration (or
 equivalent) must produce the declared `after.json` for every
 `before.json`.
 

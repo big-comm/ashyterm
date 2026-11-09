@@ -3,7 +3,7 @@
 import json
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import gi
 
@@ -13,8 +13,8 @@ gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gtk, Vte
 
 from ..sessions.models import LayoutItem, SessionItem
-from ..settings.config import LAYOUT_DIR, STATE_FILE
-from ..utils.json_versioning import migrate_data, stamp_version
+from ..settings.config import LAYOUT_DIR
+from ..utils.json_versioning import stamp_version
 from ..utils.logger import get_logger
 from ..utils.security import InputSanitizer, atomic_json_write
 from ..utils.translation_utils import _
@@ -24,21 +24,10 @@ if TYPE_CHECKING:
     from ..window import CommTerminalWindow
 
 
-def _migrate_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
-    """Add empty groups list and null group_id to each tab."""
-    data.setdefault("groups", [])
-    for tab in data.get("tabs", []):
-        tab.setdefault("group_id", None)
-    return data
-
-
 class WindowStateManager:
     """Save/restore window state (tabs, splits, groups, named layouts)."""
 
-    SCHEMA_VERSION = 2
-    MIGRATIONS: dict[int, Callable[[dict[str, Any]], dict[str, Any]]] = {
-        1: _migrate_v1_to_v2,
-    }
+    SCHEMA_VERSION = 2  # Named layout files; the session file is versioned in session_autosave.
 
     def __init__(self, window: "CommTerminalWindow"):
         self.window = window
@@ -47,78 +36,44 @@ class WindowStateManager:
         self.terminal_manager = window.terminal_manager
         self.logger = get_logger("ashyterm.state")
 
-    def save_session_state(self) -> None:
-        """Persist the current tab/pane layout to the session state file."""
-        state = stamp_version({"groups": [], "tabs": []}, self.SCHEMA_VERSION)
-        state["groups"] = self.tab_manager.group_manager.to_list()
-
+    def serialize_window(self) -> Optional[dict[str, Any]]:
+        """Describe this window's tabs, splits and groups; None when it has no tabs."""
+        tabs = []
         for tab_widget in self.tab_manager.tabs:
             page = self.tab_manager.pages.get(tab_widget)
-            if not page:
+            tab_content = page.get_child() if page else None
+            tab_structure = (
+                self._serialize_widget_tree(tab_content) if tab_content else None
+            )
+            if not tab_structure:
                 continue
-            tab_content = page.get_child()
-            if tab_content:
-                tab_structure = self._serialize_widget_tree(tab_content)
-                if tab_structure:
-                    tab_id = self.tab_manager.get_tab_id(tab_widget)
-                    group = self.tab_manager.group_manager.get_group_for_tab(tab_id)
-                    tab_structure["group_id"] = group.id if group else None
-                    state["tabs"].append(tab_structure)
+            tab_id = self.tab_manager.get_tab_id(tab_widget)
+            group = self.tab_manager.group_manager.get_group_for_tab(tab_id)
+            tab_structure["group_id"] = group.id if group else None
+            tabs.append(tab_structure)
+        if not tabs:
+            return None
+        return {"groups": self.tab_manager.group_manager.to_list(), "tabs": tabs}
 
-        try:
-            atomic_json_write(Path(STATE_FILE), state)
-            self.logger.info("Session state saved successfully.")
-        except Exception as e:
-            self.logger.error(f"Failed to save session state: {e}")
-
-    def restore_session_state(self) -> bool:
-        """Restores the window layout from the state file if it exists.
-
-        The state file only exists if the user chose 'Save and Close' when exiting.
-        """
-        if not os.path.exists(STATE_FILE):
+    def restore_window(self, window_state: dict[str, Any]) -> bool:
+        """Recreate the tabs, splits and groups of one saved window."""
+        tabs = window_state.get("tabs") or []
+        if not tabs:
             return False
+        if window_state.get("groups"):
+            self.tab_manager.group_manager.load_from_list(window_state["groups"])
 
-        try:
-            with open(STATE_FILE, "r") as f:
-                state = json.load(f)
-            if isinstance(state, dict):
-                state = migrate_data(state, self.SCHEMA_VERSION, self.MIGRATIONS)
-        except Exception as e:
-            self.logger.error(f"Failed to read session state file: {e}")
-            return False
-
-        if not state.get("tabs"):
-            return False
-
-        # Restore groups metadata
-        if state.get("groups"):
-            self.tab_manager.group_manager.load_from_list(state["groups"])
-
-        self.logger.info(f"Restoring {len(state['tabs'])} tabs from previous session.")
-        for tab_structure in state["tabs"]:
+        self.logger.info(f"Restoring {len(tabs)} tabs from previous session.")
+        for tab_structure in tabs:
+            tab_structure = dict(tab_structure)
             group_id = tab_structure.pop("group_id", None)
             self.tab_manager.recreate_tab_from_structure(tab_structure)
-            # Re-assign group membership using the last-created tab
             if group_id and self.tab_manager.tabs:
-                new_tab = self.tab_manager.tabs[-1]
-                tab_id = self.tab_manager.get_tab_id(new_tab)
+                tab_id = self.tab_manager.get_tab_id(self.tab_manager.tabs[-1])
                 self.tab_manager.group_manager.add_tab_to_group(group_id, tab_id)
 
-        # Rebuild tab bar to show group chips
         self.tab_manager._rebuild_tab_bar_order()
-
-        self.clear_session_state()
-        return True
-
-    def clear_session_state(self) -> None:
-        """Removes the state file to prevent restoration on next startup."""
-        if os.path.exists(STATE_FILE):
-            try:
-                os.remove(STATE_FILE)
-                self.logger.info("Session state file removed.")
-            except OSError as e:
-                self.logger.error(f"Failed to remove state file: {e}")
+        return self.tab_manager.get_tab_count() > 0
 
     def save_current_layout(self) -> None:
         """Prompts for a name and saves the current window layout."""

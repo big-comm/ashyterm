@@ -18,6 +18,9 @@ if TYPE_CHECKING:
     from ..sessions.models import SessionItem
     from .highlighter import HighlightedTerminalProxy
 
+from ..utils.flatpak_host import (
+    get_host_shell, host_shell_command, is_flatpak, prepare_host_bash, shell_temp_root,
+)
 from ..utils.logger import log_terminal_event
 from ..utils.osc7 import OSC7_HOST_DETECTION_SNIPPET
 
@@ -76,7 +79,7 @@ class LocalSpawnMixin:
 
         Returns: (command_list, environment_dict, temp_dir_path, shell_name)
         """
-        shell = Vte.get_user_shell()
+        shell = get_host_shell() if is_flatpak() else Vte.get_user_shell()
         shell_basename = os.path.basename(shell)
         temp_dir_path: Optional[str] = None
 
@@ -88,7 +91,10 @@ class LocalSpawnMixin:
 
         if shell_basename == "zsh":
             try:
-                temp_dir_path = tempfile.mkdtemp(prefix="ashyterm_zsh_")
+                temp_dir_path = tempfile.mkdtemp(
+                    prefix="ashyterm_zsh_",
+                    dir=shell_temp_root() if is_flatpak() else None,
+                )
                 zshrc_path = os.path.join(temp_dir_path, ".zshrc")
 
                 zshrc_content = (
@@ -121,17 +127,25 @@ class LocalSpawnMixin:
             self.logger.info(f"Spawning '{shell} -l' as a login shell.")
         else:
             cmd = [shell]
+            if is_flatpak() and shell_basename == "bash":
+                temp_dir_path, rcfile = prepare_host_bash(osc7_command)
+                cmd.extend(["--rcfile", rcfile])
 
+        if is_flatpak():
+            if temp_dir_path is None:
+                temp_dir_path = tempfile.mkdtemp(prefix="ashyterm_host_", dir=shell_temp_root())
+            env["_ASHYTERM_HOST_STATE"] = os.path.join(temp_dir_path, "host-process")
         return cmd, env, temp_dir_path, shell_basename
 
     def _create_pty_preexec_fn(
-        self, slave_fd: int, master_fd: int
+        self, slave_fd: int, master_fd: int, claim_ctty: bool = True
     ) -> Callable[[], None]:
         """Create preexec_fn for PTY setup in child process."""
 
         def preexec_fn() -> None:
             os.setsid()
-            fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
+            if claim_ctty:
+                fcntl.ioctl(slave_fd, termios.TIOCSCTTY, 0)
             os.dup2(slave_fd, 0)
             os.dup2(slave_fd, 1)
             os.dup2(slave_fd, 2)
@@ -206,8 +220,14 @@ class LocalSpawnMixin:
             rows, cols = self._get_expected_terminal_size(terminal)
             proxy.set_window_size(rows, cols)
 
-            preexec_fn = self._create_pty_preexec_fn(slave_fd, master_fd)
+            # Flatpak's host helper must acquire the controlling terminal.
+            preexec_fn = self._create_pty_preexec_fn(
+                slave_fd, master_fd,
+                claim_ctty=not (spawn_type == "local" and is_flatpak()),
+            )
 
+            if spawn_type == "local":
+                cmd = host_shell_command(cmd, env, working_dir, terminal)
             proc = subprocess.Popen(
                 cmd,
                 cwd=working_dir,
@@ -281,6 +301,7 @@ class LocalSpawnMixin:
                 self.logger.debug("Using pre-prepared shell environment")
             else:
                 cmd, env, temp_dir_path, _shell_name = self._prepare_shell_environment()
+            cmd = host_shell_command(cmd, env, working_dir, terminal)
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             final_user_data = {
@@ -289,7 +310,7 @@ class LocalSpawnMixin:
             }
 
             terminal.spawn_async(
-                Vte.PtyFlags.DEFAULT,
+                Vte.PtyFlags.NO_CTTY if is_flatpak() else Vte.PtyFlags.DEFAULT,
                 working_dir,
                 cmd,
                 env_list,
