@@ -446,31 +446,16 @@ class WindowUIBuilder:
         return self.ai_paned
 
     def _setup_lazy_menu_popover(self) -> None:
-        """Set up lazy loading for the main menu popover using a lightweight placeholder."""
-        # Create an empty placeholder popover
-        placeholder = Gtk.Popover()
-        placeholder.connect("show", self._on_menu_popover_show)
-        self.menu_button.set_popover(placeholder)
+        """Build the main menu lazily, right before its first popup.
 
-    def _on_menu_popover_show(self, popover: Gtk.Popover) -> None:
-        """Replace placeholder popover with real menu on first show."""
-        if self._main_menu_popover is not None:
-            return  # Already initialized
-
-        from .menus import MainApplicationMenu
-
-        real_popover, self.font_sizer_widget = MainApplicationMenu.create_main_popover(
-            self.window
-        )
-        real_popover.connect("show", lambda p: self.tooltip_helper.hide())
-        self._main_menu_popover = real_popover
-        self.menu_button.set_popover(real_popover)
-
-        # Show the real popover now
-        real_popover.popup()
+        GTK calls the create-popup func before showing, so the real popover
+        is attached up front. Swapping a placeholder popover from inside its
+        own "show" handler freed it mid-show and crashed GTK 4.22 (SIGSEGV).
+        """
+        self.menu_button.set_create_popup_func(self._ensure_main_menu_popover)
 
     def _ensure_main_menu_popover(self, button: Gtk.MenuButton) -> None:
-        """Lazily create and attach the main menu popover on first click."""
+        """Create and attach the main menu popover on first click."""
         if self._main_menu_popover is None:
             from .menus import MainApplicationMenu
 
