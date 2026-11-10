@@ -28,6 +28,19 @@ if TYPE_CHECKING:
 _STYLES_DIR = Path(__file__).parent.parent / "data" / "styles"
 
 
+def hide_title_buttons(
+    hidden_when_maximized: bool, wm_titlebar: bool, setting: str
+) -> bool:
+    """Whether the headerbar hides its close/minimize/maximize buttons.
+
+    A window manager title bar already has those buttons; the "never"
+    setting keeps the headerbar ones anyway.
+    """
+    if wm_titlebar and setting != "never":
+        return True
+    return hidden_when_maximized
+
+
 class WindowUIBuilder:
     """
     Builds and assembles the GTK/Adw widgets for the main application window.
@@ -78,9 +91,14 @@ class WindowUIBuilder:
 
         # Track headerbar buttons visibility state
         self._headerbar_buttons_hidden = False
+        # The X11 window manager draws a title bar of its own (with its own
+        # buttons) around the window: checked once mapped and on focus.
+        self._wm_titlebar = False
 
         # Connect to window maximized state changes
         self.window.connect("notify::maximized", self._on_maximized_changed)
+        self.window.connect("map", self._on_window_mapped)
+        self.window.connect("notify::is-active", self._on_active_changed)
 
         # --- Widgets to be created and exposed ---
         self.header_bar = None
@@ -670,7 +688,11 @@ class WindowUIBuilder:
             return
 
         is_maximized = self.window.is_maximized()
-        should_hide = is_maximized and self._should_hide_headerbar_buttons()
+        should_hide = hide_title_buttons(
+            is_maximized and self._should_hide_headerbar_buttons(),
+            self._wm_titlebar,
+            self.settings_manager.get("hide_headerbar_buttons_when_maximized", "auto"),
+        )
 
         # Only update if state changed to avoid unnecessary redraws
         if should_hide != self._headerbar_buttons_hidden:
@@ -685,6 +707,27 @@ class WindowUIBuilder:
                 )
             else:
                 self.logger.debug("Showing headerbar title buttons")
+
+    def _on_window_mapped(self, window):
+        # The window manager frames the window while handling the map
+        # request; give it a moment before reading _NET_FRAME_EXTENTS.
+        GLib.timeout_add(150, self._check_wm_titlebar)
+
+    def _on_active_changed(self, window, param):
+        # Decorations can change while the window is open (a window manager
+        # rule or menu): check again whenever the window gains focus.
+        if window.is_active():
+            self._check_wm_titlebar()
+
+    def _check_wm_titlebar(self) -> bool:
+        from ..utils.wm_frame import wm_draws_titlebar
+
+        wm_titlebar = wm_draws_titlebar(self.window)
+        if wm_titlebar != self._wm_titlebar:
+            self._wm_titlebar = wm_titlebar
+            self.logger.debug(f"Window manager draws a title bar: {wm_titlebar}")
+            self._update_headerbar_buttons_visibility()
+        return GLib.SOURCE_REMOVE
 
     def _on_maximized_changed(self, window, param):
         """Handle window maximized state changes."""
