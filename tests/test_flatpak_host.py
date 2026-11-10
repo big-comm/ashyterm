@@ -122,6 +122,50 @@ def test_invalid_pid_asks_for_confirmation(tmp_path):
     assert flatpak_host.host_terminal_has_children(t) is True
 
 
+def _two_terminals(tmp_path):
+    terminals = []
+    for pid in ("1234", "5678"):
+        state = tmp_path / f"host-process-{pid}"
+        state.write_text(f"{pid}\n{_stat(pid, '500')}\n")
+        terminals.append(SimpleNamespace(_flatpak_host_state=str(state)))
+    return terminals
+
+
+def test_many_terminals_use_a_single_host_call(monkeypatch, tmp_path):
+    calls = []
+
+    def run(args, **kwargs):
+        calls.append(args)
+        out = f"{_stat('1234', '500')}\n\n{_stat('5678', '500')}\n\n"
+        return subprocess.CompletedProcess(args, 0, stdout=out, stderr="")
+
+    monkeypatch.setattr(flatpak_host.subprocess, "run", run)
+    terminals = _two_terminals(tmp_path)
+    assert flatpak_host.host_terminals_have_children(terminals) is False
+    assert len(calls) == 1
+    assert calls[0][-2:] == ["1234", "5678"]
+
+
+def test_many_terminals_child_in_any_returns_true(monkeypatch, tmp_path):
+    out = f"{_stat('1234', '500')}\n\n{_stat('5678', '500')}\n9999\n"
+    _fake_run(monkeypatch, stdout=out)
+    terminals = _two_terminals(tmp_path)
+    assert flatpak_host.host_terminals_have_children(terminals) is True
+
+
+def test_many_terminals_vanished_shell_asks_for_confirmation(monkeypatch, tmp_path):
+    # The host prints an empty stat line for a PID that no longer exists.
+    out = f"{_stat('1234', '500')}\n\n\n\n"
+    _fake_run(monkeypatch, stdout=out)
+    terminals = _two_terminals(tmp_path)
+    assert flatpak_host.host_terminals_have_children(terminals) is True
+
+
+def test_no_host_terminals_skips_the_host_call(monkeypatch):
+    _fake_run(monkeypatch, exc=AssertionError("must not call the host"))
+    assert flatpak_host.host_terminals_have_children([]) is False
+
+
 # --- get_host_shell -------------------------------------------------------
 
 
