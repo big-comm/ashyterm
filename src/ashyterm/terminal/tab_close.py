@@ -56,13 +56,14 @@ def any_terminal_has_foreground_process(
     False so the user doesn't get spurious warnings; the hard path
     still waits for the child-exit event from VTE.
     """
-    from ..utils.flatpak_host import host_terminal_has_children, is_flatpak
+    from ..utils.flatpak_host import host_terminals_have_children, is_flatpak
 
     try:
         import psutil
     except ImportError:
         return False
 
+    host_terminals = []
     for terminal in terminals:
         terminal_id = getattr(terminal, "terminal_id", None)
         if not terminal_id:
@@ -71,8 +72,8 @@ def any_terminal_has_foreground_process(
         if not info:
             continue
         if is_flatpak() and info.get("type") == "local":
-            if host_terminal_has_children(terminal):
-                return True
+            # Host shells are checked together below, in one round trip.
+            host_terminals.append(terminal)
             continue
         pid = info.get("process_id")
         if not pid or pid == -1:
@@ -85,7 +86,7 @@ def any_terminal_has_foreground_process(
             # Process vanished between the registry read and the psutil
             # call (common during shutdown) — treat as "no child".
             continue
-    return False
+    return host_terminals_have_children(host_terminals)
 
 
 def process_terminals_for_close(
