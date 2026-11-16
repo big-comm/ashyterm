@@ -215,20 +215,20 @@ class TestIsSafePathWithBase:
 # ── Risky paste patterns ───────────────────────────────────
 
 
-# Import the module-level tuple and helper; they live in terminal.manager.
+# Import the module-level tuple and helper; they live in terminal.paste_flow.
 # Keep import local so missing optional deps don't block the rest of this
 # module's tests from running.
 try:
-    from ashyterm.terminal.manager import (
-        _RISKY_PASTE_PATTERNS,
-        _paste_needs_confirmation,
+    from ashyterm.terminal.paste_flow import (
+        RISKY_PASTE_PATTERNS,
+        paste_needs_confirmation,
     )
     _HAS_PASTE = True
-except Exception:  # pragma: no cover — terminal.manager pulls heavy GTK deps
+except Exception:  # pragma: no cover — terminal.paste_flow pulls GTK deps
     _HAS_PASTE = False
 
 
-@pytest.mark.skipif(not _HAS_PASTE, reason="terminal.manager not importable")
+@pytest.mark.skipif(not _HAS_PASTE, reason="terminal.paste_flow not importable")
 class TestRiskyPastePatterns:
     RISKY = [
         "sudo rm -rf /",
@@ -257,14 +257,14 @@ class TestRiskyPastePatterns:
 
     @pytest.mark.parametrize("text", RISKY)
     def test_risky_trips_confirmation(self, text: str):
-        assert _paste_needs_confirmation(text) is True, f"false negative: {text!r}"
+        assert paste_needs_confirmation(text) is True, f"false negative: {text!r}"
 
     def test_known_false_positive_sudo_in_commit(self):
         """'git commit -m "sudo fix typo"' matches \\bsudo\\b. This is a
         known limitation — regex is intentionally narrow but not
         contextual. Documenting it so the Rust port doesn't silently
         'fix' it into semantic analysis."""
-        assert _paste_needs_confirmation(
+        assert paste_needs_confirmation(
             "git commit -m 'sudo fix typo in docs'"
         ) is True
 
@@ -280,21 +280,21 @@ class TestRiskyPastePatterns:
 
     @pytest.mark.parametrize("text", SAFE_STRICT)
     def test_safe_passes_without_confirmation(self, text: str):
-        assert _paste_needs_confirmation(text) is False, f"false positive: {text!r}"
+        assert paste_needs_confirmation(text) is False, f"false positive: {text!r}"
 
     def test_multiline_always_trips(self):
         """Any text with an internal newline needs confirmation, even if
         individually innocuous — the user could be pasting unvetted
         blocks."""
-        assert _paste_needs_confirmation("ls\necho hi") is True
+        assert paste_needs_confirmation("ls\necho hi") is True
 
     def test_trailing_newline_alone_is_fine(self):
         """A single trailing newline is not 'multi-line' — typical
         clipboard behaviour for a single-line command."""
-        assert _paste_needs_confirmation("ls -la\n") is False
+        assert paste_needs_confirmation("ls -la\n") is False
 
     def test_patterns_are_compiled_regexes(self):
-        for rx in _RISKY_PASTE_PATTERNS:
+        for rx in RISKY_PASTE_PATTERNS:
             assert isinstance(rx, re.Pattern)
 
 

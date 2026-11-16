@@ -8,8 +8,12 @@ from gi.repository import Adw
 from ashyterm.terminal.paste_confirmation import build_paste_confirmation_dialog
 
 
+def _editor_buffer(dialog):
+    return dialog.get_extra_child().get_child().get_buffer()
+
+
 def test_paste_is_default_and_cancel_remains_close_response():
-    dialog = build_paste_confirmation_dialog("echo first\necho second")
+    dialog = build_paste_confirmation_dialog("echo first\necho second", print)
 
     assert dialog.get_default_response() == "paste"
     assert dialog.get_close_response() == "cancel"
@@ -19,10 +23,27 @@ def test_paste_is_default_and_cancel_remains_close_response():
     )
 
 
-def test_preview_is_truncated():
-    dialog = build_paste_confirmation_dialog("x" * 700)
-    scrolled = dialog.get_extra_child()
-    viewport = scrolled.get_child()
-    label = viewport.get_child()
+def test_full_text_is_shown_for_review():
+    dialog = build_paste_confirmation_dialog("x" * 700, print)
 
-    assert label.get_text() == "x" * 600 + "…"
+    assert _editor_buffer(dialog).props.text == "x" * 700
+
+
+def test_paste_sends_edited_text():
+    pasted = []
+    dialog = build_paste_confirmation_dialog("rm -rf /\necho ok", pasted.append)
+    _editor_buffer(dialog).set_text("echo ok")
+
+    dialog.emit("response", "paste")
+
+    assert pasted == ["echo ok"]
+
+
+def test_cancel_and_emptied_text_paste_nothing():
+    pasted = []
+    dialog = build_paste_confirmation_dialog("a\nb", pasted.append)
+    dialog.emit("response", "cancel")
+    _editor_buffer(dialog).set_text("")
+    dialog.emit("response", "paste")
+
+    assert pasted == []
