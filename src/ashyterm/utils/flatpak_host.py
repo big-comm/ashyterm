@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, Iterable, List
 
 from .logger import get_logger
 
@@ -15,11 +15,15 @@ _RECORD_HOST_PROCESS = (
     'printf "%s\\n%s\\n" "$$" "$stat" > "$1" || exit 1; '
     'shift; exec "$@"'
 )
-_READ_HOST_PROCESS = (
-    'IFS= read -r stat < "/proc/$1/stat" || exit 1; '
+# Prints two lines per PID: its stat (empty if the process is gone) and its
+# children. One host round trip covers every terminal being closed.
+_READ_HOST_PROCESSES = (
+    'for pid in "$@"; do '
+    'stat=; IFS= read -r stat < "/proc/$pid/stat"; '
     'printf "%s\\n" "$stat"; '
-    'IFS= read -r children < "/proc/$1/task/$1/children"; '
-    'printf "%s\\n" "$children"'
+    'children=; IFS= read -r children < "/proc/$pid/task/$pid/children"; '
+    'printf "%s\\n" "$children"; '
+    "done"
 )
 
 
@@ -106,32 +110,49 @@ def _process_start_time(stat: str) -> str:
     return stat.rsplit(")", 1)[1].split()[19]
 
 
-def host_terminal_has_children(terminal: Any) -> bool:
-    """Inspect this shell on the host; ask for confirmation when uncertain."""
+def host_terminals_have_children(terminals: Iterable[Any]) -> bool:
+    """Inspect these shells on the host; ask for confirmation when uncertain.
+
+    A single flatpak-spawn call serves all terminals, so closing a tab with
+    several panes blocks the UI for one round trip (2s at worst), not one each.
+    """
     try:
-        state = Path(terminal._flatpak_host_state).read_text().splitlines()
-        pid, original_stat = state
-        if not pid.isdecimal() or int(pid) <= 0:
-            return True
+        states = [
+            Path(t._flatpak_host_state).read_text().splitlines() for t in terminals
+        ]
+        if not states:
+            return False
+        pids = []
+        for pid, _original_stat in states:
+            if not pid.isdecimal() or int(pid) <= 0:
+                return True
+            pids.append(pid)
         result = subprocess.run(
             [
                 "flatpak-spawn",
                 "--host",
                 "sh",
                 "-c",
-                _READ_HOST_PROCESS,
+                _READ_HOST_PROCESSES,
                 "ashyterm-check",
-                pid,
+                *pids,
             ],
             capture_output=True,
             text=True,
             check=True,
             timeout=2,
         )
-        current_stat, children = result.stdout.splitlines()
-        if _process_start_time(original_stat) != _process_start_time(current_stat):
+        lines = result.stdout.splitlines()
+        if len(lines) != 2 * len(states):
             return True
-        return bool(children.strip())
+        for (_pid, original_stat), current_stat, children in zip(
+            states, lines[0::2], lines[1::2]
+        ):
+            if _process_start_time(original_stat) != _process_start_time(current_stat):
+                return True
+            if children.strip():
+                return True
+        return False
     except (
         AttributeError,
         OSError,
@@ -140,3 +161,8 @@ def host_terminal_has_children(terminal: Any) -> bool:
         subprocess.SubprocessError,
     ):
         return True
+
+
+def host_terminal_has_children(terminal: Any) -> bool:
+    """Single-terminal form of host_terminals_have_children()."""
+    return host_terminals_have_children([terminal])
