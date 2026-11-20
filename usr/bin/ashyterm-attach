@@ -1,0 +1,3 @@
+#!/bin/sh
+# Join a terminal session AshyTerm keeps open (see ashyterm/ptyd/attach.py).
+exec python3 -m ashyterm.ptyd.attach "$@"
