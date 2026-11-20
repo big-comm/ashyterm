@@ -123,6 +123,13 @@ Fonts, line spacing, terminal and headerbar transparency, cursor, scrollback, sc
 
 ## Installation
 
+### Flatpak
+
+```bash
+flatpak install flathub org.communitybig.ashyterm
+
+```
+
 ### BigLinux / BigCommunity
 
 Ashy Terminal comes **pre-installed** as the default terminal. Nothing to do.
