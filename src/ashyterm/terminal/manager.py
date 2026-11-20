@@ -11,6 +11,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, Gio, GLib, Gtk, Vte
 
+from ..ptyd.shell import shell_pid
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
 from ..utils.exceptions import TerminalCreationError
@@ -352,7 +353,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         updates = []
         for pid, terminal, last_cwd in candidates:
             try:
-                cwd = os.readlink(f"/proc/{pid}/cwd")
+                cwd = os.readlink(f"/proc/{shell_pid(terminal, pid)}/cwd")
             except OSError:
                 continue
             if cwd != last_cwd:
@@ -554,10 +555,13 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
+        kept_session: Optional[dict] = None,
     ) -> Any:
         terminal = self._get_or_create_terminal()
         if not terminal:
             raise TerminalCreationError("base terminal creation failed", "local")
+        # Join a shell the PTY daemon kept, instead of starting one.
+        terminal._ptyd_reattach = kept_session
 
         identifier = session if session else title
         terminal_id = self.registry.register_terminal(terminal, "local", identifier)

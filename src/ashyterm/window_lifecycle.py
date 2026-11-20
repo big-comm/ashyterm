@@ -10,6 +10,7 @@ gi.require_version("Adw", "1")
 gi.require_version("Vte", "3.91")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
+from .ptyd.shell import kept_sessions
 from .sessions.models import LayoutItem, SessionFolder, SessionItem
 from .terminal.manager import TerminalManager
 from .utils.translation_utils import _
@@ -275,7 +276,10 @@ class WindowLifecycleMixin:
     def _create_initial_tab_safe(self) -> bool:
         """Safely create initial tab, trying to restore session first."""
         try:
+            # Saved local tabs rejoin their kept shells; the rest get tabs of their own.
+            self._kept_sessions = {s["id"]: s for s in kept_sessions()}
             restored = self._restore_saved_session()
+            restored = self._reopen_kept_sessions() or restored
             if self.tab_manager.get_tab_count() == 0 or (
                 restored and self._has_launch_request()
             ):
@@ -287,6 +291,14 @@ class WindowLifecycleMixin:
                 _("Failed to initialize terminal: {error}").format(error=str(e)),
             )
         return False
+
+    def _reopen_kept_sessions(self) -> bool:
+        """Tabs for the kept shells no restored tab took back."""
+        kept = list(self._kept_sessions.values())
+        self._kept_sessions = {}
+        for session in kept:
+            self.tab_manager.create_local_tab(working_directory=session["cwd"] or None, kept_session=session)
+        return bool(kept)
 
     def _create_requested_tab(self) -> None:
         """Open the tab the launch asked for (SSH target, command or directory)."""

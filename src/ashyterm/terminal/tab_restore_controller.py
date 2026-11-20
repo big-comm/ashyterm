@@ -161,6 +161,7 @@ class TabRestoreController:
             title,
             working_dir,
             initial_command,
+            node.get("ptyd_session"),
         )
 
         if not terminal:
@@ -191,8 +192,10 @@ class TabRestoreController:
         title: str,
         working_dir: Optional[str],
         initial_command: Optional[str],
+        ptyd_session: Optional[str] = None,
     ) -> Optional[Vte.Terminal]:
-        """Look up the saved session and spawn the matching terminal."""
+        """Look up the saved session and spawn the matching terminal; a local
+        one rejoins its kept shell when the daemon still has it."""
         store = self.manager.terminal_manager.parent_window.session_store
 
         if session_type == "ssh":
@@ -217,8 +220,10 @@ class TabRestoreController:
             (s for s in store if s.name == session_name and s.is_local()),
             None,
         )
+        window = self.manager.terminal_manager.parent_window
+        kept = getattr(window, "_kept_sessions", {}).pop(ptyd_session, None) if ptyd_session else None
         return self.manager.terminal_manager.create_local_terminal(
-            session=session, title=title, working_directory=working_dir
+            session=session, title=title, working_directory=working_dir, kept_session=kept
         )
 
     def recreate_paned_node(self, node: dict) -> Optional[Gtk.Widget]:

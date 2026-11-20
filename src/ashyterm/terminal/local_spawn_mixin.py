@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 from ..utils.flatpak_host import (
     get_host_shell, host_shell_command, is_flatpak, prepare_host_bash, shell_temp_root,
 )
+from ..ptyd.shell import persistent_shell_command
 from ..utils.logger import log_terminal_event
 from ..utils.osc7 import OSC7_HOST_DETECTION_SNIPPET
 
@@ -228,6 +229,7 @@ class LocalSpawnMixin:
 
             if spawn_type == "local":
                 cmd = host_shell_command(cmd, env, working_dir, terminal)
+                cmd = persistent_shell_command(cmd, env, working_dir, terminal)
             proc = subprocess.Popen(
                 cmd,
                 cwd=working_dir,
@@ -302,6 +304,7 @@ class LocalSpawnMixin:
             else:
                 cmd, env, temp_dir_path, _shell_name = self._prepare_shell_environment()
             cmd = host_shell_command(cmd, env, working_dir, terminal)
+            cmd = persistent_shell_command(cmd, env, working_dir, terminal)
             env_list = [f"{k}={v}" for k, v in env.items()]
 
             final_user_data = {
