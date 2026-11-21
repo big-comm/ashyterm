@@ -34,9 +34,11 @@ START_TIMEOUT = 5.0
 
 
 def ensure_daemon() -> None:
-    """Start the daemon unless it already answers."""
+    """Start the daemon unless it already answers; one running older code
+    swaps in this code, keeping its sessions."""
     try:
         wire.connect().close()
+        refresh_daemon()
         return
     except (FileNotFoundError, ConnectionRefusedError):
         pass
@@ -65,6 +67,30 @@ def ensure_daemon() -> None:
         except (FileNotFoundError, ConnectionRefusedError):
             time.sleep(0.05)
     raise RuntimeError("the terminal daemon did not start")
+
+
+def refresh_daemon() -> None:
+    """Ask a daemon running other code to exec this code (see ``daemon``)."""
+    from .daemon import CODE
+
+    try:
+        running = wire.ask({"op": "version"}).get("code")
+    except (OSError, RuntimeError, ValueError):
+        # A daemon older than upgrades: it keeps its code until it exits.
+        return
+    if running == CODE:
+        return
+    wire.ask({"op": "upgrade"})
+    deadline = time.monotonic() + START_TIMEOUT
+    while time.monotonic() < deadline:
+        try:
+            if wire.ask({"op": "version"}).get("code") == CODE:
+                return
+        except (OSError, RuntimeError, ValueError):
+            pass
+        time.sleep(0.05)
+    # Still the old code (it runs another copy of AshyTerm): keep using it as it is.
+    print("ashyterm: the terminal daemon kept its older code", file=sys.stderr)
 
 
 def package_root() -> str:

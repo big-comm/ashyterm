@@ -5,12 +5,19 @@ phone over SSH through ``ashyterm-attach``).
 One per user, started on demand, listening on a socket only that user can
 reach (the directory is 0700 and each peer's uid is checked). It exits when it
 has had no session and no client for :data:`IDLE_EXIT` seconds.
+
+After an update, AshyTerm finds the daemon's :data:`CODE` differs from its own
+and asks it to ``upgrade``: the daemon writes its state (sessions, their
+replay, attached clients) to a private file and execs the new code with the
+same pid, PTYs and sockets, so no shell and no attached tab notices.
 """
 
 from __future__ import annotations
 
+import base64
 import errno
 import fcntl
+import hashlib
 import json
 import os
 import secrets
@@ -33,6 +40,8 @@ REPLAY_BYTES = 1024 * 1024
 MAX_CLIENT_BACKLOG = 8 * 1024 * 1024
 IDLE_EXIT = 30.0
 READ_CHUNK = 65536
+# This code's identity: a daemon still running older code answers another one.
+CODE = hashlib.sha256(Path(__file__).read_bytes() + Path(wire.__file__).read_bytes()).hexdigest()[:16]
 
 
 class Client:
@@ -69,13 +78,51 @@ class Session:
             os.setsid()
             fcntl.ioctl(slave, termios.TIOCSCTTY, 0)
 
-        self.proc = subprocess.Popen(
+        self.proc: Optional[subprocess.Popen] = subprocess.Popen(
             argv, cwd=cwd, env=env, stdin=slave, stdout=slave, stderr=slave,
             preexec_fn=child_setup, close_fds=True,
         )
+        self.pid = self.proc.pid
         os.close(slave)
         os.set_blocking(master, False)
         self.master = master
+
+    @classmethod
+    def restore(cls, state: Dict[str, Any]) -> "Session":
+        """A session an older daemon handed over: its shell is our child already."""
+        session = cls.__new__(cls)
+        session.id = state["id"]
+        session.title = state["title"]
+        session.created = state["created"]
+        session.replay = bytearray(base64.b64decode(state["replay"]))
+        session.clients = []
+        session.active = None
+        session.size = tuple(state["size"])
+        session.proc = None
+        session.pid = state["pid"]
+        session.master = state["master"]
+        return session
+
+    def handover(self) -> Dict[str, Any]:
+        """What the next daemon needs to keep this session going."""
+        return {
+            "id": self.id, "title": self.title, "created": self.created, "size": list(self.size),
+            "pid": self.pid, "master": self.master, "replay": base64.b64encode(bytes(self.replay)).decode(),
+            "clients": [
+                {
+                    "fd": c.sock.fileno(), "owner": c.owner, "size": list(c.size) if c.size else None,
+                    "outgoing": base64.b64encode(bytes(c.outgoing)).decode(),
+                    "incoming": base64.b64encode(c.frames.pending()).decode(), "active": self.active is c,
+                }
+                for c in self.clients
+            ],
+        }
+
+    def exit_code(self) -> int:
+        if self.proc is not None:
+            return self.proc.wait()
+        _, status = os.waitpid(self.pid, 0)
+        return os.waitstatus_to_exitcode(status)
 
     def remember(self, chunk: bytes) -> None:
         self.replay += chunk
@@ -84,7 +131,7 @@ class Session:
 
     def cwd(self) -> str:
         try:
-            return os.readlink(f"/proc/{self.proc.pid}/cwd")
+            return os.readlink(f"/proc/{self.pid}/cwd")
         except OSError:
             return ""
 
@@ -97,7 +144,7 @@ class Session:
 
     def describe(self) -> Dict[str, Any]:
         return {
-            "id": self.id, "title": self.title, "pid": self.proc.pid, "cwd": self.cwd(),
+            "id": self.id, "title": self.title, "pid": self.pid, "cwd": self.cwd(),
             "running": self.running(), "created": self.created, "clients": len(self.clients),
             "owners": sum(1 for c in self.clients if c.owner),
         }
@@ -105,7 +152,7 @@ class Session:
     def hang_up(self) -> None:
         """End the session as closing a terminal does: SIGHUP to the shell and to
         whatever runs in the foreground."""
-        for group in {self.proc.pid, foreground_group(self.master)} - {0}:
+        for group in {self.pid, foreground_group(self.master)} - {0}:
             try:
                 os.killpg(group, signal.SIGHUP)
             except (ProcessLookupError, PermissionError):
@@ -133,14 +180,55 @@ def peer_uid(sock: socket.socket) -> int:
 
 
 class Daemon:
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, resume: Optional[Dict[str, Any]] = None) -> None:
         self.path = path
         self.selector = selectors.DefaultSelector()
         self.sessions: Dict[str, Session] = {}
         self.pending: Dict[socket.socket, bytearray] = {}
         self.idle_since = time.monotonic()
-        self.listener = self._bind()
+        self.upgrading = False
+        if resume is None:
+            self.listener = self._bind()
+        else:
+            self.listener = socket.socket(fileno=resume["listener"])
+            self.listener.setblocking(False)
         self.selector.register(self.listener, selectors.EVENT_READ, ("listen", None))
+        for state in (resume or {}).get("sessions", []):
+            self._take_over(state)
+
+    def _take_over(self, state: Dict[str, Any]) -> None:
+        """Keep running a session (and its clients) an older daemon handed over."""
+        session = Session.restore(state)
+        self.sessions[session.id] = session
+        self.selector.register(session.master, selectors.EVENT_READ, ("pty", session))
+        for c in state["clients"]:
+            sock = socket.socket(fileno=c["fd"])
+            sock.setblocking(False)
+            client = Client(sock, owner=c["owner"])
+            client.size = tuple(c["size"]) if c["size"] else None
+            client.outgoing += base64.b64decode(c["outgoing"])
+            client.frames.restore(base64.b64decode(c["incoming"]))
+            session.clients.append(client)
+            if c["active"]:
+                session.active = client
+            events = selectors.EVENT_READ | (selectors.EVENT_WRITE if client.outgoing else 0)
+            self.selector.register(sock, events, ("client", (session, client)))
+
+    def _upgrade(self) -> None:
+        """Exec this program's current code with everything open handed over."""
+        for sock in list(self.pending):
+            self._drop_pending(sock)
+        state = {"listener": self.listener.fileno(), "sessions": [s.handover() for s in self.sessions.values()]}
+        fds = [state["listener"]] + [s["master"] for s in state["sessions"]]
+        fds += [c["fd"] for s in state["sessions"] for c in s["clients"]]
+        for fd in fds:
+            os.set_inheritable(fd, True)
+        path = self.path.parent / f"ptyd-handover-{os.getpid()}.json"
+        path.unlink(missing_ok=True)
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as out:
+            json.dump(state, out)
+        os.execv(sys.executable, [sys.executable, "-m", "ashyterm.ptyd.daemon", str(self.path), "--resume", str(path)])
 
     def _bind(self) -> socket.socket:
         self.path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -174,6 +262,8 @@ class Daemon:
                     self._read_client(*item)
                 if role == "client" and mask & selectors.EVENT_WRITE:
                     self._flush(*item)
+            if self.upgrading:
+                self._upgrade()
         self.listener.close()
         self.path.unlink(missing_ok=True)
 
@@ -235,12 +325,17 @@ class Daemon:
             self._answer(sock, {"ok": True, "sessions": [s.describe() for s in sessions]})
         elif op == "new":
             session = self._spawn(request)
-            self._answer(sock, {"ok": True, "id": session.id, "pid": session.proc.pid})
+            self._answer(sock, {"ok": True, "id": session.id, "pid": session.pid})
         elif op == "close":
             self._session(request).hang_up()
             self._answer(sock, {"ok": True})
         elif op == "attach":
             self._attach(sock, self._session(request), request, rest)
+        elif op == "version":
+            self._answer(sock, {"ok": True, "code": CODE})
+        elif op == "upgrade":
+            self._answer(sock, {"ok": True})
+            self.upgrading = True
         else:
             raise ValueError(f"unknown request {op!r}")
 
@@ -311,7 +406,7 @@ class Daemon:
     def _end(self, session: Session) -> None:
         self.selector.unregister(session.master)
         os.close(session.master)
-        code = session.proc.wait()
+        code = session.exit_code()
         for client in list(session.clients):
             self._send(session, client, wire.frame(wire.EXIT, str(code).encode()))
             self._flush_blocking(client)
@@ -390,7 +485,13 @@ def main() -> None:
     os.umask(0o077)
     signal.signal(signal.SIGHUP, signal.SIG_IGN)
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else wire.socket_path()
-    Daemon(path).run()
+    resume = None
+    if len(sys.argv) > 3 and sys.argv[2] == "--resume":
+        # Written by this daemon's previous code just before it exec'd us.
+        handover = Path(sys.argv[3])
+        resume = json.loads(handover.read_text(encoding="utf-8"))
+        handover.unlink()
+    Daemon(path, resume).run()
 
 
 if __name__ == "__main__":

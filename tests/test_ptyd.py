@@ -137,6 +137,45 @@ def test_tab_keeps_its_size_while_a_phone_looks(daemon):
     phone.close()
 
 
+def test_upgrade_keeps_sessions_and_clients(daemon):
+    from ashyterm.ptyd.daemon import CODE
+
+    session = new_shell(daemon)
+    tab, rest = join(daemon, session, 30, 100, owner=True)
+    frames = wire.FrameBuffer()
+    tab.sendall(wire.frame(wire.INPUT, b"echo before-$((1+1))\n"))
+    _, output = frames_until(tab, rest, b"before-2", frames)
+    assert b"before-2" in output
+    pid = wire.ask({"op": "version"}, daemon)
+    assert pid["code"] == CODE
+
+    # The daemon execs itself: same session, and the attached tab keeps working.
+    wire.ask({"op": "upgrade"}, daemon)
+    for _ in range(100):
+        try:
+            if wire.ask({"op": "version"}, daemon)["code"] == CODE:
+                break
+        except (OSError, RuntimeError):
+            pass
+        time.sleep(0.05)
+    tab.sendall(wire.frame(wire.INPUT, b"echo after-$((2+3)) $(stty size | tr ' ' x)\n"))
+    _, output = frames_until(tab, b"", b"after-5 30x100", frames)
+    assert b"after-5 30x100" in output
+    listed = wire.list_sessions(daemon)
+    assert [(s["id"], s["owners"]) for s in listed] == [(session, 1)]
+    assert not list(daemon.parent.glob("ptyd-handover-*")), "the handover file is removed"
+    # A session the new code took over still ends properly, with the shell's exit code.
+    tab.sendall(wire.frame(wire.INPUT, b"exit 7\n"))
+    tab.settimeout(5)
+    seen, chunk = [], b""
+    while wire.EXIT not in [k for k, _ in seen]:
+        chunk = tab.recv(65536)
+        assert chunk, "connection closed before the exit code"
+        seen += list(frames.feed(chunk))
+    assert dict(seen)[wire.EXIT] == b"7"
+    tab.close()
+
+
 def test_close_ends_session_and_tells_clients(daemon):
     session = new_shell(daemon)
     sock, rest = attach(daemon, session)

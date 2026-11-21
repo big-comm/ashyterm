@@ -80,6 +80,13 @@ class FrameBuffer:
             del self._pending[:end]
             yield kind, payload
 
+    def pending(self) -> bytes:
+        """The start of a frame not complete yet (handed over on a daemon upgrade)."""
+        return bytes(self._pending)
+
+    def restore(self, pending: bytes) -> None:
+        self._pending[:0] = pending
+
 
 def encode_line(message: Dict[str, Any]) -> bytes:
     return json.dumps(message, separators=(",", ":")).encode() + b"\n"
