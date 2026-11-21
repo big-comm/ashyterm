@@ -86,6 +86,57 @@ def test_session_outlives_client_and_replays(daemon):
     again.close()
 
 
+def join(path, session_id, rows, cols, owner):
+    sock = wire.connect(path)
+    sock.sendall(wire.encode_line({"op": "attach", "id": session_id, "rows": rows, "cols": cols, "owner": owner}))
+    answer, rest = wire.read_line(sock)
+    assert answer["ok"]
+    return sock, rest
+
+
+def frames_until(sock, rest, needle, frames, timeout=5.0):
+    """Frames (kind, payload) until output holds `needle`."""
+    seen, output = [], bytearray()
+    sock.settimeout(timeout)
+    chunk, deadline = rest, time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        for kind, payload in frames.feed(chunk):
+            seen.append((kind, payload))
+            if kind == wire.OUTPUT:
+                output += payload
+        if needle in output:
+            break
+        chunk = sock.recv(65536)
+    return seen, bytes(output)
+
+
+def test_tab_keeps_its_size_while_a_phone_looks(daemon):
+    session = new_shell(daemon)
+    tab, _ = join(daemon, session, 40, 160, owner=True)
+    phone, rest = join(daemon, session, 20, 45, owner=False)
+    frames = wire.FrameBuffer()
+    # The phone is told the tab's size before the replay, and its typing and
+    # resizing leave the size alone.
+    phone.sendall(wire.frame(wire.RESIZE, wire.resize_payload(20, 45)))
+    phone.sendall(wire.frame(wire.INPUT, b"echo size-$(stty size | tr ' ' x)\n"))
+    seen, output = frames_until(phone, rest, b"size-40x160", frames)
+    assert b"size-40x160" in output
+    kinds = [k for k, _ in seen]
+    assert kinds.index(wire.SIZE) < kinds.index(wire.OUTPUT)
+    assert wire.parse_resize(seen[kinds.index(wire.SIZE)][1]) == (40, 160)
+
+    listed = wire.list_sessions(daemon)
+    assert (listed[0]["clients"], listed[0]["owners"]) == (2, 1)
+
+    # The tab leaves: the phone's size counts, and it is told so.
+    tab.close()
+    phone.sendall(wire.frame(wire.INPUT, b"echo now-$(stty size | tr ' ' x)\n"))
+    seen, output = frames_until(phone, b"", b"now-20x45", frames)
+    assert b"now-20x45" in output
+    assert (wire.SIZE, wire.resize_payload(20, 45)) in seen
+    phone.close()
+
+
 def test_close_ends_session_and_tells_clients(daemon):
     session = new_shell(daemon)
     sock, rest = attach(daemon, session)

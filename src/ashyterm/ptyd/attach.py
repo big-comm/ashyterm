@@ -5,7 +5,9 @@ terminal (the phone over SSH), or start one.
     ashyterm-attach ID                 join session ID
     ashyterm-attach new                start a session and join it
 
-Closing the connection leaves the session running.
+Closing the connection leaves the session running. While one of AshyTerm's
+own tabs shows the session, its size counts: this terminal is asked to
+take it (ESC [ 8 ; rows ; cols t), so both show the same lines.
 """
 
 from __future__ import annotations
@@ -108,11 +110,11 @@ def system_lang() -> str:
     return ""
 
 
-def attach(session_id: str) -> int:
+def attach(session_id: str, owner: bool = False) -> int:
     """Bridge this terminal to the session until it ends or we're cut off."""
     rows, cols = terminal_size()
     sock = wire.connect()
-    sock.sendall(wire.encode_line({"op": "attach", "id": session_id, "rows": rows, "cols": cols}))
+    sock.sendall(wire.encode_line({"op": "attach", "id": session_id, "rows": rows, "cols": cols, "owner": owner}))
     answer, rest = wire.read_line(sock)
     if not answer.get("ok"):
         print(answer.get("error") or "could not join the session", file=sys.stderr)
@@ -166,6 +168,9 @@ def write_frames(frames: wire.FrameBuffer, chunk: bytes) -> Optional[int]:
     for kind, payload in frames.feed(chunk):
         if kind == wire.OUTPUT:
             os.write(sys.stdout.fileno(), payload)
+        elif kind == wire.SIZE:
+            rows, cols = wire.parse_resize(payload)
+            os.write(sys.stdout.fileno(), f"\x1b[8;{rows};{cols}t".encode())
         elif kind == wire.EXIT:
             return int(payload or b"0")
     return None
@@ -176,12 +181,13 @@ def main() -> None:
     parser.add_argument("session", nargs="?", help="session id, or 'new'")
     parser.add_argument("--list", action="store_true", help="list the open sessions")
     parser.add_argument("--json", action="store_true", help="with --list: print JSON")
+    parser.add_argument("--owner", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.list or not args.session:
         print_sessions(args.json)
         return
     session_id = new_session() if args.session == "new" else args.session
-    sys.exit(attach(session_id))
+    sys.exit(attach(session_id, args.owner))
 
 
 if __name__ == "__main__":

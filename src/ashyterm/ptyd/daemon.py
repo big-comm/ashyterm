@@ -36,10 +36,16 @@ READ_CHUNK = 65536
 
 
 class Client:
-    """One attached connection: what's still to be sent, and its size."""
+    """One attached connection: what's still to be sent, and its size.
 
-    def __init__(self, sock: socket.socket) -> None:
+    An owner is one of AshyTerm's own tabs. Anything else (``ashyterm-attach``
+    from the phone) is a guest: while an owner is attached, a guest doesn't
+    change the session's size; it's told the size and draws at it.
+    """
+
+    def __init__(self, sock: socket.socket, owner: bool) -> None:
         self.sock = sock
+        self.owner = owner
         self.outgoing = bytearray()
         self.frames = wire.FrameBuffer()
         self.size: Optional[tuple] = None
@@ -53,6 +59,7 @@ class Session:
         self.replay = bytearray()
         self.clients: List[Client] = []
         self.active: Optional[Client] = None
+        self.size = (rows, cols)
         master, slave = os.openpty()
         set_size(master, rows, cols)
 
@@ -92,6 +99,7 @@ class Session:
         return {
             "id": self.id, "title": self.title, "pid": self.proc.pid, "cwd": self.cwd(),
             "running": self.running(), "created": self.created, "clients": len(self.clients),
+            "owners": sum(1 for c in self.clients if c.owner),
         }
 
     def hang_up(self) -> None:
@@ -103,11 +111,9 @@ class Session:
             except (ProcessLookupError, PermissionError):
                 pass
 
-    def resize_to(self, client: Client) -> None:
-        """The PTY takes the size of the client that last typed or resized."""
-        self.active = client
-        if client.size:
-            set_size(self.master, *client.size)
+    def takes_size_of(self, client: Client) -> bool:
+        """Whether `client` sets the size: any client while no owner is attached, else an owner."""
+        return client.owner or not any(c.owner for c in self.clients)
 
 
 def foreground_group(master: int) -> int:
@@ -259,14 +265,18 @@ class Daemon:
         return session
 
     def _attach(self, sock: socket.socket, session: Session, request: Dict[str, Any], rest: bytes) -> None:
-        client = Client(sock)
+        client = Client(sock, owner=bool(request.get("owner")))
         session.clients.append(client)
         client.outgoing += wire.encode_line({"ok": True, "id": session.id})
-        client.outgoing += wire.frame(wire.OUTPUT, bytes(session.replay))
+        self.selector.register(sock, selectors.EVENT_READ | selectors.EVENT_WRITE, ("client", (session, client)))
         if request.get("rows") and request.get("cols"):
             client.size = (int(request["rows"]), int(request["cols"]))
-            session.resize_to(client)
-        self.selector.register(sock, selectors.EVENT_READ | selectors.EVENT_WRITE, ("client", (session, client)))
+        # The size before the replay: a guest redraws the replay at the session's size.
+        if session.takes_size_of(client):
+            self._resize(session, client)
+        else:
+            client.outgoing += wire.frame(wire.SIZE, wire.resize_payload(*session.size))
+        client.outgoing += wire.frame(wire.OUTPUT, bytes(session.replay))
         if rest:
             self._take_frames(session, client, rest)
 
@@ -287,6 +297,16 @@ class Daemon:
         session.remember(chunk)
         for client in list(session.clients):
             self._send(session, client, wire.frame(wire.OUTPUT, chunk))
+
+    def _resize(self, session: Session, client: Client) -> None:
+        """The session takes `client`'s size, and its guests are told."""
+        session.active = client
+        if client.size and client.size != session.size:
+            session.size = client.size
+            set_size(session.master, *client.size)
+        for c in session.clients:
+            if not c.owner:
+                self._send(session, c, wire.frame(wire.SIZE, wire.resize_payload(*session.size)))
 
     def _end(self, session: Session) -> None:
         self.selector.unregister(session.master)
@@ -343,12 +363,14 @@ class Daemon:
     def _take_frames(self, session: Session, client: Client, chunk: bytes) -> None:
         for kind, payload in client.frames.feed(chunk):
             if kind == wire.INPUT:
-                if session.active is not client:
-                    session.resize_to(client)
+                # Typing makes a client the one whose size counts (owners first).
+                if session.active is not client and session.takes_size_of(client):
+                    self._resize(session, client)
                 os.write(session.master, payload)
             elif kind == wire.RESIZE:
                 client.size = wire.parse_resize(payload)
-                session.resize_to(client)
+                if session.takes_size_of(client):
+                    self._resize(session, client)
 
     def _detach(self, session: Session, client: Client) -> None:
         if client not in session.clients:
@@ -360,7 +382,8 @@ class Daemon:
             pass
         client.sock.close()
         if session.active is client and session.clients:
-            session.resize_to(session.clients[-1])
+            owners = [c for c in session.clients if c.owner]
+            self._resize(session, (owners or session.clients)[-1])
 
 
 def main() -> None:

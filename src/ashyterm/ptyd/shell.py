@@ -46,15 +46,17 @@ def persistent_shell_command(command: List[str], env: Dict[str, str], working_di
 def _join(terminal: Any, session: str, pid: int) -> List[str]:
     terminal._ptyd_session = session
     terminal._ptyd_shell_pid = pid
-    return [sys.executable, "-c", _ATTACH, package_root(), session]
+    # --owner: an AshyTerm tab, whose size the session keeps while a phone also looks.
+    return [sys.executable, "-c", _ATTACH, package_root(), "--owner", session]
 
 
 def kept_sessions() -> List[Dict[str, Any]]:
-    """Sessions nobody is attached to: what a window closed earlier left running."""
+    """Sessions no AshyTerm tab shows: what a window closed earlier left running
+    (a phone may be looking at one; it's still this computer's)."""
     if is_flatpak():
         return []
     try:
-        return [s for s in wire.list_sessions() if not s["clients"]]
+        return [s for s in wire.list_sessions() if not s.get("owners", s["clients"])]
     except (OSError, RuntimeError) as error:
         logger.warning(f"Could not list kept terminal sessions: {error}")
         return []

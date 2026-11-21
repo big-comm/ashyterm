@@ -18,6 +18,8 @@ from typing import Any, Dict, Iterator, List, Optional, Tuple
 # Daemon → client.
 OUTPUT = 1
 EXIT = 2
+# The session's size, to a guest (rows, cols as in RESIZE): it draws at that size.
+SIZE = 5
 # Client → daemon.
 INPUT = 3
 RESIZE = 4
