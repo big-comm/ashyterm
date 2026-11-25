@@ -22,14 +22,30 @@ from .scroll_mode_guard import ScrollModeGuard
 # Intentionally narrow: mundane multi-line commits should not be blocked.
 RISKY_PASTE_PATTERNS: tuple = (
     re.compile(r"\bsudo\b", re.IGNORECASE),
-    re.compile(r"\brm\s+-[rRfF]", re.IGNORECASE),
+    re.compile(r"\brm\s+-[rf]", re.IGNORECASE),
     re.compile(r"\bmkfs\.", re.IGNORECASE),
-    re.compile(r"\bdd\s+[^|]*of=/dev/", re.IGNORECASE),
-    re.compile(r"\bcurl\b[^|]*\|\s*(sudo\s+)?(bash|sh)\b", re.IGNORECASE),
-    re.compile(r"\bwget\b[^|]*\|\s*(sudo\s+)?(bash|sh)\b", re.IGNORECASE),
     re.compile(r"\bchmod\s+(-R\s+)?[0-7]*777\b"),
     re.compile(r">\s*/dev/sd[a-z]"),
 )
+
+# Rules spanning a pipeline run per segment: a regex like `curl[^|]*\|` retried
+# from every match start backtracks quadratically on a long pasted line.
+_DD = re.compile(r"\bdd\s", re.IGNORECASE)
+_DD_DEVICE_TARGET = re.compile(r"of=/dev/", re.IGNORECASE)
+_DOWNLOADER = re.compile(r"\b(curl|wget)\b", re.IGNORECASE)
+_SHELL = re.compile(r"\s*(sudo\s+)?(bash|sh)\b", re.IGNORECASE)
+
+
+def _risky_pipeline(text: str) -> bool:
+    segments = text.split("|")
+    for index, segment in enumerate(segments):
+        dd = _DD.search(segment)
+        if dd and _DD_DEVICE_TARGET.search(segment, dd.end()):
+            return True
+        piped_into = segments[index + 1] if index + 1 < len(segments) else ""
+        if _SHELL.match(piped_into) and _DOWNLOADER.search(segment):
+            return True
+    return False
 
 
 def paste_needs_confirmation(text: str) -> bool:
@@ -38,7 +54,7 @@ def paste_needs_confirmation(text: str) -> bool:
         return False
     if "\n" in text.rstrip("\n"):  # a trailing newline alone is fine
         return True
-    return any(rx.search(text) for rx in RISKY_PASTE_PATTERNS)
+    return any(rx.search(text) for rx in RISKY_PASTE_PATTERNS) or _risky_pipeline(text)
 
 
 def middle_click_reaches_paste(terminal: Vte.Terminal, shift_held: bool) -> bool:

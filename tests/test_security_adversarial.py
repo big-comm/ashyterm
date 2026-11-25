@@ -19,6 +19,7 @@ a new adversarial case is a one-line change.
 from __future__ import annotations
 
 import re
+import time
 
 import pytest
 
@@ -292,6 +293,26 @@ class TestRiskyPastePatterns:
         """A single trailing newline is not 'multi-line' — typical
         clipboard behaviour for a single-line command."""
         assert paste_needs_confirmation("ls -la\n") is False
+
+    @pytest.mark.parametrize("word", ["dd ", "curl ", "wget "])
+    def test_long_crafted_line_fast(self, word: str):
+        """Clipboard text comes from web pages, so the check must stay linear;
+        backtracking took about 9 s on 40,000 repeats of 'dd '."""
+        started = time.perf_counter()
+        assert paste_needs_confirmation(word * 40_000) is False
+        assert time.perf_counter() - started < 1.0
+
+    @pytest.mark.parametrize(
+        ("text", "risky"),
+        [
+            ("curl -s example.com | tee x | sh", False),
+            ("curl -s example.com || sh", False),
+            ("dd if=a | dd of=/dev/sdb", True),
+            ("dd if=/dev/sda of=disk.img", False),
+        ],
+    )
+    def test_pipeline_segment_rules(self, text: str, risky: bool):
+        assert paste_needs_confirmation(text) is risky
 
     def test_patterns_are_compiled_regexes(self):
         for rx in RISKY_PASTE_PATTERNS:
