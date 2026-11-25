@@ -1,4 +1,6 @@
-"""Risky paste confirmation dialog."""
+"""Risky paste confirmation dialog with an editable preview."""
+
+from typing import Callable
 
 import gi
 
@@ -9,9 +11,23 @@ from gi.repository import Adw, Gtk
 from ..utils.translation_utils import _
 
 
-def build_paste_confirmation_dialog(text: str) -> Adw.AlertDialog:
-    """Build a paste dialog that defaults to the affirmative action."""
-    preview = text if len(text) <= 600 else text[:600] + "…"
+def _build_editor(text: str) -> Gtk.TextView:
+    editor = Gtk.TextView(
+        monospace=True,
+        wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        top_margin=8,
+        bottom_margin=8,
+        left_margin=8,
+        right_margin=8,
+    )
+    editor.get_buffer().set_text(text)
+    return editor
+
+
+def build_paste_confirmation_dialog(
+    text: str, on_paste: Callable[[str], None]
+) -> Adw.AlertDialog:
+    """Build a review dialog; ``on_paste`` receives the possibly edited text."""
     dialog = Adw.AlertDialog(
         heading=_("Confirm paste"),
         body=_(
@@ -19,22 +35,28 @@ def build_paste_confirmation_dialog(text: str) -> Adw.AlertDialog:
             "risky command. Paste anyway?"
         ),
     )
+    editor = _build_editor(text)
     scrolled = Gtk.ScrolledWindow(
         min_content_height=160,
         max_content_height=300,
+        propagate_natural_height=True,
         has_frame=True,
+        child=editor,
     )
-    label = Gtk.Label(label=preview, xalign=0.0, yalign=0.0, wrap=True)
-    label.add_css_class("monospace")
-    label.set_margin_start(8)
-    label.set_margin_end(8)
-    label.set_margin_top(8)
-    label.set_margin_bottom(8)
-    scrolled.set_child(label)
     dialog.set_extra_child(scrolled)
     dialog.add_response("cancel", _("Cancel"))
     dialog.add_response("paste", _("Paste"))
     dialog.set_response_appearance("paste", Adw.ResponseAppearance.SUGGESTED)
     dialog.set_default_response("paste")
     dialog.set_close_response("cancel")
+
+    def on_response(_dialog: Adw.AlertDialog, response: str) -> None:
+        if response != "paste":
+            return
+        buffer = editor.get_buffer()
+        edited = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), False)
+        if edited:
+            on_paste(edited)
+
+    dialog.connect("response", on_response)
     return dialog

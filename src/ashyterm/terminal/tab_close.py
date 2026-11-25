@@ -21,6 +21,7 @@ import gi
 gi.require_version("Adw", "1")
 from gi.repository import Adw
 
+from ..ptyd.shell import end_session, shell_pid
 from ..utils.translation_utils import _
 
 if TYPE_CHECKING:
@@ -75,7 +76,7 @@ def any_terminal_has_foreground_process(
             # Host shells are checked together below, in one round trip.
             host_terminals.append(terminal)
             continue
-        pid = info.get("process_id")
+        pid = shell_pid(terminal, info.get("process_id"))
         if not pid or pid == -1:
             continue
         try:
@@ -115,6 +116,7 @@ def process_terminals_for_close(
             if has_stable_running_process(info):
                 should_wait = True
 
+        end_session(terminal)
         terminal_manager.remove_terminal(terminal, force_kill_group=True)
 
     return should_wait

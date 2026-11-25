@@ -341,4 +341,6 @@ class WindowStateManager:
             if isinstance(session_info, SessionItem)
             else str(session_info),
             "working_dir": working_dir,
+            # The shell the PTY daemon keeps for this tab, rejoined on restore.
+            "ptyd_session": getattr(terminal, "_ptyd_session", None),
         }

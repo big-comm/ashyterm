@@ -139,7 +139,35 @@ class TestSessionLookup:
 
         assert out == "LOCAL"
         mgr.terminal_manager.create_local_terminal.assert_called_once_with(
-            session=target, title="Title", working_directory="/tmp"
+            session=target, title="Title", working_directory="/tmp", kept_session=None
+        )
+
+    def test_local_rejoins_its_kept_shell(self):
+        target = _FakeSession("shell", "local")
+        mgr = _make_manager(sessions=[target])
+        kept = {"id": "ab12cd34", "pid": 4242, "cwd": "/tmp"}
+        other = {"id": "ffff0000", "pid": 4343, "cwd": "/"}
+        mgr.terminal_manager.parent_window._kept_sessions = {"ab12cd34": kept, "ffff0000": other}
+        ctrl = TabRestoreController(mgr)
+
+        ctrl.create_terminal_from_session("local", "shell", "Title", "/tmp", None, "ab12cd34")
+
+        mgr.terminal_manager.create_local_terminal.assert_called_once_with(
+            session=target, title="Title", working_directory="/tmp", kept_session=kept
+        )
+        # Taken: the window won't open a second tab for it; the other remains.
+        assert mgr.terminal_manager.parent_window._kept_sessions == {"ffff0000": other}
+
+    def test_gone_shell_starts_anew(self):
+        target = _FakeSession("shell", "local")
+        mgr = _make_manager(sessions=[target])
+        mgr.terminal_manager.parent_window._kept_sessions = {}
+        ctrl = TabRestoreController(mgr)
+
+        ctrl.create_terminal_from_session("local", "shell", "Title", "/tmp", None, "deadbeef")
+
+        mgr.terminal_manager.create_local_terminal.assert_called_once_with(
+            session=target, title="Title", working_directory="/tmp", kept_session=None
         )
 
 

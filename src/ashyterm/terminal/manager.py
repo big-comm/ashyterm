@@ -11,6 +11,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Vte", "3.91")
 from gi.repository import Gdk, Gio, GLib, Gtk, Vte
 
+from ..ptyd.shell import shell_pid
 from ..sessions.models import SessionItem
 from ..settings.manager import SettingsManager
 from ..utils.exceptions import TerminalCreationError
@@ -21,7 +22,7 @@ from ..utils.platform import get_environment_manager, get_platform_info
 from ..utils.security import validate_session_data
 from ..utils.translation_utils import _
 from .clipboard_image import clipboard_has_image, save_clipboard_image_async
-from .paste_confirmation import build_paste_confirmation_dialog
+from .paste_flow import TerminalPaste
 from .registry import ManualSSHTracker, TerminalLifecycleManager, TerminalRegistry
 from .scroll_mode_guard import ScrollModeGuard
 from .sftp_open import RemoteFileTarget, resolve_remote_file_target
@@ -83,35 +84,6 @@ def _get_terminal_menu_creator():
     return create_terminal_menu
 
 
-# Regex signatures for paste content that deserves a confirmation prompt
-# when the user has the safety net enabled. Intentionally narrow — we
-# don't want to block mundane multi-line commits from the clipboard.
-import re as _re
-
-_RISKY_PASTE_PATTERNS: tuple = (
-    _re.compile(r"\bsudo\b", _re.IGNORECASE),
-    _re.compile(r"\brm\s+-[rRfF]", _re.IGNORECASE),
-    _re.compile(r"\bmkfs\.", _re.IGNORECASE),
-    _re.compile(r"\bdd\s+[^|]*of=/dev/", _re.IGNORECASE),
-    _re.compile(r"\bcurl\b[^|]*\|\s*(sudo\s+)?(bash|sh)\b", _re.IGNORECASE),
-    _re.compile(r"\bwget\b[^|]*\|\s*(sudo\s+)?(bash|sh)\b", _re.IGNORECASE),
-    _re.compile(r"\bchmod\s+(-R\s+)?[0-7]*777\b"),
-    _re.compile(r">\s*/dev/sd[a-z]"),
-)
-
-
-def _paste_needs_confirmation(text: str) -> bool:
-    """True when ``text`` looks multi-line or matches a risky pattern."""
-    if not text:
-        return False
-    if "\n" in text.rstrip("\n"):  # a trailing newline alone is fine
-        return True
-    for rx in _RISKY_PASTE_PATTERNS:
-        if rx.search(text):
-            return True
-    return False
-
-
 def _create_terminal_menu(*args, **kwargs):
     """Create terminal menu via lazy-loaded creator."""
     return _get_terminal_menu_creator()(*args, **kwargs)
@@ -122,6 +94,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         self.logger = get_logger("ashyterm.terminal.manager")
         self.parent_window = parent_window
         self.settings_manager = settings_manager
+        self.paste_flow = TerminalPaste(settings_manager, lambda: self.parent_window)
         self.platform_info = get_platform_info()
         self.environment_manager = get_environment_manager()
         self.registry = TerminalRegistry()
@@ -380,7 +353,7 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         updates = []
         for pid, terminal, last_cwd in candidates:
             try:
-                cwd = os.readlink(f"/proc/{pid}/cwd")
+                cwd = os.readlink(f"/proc/{shell_pid(terminal, pid)}/cwd")
             except OSError:
                 continue
             if cwd != last_cwd:
@@ -582,10 +555,13 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
+        kept_session: Optional[dict] = None,
     ) -> Any:
         terminal = self._get_or_create_terminal()
         if not terminal:
             raise TerminalCreationError("base terminal creation failed", "local")
+        # Join a shell the PTY daemon kept, instead of starting one.
+        terminal._ptyd_reattach = kept_session
 
         identifier = session if session else title
         terminal_id = self.registry.register_terminal(terminal, "local", identifier)
@@ -1002,14 +978,9 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
             terminal.add_controller(click_controller)
             terminal.ashy_controllers.append(click_controller)
 
-            # VTE 0.84 dropped built-in middle-click PRIMARY paste; reinstate it here.
-            middle_click_controller = Gtk.GestureClick()
-            middle_click_controller.set_button(Gdk.BUTTON_MIDDLE)
-            middle_click_controller.connect(
-                "pressed", self._on_terminal_middle_clicked, terminal
+            terminal.ashy_controllers.append(
+                self.paste_flow.attach_middle_click(terminal)
             )
-            terminal.add_controller(middle_click_controller)
-            terminal.ashy_controllers.append(middle_click_controller)
 
             # Context menu is now handled natively by VTE via setup-context-menu signal
 
@@ -1108,30 +1079,12 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
         if terminal.get_has_selection():
             terminal.copy_clipboard_format(Vte.Format.TEXT)
 
-    def _on_terminal_middle_clicked(
-        self,
-        gesture: Gtk.GestureClick,
-        _n_press: int,
-        _x: float,
-        _y: float,
-        terminal: Vte.Terminal,
-    ) -> None:
-        try:
-            terminal.paste_primary()
-        except Exception as e:
-            self.logger.error(f"Middle-click paste failed: {e}")
-            return
-        gesture.set_state(Gtk.EventSequenceState.CLAIMED)
-
     def paste_clipboard(self, terminal: Vte.Terminal) -> None:
         clipboard = terminal.get_clipboard()
         if clipboard_has_image(clipboard):
             self._paste_clipboard_image(terminal, clipboard)
             return
-        if not self.settings_manager.get("paste_warning_enabled", True):
-            terminal.paste_clipboard()
-            return
-        self._paste_with_confirmation(terminal)
+        self.paste_flow.paste_clipboard(terminal)
 
     def _on_terminal_key_pressed_for_image_paste(
         self,
@@ -1182,34 +1135,6 @@ class TerminalManager(SSHLifecycleMixin, URLHandlerMixin):
                 self.logger.error(f"Failed to paste clipboard image path: {exc}")
 
         save_clipboard_image_async(clipboard, on_saved)
-
-    def _paste_with_confirmation(self, terminal: Vte.Terminal) -> None:
-        """Read clipboard, confirm if multi-line or risky, then paste."""
-        clipboard = terminal.get_clipboard()
-
-        def on_text(clip, result):
-            try:
-                text = clip.read_text_finish(result)
-            except Exception:
-                terminal.paste_clipboard()
-                return
-            if text is None or not _paste_needs_confirmation(text):
-                terminal.paste_clipboard()
-                return
-            self._show_paste_confirmation(terminal, text)
-
-        clipboard.read_text_async(None, on_text)
-
-    def _show_paste_confirmation(self, terminal: Vte.Terminal, text: str) -> None:
-        dialog = build_paste_confirmation_dialog(text)
-
-        def on_response(_dlg, response):
-            if response == "paste":
-                terminal.paste_clipboard()
-
-        dialog.connect("response", on_response)
-        parent = self.parent_window if hasattr(self, "parent_window") else None
-        dialog.present(parent if isinstance(parent, Gtk.Widget) else terminal)
 
     def select_all(self, terminal: Vte.Terminal) -> None:
         terminal.select_all()

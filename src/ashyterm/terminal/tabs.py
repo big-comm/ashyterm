@@ -363,6 +363,7 @@ class TabManager:
         working_directory: Optional[str] = None,
         execute_command: Optional[str] = None,
         close_after_execute: bool = False,
+        kept_session: Optional[dict] = None,
     ) -> Optional[Vte.Terminal]:
         if session is None:
             session = SessionItem(name=title, session_type="local")
@@ -385,6 +386,7 @@ class TabManager:
             working_directory=effective_working_dir,
             execute_command=effective_command,
             close_after_execute=close_after_execute,
+            kept_session=kept_session,
         )
         if terminal:
             resolved_dir = effective_working_dir or str(Path.home())
