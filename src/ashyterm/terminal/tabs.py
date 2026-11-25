@@ -975,12 +975,6 @@ class TabManager:
     def _create_file_manager(self, page):
         return self.fm_handler.create_file_manager(page)
 
-    def _calculate_file_manager_position(self, page, paned) -> int:
-        return self.fm_handler.calculate_file_manager_position(page, paned)
-
-    def _get_available_paned_height(self, paned) -> int:
-        return self.fm_handler.get_available_paned_height(paned)
-
     def _connect_paned_position_handler(self, paned, page):
         self.fm_handler.connect_paned_position_handler(paned, page)
 
