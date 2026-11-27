@@ -42,6 +42,15 @@ class BroadcastManager(GObject.Object):
 
     def _setup_connections(self):
         """Connect UI signals to manager methods."""
+        # win.toggle-broadcast (Ctrl+Shift+B, command palette) flips the
+        # hidden broadcast button; this binding is what shows the bar.
+        self.ui.broadcast_button.bind_property(
+            "active",
+            self.ui.broadcast_bar,
+            "search-mode-enabled",
+            GObject.BindingFlags.BIDIRECTIONAL,
+        )
+
         self.ui.broadcast_entry.connect("activate", self._on_broadcast_activate)
 
         # Controller for Escape key
@@ -183,7 +192,12 @@ class BroadcastManager(GObject.Object):
         a11y_label(remember_check, _("Remember my choice"))
 
         content = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, spacing=12, margin_all=12
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=12,
+            margin_top=12,
+            margin_bottom=12,
+            margin_start=12,
+            margin_end=12,
         )
         content.append(command_label)
         content.append(
