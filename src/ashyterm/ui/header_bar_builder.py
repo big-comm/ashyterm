@@ -96,9 +96,9 @@ def _create_buttons(builder: "WindowUIBuilder") -> None:
     builder.search_button.add_css_class("flat")
     a11y_label(builder.search_button, _("Search in Terminal"))
 
-    # Broadcast button stays hidden — the functionality is embedded in
-    # the Command Manager now, but we keep the widget around for the
-    # handful of code paths that reference it.
+    # Broadcast button stays hidden from the header bar (the Command
+    # Manager also broadcasts), but it still backs win.toggle-broadcast:
+    # BroadcastManager binds it to the broadcast bar's search mode.
     builder.broadcast_button = Gtk.ToggleButton()
     builder.broadcast_button.set_child(icon_image("utilities-terminal-symbolic"))
     builder.broadcast_button.add_css_class("flat")
